@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "reflect-metadata": "^0.1.12",
     "webpack": "^4.8.1",
     "webpack-cli": "^2.1.3"
   },

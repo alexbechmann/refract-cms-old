@@ -1,13 +1,14 @@
-import { entity, register, getAllEntities } from '@headless-cms/core';
+import { entity, register, getAllEntities, property } from '@headless-cms/core';
 
 @entity({
   alias: 'product'
 })
 class Product {
-
+  @property({
+    editorAlias: 'textEditor'
+  })
+  type: string;
 }
 
-console.log(Product);
-
 register(Product);
-console.log(getAllEntities());
+console.log(Product, getAllEntities());
