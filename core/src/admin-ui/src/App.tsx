@@ -1,36 +1,38 @@
 import * as React from 'react';
-import './App.css';
 
-interface IState {
+interface State {
   schema: any[];
 }
 
-class App extends React.Component<{}, IState> {
-   constructor(props: any) {
+class App extends React.Component<{}, State> {
+  constructor(props: any) {
     super(props);
     this.state = {
       schema: []
     }
-   }
-  public componentDidMount() {
+  }
+  componentDidMount() {
     fetch('/schema').then(result => result.json()).then(schema => {
       this.setState({
         schema
-      }) 
-    }); 
+      })
+    });
   }
 
-  public render() {
+  render() {
     return (
-      <div className="App">
-        <h2>   
-          Admin 
+      <div>
+        <h2>
+          Admin
         </h2>
         {this.state.schema.map(item => (
-          <div key={item}>{item}</div>
+          <div key={item.alias}>
+            <div> {item.alias}</div>
+            <div>{JSON.stringify(item.properties)}</div>
+          </div>
         ))}
       </div>
-    ); 
+    );
   }
 }
 

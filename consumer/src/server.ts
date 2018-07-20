@@ -1,28 +1,11 @@
 import { entity, register, getAllEntities, property, setupExpress } from '@headless-cms/core';
 import * as express from 'express';
-const app = express();
-
-@entity({
-  alias: 'product'
-})
-class Product {
-  @property({
-    editorAlias: 'text'
-  })
-  type: string;
-}
-
-@entity({
-  alias: 'newsArticle'
-})
-class NewsArticle {
-  @property({
-    editorAlias: 'text'
-  })
-  headline: string;
-}
+import Product from '@src/products/product.model';
+import NewsArticle from '@src/news/news-article.model';
 
 register(Product, NewsArticle);
+
+const app = express();
 
 setupExpress(app);
 app.listen(3300, () => console.log('Example app listening on port 3300!'))
