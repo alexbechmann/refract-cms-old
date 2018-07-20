@@ -5,10 +5,21 @@ import { entity, register, getAllEntities, property } from '@headless-cms/core';
 })
 class Product {
   @property({
-    editorAlias: 'textEditor'
+    editorAlias: 'text'
   })
   type: string;
 }
 
+@entity({
+  alias: 'newsArticle'
+})
+class NewsArticle {
+  @property({
+    editorAlias: 'text'
+  })
+  headline: string;
+}
+
 register(Product);
-console.log(Product, getAllEntities());
+register(NewsArticle);
+console.log(getAllEntities());
