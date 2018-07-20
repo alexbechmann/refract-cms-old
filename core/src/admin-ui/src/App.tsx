@@ -16,16 +16,16 @@ class App extends React.Component<{}, IState> {
     fetch('/schema').then(result => result.json()).then(schema => {
       this.setState({
         schema
-      })
-    });
+      }) 
+    }); 
   }
 
   public render() {
     return (
       <div className="App">
-        <h1>
-          Admin
-        </h1>
+        <h2>   
+          Admin 
+        </h2>
         {this.state.schema.map(item => (
           <div key={item}>{item}</div>
         ))}

@@ -15,6 +15,7 @@
     "eject": "react-scripts-ts eject"
   },
   "proxy": "http://localhost:3300",
+  "homepage": "/admin/",
   "devDependencies": {
     "@types/jest": "^23.3.0",
     "@types/node": "^10.5.2",

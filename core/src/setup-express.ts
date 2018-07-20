@@ -5,7 +5,7 @@ const path = require('path');
 
 export default (app: any) => {
   const uiPath = path.resolve('./node_modules/@headless-cms/core/src/admin-ui/build');
-  app.use('/', express.static(uiPath));
+  app.use('/admin', express.static(uiPath));
   app.get('/schema', (req: Request, res: Response) => {
     res.send(getAllEntities());
   });

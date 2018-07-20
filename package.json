@@ -11,8 +11,9 @@
     "consumer:start": "cd consumer && npm start",
     "core:react-app:install": "cd core/src/admin-ui && npm install",
     "core:react-app:start": "cd core/src/admin-ui && npm run start",
+    "core:react-app:build:watch": "cd core/src/admin-ui && npm run build:watch",
     "postinstall": "npm-run-all core:install consumer:install core:react-app:install",
-    "start": "npm-run-all -p core:start consumer:start core:react-app:start"
+    "start": "npm-run-all -p core:start consumer:start core:react-app:start core:react-app:build:watch"
   },
   "repository": {
     "type": "git",
