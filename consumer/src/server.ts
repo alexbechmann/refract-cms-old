@@ -20,6 +20,5 @@ class NewsArticle {
   headline: string;
 }
 
-register(Product);
-register(NewsArticle);
+register(Product, NewsArticle);
 console.log(getAllEntities());

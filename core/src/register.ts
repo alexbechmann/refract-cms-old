@@ -1,13 +1,13 @@
-const entities: any[] = [];
+const allEntities: any[] = [];
 
 export const getAllEntities = () => {
-  entities.forEach(e => {
+  allEntities.forEach(e => {
     const properties = Reflect.getMetadata('properties', e);
     console.log(properties);
   });
-  return entities.map(e => e.alias);
+  return allEntities.map(e => e.alias);
 };
 
-export default function register(entity: any) {
-  entities.push(entity);
+export default function register(...entities: any[]) {
+  entities.forEach(e => allEntities.push(e));
 }
