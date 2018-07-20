@@ -1,0 +1,30 @@
+{
+  "name": "headless-cms",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "core:install": "cd core && npm install",
+    "core:start": "cd core && npm start",
+    "consumer:install": "cd consumer && npm install",
+    "consumer:start": "cd consumer && npm start",
+    "core:react-app:install": "cd core/src/admin-ui && npm install",
+    "core:react-app:start": "cd core/src/admin-ui && npm run start",
+    "postinstall": "npm-run-all core:install consumer:install core:react-app:install",
+    "start": "npm-run-all -p core:start consumer:start core:react-app:start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexbechmann/headless-cms.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexbechmann/headless-cms/issues"
+  },
+  "homepage": "https://github.com/alexbechmann/headless-cms#readme",
+  "devDependencies": {
+    "npm-run-all": "^4.1.3"
+  }
+}

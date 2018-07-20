@@ -1,21 +1,36 @@
 import * as React from 'react';
 import './App.css';
 
-import logo from './logo.svg';
+interface IState {
+  schema: any[];
+}
 
-class App extends React.Component {
+class App extends React.Component<{}, IState> {
+   constructor(props: any) {
+    super(props);
+    this.state = {
+      schema: []
+    }
+   }
+  public componentDidMount() {
+    fetch('/schema').then(result => result.json()).then(schema => {
+      this.setState({
+        schema
+      })
+    });
+  }
+
   public render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+        <h1>
+          Admin
+        </h1>
+        {this.state.schema.map(item => (
+          <div key={item}>{item}</div>
+        ))}
       </div>
-    );
+    ); 
   }
 }
 
