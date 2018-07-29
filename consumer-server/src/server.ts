@@ -1,4 +1,4 @@
-import { entity, register, getAllEntities, property, setupExpress } from '@headless-cms/core';
+import { entity, register, getAllEntities, property, setupExpress } from '@headless-cms/server';
 import * as express from 'express';
 import Product from '@src/products/product.model';
 import NewsArticle from '@src/news/news-article.model';

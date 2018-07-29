@@ -13,7 +13,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
-    library: "@headless-cms/core",
+    library: "@headless-cms/server",
     libraryTarget: "umd"
   },
   module: {

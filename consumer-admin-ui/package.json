@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@headless-cms/admin-ui": "file:../admin-ui",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts-ts": "2.16.0"
@@ -14,7 +15,6 @@
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"
   },
-  "proxy": "http://localhost:3300",
   "homepage": "/admin/",
   "devDependencies": {
     "@types/jest": "^23.3.0",

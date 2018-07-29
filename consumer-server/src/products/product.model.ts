@@ -1,4 +1,4 @@
-import { entity, property } from "@headless-cms/core";
+import { entity, property } from "@headless-cms/server";
 
 @entity({
   alias: 'product'

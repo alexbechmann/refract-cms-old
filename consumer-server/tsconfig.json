@@ -12,7 +12,8 @@
           "./src/*"
         ]
       },
-      "experimentalDecorators": true
+      "experimentalDecorators": true,
+      "jsx": "react"
     },
     "exclude": [
       "node_modules"

@@ -1,30 +1,34 @@
 import * as React from 'react';
 
-interface State {
+export interface AdminProps {
+  serverUrl: string;
+}
+
+export interface State {
   schema: any[];
 }
 
-class App extends React.Component<{}, State> {
+class Admin extends React.Component<AdminProps, State> {
   constructor(props: any) {
     super(props);
     this.state = {
       schema: []
-    }
+    };
   }
   componentDidMount() {
-    fetch('/schema').then(result => result.json()).then(schema => {
-      this.setState({
-        schema
-      })
-    });
+    fetch(`${this.props.serverUrl}/schema`)
+      .then(result => result.json())
+      .then(schema => {
+        this.setState({
+          schema
+        });
+      });
   }
 
   render() {
     return (
       <div>
-        <h2>
-          Admin
-        </h2>
+        <h1>Admin</h1>
         {this.state.schema.map(item => (
           <div key={item.alias}>
             <div> {item.alias}</div>
@@ -36,4 +40,4 @@ class App extends React.Component<{}, State> {
   }
 }
 
-export default App;
+export default Admin;
