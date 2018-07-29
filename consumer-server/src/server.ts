@@ -1,9 +1,5 @@
-import { entity, register, getAllEntities, property, setupExpress } from '@headless-cms/server';
+import { setupExpress } from '@headless-cms/server';
 import * as express from 'express';
-import Product from '@src/products/product.model';
-import NewsArticle from '@src/news/news-article.model';
-
-register(Product, NewsArticle);
 
 const app = express();
 
