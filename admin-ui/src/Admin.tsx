@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { getAllEntities } from './schema/register';
+import { getSchemaMetadata } from './schema/get-schema-metadata';
 
 export interface AdminProps {
   serverUrl: string;
+  schemas: any[];
 }
 
 class Admin extends React.Component<AdminProps> {
@@ -10,7 +11,7 @@ class Admin extends React.Component<AdminProps> {
     return (
       <div>
         <h1>Admin</h1>
-        {getAllEntities().map(item => (
+        {getSchemaMetadata(this.props.schemas).map(item => (
           <div key={item.alias}>
             <div> {item.alias}</div>
             <table>
