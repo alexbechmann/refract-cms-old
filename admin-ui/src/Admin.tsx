@@ -13,13 +13,20 @@ class Admin extends React.Component<AdminProps> {
         {getAllEntities().map(item => (
           <div key={item.alias}>
             <div> {item.alias}</div>
-            <div>
-              {Object.keys(item.properties)
-                .map(key => item.properties[key])
-                .map((prop: any, index: number) => {
-                  return <div key={index}>{this.renderEditor(prop)}</div>;
-                })}
-            </div>
+            <table>
+              <tbody>
+                {Object.keys(item.properties)
+                  .map(key => item.properties[key])
+                  .map((prop: any, index: number) => {
+                    return (
+                      <tr key={index}>
+                        <td>{JSON.stringify(prop)}</td>
+                        <td>{this.renderEditor(prop)}</td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
           </div>
         ))}
       </div>
@@ -30,6 +37,9 @@ class Admin extends React.Component<AdminProps> {
     switch (prop.editorAlias) {
       case 'text': {
         return <input />;
+      }
+      case 'custom': {
+        return <prop.editorComponent />;
       }
       default: {
         return <React.Fragment />;
