@@ -9,13 +9,13 @@
     "server:start": "cd server && npm start",
     "admin-ui:install": "cd admin-ui && npm install",
     "admin-ui:start": "cd admin-ui && npm start",
-    "consumer-server:install": "cd consumer-server && npm install",
-    "consumer-server:start": "cd consumer-server && npm start",
-    "consumer-admin-ui:install": "cd consumer-admin-ui && npm install",
-    "consumer-admin-ui:start": "cd consumer-admin-ui && npm run start",
-    "consumer-admin-ui:build:watch": "cd consumer-admin-ui && npm run build:watch",
-    "postinstall": "npm-run-all server:install consumer-server:install consumer-admin-ui:install admin-ui:install",
-    "start": "npm-run-all -p server:start consumer-server:start consumer-admin-ui:start admin-ui:start"
+    "server-consumer:install": "cd server-consumer && npm install",
+    "server-consumer:start": "cd server-consumer && npm start",
+    "admin-ui-consumer:install": "cd admin-ui-consumer && npm install",
+    "admin-ui-consumer:start": "cd admin-ui-consumer && npm run start",
+    "admin-ui-consumer:build:watch": "cd admin-ui-consumer && npm run build:watch",
+    "postinstall": "npm-run-all server:install server-consumer:install admin-ui-consumer:install admin-ui:install",
+    "start": "npm-run-all -p server:start server-consumer:start admin-ui-consumer:start admin-ui:start"
   },
   "repository": {
     "type": "git",

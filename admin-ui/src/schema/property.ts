@@ -2,6 +2,7 @@ import 'reflect-metadata';
 
 export default function(options: {
   editorAlias: 'text' | 'number' | 'date' | 'custom';
+  displayName?: string;
   editorComponent?: any;
 }): PropertyDecorator {
   return (target, propertyKey) => {

@@ -6,16 +6,17 @@ import CustomDropdown from '../property-editors/CustomDropdown';
 })
 class Product {
   @property({
-    editorAlias: 'text'
+    editorAlias: 'text',
+    displayName: 'Product type'
   })
-  type: string;
+  productType: string;
 
   @property({
     editorAlias: 'custom',
+    displayName: 'Customer number',
     editorComponent: CustomDropdown
   })
   customNumber: number;
-
 } 
 
 export default Product;

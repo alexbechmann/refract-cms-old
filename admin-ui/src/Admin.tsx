@@ -15,16 +15,15 @@ class Admin extends React.Component<AdminProps> {
             <div> {item.alias}</div>
             <table>
               <tbody>
-                {Object.keys(item.properties)
-                  .map(key => item.properties[key])
-                  .map((prop: any, index: number) => {
-                    return (
-                      <tr key={index}>
-                        <td>{JSON.stringify(prop)}</td>
-                        <td>{this.renderEditor(prop)}</td>
-                      </tr>
-                    );
-                  })}
+                {Object.keys(item.properties).map((key: string, index: number) => {
+                  const prop = item.properties[key];
+                  return (
+                    <tr key={index}>
+                      <td>{prop.displayName || key}</td>
+                      <td>{this.renderEditor(prop)}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
