@@ -1,9 +1,10 @@
 import 'reflect-metadata';
+import * as React from 'react';
+import { PropertyEditorProps } from './property-editor-props';
 
-export default function(options: {
-  editorAlias: 'text' | 'number' | 'date' | 'custom';
+export default function<T>(options: {
   displayName?: string;
-  editorComponent?: any;
+  editorComponent?: React.ComponentType<PropertyEditorProps<T>>;
 }): PropertyDecorator {
   return (target, propertyKey) => {
     var classConstructor = target.constructor;

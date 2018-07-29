@@ -1,9 +1,10 @@
 import * as React from 'react';
+import { PropertyEditorProps } from '@headless-cms/admin-ui';
 
-export default () => {
+export default (props: PropertyEditorProps<number>) => {
   return (
-    <select>
-      <option>1</option>
+    <select onChange={(e) => props.setValue(parseInt(e.target.value, 10))}>
+      <option>1</option> 
       <option>2</option>
       <option>3</option>
     </select>

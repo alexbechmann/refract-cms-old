@@ -33,16 +33,10 @@ class Admin extends React.Component<AdminProps> {
   }
 
   renderEditor(prop: any) {
-    switch (prop.editorAlias) {
-      case 'text': {
-        return <input />;
-      }
-      case 'custom': {
-        return <prop.editorComponent />;
-      }
-      default: {
-        return <React.Fragment />;
-      }
+    if (prop.editorComponent) {
+      return <prop.editorComponent setValue={console.log} />;
+    } else {
+      return <React.Fragment />;
     }
   }
 }

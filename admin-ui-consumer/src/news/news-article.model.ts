@@ -5,7 +5,7 @@ import { entity, property } from "@headless-cms/admin-ui";
 })
 class NewsArticle {
   @property({
-    editorAlias: 'text'
+    displayName: 'Headline'
   })
   headline: string;
 }
