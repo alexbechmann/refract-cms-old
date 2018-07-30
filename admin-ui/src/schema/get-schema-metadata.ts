@@ -1,6 +1,6 @@
 export const getSchemaMetadata = (allEntities: any[]) => {
   return allEntities.map(e => ({
-    alias: e.alias,
+    ...e,
     properties: Reflect.getMetadata('properties', e)
   }));
 };

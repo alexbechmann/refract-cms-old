@@ -12,8 +12,8 @@ class Admin extends React.Component<AdminProps> {
       <div>
         <h1>Admin</h1>
         {getSchemaMetadata(this.props.schemas).map(item => (
-          <div key={item.alias}>
-            <div> {item.alias}</div>
+          <div key={item.options.alias}>
+            <div> {item.options.displayName || item.options.alias}</div>
             <table>
               <tbody>
                 {Object.keys(item.properties).map((key: string, index: number) => {

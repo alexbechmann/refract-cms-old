@@ -2,7 +2,8 @@ import { entity, property, TextEditor } from "@headless-cms/admin-ui";
 import CustomDropdown from '../property-editors/CustomDropdown';
 
 @entity({
-  alias: 'product'
+  alias: 'product',
+  displayName: 'Product'
 })
 class Product {
   @property<string>({
@@ -10,7 +11,7 @@ class Product {
     editorComponent: TextEditor({
       maxLength: 3
     })
-  }) 
+  })
   productType: string;
 
   @property<number>({
