@@ -13,8 +13,7 @@ export function configReducer(state: ConfigState = defaultState, action: AppActi
     case CONFIGURE: {
       return {
         ...state,
-        ...action.payload,
-        entities: getEntitiesWithMetadata(action.payload.entities)
+        ...action.payload
       };
     }
     default: {

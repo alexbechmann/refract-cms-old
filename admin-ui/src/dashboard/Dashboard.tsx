@@ -7,6 +7,7 @@ import { routes } from '../routes/routes';
 import { combineContainers } from 'combine-containers';
 import { AppState } from '../state/app.state';
 import { connect } from 'react-redux';
+import EntityForm from '../entities/EntityForm';
 
 export interface DashboardProps {
   entities: any[];
@@ -46,48 +47,19 @@ class Dashboard extends React.Component<Props, State> {
               key={entity.options.alias}
               exact
               path={routes.entityRoot.path(this.props.match, entity.options.alias)}
-              component={() => <div>{entity.options.alias}</div>}
+              component={() => <EntityForm entity={entity} />}
             />
           );
         })}
       </div>
     );
   }
-
-  renderEditor(propertyKey: string, propertyOptions: PropertyOptions<any>) {
-    if (propertyOptions.editorComponent) {
-      return <propertyOptions.editorComponent propertyKey={propertyKey} value={''} setValue={console.log} />;
-    } else {
-      return <React.Fragment />;
-    }
-  }
 }
 
 function mapStateToProps(state: AppState): DashboardProps {
-  console.log(state.config.entities);
   return {
     entities: state.config.entities
   };
 }
 
 export default combineContainers(withRouter, connect(mapStateToProps))(Dashboard) as React.ComponentType;
-
-// {entities.map(entity => (
-//   <div key={entity.options.alias}>
-//     <div> {entity.options.displayName || entity.options.alias}</div>
-//     <span>allowMultiple: {JSON.stringify(entity.options.allowMultiple)}</span>
-//     <table>
-//       <tbody>
-//         {Object.keys(entity.properties).map((key: string, index: number) => {
-//           const propertyOptions = entity.properties[key];
-//           return (
-//             <tr key={index}>
-//               <td>{propertyOptions.displayName || key}</td>
-//               <td>{this.renderEditor(key, propertyOptions)}</td>
-//             </tr>
-//           );
-//         })}
-//       </tbody>
-//     </table>
-//   </div>
-// ))}
