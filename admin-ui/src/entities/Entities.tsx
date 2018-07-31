@@ -9,7 +9,7 @@ import { AppState } from '../state/app.state';
 import { connect } from 'react-redux';
 import EntityForm from '../entities/EntityForm';
 
-export interface DashboardProps {
+export interface EntitiesProps {
   entities: any[];
 }
 
@@ -17,9 +17,9 @@ interface State {
   tabIndex: number;
 }
 
-interface Props extends DashboardProps, RouteComponentProps<{}> {}
+interface Props extends EntitiesProps, RouteComponentProps<{}> {}
 
-class Dashboard extends React.Component<Props, State> {
+class Entities extends React.Component<Props, State> {
   state: State = {
     tabIndex: 0
   };
@@ -56,10 +56,10 @@ class Dashboard extends React.Component<Props, State> {
   }
 }
 
-function mapStateToProps(state: AppState): DashboardProps {
+function mapStateToProps(state: AppState): EntitiesProps {
   return {
     entities: state.config.entities
   };
 }
 
-export default combineContainers(withRouter, connect(mapStateToProps))(Dashboard) as React.ComponentType;
+export default combineContainers(withRouter, connect(mapStateToProps))(Entities) as React.ComponentType;
