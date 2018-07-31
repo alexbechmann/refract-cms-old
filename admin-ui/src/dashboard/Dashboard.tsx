@@ -1,30 +1,46 @@
 import * as React from 'react';
-import { getAllEntities } from '../schema/get-all-entities';
+import { getEntitiesWithMetadata } from '../schema/get-entities-with-metadata';
 import { PropertyOptions } from '../schema/property-options';
+import { Tabs, Tab } from '@material-ui/core';
+import { Route, RouteComponentProps, withRouter } from 'react-router';
+import { routes } from '../routes/routes';
 
-class Dashboard extends React.Component<any> {
+export interface DashboardProps {
+  entities: any[];
+}
+
+interface State {
+  tabIndex: number;
+}
+
+interface Props extends DashboardProps, RouteComponentProps<{}> {}
+
+class Dashboard extends React.Component<Props, State> {
+  state: State = {
+    tabIndex: 0
+  };
+
   render() {
+    const entities = getEntitiesWithMetadata(this.props.entities);
     return (
       <div>
-        {getAllEntities(this.props.schema).map(entity => (
-          <div key={entity.options.alias}>
-            <div> {entity.options.displayName || entity.options.alias}</div>
-            <span>allowMultiple: {JSON.stringify(entity.options.allowMultiple)}</span>
-            <table>
-              <tbody>
-                {Object.keys(entity.properties).map((key: string, index: number) => {
-                  const propertyOptions = entity.properties[key];
-                  return (
-                    <tr key={index}>
-                      <td>{propertyOptions.displayName || key}</td>
-                      <td>{this.renderEditor(key, propertyOptions)}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        ))}
+        <Tabs
+          value={this.state.tabIndex}
+          onChange={(e, tabIndex) =>
+            this.props.history.push(routes.entityRoot.url(this.props.match, entities[tabIndex].options.alias))
+          }
+        >
+          {entities.map(entity => <Tab label={entity.options.displayName || entity.options.alias} />)}
+        </Tabs>
+        {entities.map(entity => {
+          return (
+            <Route
+              exact
+              path={routes.entityRoot.path(this.props.match, entity.options.alias)}
+              component={() => <div>{entity.options.alias}</div>}
+            />
+          );
+        })}
       </div>
     );
   }
@@ -38,4 +54,24 @@ class Dashboard extends React.Component<any> {
   }
 }
 
-export default Dashboard;
+export default withRouter(Dashboard) as React.ComponentType<DashboardProps>;
+
+// {entities.map(entity => (
+//   <div key={entity.options.alias}>
+//     <div> {entity.options.displayName || entity.options.alias}</div>
+//     <span>allowMultiple: {JSON.stringify(entity.options.allowMultiple)}</span>
+//     <table>
+//       <tbody>
+//         {Object.keys(entity.properties).map((key: string, index: number) => {
+//           const propertyOptions = entity.properties[key];
+//           return (
+//             <tr key={index}>
+//               <td>{propertyOptions.displayName || key}</td>
+//               <td>{this.renderEditor(key, propertyOptions)}</td>
+//             </tr>
+//           );
+//         })}
+//       </tbody>
+//     </table>
+//   </div>
+// ))}

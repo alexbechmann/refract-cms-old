@@ -1,7 +1,7 @@
 import { PropertyOptions } from './property-options';
 import { EntityMetadata } from './entity-metadata';
 
-export const getAllEntities = (classDefinitions: any[]) => {
+export const getEntitiesWithMetadata = (classDefinitions: any[]) => {
   return classDefinitions.map(
     classDefinition =>
       ({

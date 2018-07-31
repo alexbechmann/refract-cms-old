@@ -5,7 +5,7 @@ import Dashboard from './dashboard/Dashboard';
 
 export interface AdminProps {
   serverUrl: string;
-  schemas: any[];
+  entities: any[];
 }
 
 interface Props extends AdminProps, RouteComponentProps<{}> {}
@@ -18,10 +18,10 @@ class Admin extends React.Component<Props> {
       : (props: any) => <div>{props.children}</div>;
     return (
       <div>
-        <Link to={routes.dashboard.buildUrl(match)}>Dashboard</Link>
+        <Link to={routes.dashboard.url(match)}>Dashboard</Link>
         <RouterOrAny>
           <Switch>
-            <Route path={routes.dashboard.buildPath(match)} component={() => <Dashboard {...this.props} />} />
+            <Route path={routes.dashboard.path(match)} component={() => <Dashboard {...this.props} />} />
           </Switch>
         </RouterOrAny>
       </div>

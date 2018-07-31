@@ -11,7 +11,7 @@ class App extends React.Component {
       <div>
          <BrowserRouter>
           <Switch>
-            <Route path={`/admin`} component={() => <Admin serverUrl="http://localhost:3300" schemas={[Product, NewsArticle, Settings]} />} />
+            <Route path={`/admin`} component={() => <Admin serverUrl="http://localhost:3300" entities={[Product, NewsArticle, Settings]} />} />
           </Switch>
         </BrowserRouter>
       </div>
