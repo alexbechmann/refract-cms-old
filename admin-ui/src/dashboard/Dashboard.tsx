@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { getSchemaMetadata } from '../schema/get-schema-metadata';
+import { getAllEntities } from '../schema/get-all-entities';
 import { PropertyOptions } from '../schema/property-options';
 
 class Dashboard extends React.Component<any> {
   render() {
     return (
       <div>
-        {getSchemaMetadata(this.props.schemas).map(entity => (
+        {getAllEntities(this.props.schema).map(entity => (
           <div key={entity.options.alias}>
             <div> {entity.options.displayName || entity.options.alias}</div>
             <span>allowMultiple: {JSON.stringify(entity.options.allowMultiple)}</span>
