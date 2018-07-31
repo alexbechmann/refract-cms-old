@@ -4,6 +4,9 @@ import { PropertyOptions } from '../schema/property-options';
 import { Tabs, Tab } from '@material-ui/core';
 import { Route, RouteComponentProps, withRouter } from 'react-router';
 import { routes } from '../routes/routes';
+import { combineContainers } from 'combine-containers';
+import { AppState } from '../state/app.state';
+import { connect } from 'react-redux';
 
 export interface DashboardProps {
   entities: any[];
@@ -26,15 +29,21 @@ class Dashboard extends React.Component<Props, State> {
       <div>
         <Tabs
           value={this.state.tabIndex}
-          onChange={(e, tabIndex) =>
-            this.props.history.push(routes.entityRoot.url(this.props.match, entities[tabIndex].options.alias))
-          }
+          onChange={(e, tabIndex) => {
+            this.setState({
+              tabIndex
+            });
+            this.props.history.push(routes.entityRoot.url(this.props.match, entities[tabIndex].options.alias));
+          }}
         >
-          {entities.map(entity => <Tab label={entity.options.displayName || entity.options.alias} />)}
+          {entities.map(entity => (
+            <Tab key={entity.options.alias} label={entity.options.displayName || entity.options.alias} />
+          ))}
         </Tabs>
         {entities.map(entity => {
           return (
             <Route
+              key={entity.options.alias}
               exact
               path={routes.entityRoot.path(this.props.match, entity.options.alias)}
               component={() => <div>{entity.options.alias}</div>}
@@ -54,7 +63,13 @@ class Dashboard extends React.Component<Props, State> {
   }
 }
 
-export default withRouter(Dashboard) as React.ComponentType<DashboardProps>;
+function mapStateToProps(state: AppState): DashboardProps {
+  return {
+    entities: state.config.entities
+  };
+}
+
+export default combineContainers(withRouter, connect(mapStateToProps))(Dashboard) as React.ComponentType;
 
 // {entities.map(entity => (
 //   <div key={entity.options.alias}>

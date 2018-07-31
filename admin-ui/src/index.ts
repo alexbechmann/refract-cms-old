@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 
+export { configureHeadlessCms } from './config/configure-headless-cms';
 export { default as Admin } from './Admin';
 export { default as entity } from './schema/entity';
 export { default as property } from './schema/property';

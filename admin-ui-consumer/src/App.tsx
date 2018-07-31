@@ -1,8 +1,5 @@
 import * as React from 'react';
 import { Admin } from '@headless-cms/admin-ui';
-import Product from './products/product.model';
-import NewsArticle from './news/news-article.model';
-import Settings from './settings/settings.model';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 class App extends React.Component {
@@ -11,7 +8,7 @@ class App extends React.Component {
       <div>
          <BrowserRouter>
           <Switch>
-            <Route path={`/admin`} component={() => <Admin serverUrl="http://localhost:3300" entities={[Product, NewsArticle, Settings]} />} />
+            <Route path={`/admin`} component={() => <Admin />} />} />
           </Switch>
         </BrowserRouter>
       </div>
