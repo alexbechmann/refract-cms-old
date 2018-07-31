@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PropertyOptions } from '../schema/property-options';
+import { PropertyOptions } from '../property-options';
 
 export interface RenderEditorProps {
   propertyKey: string;

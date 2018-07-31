@@ -1,7 +1,7 @@
 import { AppAction } from '../../state/app-action';
 import { ConfigState } from './config.state';
 import { CONFIGURE } from './config.actions';
-import { getEntitiesWithMetadata } from '../../schema/get-entities-with-metadata';
+import { getEntitiesWithMetadata } from '../../entities/get-entities-with-metadata';
 
 const defaultState: ConfigState = {
   serverUrl: '',

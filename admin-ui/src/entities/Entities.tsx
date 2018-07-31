@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { getEntitiesWithMetadata } from '../schema/get-entities-with-metadata';
-import { PropertyOptions } from '../schema/property-options';
+import { getEntitiesWithMetadata } from '../entities/get-entities-with-metadata';
+import { PropertyOptions } from '../properties/property-options';
 import { Tabs, Tab } from '@material-ui/core';
 import { Route, RouteComponentProps, withRouter } from 'react-router';
 import { routes } from '../routes/routes';
@@ -47,7 +47,13 @@ class Entities extends React.Component<Props, State> {
               key={entity.options.alias}
               exact
               path={routes.entityRoot.path(this.props.match, entity.options.alias)}
-              component={() => <EntityForm entity={entity} />}
+              component={() =>
+                entity.options.allowMultiple ? (
+                  <div>list of {entity.options.alias}</div>
+                ) : (
+                  <EntityForm entity={entity} />
+                )
+              }
             />
           );
         })}

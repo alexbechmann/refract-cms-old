@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { EntityMetadata } from '../schema/entity-metadata';
-import RenderEditor from '../property-editors/RenderEditor';
+import { EntityMetadata } from '../entities/entity-metadata';
+import RenderEditor from '../properties/property-editors/RenderEditor';
 
 export interface EntityFormProps {
   entity: EntityMetadata;

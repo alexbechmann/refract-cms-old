@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PropertyEditorProps } from '../schema/property-editor-props';
+import { PropertyEditorProps } from '../property-editor-props';
 
 export interface TextEditorOptions {
   maxLength?: number;

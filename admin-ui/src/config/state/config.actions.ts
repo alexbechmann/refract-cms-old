@@ -1,7 +1,7 @@
 import { createStandardAction, action } from 'typesafe-actions';
 import { Config } from '../config';
-import { getEntitiesWithMetadata } from '../../schema/get-entities-with-metadata';
-import { EntityMetadata } from '../../schema/entity-metadata';
+import { getEntitiesWithMetadata } from '../../entities/get-entities-with-metadata';
+import { EntityMetadata } from '../../entities/entity-metadata';
 
 export const CONFIGURE = '@@CMS/init';
 

@@ -1,4 +1,4 @@
-import { EntityMetadata } from "../../schema/entity-metadata";
+import { EntityMetadata } from "../../entities/entity-metadata";
 
 export interface ConfigState {
   serverUrl: string;

@@ -1,5 +1,5 @@
 import { EntityOptions } from "./entity-options";
-import { PropertyOptions } from "./property-options";
+import { PropertyOptions } from "../properties/property-options";
 
 export interface EntityMetadata {
   options: EntityOptions,
