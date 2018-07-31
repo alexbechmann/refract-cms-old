@@ -1,4 +1,6 @@
-export default function entity(options: { alias: string; displayName?: string; allowMultiple?: boolean }) {
+import { EntityOptions } from './entity-options';
+
+export default function entity(options: EntityOptions) {
   return (target: any) => {
     target.hasBeenDecorated = true;
     target.options = options;

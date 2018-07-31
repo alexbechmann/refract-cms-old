@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { getSchemaMetadata } from './schema/get-schema-metadata';
 import { BrowserRouter, Switch, Route, RouteComponentProps, withRouter, Link } from 'react-router-dom';
+import { routes } from './routes/routes';
+import Dashboard from './dashboard/Dashboard';
 
 export interface AdminProps {
   serverUrl: string;
@@ -17,10 +18,10 @@ class Admin extends React.Component<Props> {
       : (props: any) => <div>{props.children}</div>;
     return (
       <div>
-        <Link to={`${match ? match.url : ''}/dashboard`.replace('//', '/')}>Dashboard</Link>
+        <Link to={routes.dashboard.buildUrl(match)}>Dashboard</Link>
         <RouterOrAny>
           <Switch>
-            <Route path={`${match ? match.path : ''}/dashboard`} component={() => <Dashboard {...this.props} />} />
+            <Route path={routes.dashboard.buildPath(match)} component={() => <Dashboard {...this.props} />} />
           </Switch>
         </RouterOrAny>
       </div>
@@ -28,40 +29,4 @@ class Admin extends React.Component<Props> {
   }
 }
 
-class Dashboard extends React.Component<any> {
-  render() {
-    return (
-      <div>
-        sdfasfd
-        {getSchemaMetadata(this.props.schemas).map(item => (
-          <div key={item.options.alias}>
-            <div> {item.options.displayName || item.options.alias}</div>
-            <span>allowMultiple: {JSON.stringify(item.options.allowMultiple)}</span>
-            <table>
-              <tbody>
-                {Object.keys(item.properties).map((key: string, index: number) => {
-                  const prop = item.properties[key];
-                  return (
-                    <tr key={index}>
-                      <td>{prop.displayName || key}</td>
-                      <td>{this.renderEditor(prop)}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  renderEditor(prop: any) {
-    if (prop.editorComponent) {
-      return <prop.editorComponent setValue={console.log} />;
-    } else {
-      return <React.Fragment />;
-    }
-  }
-}
 export default withRouter(Admin) as React.ComponentType<AdminProps>;
