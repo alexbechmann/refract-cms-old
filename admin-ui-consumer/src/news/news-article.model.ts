@@ -2,7 +2,8 @@ import { entity, property, TextEditor } from "@headless-cms/admin-ui";
 
 @entity({
   alias: 'newsArticle',
-  displayName: 'News Article'
+  displayName: 'News Article',
+  allowMultiple: true 
 })
 class NewsArticle {
   @property({
