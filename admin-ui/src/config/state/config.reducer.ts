@@ -1,6 +1,7 @@
 import { AppAction } from '../../state/app-action';
 import { ConfigState } from './config.state';
 import { CONFIGURE } from './config.actions';
+import { getEntitiesWithMetadata } from '../../schema/get-entities-with-metadata';
 
 const defaultState: ConfigState = {
   serverUrl: '',
@@ -12,7 +13,8 @@ export function configReducer(state: ConfigState = defaultState, action: AppActi
     case CONFIGURE: {
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
+        entities: getEntitiesWithMetadata(action.payload.entities)
       };
     }
     default: {

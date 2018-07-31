@@ -24,7 +24,7 @@ class Dashboard extends React.Component<Props, State> {
   };
 
   render() {
-    const entities = getEntitiesWithMetadata(this.props.entities);
+    const { entities } = this.props;
     return (
       <div>
         <Tabs
@@ -64,6 +64,7 @@ class Dashboard extends React.Component<Props, State> {
 }
 
 function mapStateToProps(state: AppState): DashboardProps {
+  console.log(state.config.entities);
   return {
     entities: state.config.entities
   };
