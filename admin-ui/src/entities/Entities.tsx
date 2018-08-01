@@ -3,16 +3,17 @@ import { getEntitiesWithMetadata } from './get-entities-with-metadata';
 import { PropertyOptions } from '../properties/property-options';
 import { Tabs, Tab } from '@material-ui/core';
 import { Route, RouteComponentProps, withRouter } from 'react-router';
-import { routes } from '../routes/routes';
 import { combineContainers } from 'combine-containers';
 import { AppState } from '../state/app.state';
 import { connect } from 'react-redux';
 import EntityForm from './EntityForm';
 import EntityList from './EntityList';
 import { EntityMetadata } from './entity-metadata';
+import { Routes } from '../router/routes';
 
 export interface EntitiesProps {
   entities: EntityMetadata[];
+  routes: Routes;
 }
 
 interface State {
@@ -27,14 +28,14 @@ class Entities extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    const { entities } = this.props;
+    const { entities, routes } = this.props;
     if (entities.length > 1) {
       this.props.history.push(routes.entityRoot.url(entities[0].options.alias));
     }
   }
 
   render() {
-    const { entities } = this.props;
+    const { entities, routes } = this.props;
     return (
       <div>
         <Tabs
@@ -57,7 +58,8 @@ class Entities extends React.Component<Props, State> {
 
 function mapStateToProps(state: AppState): EntitiesProps {
   return {
-    entities: state.config.entities
+    entities: state.config.entities,
+    routes: state.router.routes
   };
 }
 

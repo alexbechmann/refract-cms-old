@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { EntityMetadata } from '../entities/entity-metadata';
-import RenderEditor from '../properties/property-editors/RenderEditor';
+import RenderEditor from '../property-editors/RenderEditor';
 import { Button } from '@material-ui/core';
 
 export interface EntityFormProps {
@@ -16,7 +16,8 @@ class EntityForm extends React.Component<EntityFormProps, State> {
     super(props);
     const values: any = {};
     Object.keys(props.entity.properties).forEach(propertyKey => {
-      values[propertyKey] = undefined;
+      const propertyOptions = props.entity.properties[propertyKey];
+      values[propertyKey] = propertyOptions.defaultValue;
     });
     this.state = {
       values
@@ -45,7 +46,7 @@ class EntityForm extends React.Component<EntityFormProps, State> {
                           }
                         });
                       }}
-                      value={this.state.values[propertyKey] || propertyOptions.defaultValue}
+                      value={this.state.values[propertyKey]}
                       propertyKey={propertyKey}
                       propertyOptions={propertyOptions}
                     />

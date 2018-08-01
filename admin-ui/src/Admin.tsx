@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { BrowserRouter, Switch, Route, RouteComponentProps, withRouter, Link } from 'react-router-dom';
-import { routes } from './routes/routes';
 import Entities from './entities/Entities';
 import { Provider } from 'react-redux';
 import { store } from './state/root.store';
@@ -10,7 +9,7 @@ import { EntityMetadata } from './entities/entity-metadata';
 import EntityForm from './entities/EntityForm';
 import EntityList from './entities/EntityList';
 import { connect } from 'react-redux';
-import Router from './routes/Router';
+import Router from './router/Router';
 
 export interface AdminProps {}
 

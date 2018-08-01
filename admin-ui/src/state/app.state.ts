@@ -1,7 +1,7 @@
 import { ConfigState } from '../config/state/config.state';
-import { RoutesState } from '../routes/state/routes.state';
+import { RouterState } from '../router/state/router.state';
 
 export interface AppState {
   config: ConfigState;
-  routes: RoutesState;
+  router: RouterState;
 }

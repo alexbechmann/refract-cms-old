@@ -6,7 +6,7 @@ export const getEntitiesWithMetadata = (classDefinitions: any[]) => {
     classDefinition =>
       ({
         options: classDefinition.options,
-        properties: Reflect.getMetadata('properties', classDefinition) as PropertyOptions<any>
+        properties: Reflect.getMetadata('properties', classDefinition)
       } as EntityMetadata)
   );
 };

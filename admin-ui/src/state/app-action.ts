@@ -1,5 +1,5 @@
 import { ActionType } from 'typesafe-actions';
 import * as ConfigActions from '../config/state/config.actions';
-import * as RoutesActions from '../routes/state/routes.actions';
+import * as RouterActions from '../router/state/router.actions';
 
-export type AppAction = ActionType<typeof ConfigActions | typeof RoutesActions>;
+export type AppAction = ActionType<typeof ConfigActions | typeof RouterActions>;

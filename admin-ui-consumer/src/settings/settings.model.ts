@@ -10,7 +10,8 @@ class Settings {
     displayName: 'Setting1',
     editorComponent: TextEditor({
       maxLength: 50
-    })
+    }),
+    defaultValue: 'Something'
   })
   setting1: string;
 }

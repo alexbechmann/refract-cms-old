@@ -8,13 +8,14 @@ import { AppState } from '../state/app.state';
 import { combineContainers } from 'combine-containers';
 import EntityForm from '../entities/EntityForm';
 import EntityList from '../entities/EntityList';
-import { routes } from './routes';
 import { ConnectedReduxProps } from '../state/connected-redux-props';
-import { setBaseRoute } from './state/routes.actions';
+import { setBaseRoute } from './state/router.actions';
+import { Routes } from './routes';
+import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
 
 export interface RouterProps {
   entities: EntityMetadata[];
-  baseRouteSetup: boolean;
+  routes: Routes;
 }
 
 interface Props extends RouterProps, RouteComponentProps<{}>, ConnectedReduxProps {}
@@ -25,16 +26,23 @@ class Router extends React.Component<Props> {
   }
 
   render() {
-    const { match, entities, baseRouteSetup } = this.props;
+    const { match, entities, routes } = this.props;
     const RouterOrAny = match
       ? (props: any) => <BrowserRouter>{props.children}</BrowserRouter>
       : (props: any) => <div>{props.children}</div>;
-    return baseRouteSetup ? (
+    return routes ? (
       <RouterOrAny>
         <div>
-          <Link to={routes.root.url()}>Admin</Link>
-          <br />
-          <Link to={routes.entities.url()}>Entities</Link>
+          <AppBar position="sticky">
+            <Toolbar>
+              <Button color="inherit" component={(props: any) => <Link {...props} to={routes.root.url()} />}>
+                Admin
+              </Button>
+              <Button color="inherit" component={(props: any) => <Link {...props} to={routes.entities.url()} />}>
+                Entities
+              </Button>
+            </Toolbar>
+          </AppBar>
           <Switch>
             <Route path={routes.entities.path()} component={Entities} />
           </Switch>
@@ -76,7 +84,7 @@ class Router extends React.Component<Props> {
 function mapStateToProps(state: AppState): RouterProps {
   return {
     entities: state.config.entities,
-    baseRouteSetup: state.routes.baseRouteSetup
+    routes: state.router.routes
   };
 }
 

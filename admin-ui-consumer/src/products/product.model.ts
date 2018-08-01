@@ -10,13 +10,15 @@ class Product {
     displayName: 'Product type',
     editorComponent: TextEditor({
       maxLength: 3
-    })
+    }),
+    defaultValue: ''
   })
   productType: string;
 
   @property<number>({
-    displayName: 'Customer number',
-    editorComponent: CustomDropdown
+    displayName: 'Custom number',
+    editorComponent: CustomDropdown,
+    defaultValue: 1
   })
   customNumber: number;
 } 
