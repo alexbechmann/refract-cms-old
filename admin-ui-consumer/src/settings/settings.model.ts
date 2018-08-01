@@ -3,7 +3,7 @@ import { entity, property, TextEditor } from "@headless-cms/admin-ui";
 @entity({
   alias: 'settings',
   displayName: 'Settings',
-  allowMultiple: false 
+  maxOne: true 
 })
 class Settings {
   @property({

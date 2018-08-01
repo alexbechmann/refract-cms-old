@@ -22,7 +22,8 @@ export const routes = {
     url: <T>(match: match<T> | undefined, entityAlias: string) => buildUrl(match, `/${entityAlias}`)
   },
   entityEditById: {
-    path: <T>(match: match<T> | undefined, entityAlias: string) => buildPath(match, `/${entityAlias}/:id`),
-    url: <T>(match: match<T> | undefined, id: string, entityAlias: string) => buildUrl(match, `/${entityAlias}/${id}`)
+    path: <T>(match: match<T> | undefined, args: { entityAlias: string }) =>
+      buildPath(match, `/${args.entityAlias}/:id`),
+    url: <T>(match: match<T> | undefined, args: { id: string }) => buildUrl(match, `/${args.id}`)
   }
 };

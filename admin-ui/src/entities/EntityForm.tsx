@@ -11,7 +11,6 @@ export default (props: EntityFormProps) => {
   return (
     <div>
       <div> {entity.options.displayName || entity.options.alias}</div>
-      <span>allowMultiple: {JSON.stringify(entity.options.allowMultiple)}</span>
       <table>
         <tbody>
           {Object.keys(entity.properties).map((key: string, index: number) => {
