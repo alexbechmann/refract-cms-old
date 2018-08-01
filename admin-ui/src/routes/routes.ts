@@ -1,29 +1,26 @@
 import { match } from 'react-router';
+import { store } from '../state/root.store';
 
-function buildPath<T>(match: match<T> | undefined, relativePath: string) {
-  return `${match ? match.path : ''}${relativePath.length > 0 ? '/' : ''}${relativePath}`.replace('//', '/');
-}
-
-function buildUrl<T>(match: match<T> | undefined, relativePath: string) {
-  return `${match ? match.url : ''}${relativePath.length > 0 ? '/' : ''}${relativePath}`.replace('//', '/');
+function buildPath<T>(relativePath: string) {
+  const baseRoute = store.getState().routes.baseRoute;
+  return `${baseRoute}${relativePath}`.replace('//', '/');
 }
 
 export const routes = {
   root: {
-    path: <T>(match: match<T> | undefined) => buildPath(match, ''),
-    url: <T>(match: match<T> | undefined) => buildUrl(match, '')
+    path: <T>() => buildPath('/'),
+    url: <T>() => buildPath('/')
   },
   entities: {
-    path: <T>(match: match<T> | undefined) => buildPath(match, '/entities'),
-    url: <T>(match: match<T> | undefined) => buildUrl(match, '/entities')
+    path: <T>() => buildPath('/entities'),
+    url: <T>() => buildPath('/entities')
   },
   entityRoot: {
-    path: <T>(match: match<T> | undefined, entityAlias: string) => buildPath(match, `/${entityAlias}`),
-    url: <T>(match: match<T> | undefined, entityAlias: string) => buildUrl(match, `/${entityAlias}`)
+    path: <T>(entityAlias: string) => buildPath(`/entities/${entityAlias}`),
+    url: <T>(entityAlias: string) => buildPath(`/entities/${entityAlias}`)
   },
   entityEditById: {
-    path: <T>(match: match<T> | undefined, args: { entityAlias: string }) =>
-      buildPath(match, `/${args.entityAlias}/:id`),
-    url: <T>(match: match<T> | undefined, args: { id: string }) => buildUrl(match, `/${args.id}`)
+    path: <T>(args: { entityAlias: string }) => buildPath(`/${args.entityAlias}/:id`),
+    url: <T>(args: { id: string; entityAlias: string }) => buildPath(`/${args.entityAlias}/${args.id}`)
   }
 };

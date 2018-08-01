@@ -29,13 +29,12 @@ class Entities extends React.Component<Props, State> {
   componentDidMount() {
     const { entities } = this.props;
     if (entities.length > 1) {
-      this.props.history.push(routes.entityRoot.url(this.props.match, entities[0].options.alias));
+      this.props.history.push(routes.entityRoot.url(entities[0].options.alias));
     }
   }
 
   render() {
     const { entities } = this.props;
-    console.log(this.props.match);
     return (
       <div>
         <Tabs
@@ -44,37 +43,13 @@ class Entities extends React.Component<Props, State> {
             this.setState({
               tabIndex
             });
-            this.props.history.push(routes.entityRoot.url(this.props.match, entities[tabIndex].options.alias));
+            this.props.history.push(routes.entityRoot.url(entities[tabIndex].options.alias));
           }}
         >
           {entities.map(entity => (
             <Tab key={entity.options.alias} label={entity.options.displayName || entity.options.alias} />
           ))}
         </Tabs>
-        {entities.map(entity => {
-          return (
-            <Route
-              key={entity.options.alias}
-              exact
-              path={routes.entityRoot.path(this.props.match, entity.options.alias)}
-              component={() =>
-                entity.options.maxOne ? <EntityForm entity={entity} /> : <EntityList entity={entity} />
-              }
-            />
-          );
-        })}
-        {entities.map(entity => {
-          return (
-            <Route
-              key={entity.options.alias}
-              exact
-              path={routes.entityEditById.path(this.props.match, {
-                entityAlias: entity.options.alias
-              })}
-              component={() => <EntityForm entity={entity} />}
-            />
-          );
-        })}
       </div>
     );
   }

@@ -15,8 +15,9 @@ class EntityList extends React.Component<Props> {
     return (
       <div>
         <RouteButton
-          to={routes.entityEditById.url(this.props.match, {
-            id: 'create'
+          to={routes.entityEditById.url({
+            id: 'create',
+            entityAlias: this.props.entity.options.alias
           })}
         >
           New

@@ -5,6 +5,12 @@ import Entities from './entities/Entities';
 import { Provider } from 'react-redux';
 import { store } from './state/root.store';
 import { AppState } from './state/app.state';
+import { combineContainers } from 'combine-containers';
+import { EntityMetadata } from './entities/entity-metadata';
+import EntityForm from './entities/EntityForm';
+import EntityList from './entities/EntityList';
+import { connect } from 'react-redux';
+import Router from './routes/Router';
 
 export interface AdminProps {}
 
@@ -12,22 +18,14 @@ interface Props extends AdminProps, RouteComponentProps<{}> {}
 
 class Admin extends React.Component<Props> {
   render() {
-    const { match } = this.props;
-    const RouterOrAny = match
-      ? (props: any) => <BrowserRouter>{props.children}</BrowserRouter>
-      : (props: any) => <div>{props.children}</div>;
     return (
       <div>
         <Provider store={store}>
           <div>
-            <Link to={routes.root.url(match)}>Admin</Link>
+            <Link to={routes.root.url()}>Admin</Link>
             <br />
-            <Link to={routes.entities.url(match)}>Entities</Link>
-            <RouterOrAny>
-              <Switch>
-                <Route path={routes.entities.path(match)} component={Entities} />
-              </Switch>
-            </RouterOrAny>
+            <Link to={routes.entities.url()}>Entities</Link>
+            <Router />
           </div>
         </Provider>
       </div>
@@ -35,4 +33,4 @@ class Admin extends React.Component<Props> {
   }
 }
 
-export default withRouter(Admin) as React.ComponentType<AdminProps>;
+export default Admin as React.ComponentType<AdminProps>;
