@@ -63,6 +63,18 @@ class Entities extends React.Component<Props, State> {
             />
           );
         })}
+        {entities.map(entity => {
+          return (
+            <Route
+              key={entity.options.alias}
+              exact
+              path={routes.entityEditById.path(this.props.match, {
+                entityAlias: entity.options.alias
+              })}
+              component={() => <EntityForm entity={entity} />}
+            />
+          );
+        })}
       </div>
     );
   }
