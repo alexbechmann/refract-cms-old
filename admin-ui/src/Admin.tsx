@@ -22,9 +22,6 @@ class Admin extends React.Component<Props> {
       <div>
         <Provider store={store}>
           <div>
-            <Link to={routes.root.url()}>Admin</Link>
-            <br />
-            <Link to={routes.entities.url()}>Entities</Link>
             <Router />
           </div>
         </Provider>

@@ -32,6 +32,9 @@ class Router extends React.Component<Props> {
     return baseRouteSetup ? (
       <RouterOrAny>
         <div>
+          <Link to={routes.root.url()}>Admin</Link>
+          <br />
+          <Link to={routes.entities.url()}>Entities</Link>
           <Switch>
             <Route path={routes.entities.path()} component={Entities} />
           </Switch>

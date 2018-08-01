@@ -1,18 +1,28 @@
 import * as React from 'react';
 import { PropertyOptions } from '../property-options';
+import { PropertyEditorProps } from '../property-editor-props';
 
-export interface RenderEditorProps {
-  propertyKey: string;
+export interface RenderEditorProps extends PropertyEditorProps<any> {
   propertyOptions: PropertyOptions;
 }
 
-const RenderEditor = (props: RenderEditorProps) => {
-  const { propertyOptions, propertyKey } = props;
-  if (propertyOptions.editorComponent) {
-    return <propertyOptions.editorComponent propertyKey={propertyKey} value={''} setValue={console.log} />;
-  } else {
-    return <React.Fragment />;
-  }
-};
+interface Props extends RenderEditorProps {}
 
-export default RenderEditor;
+class RenderEditor extends React.Component<Props> {
+  render() {
+    const { propertyOptions, propertyKey } = this.props;
+    if (propertyOptions.editorComponent) {
+      return (
+        <propertyOptions.editorComponent
+          propertyKey={propertyKey}
+          value={this.props.value}
+          setValue={this.props.setValue}
+        />
+      );
+    } else {
+      return <React.Fragment />;
+    }
+  }
+}
+
+export default RenderEditor as React.ComponentType<RenderEditorProps>;

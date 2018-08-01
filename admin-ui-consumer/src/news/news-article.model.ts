@@ -9,7 +9,8 @@ class NewsArticle {
     displayName: 'Headline',
     editorComponent: TextEditor({
       maxLength: 100
-    })
+    }),
+    defaultValue: "default headline"
   })
   headline: string;
 }
