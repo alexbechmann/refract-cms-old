@@ -18,7 +18,6 @@ const firebaseConfig = {
 };
 
 configureHeadlessCms({
-  serverUrl: "http://localhost:3300",
   schema: [Product, NewsArticle, Settings],
   firebaseConfig
 })
