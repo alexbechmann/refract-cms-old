@@ -13,12 +13,12 @@ export default defineEntity<Product>({
   productType: {
     displayName: 'Product type',
     editorComponent: TextEditor({
-      maxLength: 3
+      maxLength: 10
     }),
-    defaultValue: ''
+    defaultValue: 'default'
   },
   customNumber: {
     displayName: 'Custom number',
     editorComponent: CustomDropdown,
-    defaultValue: 1
+    defaultValue: 3
   }});

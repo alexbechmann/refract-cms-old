@@ -1,32 +1,66 @@
 import * as React from 'react';
 import { EntitySchema } from '../entities/entity-schema';
 import RenderEditor from '../property-editors/RenderEditor';
-import { Button } from '@material-ui/core';
+import { Button, CircularProgress } from '@material-ui/core';
+import { RouteComponentProps, withRouter } from 'react-router';
+import firebase from 'firebase';
+import { connect } from 'react-redux';
+import { combineContainers } from 'combine-containers';
+import { AppState } from '../state/app.state';
+import { Routes } from '../router/routes';
 
-export interface EntityFormProps {
+interface EntityFormProps {
   entity: EntitySchema;
+  routes: Routes;
 }
 
 interface State {
-  values: any;
+  updateValues: any;
+  loading: boolean;
 }
 
-class EntityForm extends React.Component<EntityFormProps, State> {
-  constructor(props: EntityFormProps) {
+interface Props extends EntityFormProps, RouteComponentProps<{ id?: string }> {}
+
+class EntityForm extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
-    const values: any = {};
-    Object.keys(props.entity.properties).forEach(propertyKey => {
-      const propertyOptions = props.entity.properties[propertyKey];
-      values[propertyKey] = propertyOptions.defaultValue;
-    });
-    this.state = {
-      values
-    };
+    const updateValues: any = {};
+    if (!props.match.params.id) {
+      Object.keys(props.entity.properties).forEach(propertyKey => {
+        const propertyOptions = props.entity.properties[propertyKey];
+        updateValues[propertyKey] = propertyOptions.defaultValue;
+      });
+      this.state = {
+        updateValues,
+        loading: false
+      };
+    } else {
+      this.state = {
+        updateValues,
+        loading: true
+      };
+      firebase
+        .firestore()
+        .collection(this.props.entity.options.alias)
+        .doc(this.props.match.params.id)
+        .get()
+        .then(doc => {
+          this.setState({
+            updateValues: doc.data(),
+            loading: false
+          });
+        });
+    }
+
+    this.save = this.save.bind(this);
+    this.delete = this.delete.bind(this);
   }
 
   render() {
     const { entity } = this.props;
-    return (
+    return this.state.loading ? (
+      <CircularProgress />
+    ) : (
       <div>
         <div> {entity.options.displayName || entity.options.alias}</div>
         <table>
@@ -40,13 +74,13 @@ class EntityForm extends React.Component<EntityFormProps, State> {
                     <RenderEditor
                       setValue={value => {
                         this.setState({
-                          values: {
-                            ...this.state.values,
+                          updateValues: {
+                            ...this.state.updateValues,
                             [propertyKey]: value
                           }
                         });
                       }}
-                      value={this.state.values[propertyKey]}
+                      value={this.state.updateValues[propertyKey]}
                       propertyKey={propertyKey}
                       propertyOptions={propertyOptions}
                     />
@@ -56,10 +90,90 @@ class EntityForm extends React.Component<EntityFormProps, State> {
             })}
           </tbody>
         </table>
-        <Button onClick={() => console.log(this.state.values)}>Save</Button>
+        <Button color="primary" onClick={this.save}>
+          Save
+        </Button>
+        <Button onClick={this.delete}>Delete</Button>
       </div>
     );
   }
+
+  save() {
+    if (!this.props.match.params.id) {
+      this.setState(
+        {
+          loading: true
+        },
+        () => {
+          const docRef = firebase
+            .firestore()
+            .collection(this.props.entity.options.alias)
+            .doc();
+          docRef
+            .set(this.state.updateValues)
+            .then(() => {
+              this.props.history.push(
+                this.props.routes.entityEditById.url({
+                  entityAlias: this.props.entity.options.alias,
+                  id: docRef.id
+                })
+              );
+            })
+            .catch(console.log);
+          this.setState({
+            loading: false
+          });
+        }
+      );
+    } else {
+      this.setState(
+        {
+          loading: true
+        },
+        () => {
+          console.log('update', this.state.updateValues);
+          firebase
+            .firestore()
+            .collection(this.props.entity.options.alias)
+            .doc(this.props.match.params.id)
+            .update(this.state.updateValues)
+            .then(() =>
+              this.setState({
+                loading: false
+              })
+            )
+            .catch(console.log);
+        }
+      );
+    }
+  }
+
+  delete() {
+    this.setState({
+      loading: true
+    });
+    firebase
+      .firestore()
+      .collection(this.props.entity.options.alias)
+      .doc(this.props.match.params.id)
+      .delete()
+      .then(() => {
+        this.props.history.push(this.props.routes.entityRoot.url(this.props.entity.options.alias));
+      });
+  }
 }
 
-export default EntityForm as React.ComponentType<EntityFormProps>;
+export interface EntityFormPropsExtended {
+  entity: EntitySchema;
+}
+
+function mapStateToProps(state: AppState, ownProps: EntityFormPropsExtended): EntityFormProps {
+  return {
+    routes: state.router.routes,
+    entity: ownProps.entity
+  };
+}
+
+export default combineContainers(connect(mapStateToProps), withRouter)(EntityForm) as React.ComponentType<
+  EntityFormPropsExtended
+>;

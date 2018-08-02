@@ -5,24 +5,46 @@ import { AppState } from '../state/app.state';
 import { connect } from 'react-redux';
 import { combineContainers } from 'combine-containers';
 import { Routes } from '../router/routes';
-import { Button } from '@material-ui/core';
+import { Button, List, ListItem, ListItemText } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import firebase from 'firebase';
 
 export interface EntityListProps {
   routes: Routes;
 }
 
+interface State {
+  docs: firebase.firestore.QueryDocumentSnapshot[];
+}
+
 interface Props extends EntityListProps, RouteComponentProps<{}>, EntityListPropsExtended {}
 
 class EntityList extends React.Component<Props> {
+  unsubscribe?: Function;
+  state: State = {
+    docs: []
+  };
+
+  componentDidMount() {
+    this.unsubscribe = firebase
+      .firestore()
+      .collection(this.props.entity.options.alias)
+      .onSnapshot(snapshot => {
+        this.setState({
+          docs: snapshot.docs
+        });
+      });
+  }
+
   render() {
     return (
       <div>
         <Button
-          component={props => (
+          component={(props: any) => (
             <Link
+              {...props}
               to={this.props.routes.entityEditById.url({
-                id: 'create',
+                id: undefined,
                 entityAlias: this.props.entity.options.alias
               })}
             />
@@ -32,8 +54,35 @@ class EntityList extends React.Component<Props> {
         </Button>
         <br />
         list of {this.props.entity.options.alias}
+        <List>
+          {this.state.docs.map(doc => {
+            return (
+              <ListItem
+                key={doc.id}
+                button
+                component={(props: any) => (
+                  <Link
+                    {...props}
+                    to={this.props.routes.entityEditById.url({
+                      id: doc.id,
+                      entityAlias: this.props.entity.options.alias
+                    })}
+                  />
+                )}
+              >
+                <ListItemText primary={doc.id} />
+              </ListItem>
+            );
+          })}
+        </List>
       </div>
     );
+  }
+
+  componentWillUnmount() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
   }
 }
 

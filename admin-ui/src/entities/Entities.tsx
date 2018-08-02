@@ -29,7 +29,7 @@ class Entities extends React.Component<Props, State> {
   componentDidMount() {
     const { entities, routes } = this.props;
     if (entities.length > 1) {
-      this.props.history.push(routes.entityRoot.url(entities[0].options.alias));
+      //this.props.history.push(routes.entityRoot.url(entities[0].options.alias));
     }
   }
 

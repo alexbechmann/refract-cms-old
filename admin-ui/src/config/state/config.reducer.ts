@@ -4,7 +4,8 @@ import { CONFIGURE } from './config.actions';
 
 const defaultState: ConfigState = {
   serverUrl: '',
-  schema: []
+  schema: [],
+  firebaseConfig: {}
 };
 
 export function configReducer(state: ConfigState = defaultState, action: AppAction) {
