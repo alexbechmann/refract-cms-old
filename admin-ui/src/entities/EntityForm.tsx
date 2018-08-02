@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { EntitySchema } from '../entities/entity-schema';
 import RenderEditor from '../property-editors/RenderEditor';
-import { Button, CircularProgress } from '@material-ui/core';
+import { Button, CircularProgress, Typography } from '@material-ui/core';
 import { RouteComponentProps, withRouter } from 'react-router';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
@@ -62,7 +62,9 @@ class EntityForm extends React.Component<Props, State> {
       <CircularProgress />
     ) : (
       <div>
-        <div> {entity.options.displayName || entity.options.alias}</div>
+        <Typography variant="title" gutterBottom>
+          {entity.options.displayName || entity.options.alias}
+        </Typography>
         <table>
           <tbody>
             {Object.keys(entity.properties).map((propertyKey: string, index: number) => {
@@ -105,24 +107,7 @@ class EntityForm extends React.Component<Props, State> {
           loading: true
         },
         () => {
-          const docRef = firebase
-            .firestore()
-            .collection(this.props.entity.options.alias)
-            .doc();
-          docRef
-            .set(this.state.updateValues)
-            .then(() => {
-              this.props.history.push(
-                this.props.routes.entityEditById.url({
-                  entityAlias: this.props.entity.options.alias,
-                  id: docRef.id
-                })
-              );
-            })
-            .catch(console.log);
-          this.setState({
-            loading: false
-          });
+          this.insert();
         }
       );
     } else {
@@ -131,18 +116,7 @@ class EntityForm extends React.Component<Props, State> {
           loading: true
         },
         () => {
-          console.log('update', this.state.updateValues);
-          firebase
-            .firestore()
-            .collection(this.props.entity.options.alias)
-            .doc(this.props.match.params.id)
-            .update(this.state.updateValues)
-            .then(() =>
-              this.setState({
-                loading: false
-              })
-            )
-            .catch(console.log);
+          this.update();
         }
       );
     }
@@ -158,8 +132,39 @@ class EntityForm extends React.Component<Props, State> {
       .doc(this.props.match.params.id)
       .delete()
       .then(() => {
-        this.props.history.push(this.props.routes.entityRoot.url(this.props.entity.options.alias));
+        this.back();
       });
+  }
+
+  update() {
+    console.log('update', this.state.updateValues);
+    firebase
+      .firestore()
+      .collection(this.props.entity.options.alias)
+      .doc(this.props.match.params.id)
+      .update(this.state.updateValues)
+      .then(() => this.back())
+      .catch(console.log);
+  }
+
+  insert() {
+    const docRef = firebase
+      .firestore()
+      .collection(this.props.entity.options.alias)
+      .doc();
+    docRef
+      .set(this.state.updateValues)
+      .then(() => {
+        this.back();
+        this.setState({
+          loading: false
+        });
+      })
+      .catch(console.log);
+  }
+
+  back() {
+    this.props.history.push(this.props.routes.entityRoot.url(this.props.entity.options.alias));
   }
 }
 

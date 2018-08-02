@@ -5,7 +5,7 @@ import { AppState } from '../state/app.state';
 import { connect } from 'react-redux';
 import { combineContainers } from 'combine-containers';
 import { Routes } from '../router/routes';
-import { Button, List, ListItem, ListItemText } from '@material-ui/core';
+import { Button, List, ListItem, ListItemText, CircularProgress, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import firebase from 'firebase';
 
@@ -15,6 +15,7 @@ export interface EntityListProps {
 
 interface State {
   docs: firebase.firestore.QueryDocumentSnapshot[];
+  loading: boolean;
 }
 
 interface Props extends EntityListProps, RouteComponentProps<{}>, EntityListPropsExtended {}
@@ -22,38 +23,34 @@ interface Props extends EntityListProps, RouteComponentProps<{}>, EntityListProp
 class EntityList extends React.Component<Props> {
   unsubscribe?: Function;
   state: State = {
-    docs: []
+    docs: [],
+    loading: true
   };
 
   componentDidMount() {
     this.unsubscribe = firebase
       .firestore()
       .collection(this.props.entity.options.alias)
+      .limit(this.props.entity.options.maxOne ? 1 : 10)
       .onSnapshot(snapshot => {
         this.setState({
           docs: snapshot.docs
+        });
+        this.setState({
+          loading: false
         });
       });
   }
 
   render() {
-    return (
+    return this.state.loading ? (
+      <CircularProgress />
+    ) : (
       <div>
-        <Button
-          component={(props: any) => (
-            <Link
-              {...props}
-              to={this.props.routes.entityEditById.url({
-                id: undefined,
-                entityAlias: this.props.entity.options.alias
-              })}
-            />
-          )}
-        >
-          New
-        </Button>
-        <br />
-        list of {this.props.entity.options.alias}
+        <Typography variant="title" gutterBottom>
+          {this.props.entity.options.displayName || this.props.entity.options.alias}
+        </Typography>
+        {this.props.entity.options.maxOne && this.state.docs.length >= 1 ? <React.Fragment /> : this.renderNewButton()}
         <List>
           {this.state.docs.map(doc => {
             return (
@@ -76,6 +73,24 @@ class EntityList extends React.Component<Props> {
           })}
         </List>
       </div>
+    );
+  }
+
+  renderNewButton() {
+    return (
+      <Button
+        component={(props: any) => (
+          <Link
+            {...props}
+            to={this.props.routes.entityEditById.url({
+              id: undefined,
+              entityAlias: this.props.entity.options.alias
+            })}
+          />
+        )}
+      >
+        New
+      </Button>
     );
   }
 

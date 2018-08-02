@@ -53,9 +53,7 @@ class Router extends React.Component<Props> {
                   key={entity.options.alias}
                   exact
                   path={routes.entityRoot.path(entity.options.alias)}
-                  component={() =>
-                    entity.options.maxOne ? <EntityForm entity={entity} /> : <EntityList entity={entity} />
-                  }
+                  component={() => <EntityList entity={entity} />}
                 />
               );
             })}
