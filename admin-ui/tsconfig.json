@@ -10,7 +10,9 @@
     "declaration": true,
     "baseUrl": "./",
     "outDir": "./",
-    "jsx": "react"
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   },
   "files": [
     "./src/index.ts"

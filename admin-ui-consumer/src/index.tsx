@@ -9,7 +9,7 @@ import NewsArticle from './news/news-article.model';
 import Settings from './settings/settings.model';
 
 configureHeadlessCms({
-  serverUrl:"http://localhost:3300",
+  serverUrl: "http://localhost:3300",
   entities: [Product, NewsArticle, Settings]
 })
 

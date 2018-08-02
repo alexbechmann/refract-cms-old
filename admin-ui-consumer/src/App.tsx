@@ -9,7 +9,7 @@ class App extends React.Component {
       <div>
          <BrowserRouter>
           <Switch>
-            <Route path={`/admin`} component={() => <Admin />} />} />
+            <Route path={`/admin`} component={Admin} />
           </Switch>
         </BrowserRouter>
       </div>

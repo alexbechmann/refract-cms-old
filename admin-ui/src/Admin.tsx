@@ -10,10 +10,20 @@ import EntityForm from './entities/EntityForm';
 import EntityList from './entities/EntityList';
 import { connect } from 'react-redux';
 import Router from './router/Router';
+import { withStyles, WithStyles } from '@material-ui/core';
 
 export interface AdminProps {}
 
-interface Props extends AdminProps, RouteComponentProps<{}> {}
+const styles = {
+  '@global': {
+    body: {
+      margin: 0,
+      padding: 0
+    }
+  }
+};
+
+interface Props extends AdminProps, RouteComponentProps<{}>, WithStyles<typeof styles> {}
 
 class Admin extends React.Component<Props> {
   render() {
@@ -29,4 +39,4 @@ class Admin extends React.Component<Props> {
   }
 }
 
-export default Admin as React.ComponentType<AdminProps>;
+export default withStyles(styles)(Admin) as React.ComponentType<AdminProps>;

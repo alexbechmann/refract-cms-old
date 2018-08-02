@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { EntityMetadata } from './entity-metadata';
-import RouteButton from '../shared/ui/RouteButton';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { AppState } from '../state/app.state';
 import { connect } from 'react-redux';
 import { combineContainers } from 'combine-containers';
 import { Routes } from '../router/routes';
+import { Button } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 export interface EntityListProps {
   routes: Routes;
@@ -17,14 +18,18 @@ class EntityList extends React.Component<Props> {
   render() {
     return (
       <div>
-        <RouteButton
-          to={this.props.routes.entityEditById.url({
-            id: 'create',
-            entityAlias: this.props.entity.options.alias
-          })}
+        <Button
+          component={props => (
+            <Link
+              to={this.props.routes.entityEditById.url({
+                id: 'create',
+                entityAlias: this.props.entity.options.alias
+              })}
+            />
+          )}
         >
           New
-        </RouteButton>
+        </Button>
         <br />
         list of {this.props.entity.options.alias}
       </div>

@@ -28,8 +28,8 @@ class Router extends React.Component<Props> {
   render() {
     const { match, entities, routes } = this.props;
     const RouterOrAny = match
-      ? (props: any) => <BrowserRouter>{props.children}</BrowserRouter>
-      : (props: any) => <div>{props.children}</div>;
+      ? props => <BrowserRouter>{props.children}</BrowserRouter>
+      : props => <div>{props.children}</div>;
     return routes ? (
       <RouterOrAny>
         <div>

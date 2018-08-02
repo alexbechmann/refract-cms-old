@@ -2,10 +2,6 @@ import { RouterState } from './router.state';
 import { AppAction } from '../../state/app-action';
 import { SET_BASE_ROUTE } from './router.actions';
 
-function buildPath<T>(baseRoute: string, relativePath: string) {
-  return `${baseRoute}${relativePath}`.replace('//', '/');
-}
-
 const defaultState: RouterState = {
   routes: undefined
 };
@@ -14,24 +10,24 @@ export function routesReducer(state: RouterState = defaultState, action: AppActi
   switch (action.type) {
     case SET_BASE_ROUTE: {
       const baseRoute = action.payload;
+      const buildPath = <T>(relativePath: string) => `${baseRoute}${relativePath}`.replace('//', '/');
       return {
         routes: {
           root: {
-            path: <T>() => buildPath(baseRoute, '/'),
-            url: <T>() => buildPath(baseRoute, '/')
+            path: <T>() => buildPath('/'),
+            url: <T>() => buildPath('/')
           },
           entities: {
-            path: <T>() => buildPath(baseRoute, '/entities'),
-            url: <T>() => buildPath(baseRoute, '/entities')
+            path: <T>() => buildPath('/entities'),
+            url: <T>() => buildPath('/entities')
           },
           entityRoot: {
-            path: <T>(entityAlias: string) => buildPath(baseRoute, `/entities/${entityAlias}`),
-            url: <T>(entityAlias: string) => buildPath(baseRoute, `/entities/${entityAlias}`)
+            path: <T>(entityAlias: string) => buildPath(`/entities/${entityAlias}`),
+            url: <T>(entityAlias: string) => buildPath(`/entities/${entityAlias}`)
           },
           entityEditById: {
-            path: <T>(args: { entityAlias: string }) => buildPath(baseRoute, `/${args.entityAlias}/:id`),
-            url: <T>(args: { id: string; entityAlias: string }) =>
-              buildPath(baseRoute, `/${args.entityAlias}/${args.id}`)
+            path: <T>(args: { entityAlias: string }) => buildPath(`/${args.entityAlias}/:id`),
+            url: <T>(args: { id: string; entityAlias: string }) => buildPath(`/${args.entityAlias}/${args.id}`)
           }
         }
       };
