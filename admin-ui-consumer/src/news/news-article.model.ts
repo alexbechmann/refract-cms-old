@@ -15,4 +15,4 @@ export default defineEntity<Article>({
     }),
     defaultValue: "default headline"
   }
-})
+});

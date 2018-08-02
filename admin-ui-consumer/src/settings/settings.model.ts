@@ -16,4 +16,4 @@ export default defineEntity<Settings>({
     }),
     defaultValue: 'Something'
   }
-})
+});

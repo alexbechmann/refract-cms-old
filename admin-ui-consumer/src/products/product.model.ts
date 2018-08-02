@@ -21,5 +21,4 @@ export default defineEntity<Product>({
     displayName: 'Custom number',
     editorComponent: CustomDropdown,
     defaultValue: 1
-  }}
-)
+  }});
