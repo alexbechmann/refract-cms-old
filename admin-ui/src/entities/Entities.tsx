@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { getEntitiesWithMetadata } from './get-entities-with-metadata';
 import { PropertyOptions } from '../properties/property-options';
 import { Tabs, Tab } from '@material-ui/core';
 import { Route, RouteComponentProps, withRouter } from 'react-router';
@@ -8,11 +7,11 @@ import { AppState } from '../state/app.state';
 import { connect } from 'react-redux';
 import EntityForm from './EntityForm';
 import EntityList from './EntityList';
-import { EntityMetadata } from './entity-metadata';
+import { EntitySchema } from './entity-schema';
 import { Routes } from '../router/routes';
 
 export interface EntitiesProps {
-  entities: EntityMetadata[];
+  entities: EntitySchema[];
   routes: Routes;
 }
 
@@ -58,7 +57,7 @@ class Entities extends React.Component<Props, State> {
 
 function mapStateToProps(state: AppState): EntitiesProps {
   return {
-    entities: state.config.entities,
+    entities: state.config.schema,
     routes: state.router.routes
   };
 }

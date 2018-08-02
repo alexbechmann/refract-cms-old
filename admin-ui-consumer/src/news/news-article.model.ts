@@ -1,18 +1,18 @@
-import { entity, property, TextEditor } from "@headless-cms/admin-ui";
+import { defineEntity, TextEditor } from "@headless-cms/admin-ui";
 
-@entity({
+export interface Article {
+  title: string;
+}
+
+export default defineEntity<Article>({
   alias: 'newsArticle',
   displayName: 'News Article'
-})
-class NewsArticle {
-  @property({
+})({
+  title: {
     displayName: 'Headline',
     editorComponent: TextEditor({
       maxLength: 100
     }),
     defaultValue: "default headline"
-  })
-  headline: string;
-}
-
-export default NewsArticle;
+  }
+})

@@ -1,26 +1,25 @@
-import { entity, property, TextEditor } from "@headless-cms/admin-ui";
+import { defineEntity, TextEditor}  from "@headless-cms/admin-ui";
 import CustomDropdown from '../property-editors/CustomDropdown';
 
-@entity({
+export interface Product {
+  productType: string;
+  customNumber: number;
+}
+
+export default defineEntity<Product>({
   alias: 'product',
   displayName: 'Product'
-})
-class Product {
-  @property<string>({
+})({
+  productType: {
     displayName: 'Product type',
     editorComponent: TextEditor({
       maxLength: 3
     }),
     defaultValue: ''
-  })
-  productType: string;
-
-  @property<number>({
+  },
+  customNumber: {
     displayName: 'Custom number',
     editorComponent: CustomDropdown,
     defaultValue: 1
-  })
-  customNumber: number;
-} 
-
-export default Product;
+  }}
+)

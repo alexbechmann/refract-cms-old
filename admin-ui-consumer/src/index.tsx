@@ -10,7 +10,7 @@ import Settings from './settings/settings.model';
 
 configureHeadlessCms({
   serverUrl: "http://localhost:3300",
-  entities: [Product, NewsArticle, Settings]
+  schema: [Product, NewsArticle, Settings]
 })
 
 ReactDOM.render(

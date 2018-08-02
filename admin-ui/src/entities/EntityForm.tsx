@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { EntityMetadata } from '../entities/entity-metadata';
+import { EntitySchema } from '../entities/entity-schema';
 import RenderEditor from '../property-editors/RenderEditor';
 import { Button } from '@material-ui/core';
 
 export interface EntityFormProps {
-  entity: EntityMetadata;
+  entity: EntitySchema;
 }
 
 interface State {

@@ -1,4 +1,6 @@
+import { EntitySchema } from "../entities/entity-schema";
+
 export interface Config {
   serverUrl: string;
-  entities: any[];
+  schema: EntitySchema[];
 }

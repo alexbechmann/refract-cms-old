@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { store } from './state/root.store';
 import { AppState } from './state/app.state';
 import { combineContainers } from 'combine-containers';
-import { EntityMetadata } from './entities/entity-metadata';
+import { EntitySchema } from './entities/entity-schema';
 import EntityForm from './entities/EntityForm';
 import EntityList from './entities/EntityList';
 import { connect } from 'react-redux';

@@ -1,19 +1,19 @@
-import { entity, property, TextEditor } from "@headless-cms/admin-ui";
+import { defineEntity, TextEditor} from "@headless-cms/admin-ui";
 
-@entity({
+export interface Settings {
+  setting1: string;
+}
+
+export default defineEntity<Settings>({
   alias: 'settings',
   displayName: 'Settings',
   maxOne: true 
-})
-class Settings {
-  @property({
+})({
+  setting1: {
     displayName: 'Setting1',
     editorComponent: TextEditor({
       maxLength: 50
     }),
     defaultValue: 'Something'
-  })
-  setting1: string;
-}
-
-export default Settings;
+  }
+})

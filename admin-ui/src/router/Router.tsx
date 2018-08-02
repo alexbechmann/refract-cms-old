@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BrowserRouter, Switch, Route, RouteComponentProps, withRouter, Link } from 'react-router-dom';
-import { EntityMetadata } from '../entities/entity-metadata';
+import { EntitySchema } from '../entities/entity-schema';
 import Entities from '../entities/Entities';
 import { Provider, connect } from 'react-redux';
 import { store } from '../state/root.store';
@@ -14,7 +14,7 @@ import { Routes } from './routes';
 import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
 
 export interface RouterProps {
-  entities: EntityMetadata[];
+  entities: EntitySchema[];
   routes: Routes;
 }
 
@@ -83,7 +83,7 @@ class Router extends React.Component<Props> {
 
 function mapStateToProps(state: AppState): RouterProps {
   return {
-    entities: state.config.entities,
+    entities: state.config.schema,
     routes: state.router.routes
   };
 }

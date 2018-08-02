@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { EntityMetadata } from './entity-metadata';
+import { EntitySchema } from './entity-schema';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { AppState } from '../state/app.state';
 import { connect } from 'react-redux';
@@ -38,7 +38,7 @@ class EntityList extends React.Component<Props> {
 }
 
 export interface EntityListPropsExtended {
-  entity: EntityMetadata;
+  entity: EntitySchema;
 }
 
 function mapStateToProps(state: AppState): EntityListProps {
