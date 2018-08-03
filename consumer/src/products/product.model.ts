@@ -1,4 +1,4 @@
-import { defineEntity, TextEditor}  from "@headless-cms/admin-ui";
+import { defineEntity, TextEditor}  from "@firestore-cms/core";
 import CustomDropdown from '../property-editors/CustomDropdown';
 
 export interface Product {

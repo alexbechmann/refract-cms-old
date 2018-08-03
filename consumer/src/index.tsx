@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import 'typeface-roboto';
-import { configureHeadlessCms } from '@headless-cms/admin-ui';
+import { configureHeadlessCms } from '@firestore-cms/core';
 import Product from './products/product.model';
 import NewsArticle from './news/news-article.model';
 import Settings from './settings/settings.model';

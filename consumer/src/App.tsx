@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Admin } from '@headless-cms/admin-ui';
+import { Admin } from '@firestore-cms/core';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import './App.css';
 

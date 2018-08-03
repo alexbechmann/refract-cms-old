@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PropertyEditorProps } from '@headless-cms/admin-ui';
+import { PropertyEditorProps } from '@firestore-cms/core';
 
 export default (props: PropertyEditorProps<number>) => {
   return (

@@ -1,5 +1,5 @@
 {
-  "name": "@headless-cms/admin-ui",
+  "name": "@firestore-cms/core",
   "version": "1.0.0",
   "description": "",
   "main": "dist/bundle.js",

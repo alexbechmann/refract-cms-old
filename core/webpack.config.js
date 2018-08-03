@@ -13,7 +13,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
-    library: "@headless-cms/admin-ui",
+    library: "@firestore-cms/core",
     libraryTarget: "umd"
   },
   module: {

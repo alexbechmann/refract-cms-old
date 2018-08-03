@@ -1,21 +1,22 @@
 {
-  "name": "headless-cms",
+  "name": "@firestore-cms/dev",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "admin-ui:install": "cd admin-ui && npm install",
-    "admin-ui:start": "cd admin-ui && npm start",
-    "admin-ui-consumer:install": "cd admin-ui-consumer && npm install",
-    "admin-ui-consumer:start": "cd admin-ui-consumer && npm run start",
-    "admin-ui-consumer:build:watch": "cd admin-ui-consumer && npm run build:watch",
-    "postinstall": "npm-run-all admin-ui-consumer:install admin-ui:install",
-    "start": "npm-run-all -p admin-ui-consumer:start admin-ui:start"
+    "core:install": "cd core && npm install",
+    "core:build": "cd core && npm run build",
+    "core:start": "cd core && npm start",
+    "consumer:install": "cd consumer && npm install",
+    "consumer:start": "cd consumer && npm run start",
+    "consumer:build:watch": "cd consumer && npm run build:watch",
+    "postinstall": "npm-run-all consumer:install core:install",
+    "start": "npm run core:build && npm-run-all -p consumer:start core:start"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexbechmann/headless-cms.git"
+    "url": "git+https://github.com/alexbechmann/firestore-cms.git"
   },
   "author": "",
   "license": "ISC",
