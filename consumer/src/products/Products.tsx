@@ -40,7 +40,7 @@ class Products extends React.Component<Props, State> {
           const image = product.images && product.images.length > 0 ? product.images[0] : undefined;
           return (
             <Card className={classes.card} key={productDocument.id} >
-            {image && <CardMedia className={classes.media} image={image.url} />}
+            {image && <CardMedia className={classes.media} image={''} />}
               <CardHeader title={product.title} />
               <CardContent>
                 <List component="nav">
@@ -48,7 +48,7 @@ class Products extends React.Component<Props, State> {
                     <ListItemIcon>
                       <Icons.LocationOn />
                     </ListItemIcon>
-                    <ListItemText primary={`${product.location.lat}, ${product.location.lng}`} />
+                    <ListItemText primary={`${product.location.latitude}, ${product.location.longitude}`} />
                   </ListItem>
                   <ListItem>
                     <ListItemIcon>

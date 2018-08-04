@@ -151,8 +151,7 @@ class EntityForm extends React.Component<Props, State> {
     const docRef = firebase
       .firestore()
       .collection(this.props.entity.options.alias)
-      .doc();
-    docRef
+      .doc()
       .set(this.state.updateValues)
       .then(() => {
         this.back();

@@ -2,7 +2,8 @@ import { defineEntity, TextEditor, EntityPickerEditor } from "@firestore-cms/cor
 
 export interface Article {
   title: string;
-  relatedProductsIds: string[];
+  // relatedProductsIds: string[];
+  relatedProducts: firebase.firestore.DocumentReference[];
 }
 
 export default defineEntity<Article>({
@@ -16,12 +17,11 @@ export default defineEntity<Article>({
     }),
     defaultValue: "default headline"
   },
-  relatedProductsIds: {
+  relatedProducts: {
     displayName: 'Related Products',
     editorComponent: EntityPickerEditor({
       max: 10,
       entityAlias: 'product'
-    }),
-    defaultValue: []
+    })
   }
 });

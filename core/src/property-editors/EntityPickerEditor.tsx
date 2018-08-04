@@ -17,11 +17,11 @@ export interface EntityPickerEditorOptions {
 }
 
 interface State {
-  docs: firebase.firestore.DocumentSnapshot[];
+  docs: firebase.firestore.DocumentReference[];
   loading: boolean;
 }
 
-interface Props extends EntityPickerEditorOptions, PropertyEditorProps<string[]> {}
+interface Props extends EntityPickerEditorOptions, PropertyEditorProps<firebase.firestore.DocumentReference[]> {}
 
 class EntityPickerEditor extends React.Component<Props, State> {
   unsubscribe?: () => void;
@@ -36,15 +36,15 @@ class EntityPickerEditor extends React.Component<Props, State> {
     return (
       <List>
         {this.state.docs.map(doc => {
-          const selected = value.some(id => id === doc.id);
+          const selected = value.some(d => d.id === doc.id);
           return !this.state.loading ? (
             <ListItem
               key={doc.id}
               button
               onClick={() => {
                 const newValue = selected
-                  ? value.filter(v => v !== doc.id)
-                  : [...value.filter(v => v !== doc.id), doc.id];
+                  ? value.filter(d => d.id !== doc.id)
+                  : [...value.filter(d => d.id !== doc.id), doc];
                 this.props.setValue(newValue);
               }}
             >
@@ -67,7 +67,7 @@ class EntityPickerEditor extends React.Component<Props, State> {
       .collection('product')
       .onSnapshot(snapshot => {
         this.setState({
-          docs: snapshot.docs
+          docs: snapshot.docs.map(doc => doc.ref)
         });
         this.setState({
           loading: false
@@ -82,6 +82,6 @@ class EntityPickerEditor extends React.Component<Props, State> {
   }
 }
 
-export default (options?: EntityPickerEditorOptions) => (props: PropertyEditorProps<string[]>) => (
-  <EntityPickerEditor {...props} {...options} />
-);
+export default (options?: EntityPickerEditorOptions) => (
+  props: PropertyEditorProps<firebase.firestore.DocumentReference[]>
+) => <EntityPickerEditor {...props} {...options} />;

@@ -1,9 +1,17 @@
 import * as React from 'react';
 import { PropertyEditorProps } from '../properties/property-editor-props';
-import { IconButton, LinearProgress, Typography, List, ListItem, ListItemText } from '@material-ui/core';
+import {
+  IconButton,
+  LinearProgress,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+  Button
+} from '@material-ui/core';
 import firebase from 'firebase';
 import * as Icons from '@material-ui/icons';
-import { MediaItem } from '../media/media-item.model';
 import createUniqueString from 'unique-string';
 
 export interface MediaPickerEditorOptions {
@@ -15,27 +23,23 @@ interface State {
   docs: firebase.firestore.DocumentSnapshot[];
   loading: boolean;
   uploadSnapshot?: firebase.storage.UploadTaskSnapshot;
+  deleting: any;
 }
 
-interface Props extends MediaPickerEditorOptions, PropertyEditorProps<MediaItem[]> {}
+interface Props extends MediaPickerEditorOptions, PropertyEditorProps<firebase.storage.Reference[]> {}
 
 class MediaPickerEditor extends React.Component<Props, State> {
   state: State = {
     docs: [],
-    loading: true
+    loading: true,
+    deleting: {}
   };
 
   render() {
     const value = this.props.value || [];
-    console.log(value);
     return (
       <div>
-        <Typography>
-          Selected images:
-          {value.map(mediaItem => (
-            <p>{mediaItem.url}</p>
-          ))}
-        </Typography>
+        {this.renderSelectedImages()}
         {this.state.uploadSnapshot && this.renderProgress()}
         <input onChange={this.handleImageChange} accept="image/*" id="icon-button-file" type="file" />
         <label htmlFor="icon-button-file">
@@ -51,17 +55,49 @@ class MediaPickerEditor extends React.Component<Props, State> {
     const value = this.props.value || [];
     return (
       <List>
-        {value.map(mediaItem => {
+        {value.map((mediaItem, index) => {
+          const deleting = Boolean(this.state.deleting[mediaItem.fullPath]);
           return (
-            <ListItem>
-              <image href={mediaItem.url} />
-              <ListItemText primary={mediaItem.url} primaryTypographyProps={{ noWrap: true }} />
+            <ListItem key={index}>
+              <div
+                style={{
+                  height: '50px',
+                  width: '50px',
+                  //backgroundImage: `url(${mediaItem.ur})`,
+                  backgroundSize: 'cover'
+                }}
+              />
+              <ListItemText primary={index} />
+              <ListItemSecondaryAction>
+                {deleting ? <p>deleting...</p> : <Button onClick={this.removeMediaItem(mediaItem)}>Remove</Button>}
+              </ListItemSecondaryAction>
             </ListItem>
           );
         })}
       </List>
     );
   }
+
+  removeMediaItem = (mediaItem: firebase.storage.Reference) => () => {
+    this.setState({
+      deleting: {
+        ...this.state.deleting,
+        path: true
+      }
+    });
+    this.props.setValue(this.props.value.filter(mediaItem => mediaItem.fullPath !== mediaItem.fullPath));
+    mediaItem
+      .delete()
+      .then(() => {
+        this.setState({
+          deleting: {
+            ...this.state.deleting,
+            path: false
+          }
+        });
+      })
+      .catch(console.log);
+  };
 
   renderProgress() {
     const { bytesTransferred, totalBytes } = this.state.uploadSnapshot!;
@@ -90,20 +126,12 @@ class MediaPickerEditor extends React.Component<Props, State> {
         this.setState({
           uploadSnapshot: undefined
         });
-        uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
-          const newValue = [
-            ...(this.props.value || []),
-            {
-              url: downloadURL
-            }
-          ];
-          this.props.setValue(newValue);
-        });
+        this.props.setValue([...this.props.value, uploadTask.snapshot.ref]);
       }
     );
   };
 }
 
-export default (options?: MediaPickerEditorOptions) => (props: PropertyEditorProps<MediaItem[]>) => (
+export default (options?: MediaPickerEditorOptions) => (props: PropertyEditorProps<firebase.storage.Reference[]>) => (
   <MediaPickerEditor {...props} {...options} />
 );

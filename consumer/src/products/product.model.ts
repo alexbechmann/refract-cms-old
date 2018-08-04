@@ -1,14 +1,13 @@
-import { defineEntity, TextEditor, MediaItem, MediaPickerEditor } from "@firestore-cms/core";
+import { defineEntity, TextEditor, MediaPickerEditor, LocationEditor } from "@firestore-cms/core";
 import CustomDropdownEditor from '../property-editors/CustomDropdownEditor';
-import LocationEditor from '../property-editors/LocationEditor';
-import { Location } from '../shared/models/location.model';
+import firebase from 'firebase';
 
 export interface Product {
   productType: string;
   customNumber: number;
-  location: Location;
+  location: firebase.firestore.GeoPoint;
   title: string;
-  images: MediaItem[];
+  images: firebase.storage.Reference[];
 }
 
 export default defineEntity<Product>({
@@ -30,10 +29,7 @@ export default defineEntity<Product>({
   location: {
     displayName: 'Location',
     editorComponent: LocationEditor,
-    defaultValue: {
-      lng: 500,
-      lat: 500
-    },
+    defaultValue: new firebase.firestore.GeoPoint(0, 0),
   },
   title: {
     displayName: 'Title',
