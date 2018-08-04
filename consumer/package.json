@@ -1,5 +1,5 @@
 {
-  "name": "consumer-admin-ui",
+  "name": "firestore-cms-consumer",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

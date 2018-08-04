@@ -7,6 +7,7 @@ import { configureHeadlessCms } from '@firestore-cms/core';
 import Product from './products/product.model';
 import NewsArticle from './news/news-article.model';
 import Settings from './settings/settings.model';
+import firebase from 'firebase';
 
 const firebaseConfig = {
   apiKey: "AIzaSyD_ctkKvFL5OdIjeEBbQPWdQ-0QiKNB7bw",
@@ -16,6 +17,8 @@ const firebaseConfig = {
   storageBucket: "admin-ui-consumer-dev.appspot.com",
   messagingSenderId: "975437661220"
 };
+
+firebase.initializeApp(firebaseConfig);
 
 configureHeadlessCms({
   schema: [Product, NewsArticle, Settings],
