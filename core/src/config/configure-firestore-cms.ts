@@ -2,6 +2,6 @@ import { store } from '../state/root.store';
 import { configure } from './state/config.actions';
 import { Config } from './config';
 
-export const configureHeadlessCms = (config: Config) => {
+export const configureFirestoreCms = (config: Config) => {
   store.dispatch(configure(config));
 };

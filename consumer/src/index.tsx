@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import 'typeface-roboto';
-import { configureHeadlessCms } from '@firestore-cms/core';
+import { configureFirestoreCms } from '@firestore-cms/core';
 import Product from './products/product.model';
 import NewsArticle from './news/news-article.model';
 import Settings from './settings/settings.model';
@@ -20,7 +20,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-configureHeadlessCms({
+configureFirestoreCms({
   schema: [Product, NewsArticle, Settings],
   firebaseConfig
 })

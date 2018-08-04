@@ -24,6 +24,7 @@
     "redux": "^4.0.0",
     "reflect-metadata": "^0.1.12",
     "typesafe-actions": "^2.0.4",
+    "unique-string": "^1.0.0",
     "webpack": "^4.8.1",
     "webpack-cli": "^2.1.3"
   },
