@@ -137,7 +137,6 @@ class EntityForm extends React.Component<Props, State> {
   }
 
   update() {
-    console.log('update', this.state.updateValues);
     firebase
       .firestore()
       .collection(this.props.entity.options.alias)
@@ -148,7 +147,7 @@ class EntityForm extends React.Component<Props, State> {
   }
 
   insert() {
-    const docRef = firebase
+    firebase
       .firestore()
       .collection(this.props.entity.options.alias)
       .doc()

@@ -13,6 +13,7 @@ import {
 import firebase from 'firebase';
 import * as Icons from '@material-ui/icons';
 import createUniqueString from 'unique-string';
+import { MediaItem } from '../media/media-item.model';
 
 export interface MediaPickerEditorOptions {
   max: number;
@@ -26,7 +27,7 @@ interface State {
   deleting: any;
 }
 
-interface Props extends MediaPickerEditorOptions, PropertyEditorProps<firebase.storage.Reference[]> {}
+interface Props extends MediaPickerEditorOptions, PropertyEditorProps<MediaItem[]> {}
 
 class MediaPickerEditor extends React.Component<Props, State> {
   state: State = {
@@ -63,13 +64,17 @@ class MediaPickerEditor extends React.Component<Props, State> {
                 style={{
                   height: '50px',
                   width: '50px',
-                  //backgroundImage: `url(${mediaItem.ur})`,
+                  backgroundImage: `url(${mediaItem.url})`,
                   backgroundSize: 'cover'
                 }}
               />
               <ListItemText primary={index} />
               <ListItemSecondaryAction>
-                {deleting ? <p>deleting...</p> : <Button onClick={this.removeMediaItem(mediaItem)}>Remove</Button>}
+                {deleting ? (
+                  <p>deleting...</p>
+                ) : (
+                  <Button onClick={this.removeMediaItem(firebase.storage().ref(mediaItem.fullPath))}>Remove</Button>
+                )}
               </ListItemSecondaryAction>
             </ListItem>
           );
@@ -78,15 +83,15 @@ class MediaPickerEditor extends React.Component<Props, State> {
     );
   }
 
-  removeMediaItem = (mediaItem: firebase.storage.Reference) => () => {
+  removeMediaItem = (mediaRef: firebase.storage.Reference) => () => {
     this.setState({
       deleting: {
         ...this.state.deleting,
         path: true
       }
     });
-    this.props.setValue(this.props.value.filter(mediaItem => mediaItem.fullPath !== mediaItem.fullPath));
-    mediaItem
+    this.props.setValue(this.props.value.filter(mediaItem => mediaRef.fullPath !== mediaItem.fullPath));
+    mediaRef
       .delete()
       .then(() => {
         this.setState({
@@ -126,12 +131,21 @@ class MediaPickerEditor extends React.Component<Props, State> {
         this.setState({
           uploadSnapshot: undefined
         });
-        this.props.setValue([...this.props.value, uploadTask.snapshot.ref]);
+        uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+          const newValue = [
+            ...(this.props.value || []),
+            {
+              url: downloadURL,
+              fullPath: uploadTask.snapshot.ref.fullPath
+            }
+          ];
+          this.props.setValue(newValue);
+        });
       }
     );
   };
 }
 
-export default (options?: MediaPickerEditorOptions) => (props: PropertyEditorProps<firebase.storage.Reference[]>) => (
+export default (options?: MediaPickerEditorOptions) => (props: PropertyEditorProps<MediaItem[]>) => (
   <MediaPickerEditor {...props} {...options} />
 );

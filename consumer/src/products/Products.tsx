@@ -40,7 +40,7 @@ class Products extends React.Component<Props, State> {
           const image = product.images && product.images.length > 0 ? product.images[0] : undefined;
           return (
             <Card className={classes.card} key={productDocument.id} >
-            {image && <CardMedia className={classes.media} image={''} />}
+            {image && <CardMedia className={classes.media} image={image.url} />}
               <CardHeader title={product.title} />
               <CardContent>
                 <List component="nav">
