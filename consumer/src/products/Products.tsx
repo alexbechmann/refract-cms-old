@@ -20,9 +20,8 @@ class Products extends React.Component<{}, State> {
       <div>
         {this.state.productDocs.map(productDoc => {
           const product = productDoc.data() as Product;
-          console.log(product);
           return (
-            <div key={productDoc.id} >id: {productDoc.id} - type: {product.productType}</div>
+            <div key={productDoc.id}>id: {productDoc.id} - type: {product.productType}</div>
           )
         })}
       </div>

@@ -36,17 +36,21 @@ class EntityPickerEditor extends React.Component<Props, State> {
     return (
       <List>
         {this.state.docs.map(doc => {
+          const selected = value.some(id => id === doc.id);
           return !this.state.loading ? (
             <ListItem
               key={doc.id}
               button
               onClick={() => {
-                this.props.setValue([...value.filter(v => v !== doc.id), doc.id]);
+                const newValue = selected
+                  ? value.filter(v => v !== doc.id)
+                  : [...value.filter(v => v !== doc.id), doc.id];
+                this.props.setValue(newValue);
               }}
             >
               <ListItemText primary={doc.id} />
               <ListItemSecondaryAction>
-                <Checkbox checked={value.some(id => id === doc.id)} />
+                <Checkbox checked={selected} />
               </ListItemSecondaryAction>
             </ListItem>
           ) : (
