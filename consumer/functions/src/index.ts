@@ -9,3 +9,5 @@ import * as firestoreCmsFunctions from "@firestore-cms/functions";
 // });
 
 export const ensureAdmin = firestoreCmsFunctions.ensureAdmin(functions);
+
+export const test = functions.firestore.document("*").onUpdate(console.log);
