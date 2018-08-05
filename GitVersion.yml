@@ -1,0 +1,18 @@
+mode: ContinuousDeployment
+assembly-versioning-scheme: MajorMinorPatch
+assembly-informational-format: '{SemVer}'
+next-version: 0.1.0
+branches:
+  develop:
+    mode: ContinuousDeployment
+    tag: alpha
+  release:
+    mode: ContinuousDeployment
+    tag: beta
+  master:
+    mode: ContinuousDelivery
+  (pull|pull\-requests|pr)[/-]:
+    mode: ContinuousDeployment
+    tag: UseBranchName
+ignore:
+  sha: []
