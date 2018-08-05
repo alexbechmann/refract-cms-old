@@ -11,14 +11,13 @@
     "functions:install": "cd functions && npm install",
     "functions:build": "cd functions && npm run build",
     "functions:start": "cd functions && npm start",
-    "consumer:install": "cd consumer && npm install",
-    "consumer:start": "cd consumer && npm run start",
-    "consumer:build:watch": "cd consumer && npm run build:watch",
-    "consumer:functions:install": "cd consumer && npm install",
-    "consumer:functions:start": "cd consumer && npm run start",
-    "consumer:functions:build:watch": "cd consumer && npm run build:watch",
-    "postinstall": "npm-run-all consumer:install core:install functions:install consumer:functions:install",
-    "start": "npm run core:build && npm-run-all -p consumer:start core:start"
+    "consumer-core:install": "cd consumer-core && npm install",
+    "consumer-core:start": "cd consumer-core && npm run start",
+    "consumer-core:build:watch": "cd consumer-core && npm run build:watch",
+    "consumer-functions:install": "cd consumer-functions && npm install",
+    "consumer-functions:start": "cd consumer-functions && npm run start",
+    "postinstall": "npm run core:build && npm run functions:build && npm-run-all consumer-core:install core:install functions:install consumer-functions:install",
+    "start": "npm-run-all -p consumer-core:start core:start consumer-functions:start functions:start"
   },
   "repository": {
     "type": "git",

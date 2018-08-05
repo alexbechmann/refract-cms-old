@@ -1,5 +1,5 @@
-import * as functions from 'firebase-functions';
-import * as firestoreCmsFunctions from '@firestore-cms/functions';
+import * as functions from "firebase-functions";
+import * as firestoreCmsFunctions from "@firestore-cms/functions";
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
@@ -8,4 +8,4 @@ import * as firestoreCmsFunctions from '@firestore-cms/functions';
 //  response.send("Hello from Firebase!");
 // });
 
-export const ensureAdmin = firestoreCmsFunctions.ensureAdmin();
+export const ensureAdmin = firestoreCmsFunctions.ensureAdmin(functions);

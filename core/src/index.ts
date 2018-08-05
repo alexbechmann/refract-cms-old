@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-
 export { configureFirestoreCms } from './config/configure-firestore-cms';
 export { default as Admin } from './Admin';
 export { default as defineEntity } from './entities/define-entity';

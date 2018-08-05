@@ -6,4 +6,4 @@ const ensureAdmin = (functions: Functions) =>
     console.log(e);
   });
 
-export { ensureAdmin }
+export { ensureAdmin };
