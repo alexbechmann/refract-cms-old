@@ -1,0 +1,26 @@
+{
+  "name": "@firestore-cms/functions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": "webpack -w"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "firebase-admin": "^5.13.1",
+    "firebase-functions": "^2.0.2"
+  },
+  "devDependencies": {
+    "prettier": "^1.14.0",
+    "prettier-loader": "^2.1.1",
+    "ts-loader": "^4.4.2",
+    "typescript": "^3.0.1",
+    "webpack": "^4.16.4",
+    "webpack-cli": "^3.1.0",
+    "webpack-node-externals": "^1.7.2"
+  }
+}

@@ -37,7 +37,6 @@ class MediaPickerEditor extends React.Component<Props, State> {
   };
 
   render() {
-    const value = this.props.value || [];
     return (
       <div>
         {this.renderSelectedImages()}

@@ -8,10 +8,16 @@
     "core:install": "cd core && npm install",
     "core:build": "cd core && npm run build",
     "core:start": "cd core && npm start",
+    "functions:install": "cd functions && npm install",
+    "functions:build": "cd functions && npm run build",
+    "functions:start": "cd functions && npm start",
     "consumer:install": "cd consumer && npm install",
     "consumer:start": "cd consumer && npm run start",
     "consumer:build:watch": "cd consumer && npm run build:watch",
-    "postinstall": "npm-run-all consumer:install core:install",
+    "consumer:functions:install": "cd consumer && npm install",
+    "consumer:functions:start": "cd consumer && npm run start",
+    "consumer:functions:build:watch": "cd consumer && npm run build:watch",
+    "postinstall": "npm-run-all consumer:install core:install functions:install consumer:functions:install",
     "start": "npm run core:build && npm-run-all -p consumer:start core:start"
   },
   "repository": {
