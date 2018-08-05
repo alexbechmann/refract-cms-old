@@ -1,16 +1,18 @@
 import * as functions from 'firebase-functions';
 import * as firebase from 'firebase-admin';
 
-type Functions = typeof functions;
-type Firebase = typeof firebase;
-
-interface Dependencies {
-  functions: any;
-  firebase: any;
-}
+firebase.initializeApp(functions.config());
 
 export const helloWorld2 = functions.https.onRequest((request, response) => {
-  response.send('Hello from Firebase2!');
+  firebase
+    .firestore()
+    .collection('test')
+    .doc()
+    .set({ test: true })
+    .then(() => {
+      response.send('success');
+    })
+    .catch(() => response.send('error'));
 });
 
 export const ensureAdmin = functions.firestore.document('users/{userId}').onCreate(e => {

@@ -38,13 +38,13 @@ class Router extends React.Component<Props> {
               <Button color="inherit" component={(props: any) => <Link {...props} to={routes.root.url()} />}>
                 Admin
               </Button>
-              <Button color="inherit" component={(props: any) => <Link {...props} to={routes.entities.url()} />}>
-                Entities
+              <Button color="inherit" component={(props: any) => <Link {...props} to={routes.content.url()} />}>
+                Content
               </Button>
             </Toolbar>
           </AppBar>
           <Switch>
-            <Route path={routes.entities.path()} component={Entities} />
+            <Route path={routes.content.path()} component={Entities} />
           </Switch>
           <Switch>
             {entities.map(entity => {

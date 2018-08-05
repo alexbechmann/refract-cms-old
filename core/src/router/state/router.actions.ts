@@ -9,18 +9,18 @@ export const setBaseRoute = (baseRoute: string) => {
       path: <T>() => buildPath('/'),
       url: <T>() => buildPath('/')
     },
-    entities: {
-      path: <T>() => buildPath('/entities'),
-      url: <T>() => buildPath('/entities')
+    content: {
+      path: <T>() => buildPath('/content'),
+      url: <T>() => buildPath('/content')
     },
     entityRoot: {
-      path: <T>(entityAlias: string) => buildPath(`/entities/${entityAlias}`),
-      url: <T>(entityAlias: string) => buildPath(`/entities/${entityAlias}`)
+      path: <T>(entityAlias: string) => buildPath(`/content/${entityAlias}`),
+      url: <T>(entityAlias: string) => buildPath(`/content/${entityAlias}`)
     },
     entityEditById: {
-      path: <T>(args: { entityAlias: string }) => buildPath(`/entities/${args.entityAlias}/save/:id?`),
+      path: <T>(args: { entityAlias: string }) => buildPath(`/content/${args.entityAlias}/save/:id?`),
       url: <T>(args: { id: string | undefined; entityAlias: string }) =>
-        buildPath(`/entities/${args.entityAlias}/save${args.id ? '/' + args.id : ''}`)
+        buildPath(`/content/${args.entityAlias}/save${args.id ? '/' + args.id : ''}`)
     }
   };
   return action(SET_BASE_ROUTE, routes);

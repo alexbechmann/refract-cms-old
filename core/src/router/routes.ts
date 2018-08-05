@@ -3,7 +3,7 @@ export interface Routes {
     path: () => string;
     url: () => string;
   };
-  entities: {
+  content: {
     path: () => string;
     url: () => string;
   };

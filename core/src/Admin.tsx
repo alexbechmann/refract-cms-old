@@ -1,14 +1,6 @@
 import * as React from 'react';
-import { BrowserRouter, Switch, Route, RouteComponentProps, withRouter, Link } from 'react-router-dom';
-import Entities from './entities/Entities';
 import { Provider } from 'react-redux';
 import { store } from './state/root.store';
-import { AppState } from './state/app.state';
-import { combineContainers } from 'combine-containers';
-import { EntitySchema } from './entities/entity-schema';
-import EntityForm from './entities/EntityForm';
-import EntityList from './entities/EntityList';
-import { connect } from 'react-redux';
 import Router from './router/Router';
 import { withStyles, WithStyles } from '@material-ui/core';
 
@@ -23,7 +15,7 @@ const styles = {
   }
 };
 
-interface Props extends AdminProps, RouteComponentProps<{}>, WithStyles<typeof styles> {}
+interface Props extends AdminProps, WithStyles<typeof styles> {}
 
 class Admin extends React.Component<Props> {
   render() {
