@@ -23,11 +23,8 @@ steps:
     customCommand: "run build"
     workingDir: "core"
 
-- task: PowerShell@1
-  inputs:
-    scriptName: "update-package-version.ps1"
-    arguments: "$(GitVersion.SemVer)"
-    workingFolder: "core"
+- powershell: . 'core/update-package-version.ps1' $(GitVersion.SemVer) 
+  displayName: Update package version
 
 - task: Npm@1
   inputs:
@@ -42,10 +39,7 @@ steps:
     customCommand: "run build"
     workingDir: "functions"
 
-- task: PowerShell@1
-  inputs:
-    scriptName: "update-package-version.ps1"
-    arguments: "$(GitVersion.SemVer)"
-    workingFolder: "functions"
+- powershell: . 'functions/update-package-version.ps1' $(GitVersion.SemVer) 
+  displayName: Update package version
 
 
