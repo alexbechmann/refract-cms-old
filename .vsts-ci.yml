@@ -26,6 +26,9 @@ steps:
 - powershell: . 'core/update-package-version.ps1' $(GitVersion.SemVer) 
   displayName: Update package version
 
+- script: 'echo "//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" >> ~/.npmrc' core 
+  displayName: Command Line Script
+
 - task: Npm@1
   inputs:
     command: "install"
@@ -41,5 +44,9 @@ steps:
 
 - powershell: . 'functions/update-package-version.ps1' $(GitVersion.SemVer) 
   displayName: Update package version
+
+- script: 'echo "//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" >> ~/.npmrc' functions 
+  displayName: Command Line Script
+
 
 
