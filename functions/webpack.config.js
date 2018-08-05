@@ -7,14 +7,14 @@ function srcPath(subdir) {
 
 module.exports = {
   entry: './src/index.ts',
-  externals: process.env.NODE_ENV === 'production' ? [] : [nodeExternals()],
+  externals: [nodeExternals()],
   mode: "production",
   target: 'node',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
     library: "@firestore-cms/functions",
-    libraryTarget: "umd"
+    libraryTarget: 'umd'
   },
   module: {
     rules: [

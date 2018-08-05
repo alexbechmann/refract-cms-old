@@ -1,13 +1,13 @@
-import * as functions from "firebase-functions";
-import * as firestoreCmsFunctions from "@firestore-cms/functions";
+import * as functions from 'firebase-functions';
+import * as firebase from 'firebase-admin';
+import { helloWorld2 } from '@firestore-cms/functions';
+import { request } from 'http';
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
 //
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
+export const helloWorld = functions.https.onRequest((request, response) => {
+  response.send('Hello from Firebase!');
+});
 
-export const ensureAdmin = firestoreCmsFunctions.ensureAdmin(functions);
-
-export const test = functions.firestore.document("*").onUpdate(console.log);
+export * from '@firestore-cms/functions';

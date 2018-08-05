@@ -7,7 +7,9 @@ function srcPath(subdir) {
 
 module.exports = {
   entry: './src/index.ts',
-  externals: process.env.NODE_ENV === 'production' ? [] : [nodeExternals()],
+  externals: [nodeExternals({
+    whitelist: ['@firestore-cms/functions']
+  })],
   mode: "production",
   target: 'node',
   output: {

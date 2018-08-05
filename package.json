@@ -16,7 +16,7 @@
     "consumer-core:build:watch": "cd consumer/react-app && npm run build:watch",
     "consumer-functions:install": "cd consumer/functions && npm install",
     "consumer-functions:start": "cd consumer/functions && npm run start",
-    "postinstall": "npm run core:build && npm run functions:build && npm-run-all consumer-core:install core:install functions:install consumer-functions:install",
+    "postinstall": "npm-run-all core:install core:build functions:install functions:build consumer-core:install consumer-functions:install",
     "start": "npm-run-all -p consumer-core:start core:start consumer-functions:start functions:start"
   },
   "repository": {

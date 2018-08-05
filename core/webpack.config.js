@@ -7,7 +7,7 @@ function srcPath(subdir) {
 
 module.exports = {
   entry: './src/index.ts',
-  externals: process.env.NODE_ENV === 'production' ? [] : [nodeExternals()],
+  externals: [nodeExternals()],
   mode: "production",
   target: 'node',
   output: {
