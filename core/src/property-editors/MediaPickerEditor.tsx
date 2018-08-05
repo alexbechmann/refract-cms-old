@@ -139,8 +139,9 @@ class MediaPickerEditor extends React.Component<Props, State> {
   // };
 
   renderProgress() {
+    console.log(this.state.uploadSnapshot);
     const { bytesTransferred, totalBytes } = this.state.uploadSnapshot!;
-    return <LinearProgress variant="determinate" value={(totalBytes / bytesTransferred) * 100} />;
+    return <LinearProgress variant="determinate" value={(bytesTransferred / totalBytes) * 100} />;
   }
 
   handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
