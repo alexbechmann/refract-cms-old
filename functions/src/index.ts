@@ -19,23 +19,27 @@ export const ensureAdmin = functions.firestore.document('users/{userId}').onCrea
   console.log(e);
 });
 
-export const addMedia = functions.storage.object().onFinalize(e => {
-  const { id, mediaLink, name } = e;
-  firebase
+export const addMedia = functions.storage.object().onFinalize((obj, context) => {
+  console.log(obj, context);
+  const { id, mediaLink, name } = obj;
+  return firebase
     .firestore()
     .collection('media')
-    .doc(e.id)
+    .doc(obj.etag)
     .set({
-      id,
-      mediaLink,
-      name
+      url: obj.mediaLink.replace(
+        'https://www.googleapis.com/download/storage/v1/b/',
+        'https://firebasestorage.googleapis.com/v0/b/'
+      ),
+      fullPath: obj.name
     });
 });
 
-export const removeMedia = functions.storage.object().onDelete(e => {
-  firebase
+export const removeMedia = functions.storage.object().onDelete((obj, context) => {
+  console.log(obj, context);
+  return firebase
     .firestore()
     .collection('media')
-    .doc(e.id)
+    .doc(obj.etag)
     .delete();
 });

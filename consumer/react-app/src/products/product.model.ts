@@ -1,4 +1,4 @@
-import { defineEntity, TextEditor, MediaPickerEditor, LocationEditor, MediaItem } from "@firestore-cms/core";
+import { defineEntity, TextEditor, MediaPickerEditor, LocationEditor } from "@firestore-cms/core";
 import CustomDropdownEditor from '../property-editors/CustomDropdownEditor';
 import firebase from 'firebase';
 
@@ -7,7 +7,7 @@ export interface Product {
   customNumber: number;
   location: firebase.firestore.GeoPoint;
   title: string;
-  images: MediaItem[];
+  images: firebase.firestore.DocumentReference[];
 }
 
 export default defineEntity<Product>({
