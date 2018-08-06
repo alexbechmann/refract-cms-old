@@ -10,6 +10,13 @@ trigger:
 steps:
 - task: gittools.gitversion.gitversion-task.GitVersion@3
 
+- task: CmdLine@1
+  displayName: Command Line Script
+  inputs:
+    filename: echo
+    arguments: '//registry.npmjs.org/:_authToken=$(NPM_TOKEN) >> %HOMEDRIVE%%HOMEPATH%\.npmrc'
+    condition: and(succeeded(), eq(variables['NPM_TOKEN'], 'true'))
+
 - task: Npm@1
   inputs:
     command: "install"
@@ -26,13 +33,6 @@ steps:
 - powershell: . 'core/update-package-version.ps1' $(GitVersion.SemVer) 
   displayName: Update package version
 
-- task: CmdLine@1
-  displayName: Command Line Script
-  inputs:
-    filename: echo
-    arguments: '//registry.npmjs.org/:_authToken=$(NPM_TOKEN) >> $(System.DefaultWorkingDirectory)/core/.npmrc'
-    workingFolder: core
-
 - task: Npm@1
   inputs:
     command: "install"
@@ -48,13 +48,6 @@ steps:
 
 - powershell: . 'functions/update-package-version.ps1' $(GitVersion.SemVer) 
   displayName: Update package version
-
-- task: CmdLine@1
-  displayName: Command Line Script
-  inputs:
-    filename: echo
-    arguments: '//registry.npmjs.org/:_authToken=$(NPM_TOKEN) >> $(System.DefaultWorkingDirectory)/functions/.npmrc'
-    workingFolder: functions
 
 - task: Npm@1
   inputs:
