@@ -87,6 +87,13 @@ steps:
        "projects/default": "$(REACT_APP_FIREBASE_CONFIG_PROJECT_ID)"
      }
 
+- task: Npm@1
+  condition: eq(variables['DEPLOY'], 'true')
+  inputs:
+    command: custom
+    verbose: false
+    customCommand: 'install firebase-tools -g'
+
 - task: CmdLine@1
   condition: eq(variables['DEPLOY'], 'true')
   inputs:
