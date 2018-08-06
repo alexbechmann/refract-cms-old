@@ -10,13 +10,6 @@ trigger:
 steps:
 - task: gittools.gitversion.gitversion-task.GitVersion@3
 
-- task: CmdLine@1
-  displayName: Command Line Script
-  inputs:
-    filename: echo
-    arguments: '//registry.npmjs.org/:_authToken=$(NPM_TOKEN) >> $(Agent.HomeDirectory)\.npmrc'
-    condition: and(succeeded(), eq(variables['NPM_TOKEN'], 'true'))
-
 - task: Npm@1
   inputs:
     command: "install"
@@ -50,20 +43,20 @@ steps:
   displayName: Update package version
 
 - task: Npm@1
+  displayName: npm publish
   inputs:
-    command: "custom"
-    verbose: "false"
-    customCommand: "publish"
-    workingDir: "core"
-    condition: and(succeeded(), eq(variables['NPM_TOKEN'], 'true'))
+    command: publish
+    workingDir: core
+    publishEndpoint: npm
+    condition: and(succeeded(), eq(variables['DEPLOY_NPM'], 'true'))
 
 - task: Npm@1
+  displayName: npm publish
   inputs:
-    command: "custom"
-    verbose: "false"
-    customCommand: "publish"
-    workingDir: "functions"
-    condition: and(succeeded(), eq(variables['NPM_TOKEN'], 'true'))
+    command: publish
+    workingDir: functions
+    publishEndpoint: npm
+    condition: and(succeeded(), eq(variables['DEPLOY_NPM'], 'true'))
 
 - task: Npm@1
   inputs:
