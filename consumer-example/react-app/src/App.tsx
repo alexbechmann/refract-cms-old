@@ -8,7 +8,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-         <BrowserRouter>
+        <BrowserRouter>
           <Switch>
             <Route path={`/`} exact component={Products} />
             <Route path={`/admin`} component={Admin} />

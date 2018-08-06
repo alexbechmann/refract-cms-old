@@ -15,10 +15,10 @@
     "typeface-roboto": "0.0.54"
   },
   "scripts": {
-    "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build",
-    "build:watch": "nodemon --verbose --exec 'react-scripts-ts build' --watch src --watch public",
-    "test": "react-scripts-ts test --env=jsdom",
+    "start": "react-app-rewired start --scripts-version react-scripts-ts",
+    "build": "react-app-rewired build --scripts-version react-scripts-ts",
+    "test": "cross-env CI=true react-app-rewired test --scripts-version react-scripts-ts --env=jsdom",
+    "test:watch": "react-app-rewired test --scripts-version react-scripts-ts --env=jsdom",
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {

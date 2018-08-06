@@ -1,4 +1,4 @@
-import { defineEntity, TextEditor, EntityPickerEditor } from "@firestore-cms/core";
+import { defineEntity, TextEditor, EntityPickerEditor } from '@firestore-cms/core';
 
 export interface Article {
   title: string;
@@ -15,7 +15,7 @@ export default defineEntity<Article>({
     editorComponent: TextEditor({
       maxLength: 100
     }),
-    defaultValue: "default headline"
+    defaultValue: 'default headline'
   },
   relatedProducts: {
     displayName: 'Related Products',
