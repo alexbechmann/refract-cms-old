@@ -14,7 +14,7 @@ steps:
   displayName: Command Line Script
   inputs:
     filename: echo
-    arguments: '//registry.npmjs.org/:_authToken=$(NPM_TOKEN) >> %USERPROFILE%\.npmrc'
+    arguments: '//registry.npmjs.org/:_authToken=$(NPM_TOKEN) >> $(Agent.HomeDirectory)\.npmrc'
     condition: and(succeeded(), eq(variables['NPM_TOKEN'], 'true'))
 
 - task: Npm@1
