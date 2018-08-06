@@ -30,7 +30,7 @@ steps:
   displayName: Command Line Script
   inputs:
     filename: echo
-    arguments: '//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" >> ~/.npmrc'
+    arguments: '//registry.npmjs.org/:_authToken=$(NPM_TOKEN) >> ~/.npmrc'
     workingFolder: core
 
 - task: Npm@1
@@ -53,7 +53,7 @@ steps:
   displayName: Command Line Script
   inputs:
     filename: echo
-    arguments: '//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" >> ~/.npmrc'
+    arguments: '//registry.npmjs.org/:_authToken=$(NPM_TOKEN) >> ~/.npmrc'
     workingFolder: functions
 
 - task: Npm@1
