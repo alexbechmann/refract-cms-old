@@ -56,5 +56,20 @@ steps:
     arguments: '//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" >> ~/.npmrc'
     workingFolder: functions
 
+- task: Npm@1
+  inputs:
+    command: "custom"
+    verbose: "false"
+    customCommand: "publish"
+    workingDir: "core"
+    condition: and(succeeded(), eq(variables['NPM_TOKEN'], 'true'))
+
+- task: Npm@1
+  inputs:
+    command: "custom"
+    verbose: "false"
+    customCommand: "publish"
+    workingDir: "functions"
+    condition: and(succeeded(), eq(variables['NPM_TOKEN'], 'true'))
 
 
