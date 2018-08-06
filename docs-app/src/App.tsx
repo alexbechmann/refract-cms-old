@@ -5,7 +5,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Typography variant='title'>Firestore-CMS</Typography>
+        <Typography variant="title">Firestore-CMS</Typography>
         <p>Docs coming soon...</p>
       </div>
     );

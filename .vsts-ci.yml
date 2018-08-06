@@ -81,7 +81,7 @@ steps:
   condition: eq(variables['DEPLOY'], 'true')
   displayName: Config transform - .firebaserc
   inputs:
-    sourcePath: '.firebaserc'
+    sourcePath: 'docs-app/.firebaserc'
     transformations: |
      {
        "projects/default": "$(REACT_APP_FIREBASE_CONFIG_PROJECT_ID)"
