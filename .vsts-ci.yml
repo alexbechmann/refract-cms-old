@@ -43,18 +43,24 @@ steps:
   displayName: Update package version
 
 - task: Npm@1
-  displayName: npm publish
+  displayName: npm custom
   inputs:
-    command: publish
+    command: custom
     workingDir: core
+    verbose: false
+    customCommand: 'publish --access public'
+    customEndpoint: npm
     publishEndpoint: npm
     condition: and(succeeded(), eq(variables['DEPLOY_NPM'], 'true'))
 
 - task: Npm@1
-  displayName: npm publish
+  displayName: npm custom
   inputs:
-    command: publish
+    command: custom
     workingDir: functions
+    verbose: false
+    customCommand: 'publish --access public'
+    customEndpoint: npm
     publishEndpoint: npm
     condition: and(succeeded(), eq(variables['DEPLOY_NPM'], 'true'))
 
@@ -71,3 +77,13 @@ steps:
     customCommand: "run build"
     workingDir: "docs-app"
 
+# - task: sergeyzwezdin.magic-chunks.magic.chunks.MagicChunks@2
+#   displayName: Config transform - dfsdf
+#   inputs:
+#     sourcePath: dfsdf
+#     transformations: |
+#      {
+#        "projects": {
+#          "default": "$(FIREBASE_PROJECT_NAME)"
+#        }
+#      }
