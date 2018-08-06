@@ -5,5 +5,22 @@
       "config/**/*.js",
       "node_modules/**/*.ts"
     ]
+  },
+  "rules": {
+    "object-literal-sort-keys": false,
+    "ordered-imports": false,
+    "interface-name": [
+      true,
+      "never-prefix"
+    ],
+    "member-access": [
+      true,
+      "no-public"
+    ],
+    "no-empty-interface": false,
+    "no-console": false,
+    "object-literal-shorthand": false,
+    "jsx-boolean-value": false,
+    "jsx-no-lambda": false
   }
 }
