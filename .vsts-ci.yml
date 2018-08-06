@@ -14,7 +14,7 @@ steps:
   displayName: Command Line Script
   inputs:
     filename: echo
-    arguments: '//registry.npmjs.org/:_authToken=$(NPM_TOKEN) >> %HOMEDRIVE%%HOMEPATH%\.npmrc'
+    arguments: '//registry.npmjs.org/:_authToken=$(NPM_TOKEN) >> %USERPROFILE%\.npmrc'
     condition: and(succeeded(), eq(variables['NPM_TOKEN'], 'true'))
 
 - task: Npm@1
@@ -65,4 +65,16 @@ steps:
     workingDir: "functions"
     condition: and(succeeded(), eq(variables['NPM_TOKEN'], 'true'))
 
+- task: Npm@1
+  inputs:
+    command: "install"
+    verbose: "false"
+    workingDir: "docs-app"
+
+- task: Npm@1
+  inputs:
+    command: "custom"
+    verbose: "false"
+    customCommand: "run build"
+    workingDir: "docs-app"
 
