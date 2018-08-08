@@ -7,7 +7,7 @@ import { configureFirestoreCms } from '@firestore-cms/core';
 import Product from './products/product.model';
 import NewsArticle from './news/news-article.model';
 import Settings from './settings/settings.model';
-import firebase from 'firebase';
+import { firebase } from '@firestore-cms/core';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyD_ctkKvFL5OdIjeEBbQPWdQ-0QiKNB7bw',
@@ -19,10 +19,13 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+const firestore = firebase.firestore();
+const settings = { timestampsInSnapshots: true };
+firestore.settings(settings);
 
 configureFirestoreCms({
   schema: [Product, NewsArticle, Settings],
-  firebaseConfig
+  firebaseConfig: {}
 });
 
 ReactDOM.render(<App />, document.getElementById('root') as HTMLElement);

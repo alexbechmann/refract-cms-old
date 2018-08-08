@@ -42,5 +42,8 @@
     "ts-loader": "^4.3.0",
     "typescript": "^2.8.3",
     "webpack-node-externals": "^1.7.2"
+  },
+  "peerDependencies": {
+    "firebase": "^5.3.0"
   }
 }
