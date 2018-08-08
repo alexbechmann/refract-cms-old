@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import * as firebase from 'firebase';
 import * as Icons from '@material-ui/icons';
-import createUniqueString from 'unique-string';
+import * as createUniqueString from 'unique-string';
 import { MediaItem } from '../media/media-item.model';
 
 export interface MediaPickerEditorOptions {
