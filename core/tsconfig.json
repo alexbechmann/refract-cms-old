@@ -11,8 +11,8 @@
     "baseUrl": "./",
     "outDir": "./",
     "jsx": "react",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "allowSyntheticDefaultImports": false,
+    "esModuleInterop": false
   },
   "files": [
     "./src/index.ts"

@@ -4,11 +4,16 @@ import { TextField } from '@material-ui/core';
 
 export interface TextEditorOptions {
   maxLength?: number;
+  multiline?: boolean;
+  rowsMax?: number;
 }
 
 export default (options?: TextEditorOptions) => (props: PropertyEditorProps<string>) => {
   return (
     <TextField
+      multiline={options.multiline}
+      rowsMax={options.rowsMax}
+      fullWidth
       inputProps={{
         maxLength: options.maxLength
       }}

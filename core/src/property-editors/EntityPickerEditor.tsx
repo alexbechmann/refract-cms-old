@@ -9,7 +9,7 @@ import {
   Checkbox,
   CircularProgress
 } from '@material-ui/core';
-import firebase from 'firebase';
+import * as firebase from 'firebase';
 
 export interface EntityPickerEditorOptions {
   max: number;
@@ -39,6 +39,7 @@ class EntityPickerEditor extends React.Component<Props, State> {
           const selected = value.some(d => d.id === doc.id);
           return !this.state.loading ? (
             <ListItem
+              disabled={value.length >= this.props.max && !selected}
               key={doc.id}
               button
               onClick={() => {

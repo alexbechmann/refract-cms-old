@@ -11,7 +11,7 @@ import {
   Button,
   Checkbox
 } from '@material-ui/core';
-import firebase from 'firebase';
+import * as firebase from 'firebase';
 import * as Icons from '@material-ui/icons';
 import createUniqueString from 'unique-string';
 import { MediaItem } from '../media/media-item.model';
@@ -84,6 +84,7 @@ class MediaPickerEditor extends React.Component<Props, State> {
           const deleting = Boolean(this.state.deleting[mediaItem.fullPath]);
           return (
             <ListItem
+              disabled={value.length >= this.props.max && !selected}
               key={index}
               button
               onClick={() => {
@@ -139,7 +140,6 @@ class MediaPickerEditor extends React.Component<Props, State> {
   // };
 
   renderProgress() {
-    console.log(this.state.uploadSnapshot);
     const { bytesTransferred, totalBytes } = this.state.uploadSnapshot!;
     return <LinearProgress variant="determinate" value={(bytesTransferred / totalBytes) * 100} />;
   }

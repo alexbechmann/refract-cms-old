@@ -1,5 +1,5 @@
 import * as React from 'react';
-import firebase from 'firebase';
+import * as firebase from 'firebase';
 import { PropertyEditorProps } from '../properties/property-editor-props';
 
 export default (props: PropertyEditorProps<firebase.firestore.GeoPoint>) => {

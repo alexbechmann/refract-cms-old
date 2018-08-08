@@ -7,7 +7,7 @@ import { combineContainers } from 'combine-containers';
 import { Routes } from '../router/routes';
 import { Button, List, ListItem, ListItemText, CircularProgress, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import firebase from 'firebase';
+import * as firebase from 'firebase';
 
 export interface EntityListProps {
   routes: Routes;

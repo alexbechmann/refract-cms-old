@@ -3,7 +3,7 @@ import { EntitySchema } from '../entities/entity-schema';
 import RenderEditor from '../property-editors/RenderEditor';
 import { Button, CircularProgress, Typography } from '@material-ui/core';
 import { RouteComponentProps, withRouter } from 'react-router';
-import firebase from 'firebase';
+import * as firebase from 'firebase';
 import { connect } from 'react-redux';
 import { combineContainers } from 'combine-containers';
 import { AppState } from '../state/app.state';
