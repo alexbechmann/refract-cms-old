@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { EntitySchema } from '../entities/entity-schema';
 import RenderEditor from '../property-editors/RenderEditor';
-import { Button, CircularProgress, Typography } from '@material-ui/core';
+import { Button, CircularProgress, Typography, Table, TableBody, TableRow, TableCell, Grid } from '@material-ui/core';
 import { RouteComponentProps, withRouter } from 'react-router';
 import * as firebase from 'firebase';
 import { connect } from 'react-redux';
@@ -54,6 +54,7 @@ class EntityForm extends React.Component<Props, State> {
 
     this.save = this.save.bind(this);
     this.delete = this.delete.bind(this);
+    this.back = this.back.bind(this);
   }
 
   render() {
@@ -61,42 +62,48 @@ class EntityForm extends React.Component<Props, State> {
     return this.state.loading ? (
       <CircularProgress />
     ) : (
-      <div>
-        <Typography variant="title" gutterBottom>
-          {entity.options.displayName || entity.options.alias}
-        </Typography>
-        <table>
-          <tbody>
-            {Object.keys(entity.properties).map((propertyKey: string, index: number) => {
-              const propertyOptions = entity.properties[propertyKey];
-              return (
-                <tr key={index}>
-                  <td>{propertyOptions.displayName || propertyKey}</td>
-                  <td>
-                    <RenderEditor
-                      setValue={value => {
-                        this.setState({
-                          updateValues: {
-                            ...this.state.updateValues,
-                            [propertyKey]: value
-                          }
-                        });
-                      }}
-                      value={this.state.updateValues[propertyKey]}
-                      propertyKey={propertyKey}
-                      propertyOptions={propertyOptions}
-                    />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        <Button color="primary" onClick={this.save}>
-          Save
-        </Button>
-        <Button onClick={this.delete}>Delete</Button>
-      </div>
+      <Grid justify="center" container>
+        <Grid xs={12} sm={12} md={10} lg={8} xl={6}>
+          <br />
+          <Button onClick={this.back}>Back</Button>
+          <br />
+          <br />
+          <Typography variant="title" gutterBottom>
+            {entity.options.displayName || entity.options.alias}
+          </Typography>
+          <Table>
+            <TableBody>
+              {Object.keys(entity.properties).map((propertyKey: string, index: number) => {
+                const propertyOptions = entity.properties[propertyKey];
+                return (
+                  <TableRow key={index}>
+                    <TableCell numeric>{propertyOptions.displayName || propertyKey}</TableCell>
+                    <TableCell>
+                      <RenderEditor
+                        setValue={value => {
+                          this.setState({
+                            updateValues: {
+                              ...this.state.updateValues,
+                              [propertyKey]: value
+                            }
+                          });
+                        }}
+                        value={this.state.updateValues[propertyKey]}
+                        propertyKey={propertyKey}
+                        propertyOptions={propertyOptions}
+                      />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+          <Button color="primary" onClick={this.save}>
+            Save
+          </Button>
+          <Button onClick={this.delete}>Delete</Button>
+        </Grid>
+      </Grid>
     );
   }
 

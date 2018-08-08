@@ -2,7 +2,6 @@ import { defineEntity, TextEditor, EntityPickerEditor } from '@firestore-cms/cor
 
 export interface Article {
   title: string;
-  // relatedProductsIds: string[];
   relatedProducts: firebase.firestore.DocumentReference[];
   articleText: string;
 }
@@ -26,12 +25,11 @@ export default defineEntity<Article>({
     })
   },
   articleText: {
-    displayName: 'Headline',
+    displayName: 'Article text',
     editorComponent: TextEditor({
       maxLength: 100,
-      multiline: true,
-      rowsMax: 4
+      multiline: true
     }),
-    defaultValue: 'default headline'
+    defaultValue: ''
   }
 });
