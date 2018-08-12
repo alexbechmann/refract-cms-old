@@ -8,6 +8,7 @@ import Product from './products/product.model';
 import NewsArticle from './news/news-article.model';
 import Settings from './settings/settings.model';
 import { firebase } from '@firestore-cms/core';
+import '@firestore-cms/core/node_modules/react-image-crop/dist/ReactCrop.css';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyD_ctkKvFL5OdIjeEBbQPWdQ-0QiKNB7bw',
@@ -24,8 +25,7 @@ const settings = { timestampsInSnapshots: true };
 firestore.settings(settings);
 
 configureFirestoreCms({
-  schema: [Product, NewsArticle, Settings],
-  firebaseConfig: {}
+  schema: [Product, NewsArticle, Settings]
 });
 
 ReactDOM.render(<App />, document.getElementById('root') as HTMLElement);

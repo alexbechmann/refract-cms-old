@@ -12,9 +12,8 @@ import {
   Checkbox
 } from '@material-ui/core';
 import * as firebase from 'firebase';
-import * as Icons from '@material-ui/icons';
-import * as createUniqueString from 'unique-string';
 import { MediaItem } from '../media/media-item.model';
+import ImageUploader from '../media/ImageUploader';
 
 export interface MediaPickerEditorOptions {
   max: number;
@@ -24,7 +23,6 @@ export interface MediaPickerEditorOptions {
 interface State {
   docs: firebase.firestore.DocumentSnapshot[];
   loading: boolean;
-  uploadSnapshot?: firebase.storage.UploadTaskSnapshot;
   deleting: any;
 }
 
@@ -63,13 +61,7 @@ class MediaPickerEditor extends React.Component<Props, State> {
     return (
       <div>
         {this.renderSelectedImages()}
-        {this.state.uploadSnapshot && this.renderProgress()}
-        <input onChange={this.handleImageChange} accept="image/*" id="icon-button-file" type="file" />
-        <label htmlFor="icon-button-file">
-          <IconButton color="primary" component="span">
-            <Icons.Photo />
-          </IconButton>
-        </label>
+        <ImageUploader />
       </div>
     );
   }
@@ -138,37 +130,6 @@ class MediaPickerEditor extends React.Component<Props, State> {
   //     })
   //     .catch(console.log);
   // };
-
-  renderProgress() {
-    const { bytesTransferred, totalBytes } = this.state.uploadSnapshot!;
-    return <LinearProgress variant="determinate" value={(bytesTransferred / totalBytes) * 100} />;
-  }
-
-  handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const uniqueString = createUniqueString();
-    const file = e.target.files[0];
-    const imageRef = firebase
-      .storage()
-      .ref()
-      .child('firestore-cms')
-      .child('media')
-      .child(`${uniqueString}_${file.name}`);
-    const uploadTask = imageRef.put(file);
-    uploadTask.on(
-      'state_changed',
-      (uploadSnapshot: firebase.storage.UploadTaskSnapshot) => {
-        this.setState({
-          uploadSnapshot
-        });
-      },
-      error => console.log(error),
-      () => {
-        this.setState({
-          uploadSnapshot: undefined
-        });
-      }
-    );
-  };
 }
 
 export default (options?: MediaPickerEditorOptions) => (
