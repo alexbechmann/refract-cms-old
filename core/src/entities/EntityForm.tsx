@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { combineContainers } from 'combine-containers';
 import { AppState } from '../state/app.state';
 import { Routes } from '../router/routes';
+import entityService from './entity.service';
 
 interface EntityFormProps {
   entity: EntitySchema;
@@ -130,42 +131,53 @@ class EntityForm extends React.Component<Props, State> {
   }
 
   delete() {
-    this.setState({
-      loading: true
-    });
-    firebase
-      .firestore()
-      .collection(this.props.entity.options.alias)
-      .doc(this.props.match.params.id)
-      .delete()
-      .then(() => {
-        this.back();
-      });
+    // this.setState({
+    //   loading: true
+    // });
+    // firebase
+    //   .firestore()
+    //   .collection(this.props.entity.options.alias)
+    //   .doc(this.props.match.params.id)
+    //   .delete()
+    //   .then(() => {
+    //     this.back();
+    //   });
   }
 
   update() {
-    firebase
-      .firestore()
-      .collection(this.props.entity.options.alias)
-      .doc(this.props.match.params.id)
-      .set(this.state.updateValues, { merge: true })
-      .then(() => this.back())
-      .catch(console.log);
+    // firebase
+    //   .firestore()
+    //   .collection(this.props.entity.options.alias)
+    //   .doc(this.props.match.params.id)
+    //   .set(this.state.updateValues, { merge: true })
+    //   .then(() => this.back())
+    //   .catch(console.log);
   }
 
   insert() {
-    firebase
-      .firestore()
-      .collection(this.props.entity.options.alias)
-      .doc()
-      .set(this.state.updateValues)
+    entityService
+      .insert({
+        entity: this.state.updateValues,
+        alias: this.props.entity.options.alias
+      })
       .then(() => {
         this.back();
         this.setState({
           loading: false
         });
-      })
-      .catch(console.log);
+      });
+    // firebase
+    //   .firestore()
+    //   .collection(this.props.entity.options.alias)
+    //   .doc()
+    //   .set(this.state.updateValues)
+    //   .then(() => {
+    //     this.back();
+    //     this.setState({
+    //       loading: false
+    //     });
+    //   })
+    //   .catch(console.log);
   }
 
   back() {
