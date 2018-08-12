@@ -1,19 +1,24 @@
 {
   "compilerOptions": {
+    "noImplicitAny": false,
     "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "./dist",
-    "baseUrl": "./",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "sourceMap": true,
-    "declaration": false,
-    "paths": {
-      "@src/*": [
-        "./src/*"
-      ]
-    },
+    "declaration": true,
+    "baseUrl": "./",
+    "outDir": "./",
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   },
+  "files": [
+    "./src/index.ts"
+  ],
   "exclude": [
+
     "node_modules"
   ]
 }

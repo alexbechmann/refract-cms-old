@@ -1,10 +1,9 @@
 import * as express from 'express';
+import { firestoreCmsRouter } from '@firestore-cms/server';
 
 const app = express();
 
-app.post('/content/:alias/:id?', (req, res) => {
-  console.log('hi2');
-})
+app.use('/cms', firestoreCmsRouter);
 
 const port = process.env.PORT || 3500;
 app.listen(port, () => {
