@@ -22,8 +22,11 @@
     "docs-app:install": "cd docs-app && npm install",
     "docs-app:start": "cd docs-app && npm run start",
     "docs-app:clean": "cd docs-app && remove-node-modules && rimraf package-lock.json",
+    "server:install": "cd server && npm install",
+    "server:start": "cd server && npm start",
+    "docker:start": "docker-compose up",
     "postinstall": "npm-run-all core:install core:build functions:install functions:build consumer-core:install consumer-functions:install docs-app:install",
-    "start": "npm-run-all -p consumer-core:start core:start consumer-functions:start functions:start docs-app:start",
+    "start": "npm-run-all -p docker:start consumer-core:start core:start consumer-functions:start functions:start docs-app:start server:start",
     "clean": "npm-run-all core:clean functions:clean consumer-core:clean consumer-functions:clean docs-app:clean"
   },
   "repository": {

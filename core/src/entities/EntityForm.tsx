@@ -148,7 +148,7 @@ class EntityForm extends React.Component<Props, State> {
       .firestore()
       .collection(this.props.entity.options.alias)
       .doc(this.props.match.params.id)
-      .update(this.state.updateValues)
+      .set(this.state.updateValues, { merge: true })
       .then(() => this.back())
       .catch(console.log);
   }
