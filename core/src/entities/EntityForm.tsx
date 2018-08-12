@@ -63,7 +63,7 @@ class EntityForm extends React.Component<Props, State> {
       <CircularProgress />
     ) : (
       <Grid justify="center" container>
-        <Grid xs={12} sm={12} md={10} lg={8} xl={6}>
+        <Grid item xs={12} sm={12} md={10} lg={8} xl={6}>
           <br />
           <Button onClick={this.back}>Back</Button>
           <br />

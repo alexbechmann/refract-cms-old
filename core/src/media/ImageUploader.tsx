@@ -1,31 +1,40 @@
 import * as React from 'react';
 import * as ReactCrop from 'react-image-crop';
 import * as firebase from 'firebase';
-import { LinearProgress, IconButton } from '@material-ui/core';
+import { LinearProgress, IconButton, Button } from '@material-ui/core';
 import * as Icons from '@material-ui/icons';
 import * as createUniqueString from 'unique-string';
+import { resolve } from 'dns';
 
 interface State {
   uploadSnapshot?: firebase.storage.UploadTaskSnapshot;
   cropperSrc?: string;
+  crop?: any;
   selectedFile?: File;
   croppedBlob?: Blob;
+  croppedPreviewSrc?: string;
 }
 
 class ImageUploader extends React.Component<{}, State> {
   state: State = {};
+
+  constructor(props) {
+    super(props);
+    this.upload = this.upload.bind(this);
+  }
 
   render() {
     return (
       <div>
         {this.state.uploadSnapshot && this.renderProgress()}
         {this.state.cropperSrc && this.renderCropper()}
-        <input onChange={this.handleImageChange} accept="image/*" id="icon-button-file" type="file" />
+        <input hidden onChange={this.handleImageChange} accept="image/*" id="icon-button-file" type="file" />
         <label htmlFor="icon-button-file">
           <IconButton color="primary" component="span">
             <Icons.Photo />
           </IconButton>
         </label>
+        {this.state.croppedBlob && this.renderPreview()}
       </div>
     );
   }
@@ -34,19 +43,31 @@ class ImageUploader extends React.Component<{}, State> {
     return (
       <ReactCrop
         src={this.state.cropperSrc}
-        onChange={console.log}
-        crop={{
-          aspect: 16 / 9
+        onChange={crop => this.setState({ crop })}
+        onImageLoaded={image => {
+          const crop = { x: 0, y: 0, width: image.width, height: image.height };
+          this.setState({ crop });
+          this.handleCropComplete(null, crop);
         }}
+        crop={this.state.crop}
         style={{
-          width: '100%',
           height: '100px'
         }}
+        onComplete={this.handleCropComplete}
       />
     );
   }
 
-  handleCropChange = crop => {
+  renderPreview() {
+    return (
+      <div>
+        <img style={{ maxHeight: 100, maxWidth: 100 }} src={this.state.croppedPreviewSrc} />
+        <Button onClick={this.upload}> Upload</Button>
+      </div>
+    );
+  }
+
+  handleCropComplete = (_, crop) => {
     const canvas = document.createElement('canvas');
     canvas.width = crop.width;
     canvas.height = crop.height;
@@ -54,37 +75,42 @@ class ImageUploader extends React.Component<{}, State> {
 
     const image = new Image();
     image.src = this.state.cropperSrc;
-    image.onload = () => {
-      ctx.drawImage(image, crop.x, crop.y, crop.width, crop.height, 0, 0, crop.width, crop.height);
+    ctx.drawImage(image, crop.x, crop.y, crop.width, crop.height, 0, 0, crop.width, crop.height);
 
-      // As Base64 string
-      // const base64Image = canvas.toDataURL('image/jpeg');
+    // As Base64 string
+    // const base64Image = canvas.toDataURL('image/jpeg');
 
-      // As a blob
-      new Promise((resolve, reject) => {
-        canvas.toBlob(croppedBlob => {
-          //file.name = fileName;
-          this.setState({
-            croppedBlob
-          });
-        }, 'image/jpeg');
+    // As a blob
+    canvas.toBlob(croppedBlob => {
+      //file.name = fileName;
+      this.setState({
+        croppedBlob
       });
-    };
+      this.toDataUrl(croppedBlob).then(dataUrl => {
+        this.setState({
+          croppedPreviewSrc: dataUrl
+        });
+      });
+    }, 'image/jpeg');
   };
 
   handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files[0];
-    var fileReader = new FileReader();
-
-    fileReader.onload = e => {
+    this.toDataUrl(selectedFile).then(dataUrl => {
       this.setState({
-        cropperSrc: e.target.result,
+        cropperSrc: dataUrl,
         selectedFile
       });
-    };
-
-    fileReader.readAsDataURL(selectedFile);
+    });
   };
+
+  toDataUrl(file) {
+    return new Promise<string>((resolve, reject) => {
+      var fileReader = new FileReader();
+      fileReader.onload = e => resolve(e.target.result);
+      fileReader.readAsDataURL(file);
+    });
+  }
 
   upload() {
     const uniqueString = createUniqueString();

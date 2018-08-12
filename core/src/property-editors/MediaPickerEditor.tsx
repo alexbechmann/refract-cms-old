@@ -60,8 +60,8 @@ class MediaPickerEditor extends React.Component<Props, State> {
   render() {
     return (
       <div>
-        {this.renderSelectedImages()}
         <ImageUploader />
+        {this.renderSelectedImages()}
       </div>
     );
   }
