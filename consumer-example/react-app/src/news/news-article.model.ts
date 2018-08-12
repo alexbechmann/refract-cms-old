@@ -2,7 +2,7 @@ import { defineEntity, TextEditor, EntityPickerEditor } from '@firestore-cms/cor
 
 export interface Article {
   title: string;
-  relatedProducts: firebase.firestore.DocumentReference[];
+  relatedProducts: string[];
   articleText: string;
 }
 

@@ -1,7 +1,20 @@
 import * as React from 'react';
-import { EntitySchema } from '../entities/entity-schema';
+import { EntitySchema } from './entity-schema';
 import RenderEditor from '../property-editors/RenderEditor';
-import { Button, CircularProgress, Typography, Table, TableBody, TableRow, TableCell, Grid } from '@material-ui/core';
+import {
+  Button,
+  CircularProgress,
+  Typography,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  Grid,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader
+} from '@material-ui/core';
 import { RouteComponentProps, withRouter } from 'react-router';
 import * as firebase from 'firebase';
 import { connect } from 'react-redux';
@@ -40,15 +53,15 @@ class EntityForm extends React.Component<Props, State> {
         updateValues,
         loading: true
       };
-      firebase
-        .firestore()
-        .collection(this.props.entity.options.alias)
-        .doc(this.props.match.params.id)
-        .get()
-        .then(doc => {
+      entityService
+        .getById({
+          alias: this.props.entity.options.alias,
+          id: this.props.match.params.id
+        })
+        .then(entity => {
           this.setState({
-            updateValues: doc.data(),
-            loading: false
+            loading: false,
+            updateValues: entity
           });
         });
     }
@@ -65,44 +78,47 @@ class EntityForm extends React.Component<Props, State> {
     ) : (
       <Grid justify="center" container>
         <Grid xs={12} sm={12} md={10} lg={8} xl={6}>
-          <br />
-          <Button onClick={this.back}>Back</Button>
-          <br />
-          <br />
-          <Typography variant="title" gutterBottom>
-            {entity.options.displayName || entity.options.alias}
-          </Typography>
-          <Table>
-            <TableBody>
+          <Card>
+            <CardContent>
+              <CardHeader title={entity.options.displayName || entity.options.alias} />
               {Object.keys(entity.properties).map((propertyKey: string, index: number) => {
                 const propertyOptions = entity.properties[propertyKey];
                 return (
-                  <TableRow key={index}>
-                    <TableCell numeric>{propertyOptions.displayName || propertyKey}</TableCell>
-                    <TableCell>
-                      <RenderEditor
-                        setValue={value => {
-                          this.setState({
-                            updateValues: {
-                              ...this.state.updateValues,
-                              [propertyKey]: value
-                            }
-                          });
-                        }}
-                        value={this.state.updateValues[propertyKey]}
-                        propertyKey={propertyKey}
-                        propertyOptions={propertyOptions}
-                      />
-                    </TableCell>
-                  </TableRow>
+                  <div key={index} style={{ marginBottom: '20px' }}>
+                    <Grid container>
+                      <Grid item xs={12} md={3}>
+                        <Typography variant="subheading" gutterBottom>
+                          {propertyOptions.displayName || propertyKey}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={9}>
+                        <RenderEditor
+                          setValue={value => {
+                            this.setState({
+                              updateValues: {
+                                ...this.state.updateValues,
+                                [propertyKey]: value
+                              }
+                            });
+                          }}
+                          value={this.state.updateValues[propertyKey]}
+                          propertyKey={propertyKey}
+                          propertyOptions={propertyOptions}
+                        />
+                      </Grid>
+                    </Grid>
+                  </div>
                 );
               })}
-            </TableBody>
-          </Table>
-          <Button color="primary" onClick={this.save}>
-            Save
-          </Button>
-          <Button onClick={this.delete}>Delete</Button>
+            </CardContent>
+            <CardActions>
+              <Button onClick={this.back}>Back</Button>
+              <Button onClick={this.delete}>Delete</Button>
+              <Button color="primary" onClick={this.save}>
+                Save
+              </Button>
+            </CardActions>
+          </Card>
         </Grid>
       </Grid>
     );
@@ -110,48 +126,37 @@ class EntityForm extends React.Component<Props, State> {
 
   save() {
     if (!this.props.match.params.id) {
-      this.setState(
-        {
-          loading: true
-        },
-        () => {
-          this.insert();
-        }
-      );
+      this.setState({
+        loading: true
+      });
+      this.insert();
     } else {
-      this.setState(
-        {
-          loading: true
-        },
-        () => {
-          this.update();
-        }
-      );
+      this.setState({
+        loading: true
+      });
+      this.update();
     }
   }
 
   delete() {
-    // this.setState({
-    //   loading: true
-    // });
-    // firebase
-    //   .firestore()
-    //   .collection(this.props.entity.options.alias)
-    //   .doc(this.props.match.params.id)
-    //   .delete()
-    //   .then(() => {
-    //     this.back();
-    //   });
+    entityService
+      .delete({
+        id: this.props.match.params.id,
+        alias: this.props.entity.options.alias
+      })
+      .then(() => {
+        this.back();
+      });
   }
 
   update() {
-    // firebase
-    //   .firestore()
-    //   .collection(this.props.entity.options.alias)
-    //   .doc(this.props.match.params.id)
-    //   .set(this.state.updateValues, { merge: true })
-    //   .then(() => this.back())
-    //   .catch(console.log);
+    entityService
+      .update({
+        id: this.props.match.params.id,
+        entity: this.state.updateValues,
+        alias: this.props.entity.options.alias
+      })
+      .then(() => this.back());
   }
 
   insert() {
@@ -166,18 +171,6 @@ class EntityForm extends React.Component<Props, State> {
           loading: false
         });
       });
-    // firebase
-    //   .firestore()
-    //   .collection(this.props.entity.options.alias)
-    //   .doc()
-    //   .set(this.state.updateValues)
-    //   .then(() => {
-    //     this.back();
-    //     this.setState({
-    //       loading: false
-    //     });
-    //   })
-    //   .catch(console.log);
   }
 
   back() {

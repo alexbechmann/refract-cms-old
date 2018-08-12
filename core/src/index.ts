@@ -11,5 +11,5 @@ export { default as MultipleDropdownEditor } from './property-editors/MultipleDr
 export { MediaItem } from './media/media-item.model';
 
 // for local dev
-import * as firebase from 'firebase/app';
+import * as firebase from 'firebase';
 export { firebase };

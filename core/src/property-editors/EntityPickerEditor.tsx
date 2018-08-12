@@ -9,7 +9,8 @@ import {
   Checkbox,
   CircularProgress
 } from '@material-ui/core';
-import * as firebase from 'firebase';
+import entityService from '../entities/entity.service';
+import { Entity } from '../entities/entity.model';
 
 export interface EntityPickerEditorOptions {
   max: number;
@@ -17,17 +18,17 @@ export interface EntityPickerEditorOptions {
 }
 
 interface State {
-  docs: firebase.firestore.DocumentReference[];
+  entities: Entity[];
   loading: boolean;
 }
 
-interface Props extends EntityPickerEditorOptions, PropertyEditorProps<firebase.firestore.DocumentReference[]> {}
+interface Props extends EntityPickerEditorOptions, PropertyEditorProps<string[]> {}
 
 class EntityPickerEditor extends React.Component<Props, State> {
   unsubscribe?: () => void;
 
   state: State = {
-    docs: [],
+    entities: [],
     loading: true
   };
 
@@ -35,21 +36,21 @@ class EntityPickerEditor extends React.Component<Props, State> {
     const value = this.props.value || [];
     return (
       <List>
-        {this.state.docs.map(doc => {
-          const selected = value.some(d => d.id === doc.id);
+        {this.state.entities.map(entity => {
+          const selected = value.some(id => id === entity._id);
           return !this.state.loading ? (
             <ListItem
               disabled={value.length >= this.props.max && !selected}
-              key={doc.id}
+              key={entity._id}
               button
               onClick={() => {
                 const newValue = selected
-                  ? value.filter(d => d.id !== doc.id)
-                  : [...value.filter(d => d.id !== doc.id), doc];
+                  ? value.filter(id => id !== entity._id)
+                  : [...value.filter(id => id !== entity._id), entity._id];
                 this.props.setValue(newValue);
               }}
             >
-              <ListItemText primary={doc.id} />
+              <ListItemText primary={entity._id} />
               <ListItemSecondaryAction>
                 <Checkbox checked={selected} />
               </ListItemSecondaryAction>
@@ -63,17 +64,12 @@ class EntityPickerEditor extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.unsubscribe = firebase
-      .firestore()
-      .collection('product')
-      .onSnapshot(snapshot => {
-        this.setState({
-          docs: snapshot.docs.map(doc => doc.ref)
-        });
-        this.setState({
-          loading: false
-        });
+    entityService.getAll({ alias: this.props.entityAlias }).then(entities => {
+      this.setState({
+        entities,
+        loading: false
       });
+    });
   }
 
   componentWillUnmount() {
@@ -83,6 +79,6 @@ class EntityPickerEditor extends React.Component<Props, State> {
   }
 }
 
-export default (options?: EntityPickerEditorOptions) => (
-  props: PropertyEditorProps<firebase.firestore.DocumentReference[]>
-) => <EntityPickerEditor {...props} {...options} />;
+export default (options?: EntityPickerEditorOptions) => (props: PropertyEditorProps<string[]>) => (
+  <EntityPickerEditor {...props} {...options} />
+);
