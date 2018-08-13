@@ -15,21 +15,21 @@ export interface EntitiesProps {
   routes: Routes;
 }
 
-interface State {
-  tabIndex: number;
-}
+interface State {}
 
-interface Props extends EntitiesProps, RouteComponentProps<{}> {}
+interface Props
+  extends EntitiesProps,
+    RouteComponentProps<{
+      entityAlias?: string;
+    }> {}
 
 class Entities extends React.Component<Props, State> {
-  state: State = {
-    tabIndex: 0
-  };
+  state: State = {};
 
   componentDidMount() {
-    const { entities, routes } = this.props;
-    if (entities.length > 1) {
-      //this.props.history.push(routes.entityRoot.url(entities[0].options.alias));
+    const { entities, routes, match } = this.props;
+    if (entities.length > 1 && match.params.entityAlias === 'undefined') {
+      this.props.history.push(routes.entityRoot.url(entities[0].options.alias));
     }
   }
 
@@ -38,16 +38,17 @@ class Entities extends React.Component<Props, State> {
     return (
       <div>
         <Tabs
-          value={this.state.tabIndex}
-          onChange={(e, tabIndex) => {
-            this.setState({
-              tabIndex
-            });
-            this.props.history.push(routes.entityRoot.url(entities[tabIndex].options.alias));
+          value={this.props.match.params.entityAlias}
+          onChange={(e, value) => {
+            this.props.history.push(routes.entityRoot.url(value));
           }}
         >
           {entities.map(entity => (
-            <Tab key={entity.options.alias} label={entity.options.displayName || entity.options.alias} />
+            <Tab
+              value={entity.options.alias}
+              key={entity.options.alias}
+              label={entity.options.displayName || entity.options.alias}
+            />
           ))}
         </Tabs>
       </div>

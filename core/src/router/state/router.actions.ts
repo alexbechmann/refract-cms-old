@@ -10,8 +10,8 @@ export const setBaseRoute = (baseRoute: string) => {
       url: <T>() => buildPath('/')
     },
     content: {
-      path: <T>() => buildPath('/content'),
-      url: <T>() => buildPath('/content')
+      path: <T>() => buildPath(`/content/:entityAlias?`),
+      url: <T>(entityAlias?: string) => buildPath(`/content/${entityAlias}`)
     },
     entityRoot: {
       path: <T>(entityAlias: string) => buildPath(`/content/${entityAlias}`),

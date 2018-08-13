@@ -5,7 +5,7 @@ export interface Routes {
   };
   content: {
     path: () => string;
-    url: () => string;
+    url: (entityAlias?: string) => string;
   };
   entityRoot: {
     path: (entityAlias: string) => string;
