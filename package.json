@@ -9,16 +9,9 @@
     "core:build": "cd core && npm run build",
     "core:start": "cd core && npm start",
     "core:clean": "cd core && remove-node-modules && rimraf package-lock.json",
-    "functions:install": "cd functions && npm install",
-    "functions:build": "cd functions && npm run build",
-    "functions:start": "cd functions && npm start",
-    "functions:clean": "cd functions && remove-node-modules && rimraf package-lock.json",
     "consumer-core:install": "cd consumer-example/react-app && npm install",
     "consumer-core:start": "cd consumer-example/react-app && npm run start",
     "consumer-core:clean": "cd consumer-example/react-app && remove-node-modules && rimraf package-lock.json",
-    "consumer-functions:install": "cd consumer-example/functions && npm install",
-    "consumer-functions:start": "cd consumer-example/functions && npm run start",
-    "consumer-functions:clean": "cd consumer-example/functions && remove-node-modules && rimraf package-lock.json",
     "docs-app:install": "cd docs-app && npm install",
     "docs-app:start": "cd docs-app && npm run start",
     "docs-app:clean": "cd docs-app && remove-node-modules && rimraf package-lock.json",
@@ -32,7 +25,7 @@
     "docker:start": "docker-compose up",
     "postinstall": "npm-run-all core:install core:build consumer-core:install docs-app:install server:install consumer-server:install",
     "start": "npm run core:build && npm run server:build && npm-run-all -p docker:start consumer-core:start core:start docs-app:start server:start consumer-server:start",
-    "clean": "npm-run-all core:clean functions:clean consumer-core:clean consumer-functions:clean docs-app:clean server:clean consumer-server:clean"
+    "clean": "npm-run-all core:clean consumer-core:clean docs-app:clean server:clean consumer-server:clean"
   },
   "repository": {
     "type": "git",
