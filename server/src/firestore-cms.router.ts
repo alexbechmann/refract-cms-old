@@ -6,6 +6,7 @@ import { ObjectID } from 'bson';
 import * as cors from 'cors';
 import * as multer from 'multer';
 import * as fs from 'fs';
+import jimp = require('jimp');
 
 var router = express.Router();
 
@@ -87,9 +88,12 @@ router.get('/media/file/:id?', async (req, res) => {
   const db = await mongoHelper.db();
   const { id } = req.params;
   const entity = await db.collection('media').findOne({ _id: new ObjectID(id) });
-  var img = fs.readFileSync(entity.path);
+  const img = await jimp.read(entity.path);
+  img.cover(100, 100);
+  const imgBuffer = await img.getBufferAsync(entity.mimetype);
+  //var img = fs.readFileSync(entity.path);
   res.writeHead(200, { 'Content-Type': entity.mimetype });
-  res.end(img, 'binary');
+  res.end(imgBuffer, 'binary');
 });
 
 router.post('/media', upload.single('file'), async (req, res) => {
