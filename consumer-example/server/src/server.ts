@@ -2,7 +2,6 @@ import * as express from 'express';
 import { firestoreCmsRouter } from '@firestore-cms/server';
 
 const app = express();
-
 app.use('/cms', firestoreCmsRouter);
 
 const port = process.env.PORT || 3500;

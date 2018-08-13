@@ -1,8 +1,9 @@
-import express, { Router } from 'express';
-import cors from 'cors';
-import bodyParser from 'body-parser';
+import * as express from 'express';
+import * as bodyParser from 'body-parser';
+import { Router } from 'express';
 import { mongoHelper } from './db/mongo-helper';
-import { ObjectID, ObjectId } from 'bson';
+import { ObjectID } from 'bson';
+import * as cors from 'cors';
 
 var router = express.Router();
 

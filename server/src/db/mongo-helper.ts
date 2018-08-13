@@ -1,5 +1,6 @@
-import MongoClient, { Db } from 'mongodb';
+import * as MongoClient from 'mongodb';
 import { createQuery } from 'odata-v4-mongodb';
+import { Db } from 'mongodb';
 
 var mongoDb: Db;
 

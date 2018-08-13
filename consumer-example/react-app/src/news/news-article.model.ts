@@ -1,12 +1,7 @@
-import { defineEntity, TextEditor, EntityPickerEditor } from '@firestore-cms/core';
+import { defineEntity, TextEditor } from '@firestore-cms/core';
+import CustomDropdownEditor from '../property-editors/CustomDropdownEditor';
 
-export interface Article {
-  title: string;
-  relatedProducts: string[];
-  articleText: string;
-}
-
-export default defineEntity<Article>({
+export default defineEntity({
   alias: 'newsArticle',
   displayName: 'News Article'
 })({
@@ -17,12 +12,10 @@ export default defineEntity<Article>({
     }),
     defaultValue: 'default headline'
   },
-  relatedProducts: {
-    displayName: 'Related Products',
-    editorComponent: EntityPickerEditor({
-      max: 2,
-      entityAlias: 'product'
-    })
+  customNumber: {
+    displayName: 'Custom number',
+    editorComponent: CustomDropdownEditor,
+    defaultValue: 3
   },
   articleText: {
     displayName: 'Article text',

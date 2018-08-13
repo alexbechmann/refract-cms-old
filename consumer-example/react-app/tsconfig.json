@@ -28,6 +28,11 @@
     "acceptance-tests",
     "webpack",
     "jest",
-    "src/setupTests.ts"
+    "src/setupTests.ts",
+    "typings/browser.d.ts",
+    "typings/browser",
+  ],
+  "files": [
+    "src/**/*"
   ]
 }
