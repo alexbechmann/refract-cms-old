@@ -9,6 +9,7 @@ export { default as LocationEditor } from './property-editors/LocationEditor';
 export { default as SingleDropdownEditor } from './property-editors/SingleDropdownEditor';
 export { default as MultipleDropdownEditor } from './property-editors/MultipleDropdownEditor';
 export { MediaItem } from './media/media-item.model';
+export { Location } from './location/location.model';
 
 // for local dev
 import * as firebase from 'firebase';

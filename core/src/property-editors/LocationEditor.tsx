@@ -1,21 +1,32 @@
 import * as React from 'react';
 import * as firebase from 'firebase';
 import { PropertyEditorProps } from '../properties/property-editor-props';
+import { Location } from '../location/location.model';
 
-export default (props: PropertyEditorProps<firebase.firestore.GeoPoint>) => {
-  const { value } = props;
+export default (props: PropertyEditorProps<Location>) => {
+  const value: Location = props.value || {
+    latitude: 0,
+    longitude: 0
+  };
+  const { latitude, longitude } = value;
   return (
     <div>
       <input
-        value={value ? value.longitude : ''}
+        value={value.longitude}
         onChange={e =>
-          props.setValue(new firebase.firestore.GeoPoint(value ? value.latitude : 0, parseInt(e.target.value, 10) || 0))
+          props.setValue({
+            latitude,
+            longitude: parseInt(e.target.value, 10) || 0
+          })
         }
       />
       <input
-        value={value ? value.latitude : ''}
+        value={value.latitude}
         onChange={e =>
-          props.setValue(new firebase.firestore.GeoPoint(parseInt(e.target.value, 10) || 0, value ? value.latitude : 0))
+          props.setValue({
+            longitude,
+            latitude: parseInt(e.target.value, 10) || 0
+          })
         }
       />
     </div>

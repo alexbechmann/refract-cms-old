@@ -4,7 +4,8 @@ import {
   MediaPickerEditor,
   LocationEditor,
   SingleDropdownEditor,
-  MultipleDropdownEditor
+  MultipleDropdownEditor,
+  Location
 } from '@firestore-cms/core';
 import CustomDropdownEditor from '../property-editors/CustomDropdownEditor';
 import firebase from 'firebase';
@@ -12,7 +13,7 @@ import firebase from 'firebase';
 export interface Product {
   productType: string;
   customNumber: number;
-  location: firebase.firestore.GeoPoint;
+  location: Location;
   title: string;
   images: firebase.firestore.DocumentReference[];
   category: string;
@@ -37,8 +38,7 @@ export default defineEntity<Product>({
   },
   location: {
     displayName: 'Location',
-    editorComponent: LocationEditor,
-    defaultValue: new firebase.firestore.GeoPoint(0, 0)
+    editorComponent: LocationEditor
   },
   title: {
     displayName: 'Title',

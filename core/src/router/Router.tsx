@@ -44,6 +44,7 @@ class Router extends React.Component<Props> {
             </Toolbar>
           </AppBar>
           <Switch>
+            <Route exact path={routes.root.path()} component={() => <p>Welcome to admin panel</p>} />
             <Route path={routes.content.path()} component={Entities} />
           </Switch>
           <Switch>
