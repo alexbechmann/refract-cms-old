@@ -1,4 +1,4 @@
-export interface MediaItem {
-  url: string;
-  fullPath: string;
-}
+// export interface MediaItem {
+//   url: string;
+//   fullPath: string;
+// }

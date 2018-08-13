@@ -8,6 +8,7 @@ export { default as MediaPickerEditor } from './property-editors/MediaPickerEdit
 export { default as LocationEditor } from './property-editors/LocationEditor';
 export { default as SingleDropdownEditor } from './property-editors/SingleDropdownEditor';
 export { default as MultipleDropdownEditor } from './property-editors/MultipleDropdownEditor';
-export { MediaItem } from './media/media-item.model';
+// export { MediaItem } from './media/media-item.model';
 export { Location } from './location/location.model';
 export { default as entityService } from './entities/entity.service';
+export { default as mediaService } from './media/media.service';

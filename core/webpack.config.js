@@ -1,5 +1,6 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
+var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
 function srcPath(subdir) {
   return path.join(__dirname, "src", subdir);
@@ -28,5 +29,8 @@ module.exports = {
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js"]
-  }
+  },
+  plugins: [
+    new ProgressBarPlugin()
+  ]
 };

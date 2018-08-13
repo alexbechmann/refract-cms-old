@@ -15,7 +15,7 @@ export interface Product {
   customNumber: number;
   location: Location;
   title: string;
-  images: firebase.firestore.DocumentReference[];
+  imageIds: string[];
   category: string;
   types: string[];
 }
@@ -59,7 +59,7 @@ export default defineEntity<Product>({
       selectOptions: ['Type1', 'Type2']
     })
   },
-  images: {
+  imageIds: {
     displayName: 'Images',
     editorComponent: MediaPickerEditor({
       allowedFileTypes: ['jpg'],
