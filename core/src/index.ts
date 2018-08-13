@@ -10,7 +10,4 @@ export { default as SingleDropdownEditor } from './property-editors/SingleDropdo
 export { default as MultipleDropdownEditor } from './property-editors/MultipleDropdownEditor';
 export { MediaItem } from './media/media-item.model';
 export { Location } from './location/location.model';
-
-// for local dev
-import * as firebase from 'firebase';
-export { firebase };
+export { default as entityService } from './entities/entity.service';

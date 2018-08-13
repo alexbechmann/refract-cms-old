@@ -3,7 +3,6 @@ import { PropertyEditorProps } from '../properties/property-editor-props';
 import {
   IconButton,
   LinearProgress,
-  Typography,
   List,
   ListItem,
   ListItemText,
@@ -11,7 +10,6 @@ import {
   Button,
   Checkbox
 } from '@material-ui/core';
-import * as firebase from 'firebase';
 import * as Icons from '@material-ui/icons';
 import * as createUniqueString from 'unique-string';
 import { MediaItem } from '../media/media-item.model';
@@ -28,7 +26,7 @@ interface State {
   deleting: any;
 }
 
-interface Props extends MediaPickerEditorOptions, PropertyEditorProps<firebase.firestore.DocumentReference[]> {}
+interface Props extends MediaPickerEditorOptions, PropertyEditorProps<MediaItem[]> {}
 
 class MediaPickerEditor extends React.Component<Props, State> {
   state: State = {
@@ -40,17 +38,17 @@ class MediaPickerEditor extends React.Component<Props, State> {
   unsubscribe?: () => void;
 
   componentDidMount() {
-    this.unsubscribe = firebase
-      .firestore()
-      .collection('media')
-      .onSnapshot(snapshot => {
-        this.setState({
-          docs: snapshot.docs
-        });
-        this.setState({
-          loading: false
-        });
-      });
+    // this.unsubscribe = firebase
+    //   .firestore()
+    //   .collection('media')
+    //   .onSnapshot(snapshot => {
+    //     this.setState({
+    //       docs: snapshot.docs
+    //     });
+    //     this.setState({
+    //       loading: false
+    //     });
+    //   });
   }
 
   componentWillUnmount() {
@@ -62,7 +60,7 @@ class MediaPickerEditor extends React.Component<Props, State> {
   render() {
     return (
       <div>
-        {this.renderSelectedImages()}
+        {/* {this.renderSelectedImages()} */}
         {this.state.uploadSnapshot && this.renderProgress()}
         <input onChange={this.handleImageChange} accept="image/*" id="icon-button-file" type="file" />
         <label htmlFor="icon-button-file">
@@ -74,50 +72,50 @@ class MediaPickerEditor extends React.Component<Props, State> {
     );
   }
 
-  renderSelectedImages() {
-    const value = this.props.value || [];
-    return (
-      <List>
-        {this.state.docs.map((doc, index) => {
-          const mediaItem = doc.data() as MediaItem;
-          const selected = value.some(d => d.id === doc.id);
-          const deleting = Boolean(this.state.deleting[mediaItem.fullPath]);
-          return (
-            <ListItem
-              disabled={value.length >= this.props.max && !selected}
-              key={index}
-              button
-              onClick={() => {
-                const newValue = selected
-                  ? value.filter(d => d.id !== doc.id)
-                  : [...value.filter(d => d.id !== doc.id), doc.ref];
-                this.props.setValue(newValue);
-              }}
-            >
-              <div
-                style={{
-                  height: '50px',
-                  width: '50px',
-                  backgroundImage: `url(${mediaItem.url})`,
-                  backgroundSize: 'cover'
-                }}
-              />
-              <ListItemText primary={index} />
-              <ListItemSecondaryAction>
-                {deleting ? (
-                  <p>deleting...</p>
-                ) : (
-                  <ListItemSecondaryAction>
-                    <Checkbox checked={selected} />
-                  </ListItemSecondaryAction>
-                )}
-              </ListItemSecondaryAction>
-            </ListItem>
-          );
-        })}
-      </List>
-    );
-  }
+  // renderSelectedImages() {
+  //   const value = this.props.value || [];
+  //   return (
+  //     <List>
+  //       {this.state.docs.map((doc, index) => {
+  //         const mediaItem = doc.data() as MediaItem;
+  //         const selected = value.some(d => d.id === doc.id);
+  //         const deleting = Boolean(this.state.deleting[mediaItem.fullPath]);
+  //         return (
+  //           <ListItem
+  //             disabled={value.length >= this.props.max && !selected}
+  //             key={index}
+  //             button
+  //             onClick={() => {
+  //               const newValue = selected
+  //                 ? value.filter(d => d.id !== doc.id)
+  //                 : [...value.filter(d => d.id !== doc.id), doc.ref];
+  //               this.props.setValue(newValue);
+  //             }}
+  //           >
+  //             <div
+  //               style={{
+  //                 height: '50px',
+  //                 width: '50px',
+  //                 backgroundImage: `url(${mediaItem.url})`,
+  //                 backgroundSize: 'cover'
+  //               }}
+  //             />
+  //             <ListItemText primary={index} />
+  //             <ListItemSecondaryAction>
+  //               {deleting ? (
+  //                 <p>deleting...</p>
+  //               ) : (
+  //                 <ListItemSecondaryAction>
+  //                   <Checkbox checked={selected} />
+  //                 </ListItemSecondaryAction>
+  //               )}
+  //             </ListItemSecondaryAction>
+  //           </ListItem>
+  //         );
+  //       })}
+  //     </List>
+  //   );
+  // }
 
   // removeMediaItem = (mediaRef: firebase.storage.Reference) => () => {
   //   this.setState({
@@ -145,32 +143,32 @@ class MediaPickerEditor extends React.Component<Props, State> {
   }
 
   handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const uniqueString = createUniqueString();
-    const file = e.target.files[0];
-    const imageRef = firebase
-      .storage()
-      .ref()
-      .child('firestore-cms')
-      .child('media')
-      .child(`${uniqueString}_${file.name}`);
-    const uploadTask = imageRef.put(file);
-    uploadTask.on(
-      'state_changed',
-      (uploadSnapshot: firebase.storage.UploadTaskSnapshot) => {
-        this.setState({
-          uploadSnapshot
-        });
-      },
-      error => console.log(error),
-      () => {
-        this.setState({
-          uploadSnapshot: undefined
-        });
-      }
-    );
+    // const uniqueString = createUniqueString();
+    // const file = e.target.files[0];
+    // const imageRef = firebase
+    //   .storage()
+    //   .ref()
+    //   .child('firestore-cms')
+    //   .child('media')
+    //   .child(`${uniqueString}_${file.name}`);
+    // const uploadTask = imageRef.put(file);
+    // uploadTask.on(
+    //   'state_changed',
+    //   (uploadSnapshot: firebase.storage.UploadTaskSnapshot) => {
+    //     this.setState({
+    //       uploadSnapshot
+    //     });
+    //   },
+    //   error => console.log(error),
+    //   () => {
+    //     this.setState({
+    //       uploadSnapshot: undefined
+    //     });
+    //   }
+    // );
   };
 }
 
-export default (options?: MediaPickerEditorOptions) => (
-  props: PropertyEditorProps<firebase.firestore.DocumentReference[]>
-) => <MediaPickerEditor {...props} {...options} />;
+export default (options?: MediaPickerEditorOptions) => (props: PropertyEditorProps<MediaItem[]>) => (
+  <MediaPickerEditor {...props} {...options} />
+);

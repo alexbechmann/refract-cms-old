@@ -1,6 +1,5 @@
 import { action } from 'typesafe-actions';
 import { Config } from '../config';
-import * as firebase from 'firebase';
 
 export const CONFIGURE = '@@CMS/CONFIGURE';
 

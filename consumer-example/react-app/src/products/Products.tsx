@@ -1,5 +1,5 @@
 import React from 'react';
-import { firebase } from '@firestore-cms/core';
+import { entityService } from '@firestore-cms/core';
 import { Product } from './product.model';
 import {
   Typography,
@@ -20,9 +20,8 @@ import * as Icons from '@material-ui/icons';
 import withMedia from '../media/with-media';
 
 interface State {
-  productDocuments: firebase.firestore.DocumentSnapshot[];
+  products: Product[];
   loading: boolean;
-  imageUrls: any;
 }
 
 const styles = {
@@ -39,12 +38,9 @@ const styles = {
 interface Props extends WithStyles<typeof styles> {}
 
 class Products extends React.Component<Props, State> {
-  unsubscribe?: () => void;
-
   state: State = {
-    productDocuments: [],
-    loading: true,
-    imageUrls: {}
+    products: [],
+    loading: true
   };
 
   renderImage(imageRef: firebase.firestore.DocumentReference) {
@@ -62,12 +58,10 @@ class Products extends React.Component<Props, State> {
         <Typography variant="headline" gutterBottom>
           Products
         </Typography>
-        {this.state.productDocuments.map(productDocument => {
-          const product = productDocument.data() as Product;
-          const imageRef = product.images && product.images.length > 0 ? product.images[0] : undefined;
+        {this.state.products.map(product => {
           return (
-            <Card className={classes.card} key={productDocument.id}>
-              {imageRef && this.renderImage(imageRef)}
+            <Card className={classes.card} key={product['_id']}>
+              {/* {imageRef && this.renderImage(imageRef)} */}
               <CardHeader title={product.title} />
               <CardContent>
                 <List component="nav">
@@ -96,37 +90,15 @@ class Products extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.unsubscribe = firebase
-      .firestore()
-      .collection('product')
-      .onSnapshot(snapshot => {
+    entityService
+      .getAll({
+        alias: 'product'
+      })
+      .then(products => {
         this.setState({
-          productDocuments: snapshot.docs
-        });
-        this.setState({
-          loading: false
-        });
-        snapshot.docs.map(productDocument => {
-          const product = productDocument.data() as Product;
-          const imageRef = product.images && product.images.length > 0 ? product.images[0] : undefined;
-          if (imageRef) {
-            imageRef.get().then(imageSnapshot => {
-              this.setState({
-                imageUrls: {
-                  ...this.state.imageUrls,
-                  [productDocument.id]: imageSnapshot.data()!.url
-                }
-              });
-            });
-          }
+          products
         });
       });
-  }
-
-  componentWillUnmount() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
   }
 }
 
