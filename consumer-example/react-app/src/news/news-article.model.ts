@@ -10,7 +10,8 @@ export interface NewsArticle {
 
 export default defineEntity<NewsArticle>({
   alias: 'newsArticle',
-  displayName: 'News Article'
+  displayName: 'News Article',
+  instanceDisplayName: newsArticle => `${newsArticle.title}`
 })({
   title: {
     displayName: 'Headline',
@@ -20,7 +21,7 @@ export default defineEntity<NewsArticle>({
     defaultValue: 'default headline'
   },
   customNumber: {
-    displayName: 'Custom number',
+    displayName: 'Custom property editor',
     editorComponent: CustomDropdownEditor,
     defaultValue: 3
   },

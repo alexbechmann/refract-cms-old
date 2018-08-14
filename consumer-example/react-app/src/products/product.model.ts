@@ -21,7 +21,8 @@ export interface Product {
 
 export default defineEntity<Product>({
   alias: 'product',
-  displayName: 'Product'
+  displayName: 'Product',
+  instanceDisplayName: product => `${product.title} (${product.productType})`
 })({
   productType: {
     displayName: 'Product type',

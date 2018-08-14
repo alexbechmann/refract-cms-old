@@ -36,6 +36,7 @@ class EntityList extends React.Component<Props> {
   }
 
   render() {
+    const { options } = this.props.entity;
     return this.state.loading ? (
       <CircularProgress />
     ) : (
@@ -50,6 +51,7 @@ class EntityList extends React.Component<Props> {
         )}
         <List>
           {this.state.entities.map(entity => {
+            const entityName = options.instanceDisplayName ? options.instanceDisplayName(entity) : entity._id;
             return (
               <ListItem
                 key={entity._id}
@@ -64,7 +66,7 @@ class EntityList extends React.Component<Props> {
                   />
                 )}
               >
-                <ListItemText primary={entity._id} />
+                <ListItemText primary={entityName} />
               </ListItem>
             );
           })}

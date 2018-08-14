@@ -1,5 +1,6 @@
-export interface EntityOptions { 
+export interface EntityOptions<T = {}> { 
   alias: string;
   displayName?: string;
-  maxOne?: boolean 
+  maxOne?: boolean;
+  instanceDisplayName?: (item: T) => string;
 }
