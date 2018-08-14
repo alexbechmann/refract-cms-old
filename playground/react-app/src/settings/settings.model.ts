@@ -1,6 +1,6 @@
-import { defineEntity, TextEditor } from '@firestore-cms/core';
+import { defineEntity, TextEditor, Entity } from '@firestore-cms/core';
 
-export interface Settings {
+export interface Settings extends Entity {
   setting1: string;
 }
 

@@ -1,12 +1,9 @@
 import * as React from 'react';
-import { PropertyOptions } from '../properties/property-options';
-import { Tabs, Tab, CircularProgress, LinearProgress } from '@material-ui/core';
-import { Route, RouteComponentProps, withRouter } from 'react-router';
+import { Tabs, Tab, LinearProgress, WithStyles, withStyles } from '@material-ui/core';
+import { RouteComponentProps, withRouter } from 'react-router';
 import { combineContainers } from 'combine-containers';
 import { AppState } from '../state/app.state';
 import { connect } from 'react-redux';
-import EntityForm from './EntityForm';
-import EntityList from './EntityList';
 import { EntitySchema } from './entity-schema';
 import { Routes } from '../router/routes';
 
@@ -19,22 +16,29 @@ interface State {}
 
 interface Props
   extends EntitiesProps,
+    WithStyles<typeof styles>,
     RouteComponentProps<{
       entityAlias?: string;
     }> {}
 
+const styles = theme => ({
+  tabs: {
+    marginBottom: theme.spacing.unit
+  }
+});
+
 class Entities extends React.Component<Props, State> {
   state: State = {};
 
-  componentDidMount() {
-    const { entities, routes, match } = this.props;
+  componentWillReceiveProps(props) {
+    const { entities, routes, match } = props;
     if (entities.length > 1 && match.params.entityAlias === 'undefined') {
       this.props.history.push(routes.entityRoot.url(entities[0].options.alias));
     }
   }
 
   render() {
-    const { entities, routes, match, history } = this.props;
+    const { entities, routes, classes, match, history } = this.props;
     return match.params.entityAlias ? (
       <div>
         <Tabs
@@ -42,6 +46,7 @@ class Entities extends React.Component<Props, State> {
           onChange={(e, value) => {
             history.push(routes.entityRoot.url(value));
           }}
+          className={classes.tabs}
         >
           {entities.map(entity => (
             <Tab
@@ -65,4 +70,6 @@ function mapStateToProps(state: AppState): EntitiesProps {
   };
 }
 
-export default combineContainers(withRouter, connect(mapStateToProps))(Entities) as React.ComponentType;
+export default combineContainers(withStyles(styles), withRouter, connect(mapStateToProps))(
+  Entities
+) as React.ComponentType;
