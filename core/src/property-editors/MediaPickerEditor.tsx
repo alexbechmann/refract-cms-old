@@ -26,13 +26,13 @@ class MediaPickerEditor extends React.Component<Props, State> {
 
   unsubscribe?: () => void;
 
+  constructor(props) {
+    super(props);
+    this.refresh = this.refresh.bind(this);
+  }
+
   componentDidMount() {
-    mediaService.getAll().then(images => {
-      console.log(images);
-      this.setState({
-        allImages: images
-      });
-    });
+    this.refresh();
   }
 
   componentWillUnmount() {
@@ -44,10 +44,18 @@ class MediaPickerEditor extends React.Component<Props, State> {
   render() {
     return (
       <div>
-        <ImageUploader />
+        <ImageUploader onUploaded={this.refresh} />
         {this.renderSelectedImages()}
       </div>
     );
+  }
+
+  refresh() {
+    mediaService.getAll().then(images => {
+      this.setState({
+        allImages: images
+      });
+    });
   }
 
   renderSelectedImages() {

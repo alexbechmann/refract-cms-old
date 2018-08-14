@@ -1,5 +1,5 @@
 import React from 'react';
-import { entityService } from '@firestore-cms/core';
+import { entityService, mediaService } from '@firestore-cms/core';
 import { Product } from './product.model';
 import {
   Typography,
@@ -59,8 +59,11 @@ class Products extends React.Component<Props, State> {
           Products
         </Typography>
         {this.state.products.map(product => {
+          const imageId = product.imageIds.length > 0 ? product.imageIds[0] : undefined;
+          const imageUrl = imageId ? mediaService.url(imageId) : undefined;
           return (
             <Card className={classes.card} key={product['_id']}>
+              {imageUrl && <CardMedia className={classes.media} image={imageUrl} />}
               {/* {imageRef && this.renderImage(imageRef)} */}
               <CardHeader title={product.title} />
               <CardContent>

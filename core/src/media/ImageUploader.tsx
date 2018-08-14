@@ -15,7 +15,11 @@ interface State {
   uploading: boolean;
 }
 
-class ImageUploader extends React.Component<{}, State> {
+interface ImageUploaderProps {
+  onUploaded?: () => void;
+}
+
+class ImageUploader extends React.Component<ImageUploaderProps, State> {
   state: State = {
     uploading: false
   };
@@ -125,7 +129,12 @@ class ImageUploader extends React.Component<{}, State> {
     this.setState({
       uploading: true
     });
-    mediaService.upload(this.state.file, filename).then(() => this.setState({ uploading: false }));
+    mediaService.upload(this.state.file, filename).then(() => {
+      this.setState({ uploading: false });
+      if (this.props.onUploaded) {
+        this.props.onUploaded();
+      }
+    });
 
     // const imageRef = firebase
     //   .storage()
