@@ -3,6 +3,7 @@ import { PropertyEditorProps } from '../properties/property-editor-props';
 import { List, ListItem, ListItemText, ListItemSecondaryAction, Checkbox } from '@material-ui/core';
 import ImageUploader from '../media/ImageUploader';
 import mediaService from '../media/media.service';
+import entityService from '../entities/entity.service';
 
 export interface MediaPickerEditorOptions {
   max: number;
@@ -24,8 +25,6 @@ class MediaPickerEditor extends React.Component<Props, State> {
     deleting: {}
   };
 
-  unsubscribe?: () => void;
-
   constructor(props) {
     super(props);
     this.refresh = this.refresh.bind(this);
@@ -33,12 +32,6 @@ class MediaPickerEditor extends React.Component<Props, State> {
 
   componentDidMount() {
     this.refresh();
-  }
-
-  componentWillUnmount() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
   }
 
   render() {
@@ -51,11 +44,15 @@ class MediaPickerEditor extends React.Component<Props, State> {
   }
 
   refresh() {
-    mediaService.getAll().then(images => {
-      this.setState({
-        allImages: images
+    entityService
+      .getAll({
+        alias: 'media'
+      })
+      .then(images => {
+        this.setState({
+          allImages: images
+        });
       });
-    });
   }
 
   renderSelectedImages() {
@@ -81,7 +78,7 @@ class MediaPickerEditor extends React.Component<Props, State> {
                 style={{
                   height: '50px',
                   width: '50px',
-                  backgroundImage: `url(${mediaService.url(mediaItem._id)})`,
+                  backgroundImage: `url(${mediaService.buildUrl(mediaItem._id)})`,
                   backgroundSize: 'cover'
                 }}
               />

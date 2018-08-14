@@ -89,7 +89,7 @@ router.get('/media/file/:id?', async (req, res) => {
   const { id } = req.params;
   const entity = await db.collection('media').findOne({ _id: new ObjectID(id) });
   const img = await jimp.read(entity.path);
-  img.cover(100, 100);
+  img.cover(720, 480);
   const imgBuffer = await img.getBufferAsync(entity.mimetype);
   //var img = fs.readFileSync(entity.path);
   res.writeHead(200, { 'Content-Type': entity.mimetype });

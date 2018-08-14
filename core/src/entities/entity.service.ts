@@ -1,6 +1,5 @@
-import { AxiosStatic } from 'axios';
 import { store } from '../state/root.store';
-const axios: AxiosStatic = require('axios');
+import axios from 'axios';
 
 class EntityService {
   insert(args: { alias: string; entity: any }) {
