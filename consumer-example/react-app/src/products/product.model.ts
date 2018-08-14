@@ -8,7 +8,6 @@ import {
   Location
 } from '@firestore-cms/core';
 import CustomDropdownEditor from '../property-editors/CustomDropdownEditor';
-import firebase from 'firebase';
 
 export interface Product {
   productType: string;

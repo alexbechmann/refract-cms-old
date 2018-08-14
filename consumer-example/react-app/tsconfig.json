@@ -19,7 +19,8 @@
     "noUnusedLocals": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
   "exclude": [
     "node_modules",
@@ -32,7 +33,7 @@
     "typings/browser.d.ts",
     "typings/browser",
   ],
-  "files": [
+  "include": [
     "src/**/*"
   ]
 }

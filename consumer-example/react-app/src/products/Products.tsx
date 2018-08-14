@@ -17,7 +17,6 @@ import {
   CardMedia
 } from '@material-ui/core';
 import * as Icons from '@material-ui/icons';
-import withMedia from '../media/with-media';
 
 interface State {
   products: Product[];
@@ -43,14 +42,6 @@ class Products extends React.Component<Props, State> {
     loading: true
   };
 
-  renderImage(imageRef: firebase.firestore.DocumentReference) {
-    const { classes } = this.props;
-    const ImageComponent = withMedia(imageRef)(props => (
-      <CardMedia className={classes.media} image={props.mediaItem.url} />
-    ));
-    return <ImageComponent />;
-  }
-
   render() {
     const { classes } = this.props;
     return (
@@ -58,13 +49,14 @@ class Products extends React.Component<Props, State> {
         <Typography variant="headline" gutterBottom>
           Products
         </Typography>
-        {this.state.products.map(product => {
+        {this.state.products.map((product, index) => {
           const imageId = product.imageIds.length > 0 ? product.imageIds[0] : undefined;
-          const imageUrl = imageId ? mediaService.url(imageId) : undefined;
+          const m = mediaService as any;
+          console.log(mediaService.getAll);
+          const imageUrl = imageId ? m.url(imageId) : undefined;
           return (
-            <Card className={classes.card} key={product['_id']}>
+            <Card className={classes.card} key={index}>
               {imageUrl && <CardMedia className={classes.media} image={imageUrl} />}
-              {/* {imageRef && this.renderImage(imageRef)} */}
               <CardHeader title={product.title} />
               <CardContent>
                 <List component="nav">

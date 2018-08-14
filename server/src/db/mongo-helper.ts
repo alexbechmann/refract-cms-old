@@ -18,7 +18,7 @@ export const mongoHelper = {
   init() {
     return new Promise<Db>((resolve, reject) => {
       MongoClient.connect(
-        'mongodb://root:hqXzNv2f5YC45veW@localhost:27017/umbraco?authSource=admin',
+        'mongodb://root:hqXzNv2f5YC45veW@localhost:27018/umbraco?authSource=admin',
         {
           reconnectTries: Number.MAX_VALUE,
           reconnectInterval: 1000
