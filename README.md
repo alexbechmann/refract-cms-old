@@ -89,6 +89,33 @@ configureFirestoreCms({
 });
 ```
 
+`Edit App.tsx`
+```tsx
+import * as React from 'react';
+import { Admin } from '@firestore-cms/core';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import MyHomePage from './MyHomePage';
+
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <BrowserRouter>
+          <Switch>
+            <Route path={`/`} exact component={MyHomePage} />
+            <Route path={`/admin`} component={Admin} />
+          </Switch>
+        </BrowserRouter>
+      </div>
+    );
+  }
+}
+
+export default App;
+
+
+```
+
 See next section for details on setting up `YOUR_SERVER_URL`.
 
 ### Server
@@ -114,8 +141,10 @@ app.listen(port, () => {
 });
 ```
 
-### Run both frontend & server simultaneously
+### Run your new CMS
 Replace `##YOUR_SERVER_URL##` in frontend guide with `http://localhost:3500/my-cms-route`, changing `localhost`, `3500` & `your-cms-route` as neccessary.
+
+Start frontend and server projects.
 
 ## Getting started (JavaScript) 
 Coming soon...
