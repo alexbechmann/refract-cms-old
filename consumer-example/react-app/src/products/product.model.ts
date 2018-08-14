@@ -5,11 +5,12 @@ import {
   LocationEditor,
   SingleDropdownEditor,
   MultipleDropdownEditor,
-  Location
+  Location,
+  Entity
 } from '@firestore-cms/core';
 import CustomDropdownEditor from '../property-editors/CustomDropdownEditor';
 
-export interface Product {
+export interface Product extends Entity {
   productType: string;
   customNumber: number;
   location: Location;

@@ -8,13 +8,14 @@ import { Routes } from '../router/routes';
 import { Button, List, ListItem, ListItemText, CircularProgress, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import entityService from './entity.service';
+import { Entity } from './entity.model';
 
 export interface EntityListProps {
   routes: Routes;
 }
 
 interface State {
-  entities: any[];
+  entities: Entity[];
   loading: boolean;
 }
 

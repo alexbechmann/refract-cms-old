@@ -1,7 +1,7 @@
-import { defineEntity, TextEditor, EntityPickerEditor } from '@firestore-cms/core';
+import { defineEntity, TextEditor, EntityPickerEditor, Entity } from '@firestore-cms/core';
 import CustomDropdownEditor from '../property-editors/CustomDropdownEditor';
 
-export interface NewsArticle {
+export interface NewsArticle extends Entity {
   title: string;
   customNumber: number;
   articleText: string;
@@ -11,7 +11,7 @@ export interface NewsArticle {
 export default defineEntity<NewsArticle>({
   alias: 'newsArticle',
   displayName: 'News Article',
-  instanceDisplayName: newsArticle => `${newsArticle.title}`
+  instanceDisplayName: newsArticle => newsArticle.title
 })({
   title: {
     displayName: 'Headline',
