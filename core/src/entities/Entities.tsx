@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PropertyOptions } from '../properties/property-options';
-import { Tabs, Tab } from '@material-ui/core';
+import { Tabs, Tab, CircularProgress, LinearProgress } from '@material-ui/core';
 import { Route, RouteComponentProps, withRouter } from 'react-router';
 import { combineContainers } from 'combine-containers';
 import { AppState } from '../state/app.state';
@@ -34,13 +34,13 @@ class Entities extends React.Component<Props, State> {
   }
 
   render() {
-    const { entities, routes } = this.props;
-    return (
+    const { entities, routes, match, history } = this.props;
+    return match.params.entityAlias ? (
       <div>
         <Tabs
-          value={this.props.match.params.entityAlias}
+          value={match.params.entityAlias}
           onChange={(e, value) => {
-            this.props.history.push(routes.entityRoot.url(value));
+            history.push(routes.entityRoot.url(value));
           }}
         >
           {entities.map(entity => (
@@ -52,6 +52,8 @@ class Entities extends React.Component<Props, State> {
           ))}
         </Tabs>
       </div>
+    ) : (
+      <LinearProgress />
     );
   }
 }
