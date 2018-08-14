@@ -31,6 +31,14 @@ class Entities extends React.Component<Props, State> {
   state: State = {};
 
   componentWillReceiveProps(props) {
+    this.redirectToFirstEntityIfNecessary(props);
+  }
+
+  componentDidMount() {
+    this.redirectToFirstEntityIfNecessary(this.props);
+  }
+
+  redirectToFirstEntityIfNecessary(props: Props) {
     const { entities, routes, match } = props;
     if (entities.length > 1 && match.params.entityAlias === 'undefined') {
       this.props.history.push(routes.entityRoot.url(entities[0].options.alias));

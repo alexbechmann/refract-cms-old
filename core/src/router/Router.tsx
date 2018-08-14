@@ -12,6 +12,7 @@ import { ConnectedReduxProps } from '../state/connected-redux-props';
 import { setBaseRoute } from './state/router.actions';
 import { Routes } from './routes';
 import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
+import Media from '../media/Media';
 
 export interface RouterProps {
   entities: EntitySchema[];
@@ -35,17 +36,18 @@ class Router extends React.Component<Props> {
         <div>
           <AppBar position="sticky">
             <Toolbar>
-              <Button color="inherit" component={(props: any) => <Link {...props} to={routes.root.url()} />}>
-                Admin
-              </Button>
               <Button color="inherit" component={(props: any) => <Link {...props} to={routes.content.url()} />}>
                 Content
+              </Button>
+              <Button color="inherit" component={(props: any) => <Link {...props} to={routes.media.url()} />}>
+                Media
               </Button>
             </Toolbar>
           </AppBar>
           <Switch>
-            <Route exact path={routes.root.path()} component={() => <p>Welcome to admin panel</p>} />
+            <Route exact path={routes.root.path()} component={Entities} />
             <Route path={routes.content.path()} component={Entities} />
+            <Route path={routes.media.path()} component={Media} />
           </Switch>
           <Switch>
             {entities.map(entity => {

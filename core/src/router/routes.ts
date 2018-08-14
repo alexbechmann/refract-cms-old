@@ -7,6 +7,10 @@ export interface Routes {
     path: () => string;
     url: (entityAlias?: string) => string;
   };
+  media: {
+    path: () => string;
+    url: () => string;
+  };
   entityRoot: {
     path: (entityAlias: string) => string;
     url: (entityAlias: string) => string;
