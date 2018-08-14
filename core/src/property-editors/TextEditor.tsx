@@ -7,7 +7,9 @@ export interface TextEditorOptions {
   multiline?: boolean;
 }
 
-export default (options?: TextEditorOptions) => (props: PropertyEditorProps<string>) => {
+const defaultOptions: TextEditorOptions = {};
+
+export default (options: TextEditorOptions = defaultOptions) => (props: PropertyEditorProps<string>) => {
   return (
     <TextField
       multiline={options.multiline}
