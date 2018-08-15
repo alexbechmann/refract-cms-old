@@ -17,6 +17,7 @@ import {
   CardMedia
 } from '@material-ui/core';
 import * as Icons from '@material-ui/icons';
+import { Link } from 'react-router-dom';
 
 interface State {
   products: Product[];
@@ -46,6 +47,7 @@ class Products extends React.Component<Props, State> {
     const { classes } = this.props;
     return (
       <div>
+        <Button component={(props: any) => <Link {...props} to="/admin" />}>Open admin panel</Button>
         <Typography variant="headline" gutterBottom>
           Products
         </Typography>
