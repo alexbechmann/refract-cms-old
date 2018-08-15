@@ -39,7 +39,11 @@ export default defineEntity<Product>({
   },
   location: {
     displayName: 'Location',
-    editorComponent: LocationEditor
+    editorComponent: LocationEditor,
+    defaultValue: {
+      longitude: 15,
+      latitude: 23
+    }
   },
   title: {
     displayName: 'Title',
