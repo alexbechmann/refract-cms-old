@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PropertyEditorProps } from '../properties/property-editor-props';
-import { List, ListItem, ListItemText, ListItemSecondaryAction, Checkbox } from '@material-ui/core';
+import { List, ListItem, ListItemText, ListItemSecondaryAction, Checkbox, Button, Typography } from '@material-ui/core';
 import ImageUploader from '../media/ImageUploader';
 import mediaService from '../media/media.service';
 import entityService from '../entities/entity.service';
@@ -28,6 +28,7 @@ class MediaPickerEditor extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.refresh = this.refresh.bind(this);
+    this.clear = this.clear.bind(this);
   }
 
   componentDidMount() {
@@ -35,10 +36,13 @@ class MediaPickerEditor extends React.Component<Props, State> {
   }
 
   render() {
+    const value = this.props.value || [];
     return (
       <div>
+        <Typography>Selected ({value.length})</Typography>
         <ImageUploader onUploaded={this.refresh} />
-        {this.renderSelectedImages()}
+        {this.renderSelectedImages(value)}
+        <Button onClick={this.clear}>Clear</Button>
       </div>
     );
   }
@@ -46,7 +50,7 @@ class MediaPickerEditor extends React.Component<Props, State> {
   refresh() {
     entityService
       .getAll({
-        alias: 'media'
+        alias: 'media.files'
       })
       .then(images => {
         this.setState({
@@ -55,22 +59,25 @@ class MediaPickerEditor extends React.Component<Props, State> {
       });
   }
 
-  renderSelectedImages() {
-    const value = this.props.value || [];
+  clear() {
+    this.props.setValue([]);
+  }
+
+  renderSelectedImages(selectedIds) {
     return (
       <List>
         {this.state.allImages.map((mediaItem, index) => {
-          const selected = value.some(id => id === mediaItem._id);
+          const selected = selectedIds.some(id => id === mediaItem._id);
           const deleting = Boolean(this.state.deleting[mediaItem._id]);
           return (
             <ListItem
-              disabled={value.length >= this.props.max && !selected}
+              disabled={selectedIds.length >= this.props.max && !selected}
               key={index}
               button
               onClick={() => {
                 const newValue = selected
-                  ? value.filter(id => id !== mediaItem._id)
-                  : [...value.filter(id => id !== mediaItem._id), mediaItem._id];
+                  ? selectedIds.filter(id => id !== mediaItem._id)
+                  : [...selectedIds.filter(id => id !== mediaItem._id), mediaItem._id];
                 this.props.setValue(newValue);
               }}
             >

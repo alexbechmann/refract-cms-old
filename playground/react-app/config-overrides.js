@@ -10,8 +10,7 @@ module.exports = {
       {
         exclude: /node_modules/,
         loader: 'prettier-loader',
-        test: /\.(tsx|ts)?$/,
-        enforce: "pre"
+        test: /\.(tsx|ts)?$/
       }
     ]
     return config;
