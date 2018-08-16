@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PropertyEditorProps } from '@firestore-cms/core';
+import { PropertyEditorProps } from '@refract-cms/core';
 
 export default (props: PropertyEditorProps<number>) => {
   return (

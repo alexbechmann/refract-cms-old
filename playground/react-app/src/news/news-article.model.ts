@@ -1,4 +1,4 @@
-import { defineEntity, TextEditor, EntityPickerEditor, Entity } from '@firestore-cms/core';
+import { defineEntity, TextEditor, EntityPickerEditor, Entity } from '@refract-cms/core';
 import CustomDropdownEditor from '../property-editors/CustomDropdownEditor';
 
 export interface NewsArticle extends Entity {

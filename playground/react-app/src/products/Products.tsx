@@ -1,5 +1,5 @@
 import React from 'react';
-import { entityService, mediaService } from '@firestore-cms/core';
+import { entityService, mediaService } from '@refract-cms/core';
 import { Product } from './product.model';
 import {
   Typography,

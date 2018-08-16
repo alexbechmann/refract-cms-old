@@ -1,6 +1,6 @@
-# Firestore-CMS
+# refract-cms
 
-Firestore-CMS allows you to build a frontend first, code first, headless CMS using React, Express & MongoDB.
+refract-cms allows you to build a frontend first, code first, headless CMS using React, Express & MongoDB.
 
 ## Stack
 
@@ -32,12 +32,12 @@ The backend server hosts the API endpoints & handles authentication.
 ```
 create-react-app frontend --scripts-version=react-scripts-ts
 cd ./frontend
-npm i -S @firestore-cms/core
+npm i -S @refract-cms/core
 ```
 
 `Create file: news-article.model.ts`
 ```tsx
-import { defineEntity, TextEditor, Location, Entity, LocationEditor, SingleDropdownEditor } from '@firestore-cms/core';
+import { defineEntity, TextEditor, Location, Entity, LocationEditor, SingleDropdownEditor } from '@refract-cms/core';
 
 export interface NewsArticle extends Entity {
   title: string;
@@ -80,10 +80,10 @@ export default defineEntity<NewsArticle>({
 
 `Edit index.tsx`
 ```ts
-import { configureFirestoreCms } from '@firestore-cms/core';
+import { configureRefractCms } from '@refract-cms/core';
 import NewsArticle from './news/news-article.model';
 
-configureFirestoreCms({
+configureRefractCms({
   schema: [NewsArticle],
   serverUrl: '##YOUR_SERVER_URL##'
 });
@@ -92,7 +92,7 @@ configureFirestoreCms({
 `Edit App.tsx`
 ```tsx
 import * as React from 'react';
-import { Admin } from '@firestore-cms/core';
+import { Admin } from '@refract-cms/core';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import MyHomePage from './MyHomePage';
 
@@ -123,14 +123,14 @@ See next section for details on setting up `YOUR_SERVER_URL`.
 mkdir server
 cd server
 npm init
-npm i -S express @firestore-cms/server
+npm i -S express @refract-cms/server
 npm i -D @types/express
 ```
 
 `Create file index.ts`
 ```ts
 import * as express from 'express';
-import { firestoreCmsRouter } from '@firestore-cms/server';
+import { firestoreCmsRouter } from '@refract-cms/server';
 
 const app = express();
 app.use('/my-cms-route', firestoreCmsRouter);

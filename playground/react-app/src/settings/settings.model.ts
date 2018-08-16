@@ -1,4 +1,4 @@
-import { defineEntity, TextEditor, Entity } from '@firestore-cms/core';
+import { defineEntity, TextEditor, Entity } from '@refract-cms/core';
 
 export interface Settings extends Entity {
   setting1: string;

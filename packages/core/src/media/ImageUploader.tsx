@@ -139,7 +139,7 @@ class ImageUploader extends React.Component<ImageUploaderProps, State> {
     // const imageRef = firebase
     //   .storage()
     //   .ref()
-    //   .child('firestore-cms')
+    //   .child('refract-cms')
     //   .child('media')
     //   .child(`${uniqueString}_${this.state.selectedFile.name}`);
     // const uploadTask = imageRef.put(this.state.croppedBlob);

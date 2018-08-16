@@ -1,5 +1,5 @@
 {
-  "name": "@firestore-cms/dev",
+  "name": "@refract-cms/dev",
   "version": "1.0.0",
   "description": "",
   "private": true,
@@ -15,7 +15,7 @@
     "docs-app:install": "cd docs-app && npm install",
     "docs-app:start": "cd docs-app && npm run start",
     "docs-app:clean": "cd docs-app && remove-node-modules && rimraf package-lock.json",
-    "server:install": "cd packages/server && npm install",
+    "server:install": "cd packages/server && npm ci",
     "server:start": "cd packages/server && npm start",
     "server:build": "cd packages/server && npm run build",
     "server:clean": "cd packages/server && remove-node-modules && rimraf package-lock.json",
@@ -23,20 +23,20 @@
     "consumer-server:start": "cd playground/server && npm start",
     "consumer-server:clean": "cd playground/server && remove-node-modules && rimraf package-lock.json",
     "docker:start": "docker-compose up",
-    "postinstall": "npm-run-all core:install core:build consumer-core:install docs-app:install server:install consumer-server:install",
+    "postinstall": "npm-run-all core:install core:build consumer-core:install docs-app:install server:install server:build consumer-server:install",
     "start": "npm-run-all -p docker:start consumer-core:start core:start docs-app:start server:start consumer-server:start",
     "clean": "npm-run-all core:clean consumer-core:clean docs-app:clean server:clean consumer-server:clean"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexbechmann/firestore-cms.git"
+    "url": "git+https://github.com/alexbechmann/refract-cms.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/alexbechmann/firestore-cms/issues"
+    "url": "https://github.com/alexbechmann/refract-cms/issues"
   },
-  "homepage": "https://github.com/alexbechmann/firestore-cms#readme",
+  "homepage": "https://github.com/alexbechmann/refract-cms#readme",
   "devDependencies": {
     "npm-run-all": "^4.1.3",
     "remove-node-modules": "^1.7.4",

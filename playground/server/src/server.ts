@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { firestoreCmsRouter } from '@firestore-cms/server';
+import { firestoreCmsRouter } from '@refract-cms/server';
 
 const app = express();
 app.use('/cms', firestoreCmsRouter);

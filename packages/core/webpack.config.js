@@ -14,7 +14,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
-    library: "@firestore-cms/core",
+    library: "@refract-cms/core",
     libraryTarget: "umd"
   },
   module: {

@@ -1,1 +1,1 @@
-export { default as firestoreCmsRouter } from './firestore-cms.router';
+export { default as firestoreCmsRouter } from './refract-cms.router';

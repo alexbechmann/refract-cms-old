@@ -25,7 +25,7 @@ export const mongoHelper = {
         },
         (err, mongoClient) => {
           console.log(err || 'Connected successfully to mongodb.');
-          mongoDb = mongoClient.db('firestore-cms');
+          mongoDb = mongoClient.db('refract-cms');
           if (!err) {
             resolve(mongoDb);
           } else {

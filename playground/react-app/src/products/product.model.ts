@@ -7,7 +7,7 @@ import {
   MultipleDropdownEditor,
   Location,
   Entity
-} from '@firestore-cms/core';
+} from '@refract-cms/core';
 import CustomDropdownEditor from '../property-editors/CustomDropdownEditor';
 
 export interface Product extends Entity {

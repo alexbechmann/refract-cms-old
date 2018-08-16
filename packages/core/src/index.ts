@@ -1,4 +1,4 @@
-export { configureFirestoreCms } from './config/configure-firestore-cms';
+export { configureRefractCms } from './config/configure-refract-cms';
 export { default as Admin } from './Admin';
 export { default as defineEntity } from './entities/define-entity';
 export { PropertyEditorProps } from './properties/property-editor-props';
