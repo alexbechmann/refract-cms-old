@@ -8,7 +8,9 @@ function srcPath(subdir) {
 
 module.exports = {
   entry: './src/index.ts',
-  externals: [nodeExternals()],
+  externals: [nodeExternals({
+    whitelist: ['react-transition-group', 'recompose']
+  })],
   mode: "production",
   target: 'node',
   output: {
@@ -23,6 +25,7 @@ module.exports = {
       {
         test: /\.(tsx|ts)?$/,
         loader: 'prettier-loader',
+        enforce: 'pre',
         exclude: /node_modules/,
       }
     ]

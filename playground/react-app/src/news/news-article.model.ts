@@ -5,4 +5,5 @@ export interface NewsArticle extends Entity {
   articleText: string;
   relevantProductsIds: string[];
   extraText: string;
+  articleDate: Date;
 }

@@ -96,9 +96,7 @@ export default defineEntity<NewsArticle>({
 ```
 
 `Edit index.tsx`
-```ts
-
-
+```tsx
 import * as refract from '@refract-cms/core';
 import newsArticleSchema from './news-article.schema';
 
