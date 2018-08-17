@@ -26,10 +26,11 @@ The backend server hosts the API endpoints & handles authentication.
 * MongoDB
 * Typescript (optional)
 
-## Getting started (TypeScript)
+## Quick Start (TypeScript)
 
 ### Frontend
 ```
+npm i -g create-react-app
 create-react-app frontend --scripts-version=react-scripts-ts
 cd ./frontend
 npm i -S @refract-cms/core
@@ -37,20 +38,21 @@ npm i -S @refract-cms/core
 
 `Create file: news-article.model.ts`
 ```ts
-import { Location, Entity}  from '@refract-cms/core';
+import { Entity }  from '@refract-cms/core';
 
 export interface NewsArticle extends Entity {
   title: string;
   articleText: string;
   category: string;
-  location: Location;
+  articleDate: Date;
+  relevantProductsIds: string[];
 }
 ```
 
 `Create file: news-article.schema.tsx`
 ```tsx
 import * as React from 'react';
-import { defineEntity, TextEditor, EntityPickerEditor } from '@refract-cms/core';
+import { defineEntity, TextEditor, EntityPickerEditor, DatePickerEditor } from '@refract-cms/core';
 import { NewsArticle } from './news-article.model';
 
 export default defineEntity<NewsArticle>({
@@ -84,55 +86,35 @@ export default defineEntity<NewsArticle>({
     displayName: 'Extra text',
     editorComponent: props => <input value={props.value} onChange={e => props.setValue(e.target.value)} /> 
     // This is a bare bones custom component at it's most basic level.
+  },
+  articleDate: {
+    displayName: 'Article date',
+    editorComponent: DatePickerEditor()
   }
 });
 
 ```
 
-
 `Edit index.tsx`
 ```ts
-import { configureRefractCms, Admin } from '@refract-cms/core';
+
+
+import * as refract from '@refract-cms/core';
 import newsArticleSchema from './news-article.schema';
 
-configureRefractCms({
+refract.configure({
   schema: [newsArticleSchema],
-  serverUrl: '##YOUR_SERVER_URL##'
+  serverUrl: '##YOUR_SERVER_URL##' // See server section below
 });
+
 ```
-#### Render Admin dashboard (Option A)
+#### Render Admin dashboard
 `Edit index.tsx`
 ```tsx
-ReactDOM.render(<Admin />, document.getElementById('root') as HTMLElement);
+ReactDOM.render(<refract.Admin />, document.getElementById('root') as HTMLElement);
 ```
----
-# OR
+NB: See [USING_CUSTOM_ROUTER](docs/USING_CUSTOM_ROUTER.md) for how to add to a route on your existing react app
 
-#### Render Admin dashboard existing app (Option B)
-Use this if you would like to host the CMS dashboard on the same app as your frontend, mostly for convenience. For larger apps, we recommend hosting this seperately. (Option A).
-
-NB:
-* It is entirely possible to start with option B, and move to option A at a later date, or even both.
-* Currently only supports use with `react-router` package for routing.
-
-`Edit index.tsx`
-```tsx
-// ...other imports...
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-
-const Root = () => (
-  <BrowserRouter>
-    <Switch>
-      <Route path={`/`} exact component={App} />
-      <Route path={`/admin`} component={Admin} />
-    </Switch>
-  </BrowserRouter>
-)
-ReactDOM.render(<Root />, document.getElementById('root') as HTMLElement);
-```
-
-
-See next section for details on setting up `YOUR_SERVER_URL`.
 
 ### Server
 ```
@@ -146,19 +128,23 @@ npm i -D @types/express
 `Create file index.ts`
 ```ts
 import * as express from 'express';
-import { refractCmsRouter } from '@refract-cms/server';
+import * as refract from '@refract-cms/server';
+
+refract.configure({
+  mongoConnectionString: '##YOUR_MONGO_URL##'
+});
 
 const app = express();
-app.use('/my-cms-route', refractCmsRouter);
+app.use(refract.router); 
 
-const port = process.env.PORT || 3500;
+const port = process.env.PORT || 3500; 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
 ```
 
 ### Run your new CMS
-Replace `##YOUR_SERVER_URL##` in frontend guide with `http://localhost:3500/my-cms-route`, changing `localhost`, `3500` & `your-cms-route` as neccessary.
+Replace `##YOUR_SERVER_URL##` in frontend guide with `http://localhost:3500` (If using this example).
 
 Start frontend and server projects.
 
