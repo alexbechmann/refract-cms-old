@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { defineEntity, TextEditor, EntityPickerEditor } from '@refract-cms/core';
+import { defineEntity, TextEditor, EntityPickerEditor, DatePickerEditor } from '@refract-cms/core';
 import { NewsArticle } from './news-article.model';
 
 export default defineEntity<NewsArticle>({
@@ -32,5 +32,9 @@ export default defineEntity<NewsArticle>({
   extraText: {
     displayName: 'Extra text',
     editorComponent: props => <input value={props.value} onChange={e => props.setValue(e.target.value)} />
+  },
+  articleDate: {
+    displayName: 'Article date',
+    editorComponent: DatePickerEditor()
   }
 });
