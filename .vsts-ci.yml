@@ -14,39 +14,39 @@ steps:
   inputs:
     command: "install"
     verbose: "false"
-    workingDir: "core"
+    workingDir: "packages/core"
 
 - task: Npm@1
   inputs:
     command: "custom"
     verbose: "false"
     customCommand: "run build"
-    workingDir: "core"
+    workingDir: "packages/core"
 
-- powershell: . 'core/update-package-version.ps1' $(GitVersion.SemVer) 
+- powershell: . 'packages/core/update-package-version.ps1' $(GitVersion.SemVer) 
   displayName: Update package version
 
 - task: Npm@1
   inputs:
     command: "install"
     verbose: "false"
-    workingDir: "functions"
+    workingDir: "packages/server"
 
 - task: Npm@1
   inputs:
     command: "custom"
     verbose: "false"
     customCommand: "run build"
-    workingDir: "functions"
+    workingDir: "packages/server"
 
-- powershell: . 'functions/update-package-version.ps1' $(GitVersion.SemVer) 
+- powershell: . 'packages/server/update-package-version.ps1' $(GitVersion.SemVer) 
   displayName: Update package version
 
 - task: Npm@1
   displayName: npm custom
   inputs:
     command: custom
-    workingDir: core
+    workingDir: packages/core
     verbose: false
     customCommand: 'publish --access public'
     customEndpoint: npm
@@ -57,7 +57,7 @@ steps:
   displayName: npm custom
   inputs:
     command: custom
-    workingDir: functions
+    workingDir: packages/server
     verbose: false
     customCommand: 'publish --access public'
     customEndpoint: npm
