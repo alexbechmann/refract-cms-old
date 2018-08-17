@@ -36,6 +36,9 @@ class Router extends React.Component<Props> {
         <div>
           <AppBar position="sticky">
             <Toolbar>
+              <Button color="inherit" component={(props: any) => <Link {...props} to={routes.root.url()} />}>
+                Dashboard
+              </Button>
               <Button color="inherit" component={(props: any) => <Link {...props} to={routes.content.url()} />}>
                 Content
               </Button>
@@ -45,7 +48,7 @@ class Router extends React.Component<Props> {
             </Toolbar>
           </AppBar>
           <Switch>
-            <Route exact path={routes.root.path()} component={Entities} />
+            <Route exact path={routes.root.path()} component={() => <Typography>Dashboard</Typography>} />
             <Route path={routes.content.path()} component={Entities} />
             <Route path={routes.media.path()} component={Media} />
           </Switch>
