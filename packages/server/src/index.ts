@@ -1,1 +1,2 @@
-export { default as firestoreCmsRouter } from './refract-cms.router';
+export { default as router } from './router';
+export { getCurrentConfig, configure } from './config/config';

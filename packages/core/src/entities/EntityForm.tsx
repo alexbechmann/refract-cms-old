@@ -13,7 +13,9 @@ import {
   Card,
   CardActions,
   CardContent,
-  CardHeader
+  CardHeader,
+  WithStyles,
+  withStyles
 } from '@material-ui/core';
 import { RouteComponentProps, withRouter } from 'react-router';
 import * as firebase from 'firebase';
@@ -33,7 +35,16 @@ interface State {
   loading: boolean;
 }
 
-interface Props extends EntityFormProps, RouteComponentProps<{ id?: string }> {}
+const styles = theme => ({
+  card: {
+    marginBottom: theme.spacing.unit
+  },
+  propertyEditor: {
+    marginBottom: '50px'
+  }
+});
+
+interface Props extends EntityFormProps, WithStyles<typeof styles>, RouteComponentProps<{ id?: string }> {}
 
 class EntityForm extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -72,41 +83,35 @@ class EntityForm extends React.Component<Props, State> {
   }
 
   render() {
-    const { entity } = this.props;
+    const { entity, classes } = this.props;
     return this.state.loading ? (
       <CircularProgress />
     ) : (
       <Grid justify="center" container>
-        <Grid item xs={12} sm={12} md={10} lg={8} xl={6}>
-          <Card>
+        <Grid item xs={12} sm={12} md={7} lg={5} xl={4}>
+          <Card className={classes.card}>
+            <CardHeader title={entity.options.displayName || entity.options.alias} />
             <CardContent>
-              <CardHeader title={entity.options.displayName || entity.options.alias} />
               {Object.keys(entity.properties).map((propertyKey: string, index: number) => {
                 const propertyOptions = entity.properties[propertyKey];
                 return (
-                  <div key={index} style={{ marginBottom: '20px' }}>
-                    <Grid container>
-                      <Grid item xs={12} md={3}>
-                        <Typography variant="subheading" gutterBottom>
-                          {propertyOptions.displayName || propertyKey}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12} md={9}>
-                        <RenderEditor
-                          setValue={value => {
-                            this.setState({
-                              updateValues: {
-                                ...this.state.updateValues,
-                                [propertyKey]: value
-                              }
-                            });
-                          }}
-                          value={this.state.updateValues[propertyKey]}
-                          propertyKey={propertyKey}
-                          propertyOptions={propertyOptions}
-                        />
-                      </Grid>
-                    </Grid>
+                  <div key={index} className={classes.propertyEditor}>
+                    <Typography variant="subheading" gutterBottom>
+                      {propertyOptions.displayName || propertyKey}
+                    </Typography>
+                    <RenderEditor
+                      setValue={value => {
+                        this.setState({
+                          updateValues: {
+                            ...this.state.updateValues,
+                            [propertyKey]: value
+                          }
+                        });
+                      }}
+                      value={this.state.updateValues[propertyKey]}
+                      propertyKey={propertyKey}
+                      propertyOptions={propertyOptions}
+                    />
                   </div>
                 );
               })}
@@ -189,6 +194,6 @@ function mapStateToProps(state: AppState, ownProps: EntityFormPropsExtended): En
   };
 }
 
-export default combineContainers(connect(mapStateToProps), withRouter)(EntityForm) as React.ComponentType<
-  EntityFormPropsExtended
->;
+export default combineContainers(connect(mapStateToProps), withStyles(styles), withRouter)(
+  EntityForm
+) as React.ComponentType<EntityFormPropsExtended>;

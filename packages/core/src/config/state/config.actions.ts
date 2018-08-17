@@ -4,5 +4,8 @@ import { Config } from '../config';
 export const CONFIGURE = '@@CMS/CONFIGURE';
 
 export const configure = (config: Config) => {
-  return action(CONFIGURE, config);
+  return action(CONFIGURE, {
+    ...config,
+    serverUrl: `${config.serverUrl}/refract`
+  });
 };

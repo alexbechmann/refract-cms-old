@@ -2,15 +2,15 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import { configureRefractCms } from '@refract-cms/core';
-import Product from './products/product.model';
-import NewsArticle from './news/news-article.model';
-import Settings from './settings/settings.model';
+import * as refract from '@refract-cms/core';
+import productSchema from './products/product.schema';
+import newsArticleSchema from './news/news-article.schema';
+import settingsSchema from './settings/settings.schema';
 import 'typeface-roboto';
 
-configureRefractCms({
-  schema: [Product, NewsArticle, Settings],
-  serverUrl: 'http://localhost:3500/cms'
+refract.configure({
+  schema: [productSchema, newsArticleSchema, settingsSchema],
+  serverUrl: 'http://localhost:3500'
 });
 
 ReactDOM.render(<App />, document.getElementById('root') as HTMLElement);

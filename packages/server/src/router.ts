@@ -6,15 +6,15 @@ import entityRouter from './entities/entity.router';
 import mediaRouter from './media/media.router';
 
 var router = express.Router();
-
-router.get('/', (req, res) => {
-  res.send('cms');
-});
+const routePrefix = '/refract';
 
 router.use(cors());
 router.use(bodyParser.json());
 
-router.use('/entities', entityRouter);
-router.use('/media', mediaRouter);
+router.get(`${routePrefix}/`, (req, res) => {
+  res.send(`refract api`);
+});
+router.use(`${routePrefix}/entities`, entityRouter);
+router.use(`${routePrefix}/media`, mediaRouter);
 
 export default router as Router;

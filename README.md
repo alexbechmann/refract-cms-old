@@ -1,6 +1,6 @@
-# refract-cms
+# Refract-CMS
 
-refract-cms allows you to build a frontend first, code first, headless CMS using React, Express & MongoDB.
+Refract-CMS allows you to build a frontend first, code first, headless CMS using React, Express & MongoDB.
 
 ## Stack
 
@@ -36,8 +36,8 @@ npm i -S @refract-cms/core
 ```
 
 `Create file: news-article.model.ts`
-```tsx
-import { defineEntity, TextEditor, Location, Entity, LocationEditor, SingleDropdownEditor } from '@refract-cms/core';
+```ts
+import { Location, Entity}  from '@refract-cms/core';
 
 export interface NewsArticle extends Entity {
   title: string;
@@ -45,10 +45,18 @@ export interface NewsArticle extends Entity {
   category: string;
   location: Location;
 }
+```
+
+`Create file: news-article.schema.tsx`
+```tsx
+import * as React from 'react';
+import { defineEntity, TextEditor, EntityPickerEditor } from '@refract-cms/core';
+import { NewsArticle } from './news-article.model';
 
 export default defineEntity<NewsArticle>({
   alias: 'newsArticle',
-  displayName: 'News Article'
+  displayName: 'News Article',
+  instanceDisplayName: newsArticle => newsArticle.title
 })({
   title: {
     displayName: 'Headline',
@@ -65,56 +73,64 @@ export default defineEntity<NewsArticle>({
     }),
     defaultValue: ''
   },
-  category: {
-    displayName: 'Category',
-    editorComponent: SingleDropdownEditor({
-      selectOptions: ['Electronics', 'Food']
+  relevantProductsIds: {
+    displayName: 'Relevant Products',
+    editorComponent: EntityPickerEditor({
+      entityAlias: 'product',
+      max: 4
     })
   },
-  location: {
-    displayName: 'Location',
-    editorComponent: LocationEditor
+  extraText: {
+    displayName: 'Extra text',
+    editorComponent: props => <input value={props.value} onChange={e => props.setValue(e.target.value)} /> 
+    // This is a bare bones custom component at it's most basic level.
   }
 });
+
 ```
+
 
 `Edit index.tsx`
 ```ts
-import { configureRefractCms } from '@refract-cms/core';
-import NewsArticle from './news/news-article.model';
+import { configureRefractCms, Admin } from '@refract-cms/core';
+import newsArticleSchema from './news-article.schema';
 
 configureRefractCms({
-  schema: [NewsArticle],
+  schema: [newsArticleSchema],
   serverUrl: '##YOUR_SERVER_URL##'
 });
 ```
-
-`Edit App.tsx`
+#### Render Admin dashboard (Option A)
+`Edit index.tsx`
 ```tsx
-import * as React from 'react';
-import { Admin } from '@refract-cms/core';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import MyHomePage from './MyHomePage';
-
-class App extends React.Component {
-  render() {
-    return (
-      <div>
-        <BrowserRouter>
-          <Switch>
-            <Route path={`/`} exact component={MyHomePage} />
-            <Route path={`/admin`} component={Admin} />
-          </Switch>
-        </BrowserRouter>
-      </div>
-    );
-  }
-}
-
-export default App;
-
-
+ReactDOM.render(<Admin />, document.getElementById('root') as HTMLElement);
 ```
+---
+# OR
+
+#### Render Admin dashboard existing app (Option B)
+Use this if you would like to host the CMS dashboard on the same app as your frontend, mostly for convenience. For larger apps, we recommend hosting this seperately. (Option A).
+
+NB:
+* It is entirely possible to start with option B, and move to option A at a later date, or even both.
+* Currently only supports use with `react-router` package for routing.
+
+`Edit index.tsx`
+```tsx
+// ...other imports...
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+
+const Root = () => (
+  <BrowserRouter>
+    <Switch>
+      <Route path={`/`} exact component={App} />
+      <Route path={`/admin`} component={Admin} />
+    </Switch>
+  </BrowserRouter>
+)
+ReactDOM.render(<Root />, document.getElementById('root') as HTMLElement);
+```
+
 
 See next section for details on setting up `YOUR_SERVER_URL`.
 
@@ -130,10 +146,10 @@ npm i -D @types/express
 `Create file index.ts`
 ```ts
 import * as express from 'express';
-import { firestoreCmsRouter } from '@refract-cms/server';
+import { refractCmsRouter } from '@refract-cms/server';
 
 const app = express();
-app.use('/my-cms-route', firestoreCmsRouter);
+app.use('/my-cms-route', refractCmsRouter);
 
 const port = process.env.PORT || 3500;
 app.listen(port, () => {

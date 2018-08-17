@@ -1,6 +1,7 @@
 import * as MongoClient from 'mongodb';
 import { createQuery } from 'odata-v4-mongodb';
 import { Db } from 'mongodb';
+import { getCurrentConfig } from '../config/config';
 
 var mongoDb: Db;
 
@@ -18,7 +19,7 @@ export const mongoHelper = {
   init() {
     return new Promise<Db>((resolve, reject) => {
       MongoClient.connect(
-        'mongodb://root:hqXzNv2f5YC45veW@localhost:27018/umbraco?authSource=admin',
+        getCurrentConfig().mongoConnectionString,
         {
           reconnectTries: Number.MAX_VALUE,
           reconnectInterval: 1000
