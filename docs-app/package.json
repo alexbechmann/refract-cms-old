@@ -30,7 +30,6 @@
     "@types/react-dom": "^16.0.6",
     "prettier": "^1.14.0",
     "prettier-loader": "^2.1.1",
-    "raw-loader": "^0.5.1",
     "react-app-rewired": "^1.5.2",
     "typescript": "^2.9.2"
   }
