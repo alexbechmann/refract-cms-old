@@ -64,13 +64,13 @@ interface Props extends WithStyles<typeof styles> {}
 
 const packages = [
   {
-    name: '@refact-cms/core',
+    name: '@refract-cms/core',
     description:
       'Define your schema using built-in or your custom react components & render your CMS dashboard to a react app.',
     image: '/npm.png'
   },
   {
-    name: '@refact-cms/server',
+    name: '@refract-cms/server',
     description: 'Hosts API endpoints that the CMS dashboard communicates with, add this to your express app.',
     image: '/npm.png'
   }
