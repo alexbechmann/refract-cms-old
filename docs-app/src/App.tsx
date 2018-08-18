@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import 'typeface-roboto';
 import { PositionProperty } from 'csstype';
+const docExamplePath = require('@refract-cms/docs/USING_CUSTOM_ROUTER.md');
+import * as Markdown from 'react-markdown';
 
 const styles = (theme: Theme) => ({
   appBar: {
@@ -76,78 +78,93 @@ const packages = [
   }
 ];
 
-function App(props: Props) {
-  const { classes } = props;
+class App extends React.Component<Props, any> {
+  state = {
+    doc: undefined
+  };
 
-  return (
-    <React.Fragment>
-      <CssBaseline />
-      <AppBar elevation={0} position="static" className={classes.appBar}>
-        <Toolbar>
-          <Icons.Code className={classes.icon} />
-          <Typography variant="title" color="inherit" noWrap>
-            Refract CMS
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <main>
-        {/* Hero unit */}
-        <div className={classes.heroUnit}>
-          <div className={classes.heroContent}>
-            <Typography variant="display2" align="center" color="inherit" gutterBottom>
-              Refract CMS Docs
+  componentDidMount() {
+    fetch(docExamplePath)
+      .then(response => {
+        return response.text();
+      })
+      .then(doc => this.setState({ doc }));
+  }
+
+  render() {
+    const { classes } = this.props;
+    const { doc } = this.state;
+    return (
+      <React.Fragment>
+        <CssBaseline />
+        <AppBar elevation={0} position="static" className={classes.appBar}>
+          <Toolbar>
+            <Icons.Code className={classes.icon} />
+            <Typography variant="title" color="inherit" noWrap>
+              Refract CMS
             </Typography>
-            <Typography variant="subheading" align="center" color="inherit" paragraph>
-              Refract-CMS allows you to build a frontend first, code first, headless CMS using React, Express & MongoDB.
-            </Typography>
-            <div className={classes.heroButtons}>
-              <Grid container spacing={16} justify="center">
-                {/* <Grid item>
+          </Toolbar>
+        </AppBar>
+        <main>
+          {/* Hero unit */}
+          {doc && <Markdown source={doc} />}
+          <div className={classes.heroUnit}>
+            <div className={classes.heroContent}>
+              <Typography variant="display2" align="center" color="inherit" gutterBottom>
+                Refract CMS Docs
+              </Typography>
+              <Typography variant="subheading" align="center" color="inherit" paragraph>
+                Refract-CMS allows you to build a frontend first, code first, headless CMS using React, Express &
+                MongoDB.
+              </Typography>
+              <div className={classes.heroButtons}>
+                <Grid container spacing={16} justify="center">
+                  {/* <Grid item>
                   <Button variant="contained">Quick Start</Button>
                 </Grid>
                 <Grid item>
                   <Button variant="contained">Demo</Button>
                 </Grid> */}
-                <Grid item>
-                  <Button target="_blank" href="https://github.com/alexbechmann/refract-cms" variant="contained">
-                    View on Github
-                  </Button>
+                  <Grid item>
+                    <Button target="_blank" href="https://github.com/alexbechmann/refract-cms" variant="contained">
+                      View on Github
+                    </Button>
+                  </Grid>
                 </Grid>
-              </Grid>
+              </div>
             </div>
           </div>
-        </div>
-        <div className={classNames(classes.layout, classes.cardGrid)}>
-          {/* End hero unit */}
-          <Grid container spacing={40}>
-            {packages.map((pkg, index) => (
-              <Grid key={index} item sm={4} md={3} lg={3}>
-                <Card>
-                  <CardMedia className={classes.cardMedia} image={pkg.image} title="NPM" />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="title" component="h2">
-                      {pkg.name}
-                    </Typography>
-                    <Typography>{pkg.description}</Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button
-                      target="_blank"
-                      href={`https://www.npmjs.com/package/${pkg.name}`}
-                      size="small"
-                      color="primary"
-                    >
-                      View on npm
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </div>
-      </main>
-      {/* Footer */}
-      {/* <footer className={classes.footer}>
+          <div className={classNames(classes.layout, classes.cardGrid)}>
+            {/* End hero unit */}
+            <Grid container spacing={40}>
+              {packages.map((pkg, index) => (
+                <Grid key={index} item sm={4} md={3} lg={3}>
+                  <Card>
+                    <CardMedia className={classes.cardMedia} image={pkg.image} title="NPM" />
+                    <CardContent className={classes.cardContent}>
+                      <Typography gutterBottom variant="title" component="h2">
+                        {pkg.name}
+                      </Typography>
+                      <Typography>{pkg.description}</Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Button
+                        target="_blank"
+                        href={`https://www.npmjs.com/package/${pkg.name}`}
+                        size="small"
+                        color="primary"
+                      >
+                        View on npm
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </div>
+        </main>
+        {/* Footer */}
+        {/* <footer className={classes.footer}>
         <Typography variant="title" align="center" gutterBottom>
           Footer
         </Typography>
@@ -155,9 +172,10 @@ function App(props: Props) {
           Something here to give the footer a purpose!
         </Typography>
       </footer> */}
-      {/* End footer */}
-    </React.Fragment>
-  );
+        {/* End footer */}
+      </React.Fragment>
+    );
+  }
 }
 
 export default withStyles(styles)(App);

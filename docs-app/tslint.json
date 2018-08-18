@@ -21,6 +21,7 @@
     "no-console": false,
     "object-literal-shorthand": false,
     "jsx-boolean-value": false,
-    "jsx-no-lambda": false
+    "jsx-no-lambda": false,
+    "no-var-requires": false
   }
 }

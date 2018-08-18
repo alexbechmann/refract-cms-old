@@ -5,9 +5,12 @@
   "dependencies": {
     "@material-ui/core": "^1.3.1",
     "@material-ui/icons": "^1.1.0",
+    "@refract-cms/core": "file:../packages/core",
+    "@refract-cms/server": "file:../packages/server",
     "classnames": "^2.2.6",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-markdown": "^3.4.1",
     "react-scripts-ts": "2.16.0",
     "showdown": "^1.8.6",
     "typeface-roboto": "0.0.54"
@@ -27,6 +30,7 @@
     "@types/react-dom": "^16.0.6",
     "prettier": "^1.14.0",
     "prettier-loader": "^2.1.1",
+    "raw-loader": "^0.5.1",
     "react-app-rewired": "^1.5.2",
     "typescript": "^2.9.2"
   }
