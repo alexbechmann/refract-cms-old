@@ -107,7 +107,7 @@ class App extends React.Component<Props, any> {
         </AppBar>
         <main>
           {/* Hero unit */}
-          {doc && <Markdown source={doc} />}
+
           <div className={classes.heroUnit}>
             <div className={classes.heroContent}>
               <Typography variant="display2" align="center" color="inherit" gutterBottom>
@@ -136,6 +136,11 @@ class App extends React.Component<Props, any> {
           </div>
           <div className={classNames(classes.layout, classes.cardGrid)}>
             {/* End hero unit */}
+            {doc && (
+              <Typography>
+                <Markdown source={doc} />
+              </Typography>
+            )}
             <Grid container spacing={40}>
               {packages.map((pkg, index) => (
                 <Grid key={index} item sm={4} md={3} lg={3}>
