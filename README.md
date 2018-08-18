@@ -120,7 +120,6 @@ mkdir server
 cd server
 npm init
 npm i -S express @refract-cms/server
-npm i -D @types/express
 ```
 
 `Create file index.ts`
