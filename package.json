@@ -24,7 +24,7 @@
     "consumer-server:clean": "cd playground/server && remove-node-modules && rimraf package-lock.json",
     "docker:start": "docker-compose up",
     "postinstall": "npm-run-all core:install core:build consumer-core:install docs-app:install server:install server:build consumer-server:install",
-    "start": "npm-run-all -p docker:start consumer-core:start core:start docs-app:start server:start consumer-server:start",
+    "start": "npm-run-all -p docker:start core:start docs-app:start server:start consumer-server:start consumer-core:start",
     "clean": "npm-run-all core:clean consumer-core:clean docs-app:clean server:clean consumer-server:clean"
   },
   "repository": {
