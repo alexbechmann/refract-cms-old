@@ -42,27 +42,18 @@ steps:
 - powershell: . 'packages/server/update-package-version.ps1' $(GitVersion.SemVer) 
   displayName: Update package version
 
-- task: Npm@1
-  displayName: npm custom
+- task: Docker@0
+  displayName: Build an image
   inputs:
-    command: custom
-    workingDir: packages/core
-    verbose: false
-    customCommand: 'publish --access public'
-    customEndpoint: npm
-    publishEndpoint: npm
-    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
-
-- task: Npm@1
-  displayName: npm custom
-  inputs:
-    command: custom
-    workingDir: packages/server
-    verbose: false
-    customCommand: 'publish --access public'
-    customEndpoint: npm
-    publishEndpoint: npm
-    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+    containerregistrytype: 'Container Registry'
+    dockerRegistryConnection: 'Docker Hub'
+    imageName: 'refractcms/server:$(GitVersion.SemVer)'
+    additionalImageTags: |
+     $(GitVersion.MajorMinorPatch)-$(GitVersion.PreReleaseLabel)
+     $(GitVersion.SemVer)
+     $(GitVersion.PreReleaseLabel)
+     workingDirectory: '$(System.DefaultWorkingDirectory)/packages/server'
+  enabled: false
 
 - task: Npm@1
   inputs:
@@ -76,6 +67,42 @@ steps:
     verbose: "false"
     customCommand: "run build"
     workingDir: "docs-app"
+
+- task: Docker@0
+  displayName: Push an image
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryConnection: 'Docker Hub'
+    action: 'Push an image'
+    imageName: 'refractcms/server:$(GitVersion.SemVer)'
+    additionalImageTags: |
+     $(GitVersion.MajorMinorPatch)-$(GitVersion.PreReleaseLabel)
+     $(GitVersion.SemVer)
+     $(GitVersion.PreReleaseLabel)
+     workingDirectory: '$(System.DefaultWorkingDirectory)/packages/server'
+  condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+
+- task: Npm@1
+  displayName: npm custom
+  inputs:
+    command: custom
+    workingDir: packages/core
+    verbose: false
+    customCommand: 'publish --access public --tag $(GitVersion.PreReleaseLabel)'
+    customEndpoint: npm
+    publishEndpoint: npm
+    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+
+- task: Npm@1
+  displayName: npm custom
+  inputs:
+    command: custom
+    workingDir: packages/server
+    verbose: false
+    customCommand: 'publish --access public --tag $(GitVersion.PreReleaseLabel)'
+    customEndpoint: npm
+    publishEndpoint: npm
+    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
 
 - task: sergeyzwezdin.magic-chunks.magic.chunks.MagicChunks@2
   condition: eq(variables['DEPLOY'], 'true')
