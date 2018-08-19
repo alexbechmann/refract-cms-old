@@ -10,17 +10,17 @@ trigger:
 steps:
 - task: gittools.gitversion.gitversion-task.GitVersion@3
 
-- task: Docker@0
-  displayName: Build an image
-  inputs:
-    containerregistrytype: 'Container Registry'
-    dockerRegistryConnection: 'Docker Hub'
-    imageName: 'refractcms/server:$(GitVersion.SemVer)'
-    additionalImageTags: |
-     $(GitVersion.MajorMinorPatch)-$(GitVersion.PreReleaseLabel)
-     $(GitVersion.SemVer)
-     $(GitVersion.PreReleaseLabel)
-    workingDirectory: 'packages/server'
+# - task: Docker@0
+#   displayName: Build an image
+#   inputs:
+#     containerregistrytype: 'Container Registry'
+#     dockerRegistryConnection: 'Docker Hub'
+#     imageName: 'refractcms/server:$(GitVersion.SemVer)'
+#     additionalImageTags: |
+#      $(GitVersion.MajorMinorPatch)-$(GitVersion.PreReleaseLabel)
+#      $(GitVersion.SemVer)
+#      $(GitVersion.PreReleaseLabel)
+#     workingDirectory: 'packages/server'
 
 - task: Npm@1
   inputs:
@@ -67,19 +67,19 @@ steps:
     customCommand: "run build"
     workingDir: "docs-app"
 
-- task: Docker@0
-  displayName: Push an image
-  inputs:
-    containerregistrytype: 'Container Registry'
-    dockerRegistryConnection: 'Docker Hub'
-    action: 'Push an image'
-    imageName: 'refractcms/server:$(GitVersion.SemVer)'
-    additionalImageTags: |
-     $(GitVersion.MajorMinorPatch)-$(GitVersion.PreReleaseLabel)
-     $(GitVersion.SemVer)
-     $(GitVersion.PreReleaseLabel)
-    workingDirectory: 'packages/server'
-  condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+# - task: Docker@0
+#   displayName: Push an image
+#   inputs:
+#     containerregistrytype: 'Container Registry'
+#     dockerRegistryConnection: 'Docker Hub'
+#     action: 'Push an image'
+#     imageName: 'refractcms/server:$(GitVersion.SemVer)'
+#     additionalImageTags: |
+#      $(GitVersion.MajorMinorPatch)-$(GitVersion.PreReleaseLabel)
+#      $(GitVersion.SemVer)
+#      $(GitVersion.PreReleaseLabel)
+#     workingDirectory: 'packages/server'
+#   condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
 
 - task: Npm@1
   displayName: npm custom
