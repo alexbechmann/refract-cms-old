@@ -10,6 +10,18 @@ trigger:
 steps:
 - task: gittools.gitversion.gitversion-task.GitVersion@3
 
+- task: Docker@0
+  displayName: Build an image
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryConnection: 'Docker Hub'
+    imageName: 'refractcms/server:$(GitVersion.SemVer)'
+    additionalImageTags: |
+     $(GitVersion.MajorMinorPatch)-$(GitVersion.PreReleaseLabel)
+     $(GitVersion.SemVer)
+     $(GitVersion.PreReleaseLabel)
+     workingDirectory: 'packages/server'
+
 - task: Npm@1
   inputs:
     command: "install"
@@ -42,18 +54,6 @@ steps:
 - powershell: . 'packages/server/update-package-version.ps1' $(GitVersion.SemVer) 
   displayName: Update package version
 
-- task: Docker@0
-  displayName: Build an image
-  inputs:
-    containerregistrytype: 'Container Registry'
-    dockerRegistryConnection: 'Docker Hub'
-    imageName: 'refractcms/server:$(GitVersion.SemVer)'
-    additionalImageTags: |
-     $(GitVersion.MajorMinorPatch)-$(GitVersion.PreReleaseLabel)
-     $(GitVersion.SemVer)
-     $(GitVersion.PreReleaseLabel)
-     workingDirectory: '$(System.DefaultWorkingDirectory)/packages/server'
-
 - task: Npm@1
   inputs:
     command: "install"
@@ -78,7 +78,7 @@ steps:
      $(GitVersion.MajorMinorPatch)-$(GitVersion.PreReleaseLabel)
      $(GitVersion.SemVer)
      $(GitVersion.PreReleaseLabel)
-     workingDirectory: '$(System.DefaultWorkingDirectory)/packages/server'
+     workingDirectory: 'packages/server'
   condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
 
 - task: Npm@1
