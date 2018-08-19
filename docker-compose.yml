@@ -8,9 +8,16 @@ services:
       - "27018:27017"
     volumes:
       - mongodata:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=hqXzNv2f5YC45veW
+
+  # refract-cms-server:
+  #   build: 
+  #     context: './packages/server'
+  #   links: 
+  #     - mongo
+  #   expose: 
+  #     - 3600
+  #   ports:
+  #     - "3600:3500"
 
   mongoexpress:
     image: mongo-express
@@ -18,12 +25,6 @@ services:
       - "8091:8081"
     links:
       - mongo
-    environment:
-      - ME_CONFIG_MONGODB_AUTH_USERNAME=root
-      - ME_CONFIG_MONGODB_AUTH_PASSWORD=hqXzNv2f5YC45veW
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=hqXzNv2f5YC45veW
-      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
 
 volumes:
   mongodata:

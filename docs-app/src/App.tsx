@@ -56,7 +56,6 @@ class App extends React.Component<Props, any> {
             </IconButton>
           </Toolbar>
         </AppBar>
-
         <Switch>
           <Route exact path="/" component={Home} />
           <Route

@@ -6,13 +6,13 @@ function srcPath(subdir) {
 }
 
 module.exports = {
-  entry: './src/index.ts',
-  externals: [nodeExternals()],
+  entry: './src/server.ts',
+  // externals: [nodeExternals()],
   mode: "production",
   target: 'node',
   output: {
-    path: path.resolve(__dirname, 'dist/pkg'),
-    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist/docker'),
+    filename: 'server.js',
     library: "@refract-cms/server",
     libraryTarget: 'umd'
   },
