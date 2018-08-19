@@ -20,7 +20,7 @@ steps:
      $(GitVersion.MajorMinorPatch)-$(GitVersion.PreReleaseLabel)
      $(GitVersion.SemVer)
      $(GitVersion.PreReleaseLabel)
-     workingDirectory: 'packages/server'
+    workingDirectory: 'packages/server'
 
 - task: Npm@1
   inputs:
@@ -78,7 +78,7 @@ steps:
      $(GitVersion.MajorMinorPatch)-$(GitVersion.PreReleaseLabel)
      $(GitVersion.SemVer)
      $(GitVersion.PreReleaseLabel)
-     workingDirectory: 'packages/server'
+    workingDirectory: 'packages/server'
   condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
 
 - task: Npm@1
