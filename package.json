@@ -5,25 +5,25 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "core:install": "cd packages/core && npm install",
+    "core:install": "cd packages/core && yarn install",
     "core:build": "cd packages/core && npm run build",
     "core:start": "cd packages/core && npm start",
     "core:clean": "cd packages/core && remove-node-modules && rimraf package-lock.json",
-    "consumer-core:install": "cd playground/react-app && npm install",
+    "consumer-core:install": "cd playground/react-app && yarn install",
     "consumer-core:start": "cd playground/react-app && npm run start",
     "consumer-core:clean": "cd playground/react-app && remove-node-modules && rimraf package-lock.json",
-    "docs-app:install": "cd docs-app && npm install",
+    "docs-app:install": "cd docs-app && yarn install",
     "docs-app:start": "cd docs-app && npm run start",
     "docs-app:clean": "cd docs-app && remove-node-modules && rimraf package-lock.json",
-    "server:install": "cd packages/server && npm ci",
+    "server:install": "cd packages/server && yarn install",
     "server:start": "cd packages/server && npm start",
     "server:build": "cd packages/server && npm run build",
     "server:clean": "cd packages/server && remove-node-modules && rimraf package-lock.json",
-    "consumer-server:install": "cd playground/server && npm install",
+    "consumer-server:install": "cd playground/server && yarn install",
     "consumer-server:start": "cd playground/server && npm start",
     "consumer-server:clean": "cd playground/server && remove-node-modules && rimraf package-lock.json",
     "docker:start": "docker-compose up --build",
-    "postinstall": "npm-run-all core:install core:build consumer-core:install docs-app:install server:install server:build consumer-server:install",
+    "postinstall": "npm-run-all -p core:build server:build",
     "start": "npm-run-all -p docker:start core:start docs-app:start server:start consumer-server:start consumer-core:start",
     "clean": "npm-run-all core:clean consumer-core:clean docs-app:clean server:clean consumer-server:clean"
   },
@@ -41,5 +41,6 @@
     "npm-run-all": "^4.1.3",
     "remove-node-modules": "^1.7.4",
     "rimraf": "^2.6.2"
-  }
+  },
+  "workspaces": ["packages/core", "packages/server", "playground/react-app", "playground/server", "docs-app"]
 }

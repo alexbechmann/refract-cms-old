@@ -8,7 +8,12 @@ function srcPath(subdir) {
 module.exports = {
   entry: './src/server.ts',
   target: 'node',
-  externals: process.env.NODE_ENV === 'production' ? [] : [nodeExternals()],
+  externals: process.env.NODE_ENV === 'production' ? [] : [
+    nodeExternals(),
+    nodeExternals({
+      modulesDir: path.resolve(__dirname, '../../node_modules')
+    })
+  ],
   mode: "production",
   output: {
     path: path.resolve(__dirname, 'dist'),

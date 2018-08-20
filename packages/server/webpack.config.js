@@ -7,7 +7,12 @@ function srcPath(subdir) {
 
 module.exports = {
   entry: './src/index.ts',
-  externals: [nodeExternals()],
+  externals: [
+    nodeExternals(),
+    nodeExternals({
+      modulesDir: path.resolve(__dirname, '../../node_modules')
+    })
+  ],
   mode: "production",
   target: 'node',
   output: {
