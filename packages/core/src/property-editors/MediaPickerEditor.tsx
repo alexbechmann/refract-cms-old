@@ -119,9 +119,8 @@ export const SingleMediaPickerEditor = (options?: MediaPickerEditorOptions) => (
   <MediaPickerEditor
     propertyKey={props.propertyKey}
     propertyOptions={props.propertyOptions}
-    value={props.value ? props.value[0] : undefined}
+    value={props.value ? [props.value] : []}
     setValue={values => {
-      console.log(values, values[0]);
       props.setValue(values[0]);
     }}
     {...options}
