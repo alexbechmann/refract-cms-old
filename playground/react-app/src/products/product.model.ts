@@ -1,11 +1,11 @@
-import { Entity, Location } from "@refract-cms/core";
+import { Entity, Location, MediaItem } from "@refract-cms/core";
 
 export interface Product extends Entity {
   productType: string;
   customNumber: number;
   location: Location;
   title: string;
-  imageIds: string[];
+  image: MediaItem;
   category: string;
   types: string[];
 }

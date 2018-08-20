@@ -4,6 +4,7 @@ import { List, ListItem, ListItemText, ListItemSecondaryAction, Checkbox, Button
 import ImageUploader from '../media/ImageUploader';
 import mediaService from '../media/media.service';
 import entityService from '../entities/entity.service';
+import { MediaItem } from '../media/media-item.model';
 
 export interface MediaPickerEditorOptions {
   max: number;
@@ -11,12 +12,12 @@ export interface MediaPickerEditorOptions {
 }
 
 interface State {
-  allImages: any[];
+  allImages: MediaItem[];
   loading: boolean;
   deleting: any;
 }
 
-interface Props extends MediaPickerEditorOptions, PropertyEditorProps<string[]> {}
+interface Props extends MediaPickerEditorOptions, PropertyEditorProps<MediaItem[]> {}
 
 class MediaPickerEditor extends React.Component<Props, State> {
   state: State = {
@@ -63,21 +64,26 @@ class MediaPickerEditor extends React.Component<Props, State> {
     this.props.setValue([]);
   }
 
-  renderSelectedImages(selectedIds) {
+  renderSelectedImages(mediaItems: MediaItem[]) {
     return (
       <List>
-        {this.state.allImages.map((mediaItem, index) => {
-          const selected = selectedIds.some(id => id === mediaItem._id);
-          const deleting = Boolean(this.state.deleting[mediaItem._id]);
+        {this.state.allImages.map((image, index) => {
+          const selected = mediaItems.some(m => m._id === image._id);
+          const deleting = Boolean(this.state.deleting[image._id]);
           return (
             <ListItem
-              disabled={selectedIds.length >= this.props.max && !selected}
+              disabled={mediaItems.length >= this.props.max && !selected}
               key={index}
               button
               onClick={() => {
-                const newValue = selected
-                  ? selectedIds.filter(id => id !== mediaItem._id)
-                  : [...selectedIds.filter(id => id !== mediaItem._id), mediaItem._id];
+                const newValue: MediaItem[] = selected
+                  ? mediaItems.filter(m => m._id !== image._id)
+                  : [
+                      ...mediaItems.filter(m => m._id !== image._id),
+                      {
+                        _id: image._id
+                      }
+                    ];
                 this.props.setValue(newValue);
               }}
             >
@@ -85,7 +91,7 @@ class MediaPickerEditor extends React.Component<Props, State> {
                 style={{
                   height: '50px',
                   width: '50px',
-                  backgroundImage: `url(${mediaService.buildUrl(mediaItem._id)})`,
+                  backgroundImage: `url(${mediaService.buildUrl(image._id)})`,
                   backgroundSize: 'cover'
                 }}
               />
@@ -107,6 +113,21 @@ class MediaPickerEditor extends React.Component<Props, State> {
   }
 }
 
-export default (options?: MediaPickerEditorOptions) => (props: PropertyEditorProps<string[]>) => (
-  <MediaPickerEditor {...props} {...options} />
+export const SingleMediaPickerEditor = (options?: MediaPickerEditorOptions) => (
+  props: PropertyEditorProps<MediaItem>
+) => (
+  <MediaPickerEditor
+    propertyKey={props.propertyKey}
+    propertyOptions={props.propertyOptions}
+    value={props.value ? props.value[0] : undefined}
+    setValue={values => {
+      console.log(values);
+      props.setValue(values[0]);
+    }}
+    {...options}
+  />
 );
+
+export const MultipleMediaPickerEditor = (options?: MediaPickerEditorOptions) => (
+  props: PropertyEditorProps<MediaItem[]>
+) => <MediaPickerEditor {...props} {...options} />;

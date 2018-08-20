@@ -2,7 +2,7 @@ import { Product } from './product.model';
 import {
   defineEntity,
   TextEditor,
-  MediaPickerEditor,
+  SingleMediaPickerEditor,
   LocationEditor,
   SingleDropdownEditor,
   MultipleDropdownEditor
@@ -51,12 +51,11 @@ export default defineEntity<Product>({
       selectOptions: ['Type1', 'Type2']
     })
   },
-  imageIds: {
+  image: {
     displayName: 'Images',
-    editorComponent: MediaPickerEditor({
+    editorComponent: SingleMediaPickerEditor({
       allowedFileTypes: ['jpg'],
       max: 1
-    }),
-    defaultValue: []
+    })
   }
 });
