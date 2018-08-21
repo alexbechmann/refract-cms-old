@@ -6,6 +6,8 @@ import mediaService from '../media/media.service';
 import entityService from '../entities/entity.service';
 import { MediaItem } from '../media/media-item.model';
 import { Entity } from '../entities/entity.model';
+import ReactCrop from 'react-image-crop';
+import ImageCropper from '../media/ImageCropper';
 
 export interface CropDefinition {
   ratio?: number;
@@ -126,17 +128,38 @@ class MediaPickerEditor extends React.Component<Props, State> {
   }
 
   renderSelectedImages(mediaItems: MediaItem[]) {
-    const { namedCrops } = this.props;
+    const { namedCrops, setValue } = this.props;
     return (
       <div>
-        {mediaItems.map(mediaItem => {
+        {mediaItems.map((mediaItem, index) => {
           return (
             <div>
               {mediaItem._id}
               {namedCrops &&
                 Object.keys(namedCrops).map(cropKey => {
                   const cropDefinition = namedCrops[cropKey];
-                  return <p>asdf</p>;
+                  const crop = mediaItem.crops ? mediaItem.crops[cropKey] : {};
+                  return (
+                    <p>
+                      <Typography>{cropKey}</Typography>
+                      <ImageCropper
+                        imageId={mediaItem._id}
+                        crop={crop}
+                        onChange={crop => {
+                          setValue([
+                            ...mediaItems.filter((m, i) => i !== index),
+                            {
+                              ...mediaItem,
+                              crops: {
+                                ...mediaItem.crops,
+                                [cropKey]: crop
+                              }
+                            }
+                          ]);
+                        }}
+                      />
+                    </p>
+                  );
                 })}
             </div>
           );
