@@ -9,7 +9,7 @@
     "sourceMap": true,
     "declaration": true,
     "baseUrl": "./",
-    "outDir": "./",
+    "outDir": "./dist/",
     "jsx": "react",
     "allowSyntheticDefaultImports": false,
     "esModuleInterop": false

@@ -55,7 +55,13 @@ export default defineEntity<Product>({
     displayName: 'Images',
     editorComponent: SingleMediaPickerEditor({
       allowedFileTypes: ['jpg'],
-      max: 1
+      max: 1,
+      namedCrops: {
+        main: {
+          height: 400,
+          width: 300
+        }
+      }
     })
   }
 });

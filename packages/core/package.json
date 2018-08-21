@@ -9,8 +9,8 @@
   "private": false,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
-    "start": "webpack -w"
+    "build": "webpack && tsc --emitDeclarationOnly",
+    "start": "webpack -w && tsc -w --emitDeclarationOnly"
   },
   "typings": "./dist/index.d.ts",
   "author": "",
@@ -45,10 +45,14 @@
     "@types/react-redux": "^6.0.5",
     "@types/react-router": "^4.0.30",
     "@types/react-router-dom": "^4.3.0",
+    "awesome-typescript-loader": "^5.2.0",
+    "cache-loader": "^1.2.2",
     "fork-ts-checker-webpack-plugin": "^0.4.9",
+    "happypack": "^5.0.0",
     "prettier": "^1.13.7",
     "prettier-loader": "^2.1.1",
     "progress-bar-webpack-plugin": "^1.11.0",
+    "thread-loader": "^1.2.0",
     "ts-loader": "^4.3.0",
     "typescript": "^3.1.0-dev.20180810",
     "webpack-node-externals": "^1.7.2"
