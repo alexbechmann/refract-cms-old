@@ -8,5 +8,6 @@ export interface Product extends Entity {
   image: MediaItem;
   category: string;
   types: string[];
+  extraImages: MediaItem[];
 }
 

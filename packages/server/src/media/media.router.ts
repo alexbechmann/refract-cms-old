@@ -48,7 +48,7 @@ router.get('/file/:id?', async (req, res) => {
     const entity = await db.collection('media.files').findOne({ _id: new ObjectID(id) });
     var buffer = Buffer.concat(buffers);
     const img = await jimp.read(buffer);
-    img.cover(720, 480);
+    // img.cover(720, 480);
     const imgBuffer = await img.getBufferAsync(entity.metadata.mimetype);
     res.writeHead(200, { 'Content-Type': entity.metadata.mimetype });
     res.end(imgBuffer, 'binary');

@@ -2,10 +2,11 @@ import { Product } from './product.model';
 import {
   defineEntity,
   TextEditor,
-  SingleMediaPickerEditor,
+  MediaPickerEditor,
   LocationEditor,
   SingleDropdownEditor,
-  MultipleDropdownEditor
+  MultipleDropdownEditor,
+  ListEditor
 } from '@refract-cms/core';
 import CustomDropdownEditor from '../property-editors/CustomDropdownEditor';
 
@@ -53,15 +54,28 @@ export default defineEntity<Product>({
   },
   image: {
     displayName: 'Images',
-    editorComponent: SingleMediaPickerEditor({
+    editorComponent: MediaPickerEditor({
       allowedFileTypes: ['jpg'],
-      max: 1,
       namedCrops: {
         main: {
           height: 400,
           width: 300
         }
       }
+    })
+  },
+  extraImages: {
+    editorComponent: ListEditor({
+      ItemComponent: MediaPickerEditor({
+        allowedFileTypes: ['jpg'],
+        namedCrops: {
+          main: {
+            height: 400,
+            width: 300
+          }
+        }
+      }),
+      max: 5
     })
   }
 });

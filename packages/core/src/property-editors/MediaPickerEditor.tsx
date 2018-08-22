@@ -16,7 +16,6 @@ export interface CropDefinition {
 }
 
 export interface MediaPickerEditorOptions {
-  max: number;
   allowedFileTypes?: string[];
   namedCrops?: {
     [key: string]: CropDefinition;
@@ -31,7 +30,7 @@ interface State {
 
 interface MediaFile extends Entity {}
 
-interface Props extends MediaPickerEditorOptions, PropertyEditorProps<MediaItem[]> {}
+interface Props extends MediaPickerEditorOptions, PropertyEditorProps<MediaItem> {}
 
 class MediaPickerEditor extends React.Component<Props, State> {
   state: State = {
@@ -51,13 +50,12 @@ class MediaPickerEditor extends React.Component<Props, State> {
   }
 
   render() {
-    const value = this.props.value || [];
+    const value = this.props.value;
     return (
       <div>
-        <Typography>Selected ({value.length})</Typography>
         <ImageUploader onUploaded={this.refresh} />
         {this.renderImagePicker(value)}
-        {this.renderSelectedImages(value)}
+        {value && this.renderSelectedImage(value)}
         <Button onClick={this.clear}>Clear</Button>
       </div>
     );
@@ -76,29 +74,25 @@ class MediaPickerEditor extends React.Component<Props, State> {
   }
 
   clear() {
-    this.props.setValue([]);
+    this.props.setValue(undefined);
   }
 
-  renderImagePicker(mediaItems: MediaItem[]) {
+  renderImagePicker(mediaItem?: MediaItem) {
     return (
       <List>
         {this.state.mediaFiles.map((file, index) => {
-          const selected = mediaItems.some(m => m._id === file._id);
+          const selected = mediaItem && mediaItem._id === file._id;
           const deleting = Boolean(this.state.deleting[file._id]);
           return (
             <ListItem
-              disabled={mediaItems.length >= this.props.max && !selected}
               key={index}
               button
               onClick={() => {
-                const newValue: MediaItem[] = selected
-                  ? mediaItems.filter(m => m._id !== file._id)
-                  : [
-                      ...mediaItems.filter(m => m._id !== file._id),
-                      {
-                        _id: file._id
-                      }
-                    ];
+                const newValue: MediaItem = selected
+                  ? undefined
+                  : {
+                      _id: file._id
+                    };
                 this.props.setValue(newValue);
               }}
             >
@@ -127,62 +121,39 @@ class MediaPickerEditor extends React.Component<Props, State> {
     );
   }
 
-  renderSelectedImages(mediaItems: MediaItem[]) {
+  renderSelectedImage(mediaItem: MediaItem) {
     const { namedCrops, setValue } = this.props;
     return (
       <div>
-        {mediaItems.map((mediaItem, index) => {
-          return (
-            <div>
-              {mediaItem._id}
-              {namedCrops &&
-                Object.keys(namedCrops).map(cropKey => {
-                  const cropDefinition = namedCrops[cropKey];
-                  const crop = mediaItem.crops ? mediaItem.crops[cropKey] : {};
-                  return (
-                    <p>
-                      <Typography>{cropKey}</Typography>
-                      <ImageCropper
-                        imageId={mediaItem._id}
-                        crop={crop}
-                        onChange={crop => {
-                          setValue([
-                            ...mediaItems.filter((m, i) => i !== index),
-                            {
-                              ...mediaItem,
-                              crops: {
-                                ...mediaItem.crops,
-                                [cropKey]: crop
-                              }
-                            }
-                          ]);
-                        }}
-                      />
-                    </p>
-                  );
-                })}
-            </div>
-          );
-        })}
+        {mediaItem._id}
+        {namedCrops &&
+          Object.keys(namedCrops).map(cropKey => {
+            const cropDefinition = namedCrops[cropKey];
+            const crop = mediaItem.crops ? mediaItem.crops[cropKey] : {};
+            return (
+              <div key={cropKey}>
+                <Typography>Crop name: {cropKey}</Typography>
+                <ImageCropper
+                  imageId={mediaItem._id}
+                  crop={crop}
+                  onChange={crop => {
+                    setValue({
+                      ...mediaItem,
+                      crops: {
+                        ...mediaItem.crops,
+                        [cropKey]: crop
+                      }
+                    });
+                  }}
+                />
+              </div>
+            );
+          })}
       </div>
     );
   }
 }
 
-export const SingleMediaPickerEditor = (options?: MediaPickerEditorOptions) => (
-  props: PropertyEditorProps<MediaItem>
-) => (
-  <MediaPickerEditor
-    propertyKey={props.propertyKey}
-    propertyOptions={props.propertyOptions}
-    value={props.value ? [props.value] : []}
-    setValue={values => {
-      props.setValue(values[0]);
-    }}
-    {...options}
-  />
+export default (options?: MediaPickerEditorOptions) => (props: PropertyEditorProps<MediaItem>) => (
+  <MediaPickerEditor {...props} {...options} />
 );
-
-export const MultipleMediaPickerEditor = (options?: MediaPickerEditorOptions) => (
-  props: PropertyEditorProps<MediaItem[]>
-) => <MediaPickerEditor {...props} {...options} />;

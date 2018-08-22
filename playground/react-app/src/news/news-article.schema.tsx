@@ -42,6 +42,7 @@ export default defineEntity<NewsArticle>({
     editorComponent: ListEditor({
       ItemComponent: TextEditor(),
       max: 4
-    })
+    }),
+    defaultValue: ['s1', 's2']
   }
 });
