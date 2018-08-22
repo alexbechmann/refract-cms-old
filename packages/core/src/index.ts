@@ -16,3 +16,4 @@ export { default as LocationEditor } from './property-editors/LocationEditor';
 export { default as SingleDropdownEditor } from './property-editors/SingleDropdownEditor';
 export { default as MultipleDropdownEditor } from './property-editors/MultipleDropdownEditor';
 export { default as DatePickerEditor } from './property-editors/DatePickerEditor';
+export { default as ListEditor } from './property-editors/ListEditor';

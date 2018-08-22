@@ -6,4 +6,5 @@ export interface NewsArticle extends Entity {
   relevantProductsIds: string[];
   extraText: string;
   articleDate: Date;
+  listOfStrings: string[];
 }

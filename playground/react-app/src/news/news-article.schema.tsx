@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { defineEntity, TextEditor, EntityPickerEditor, DatePickerEditor } from '@refract-cms/core';
+import { defineEntity, TextEditor, EntityPickerEditor, DatePickerEditor, ListEditor } from '@refract-cms/core';
 import { NewsArticle } from './news-article.model';
 
 export default defineEntity<NewsArticle>({
@@ -14,6 +14,7 @@ export default defineEntity<NewsArticle>({
     }),
     defaultValue: 'default headline'
   },
+
   articleText: {
     displayName: 'Article text',
     editorComponent: TextEditor({
@@ -36,5 +37,11 @@ export default defineEntity<NewsArticle>({
   articleDate: {
     displayName: 'Article date',
     editorComponent: DatePickerEditor()
+  },
+  listOfStrings: {
+    editorComponent: ListEditor({
+      ItemComponent: TextEditor(),
+      max: 4
+    })
   }
 });
