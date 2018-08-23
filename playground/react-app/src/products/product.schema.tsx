@@ -66,7 +66,7 @@ export default defineEntity<Product>({
   },
   extraImages: {
     editorComponent: ListEditor({
-      ItemComponent: MediaPickerEditor({
+      itemComponent: MediaPickerEditor({
         allowedFileTypes: ['jpg'],
         namedCrops: {
           main: {

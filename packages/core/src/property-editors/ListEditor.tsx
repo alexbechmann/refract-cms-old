@@ -3,7 +3,7 @@ import { PropertyEditorProps } from '../properties/property-editor-props';
 import { IconButton, Typography, Button, Divider } from '@material-ui/core';
 
 export interface ListEditorOptions<T> {
-  ItemComponent: React.ComponentType<PropertyEditorProps<T>>;
+  itemComponent: React.ComponentType<PropertyEditorProps<T>>;
   max: number;
 }
 
@@ -19,14 +19,14 @@ class ListEditor<T> extends React.Component<Props<T>, State<T>> {
   };
 
   render() {
-    const { setValue, ItemComponent, propertyOptions, propertyKey } = this.props;
+    const { setValue, propertyOptions, propertyKey } = this.props;
     const value = this.props.value || [];
     return (
       <div>
         <Typography>Current values:</Typography>
         {value.map((v, index) => (
           <div key={index}>
-            <ItemComponent
+            <this.props.itemComponent
               propertyOptions={propertyOptions}
               propertyKey={propertyKey}
               value={v}
@@ -45,7 +45,7 @@ class ListEditor<T> extends React.Component<Props<T>, State<T>> {
         ))}
         <Divider />
         <Typography>Add new value</Typography>
-        <ItemComponent
+        <this.props.itemComponent
           propertyOptions={propertyOptions}
           propertyKey={propertyKey}
           value={this.state.stagedValue}
