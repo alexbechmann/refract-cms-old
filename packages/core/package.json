@@ -9,8 +9,12 @@
   "private": false,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack && tsc --emitDeclarationOnly",
-    "start": "webpack -w && tsc -w --emitDeclarationOnly"
+    "build": "npm-run-all lib:build typings:build",
+    "start": "npm-run-all -p lib:watch typings:watch",
+    "lib:build": "webpack",
+    "lib:watch": "webpack -w",
+    "typings:build": "tsc --emitDeclarationOnly",
+    "typings:watch": "tsc -w --emitDeclarationOnly"
   },
   "typings": "./dist/index.d.ts",
   "author": "",

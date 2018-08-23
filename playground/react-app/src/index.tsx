@@ -3,13 +3,13 @@ import * as ReactDOM from 'react-dom';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import * as refract from '@refract-cms/core';
-import productSchema from './products/product.schema';
-import newsArticleSchema from './news/news-article.schema';
-import settingsSchema from './settings/settings.schema';
+import { ProductSchema } from './products/product.model';
+import { NewsArticleSchema } from './news/news-article.model';
+import { SettingsSchema } from './settings/settings.model';
 import 'typeface-roboto';
 
 refract.configure({
-  schema: [productSchema, newsArticleSchema, settingsSchema],
+  schema: [ProductSchema, NewsArticleSchema, SettingsSchema],
   serverUrl: 'http://localhost:3500'
 });
 

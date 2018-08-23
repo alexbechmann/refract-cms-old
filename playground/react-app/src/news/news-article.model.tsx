@@ -1,8 +1,17 @@
 import * as React from 'react';
-import { defineEntity, TextEditor, EntityPickerEditor, DatePickerEditor, ListEditor } from '@refract-cms/core';
+import { Entity, defineEntity, TextEditor, EntityPickerEditor, DatePickerEditor, ListEditor } from '@refract-cms/core';
 import { NewsArticle } from './news-article.model';
 
-export default defineEntity<NewsArticle>({
+export interface NewsArticle extends Entity {
+  title: string;
+  articleText: string;
+  relevantProductsIds: string[];
+  extraText: string;
+  articleDate: Date;
+  listOfStrings: string[];
+}
+
+export const NewsArticleSchema = defineEntity<NewsArticle>({
   alias: 'newsArticle',
   displayName: 'News Article',
   instanceDisplayName: newsArticle => newsArticle.title
