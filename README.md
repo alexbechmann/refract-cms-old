@@ -28,7 +28,7 @@ The backend server hosts the API endpoints & handles authentication.
 
 ## Quick Start (TypeScript)
 
-### Frontend
+## Frontend
 ```
 npm i -g create-react-app
 create-react-app frontend --scripts-version=react-scripts-ts
@@ -36,29 +36,28 @@ cd ./frontend
 npm i -S @refract-cms/core
 ```
 
-`Create file: news-article.model.ts`
-```ts
-import { Entity }  from '@refract-cms/core';
+```tsx
+import * as React from 'react';
+import {
+  Entity,
+  defineEntity,
+  TextEditor,
+  EntityPickerEditor,
+  DatePickerEditor,
+  ListEditor,
+  Admin,
+  configure
+} from '@refract-cms/core';
 
 export interface NewsArticle extends Entity {
   title: string;
   articleText: string;
-  category: string;
   articleDate: Date;
-  relevantProductsIds: string[];
 }
-```
 
-`Create file: news-article.schema.tsx`
-```tsx
-import * as React from 'react';
-import { defineEntity, TextEditor, EntityPickerEditor, DatePickerEditor } from '@refract-cms/core';
-import { NewsArticle } from './news-article.model';
-
-export default defineEntity<NewsArticle>({
+export const NewsArticleSchema = defineEntity<NewsArticle>({
   alias: 'newsArticle',
-  displayName: 'News Article',
-  instanceDisplayName: newsArticle => newsArticle.title
+  displayName: 'News Article'
 })({
   title: {
     displayName: 'Headline',
@@ -69,52 +68,20 @@ export default defineEntity<NewsArticle>({
   },
   articleText: {
     displayName: 'Article text',
-    editorComponent: TextEditor({
-      maxLength: 100,
-      multiline: true
-    }),
-    defaultValue: ''
-  },
-  relevantProductsIds: {
-    displayName: 'Relevant Products',
-    editorComponent: EntityPickerEditor({
-      entityAlias: 'product',
-      max: 4
-    })
-  },
-  extraText: {
-    displayName: 'Extra text',
     editorComponent: props => <input value={props.value} onChange={e => props.setValue(e.target.value)} /> 
-    // This is a bare bones custom component at it's most basic level.
-  },
-  articleDate: {
-    displayName: 'Article date',
-    editorComponent: DatePickerEditor()
+    // This is a bare bones custom component at it's most basic level
   }
 });
 
-```
-
-`Edit index.tsx`
-```tsx
-import * as refract from '@refract-cms/core';
-import newsArticleSchema from './news-article.schema';
-
-refract.configure({
-  schema: [newsArticleSchema],
-  serverUrl: '##YOUR_SERVER_URL##' // See server section below
+configure({
+  schema: [NewsArticleSchema],
+  serverUrl: 'http://localhost:3500' // See server below
 });
 
+ReactDOM.render(<Admin />, document.getElementById('root') as HTMLElement);
 ```
-#### Render Admin dashboard
-`Edit index.tsx`
-```tsx
-ReactDOM.render(<refract.Admin />, document.getElementById('root') as HTMLElement);
-```
-NB: See [USING_CUSTOM_ROUTER](docs/USING_CUSTOM_ROUTER.md) for how to add to a route on your existing react app
 
-
-### Server
+## Server
 ```
 mkdir server
 cd server
@@ -122,13 +89,12 @@ npm init
 npm i -S express @refract-cms/server
 ```
 
-`Create file index.ts`
 ```ts
 import * as express from 'express';
 import * as refract from '@refract-cms/server';
 
 refract.configure({
-  mongoConnectionString: '##YOUR_MONGO_URL##'
+  mongoConnectionString: 'mongodb://localhost:27017/my-app' // Must provide mongodb connection string here
 });
 
 const app = express();
@@ -139,11 +105,3 @@ app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
 ```
-
-### Run your new CMS
-Replace `##YOUR_SERVER_URL##` in frontend guide with `http://localhost:3500` (If using this example).
-
-Start frontend and server projects.
-
-## Getting started (JavaScript) 
-Coming soon...

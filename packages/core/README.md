@@ -54,7 +54,8 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
   },
   extraText: {
     displayName: 'Extra text',
-    editorComponent: props => <input value={props.value} onChange={e => props.setValue(e.target.value)} />
+    editorComponent: props => <input value={props.value} onChange={e => props.setValue(e.target.value)} /> 
+    // This is a bare bones custom component at it's most basic level.
   },
   articleDate: {
     displayName: 'Article date',
