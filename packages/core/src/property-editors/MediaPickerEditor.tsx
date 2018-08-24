@@ -1,24 +1,17 @@
 import * as React from 'react';
 import { PropertyEditorProps } from '../properties/property-editor-props';
-import { List, ListItem, ListItemText, ListItemSecondaryAction, Checkbox, Button, Typography } from '@material-ui/core';
-import ImageUploader from '../media/ImageUploader';
-import mediaService from '../media/media.service';
+import { Button, Typography } from '@material-ui/core';
 import entityService from '../entities/entity.service';
 import { MediaItem } from '../media/media-item.model';
 import { Entity } from '../entities/entity.model';
-import ReactCrop from 'react-image-crop';
 import ImageCropper from '../media/ImageCropper';
-
-export interface CropDefinition {
-  ratio?: number;
-  height?: number;
-  width?: number;
-}
+import { Crop } from '../media/crop.model';
+import MediaPickerButton from '../media/MediaPickerButton';
 
 export interface MediaPickerEditorOptions {
   allowedFileTypes?: string[];
   namedCrops?: {
-    [key: string]: CropDefinition;
+    [key: string]: Crop;
   };
 }
 
@@ -53,8 +46,7 @@ class MediaPickerEditor extends React.Component<Props, State> {
     const value = this.props.value;
     return (
       <div>
-        <ImageUploader onUploaded={this.refresh} />
-        {this.renderImagePicker(value)}
+        <MediaPickerButton onSelect={this.props.setValue} />
         {value && this.renderSelectedImage(value)}
         <Button onClick={this.clear}>Clear</Button>
       </div>
@@ -75,50 +67,6 @@ class MediaPickerEditor extends React.Component<Props, State> {
 
   clear() {
     this.props.setValue(undefined);
-  }
-
-  renderImagePicker(mediaItem?: MediaItem) {
-    return (
-      <List>
-        {this.state.mediaFiles.map((file, index) => {
-          const selected = mediaItem && mediaItem._id === file._id;
-          const deleting = Boolean(this.state.deleting[file._id]);
-          return (
-            <ListItem
-              key={index}
-              button
-              onClick={() => {
-                const newValue: MediaItem = selected
-                  ? undefined
-                  : {
-                      _id: file._id
-                    };
-                this.props.setValue(newValue);
-              }}
-            >
-              <div
-                style={{
-                  height: '50px',
-                  width: '50px',
-                  backgroundImage: `url(${mediaService.buildUrl(file._id)})`,
-                  backgroundSize: 'cover'
-                }}
-              />
-              <ListItemText primary={index} />
-              <ListItemSecondaryAction>
-                {deleting ? (
-                  <p>deleting...</p>
-                ) : (
-                  <ListItemSecondaryAction>
-                    <Checkbox checked={selected} />
-                  </ListItemSecondaryAction>
-                )}
-              </ListItemSecondaryAction>
-            </ListItem>
-          );
-        })}
-      </List>
-    );
   }
 
   renderSelectedImage(mediaItem: MediaItem) {

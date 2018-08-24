@@ -21,11 +21,11 @@ interface State {
   dialogOpen: boolean;
 }
 
-export interface ImageUploaderProps {
+export interface ImageUploaderButtonProps {
   onUploaded?: () => void;
 }
 
-class ImageUploader extends React.Component<ImageUploaderProps, State> {
+class ImageUploaderButton extends React.Component<ImageUploaderButtonProps, State> {
   state: State = {
     uploading: false,
     dialogOpen: false
@@ -59,6 +59,7 @@ class ImageUploader extends React.Component<ImageUploaderProps, State> {
                 Select photo
               </Button>
             </label>
+            {this.state.file && <p>Click upload to upload file to server</p>}
           </DialogContent>
           <DialogActions>
             {this.state.file && !this.state.uploading ? (
@@ -95,4 +96,4 @@ class ImageUploader extends React.Component<ImageUploaderProps, State> {
   }
 }
 
-export default ImageUploader as React.ComponentType<ImageUploaderProps>;
+export default ImageUploaderButton as React.ComponentType<ImageUploaderButtonProps>;

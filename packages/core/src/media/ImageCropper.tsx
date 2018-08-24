@@ -14,6 +14,7 @@ class ImageCropper extends React.Component<Props> {
     const { imageId, crop, onChange } = this.props;
     return (
       <ReactCrop
+        style={{ maxWidth: '100%' }}
         src={mediaService.buildUrl(imageId)}
         onChange={(crop, pixelCrop) => {
           onChange(crop);

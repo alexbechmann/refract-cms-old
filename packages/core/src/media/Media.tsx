@@ -15,7 +15,7 @@ import entityService from '../entities/entity.service';
 import mediaService from './media.service';
 import * as Icons from '@material-ui/icons';
 import { Entity } from '../entities/entity.model';
-import ImageUploader from './ImageUploader';
+import ImageUploaderButton from './ImageUploaderButton';
 
 interface State {
   media: Entity[];
@@ -59,7 +59,7 @@ class Media extends React.Component<Props, State> {
     const { classes } = this.props;
     return (
       <div>
-        <ImageUploader onUploaded={this.refresh} />
+        <ImageUploaderButton onUploaded={this.refresh} />
         <List>
           <ListSubheader title="Media" />
           {this.state.media.map(mediaItem => {
