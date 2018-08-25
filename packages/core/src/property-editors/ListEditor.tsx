@@ -68,39 +68,6 @@ class ListEditor<T> extends React.Component<Props<T>, State<T>> {
             </ExpansionPanelActions>
           </ExpansionPanel>
         ))}
-        {/* <ExpansionPanel expanded={true}>
-          <ExpansionPanelSummary>
-            <Typography>Add new item</Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <this.props.itemComponent
-              propertyOptions={propertyOptions}
-              propertyKey={propertyKey}
-              value={this.state.stagedValue}
-              setValue={newValue => {
-                this.setState({
-                  stagedValue: newValue
-                });
-              }}
-            />
-          </ExpansionPanelDetails>
-          <ExpansionPanelActions>
-            {this.state.stagedValue && (
-              <Button
-                onClick={() => {
-                  const { stagedValue } = this.state;
-                  const newValues = [...value, stagedValue];
-                  setValue(newValues);
-                  this.setState({
-                    stagedValue: undefined
-                  });
-                }}
-              >
-                Add item
-              </Button>
-            )}
-          </ExpansionPanelActions>
-        </ExpansionPanel> */}
         {this.state.showAddNewEditor && (
           <this.props.itemComponent
             propertyOptions={propertyOptions}

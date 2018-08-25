@@ -37,10 +37,10 @@ interface State {
 
 const styles = theme => ({
   card: {
-    marginBottom: theme.spacing.unit
+    margin: theme.spacing.unit
   },
   propertyEditor: {
-    marginBottom: '50px'
+    marginBottom: theme.spacing.unit * 4
   }
 });
 
