@@ -50,7 +50,8 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
   listOfStrings: {
     editorComponent: ListEditor({
       itemComponent: TextEditor(),
-      max: 4
+      max: 4,
+      displayNameFormat: s => s
     }),
     defaultValue: ['s1', 's2']
   }

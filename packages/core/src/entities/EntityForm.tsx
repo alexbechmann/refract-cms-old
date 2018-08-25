@@ -3,7 +3,7 @@ import { EntitySchema } from './entity-schema';
 import RenderEditor from '../property-editors/RenderEditor';
 import {
   Button,
-  CircularProgress,
+  LinearProgress,
   Typography,
   Table,
   TableBody,
@@ -85,10 +85,10 @@ class EntityForm extends React.Component<Props, State> {
   render() {
     const { entity, classes } = this.props;
     return this.state.loading ? (
-      <CircularProgress />
+      <LinearProgress />
     ) : (
       <Grid justify="center" container>
-        <Grid item xs={12} sm={12} md={7} lg={5} xl={4}>
+        <Grid item xs={12} sm={12} md={10} lg={8} xl={7}>
           <Card className={classes.card}>
             <CardHeader title={entity.options.displayName || entity.options.alias} />
             <CardContent>
@@ -96,30 +96,40 @@ class EntityForm extends React.Component<Props, State> {
                 const propertyOptions = entity.properties[propertyKey];
                 return (
                   <div key={index} className={classes.propertyEditor}>
-                    <Typography variant="subheading" gutterBottom>
-                      {propertyOptions.displayName || propertyKey}
-                    </Typography>
-                    <RenderEditor
-                      setValue={value => {
-                        this.setState({
-                          updateValues: {
-                            ...this.state.updateValues,
-                            [propertyKey]: value
-                          }
-                        });
-                      }}
-                      value={this.state.updateValues[propertyKey]}
-                      propertyKey={propertyKey}
-                      propertyOptions={propertyOptions}
-                    />
+                    <Grid container spacing={16}>
+                      <Grid item xs={12} sm={12} md={3} lg={3} xl={3}>
+                        <Typography variant="subheading" gutterBottom>
+                          {propertyOptions.displayName || propertyKey}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={9} lg={9} xl={9}>
+                        <RenderEditor
+                          setValue={value => {
+                            this.setState({
+                              updateValues: {
+                                ...this.state.updateValues,
+                                [propertyKey]: value
+                              }
+                            });
+                          }}
+                          value={this.state.updateValues[propertyKey]}
+                          propertyKey={propertyKey}
+                          propertyOptions={propertyOptions}
+                        />
+                      </Grid>
+                    </Grid>
                   </div>
                 );
               })}
             </CardContent>
             <CardActions>
-              <Button onClick={this.back}>Back</Button>
-              <Button onClick={this.delete}>Delete</Button>
-              <Button color="primary" onClick={this.save}>
+              <Button variant="raised" onClick={this.back}>
+                Back
+              </Button>
+              <Button variant="raised" onClick={this.delete}>
+                Delete
+              </Button>
+              <Button variant="raised" color="primary" onClick={this.save}>
                 Save
               </Button>
             </CardActions>
