@@ -12,33 +12,42 @@ import {
   DialogActions,
   DialogContent
 } from '@material-ui/core';
-import ImageUploaderButton from '../media/ImageUploaderButton';
+import ImageUploaderDialog from '../media/ImageUploaderDialog';
 import mediaService from '../media/media.service';
 import entityService from '../entities/entity.service';
 import { MediaItem } from '../media/media-item.model';
 import { Entity } from '../entities/entity.model';
-import ReactCrop from 'react-image-crop';
-import ImageCropper from '../media/ImageCropper';
-import { Crop } from './crop.model';
 import { MediaPickerEditorOptions } from '../property-editors/MediaPickerEditor';
 
 interface State {
   mediaFiles: MediaFile[];
   loading: boolean;
-  dialogOpen: boolean;
+  uploadDialogOpen: boolean;
 }
 
-interface MediaFile extends Entity {}
+interface MediaFile extends Entity {
+  metadata: {
+    mimetype: string;
+    size: {
+      width: number;
+      height: number;
+    };
+  };
+}
 
 interface Props extends MediaPickerEditorOptions {
+  open: boolean;
+  handleClose: () => void;
   onSelect: (mediaItem: MediaItem) => void;
+  minWidth?: number;
+  minHeight?: number;
 }
 
-class MediaPickerButton extends React.Component<Props, State> {
+class MediaPickerDialog extends React.Component<Props, State> {
   state: State = {
     mediaFiles: [],
     loading: true,
-    dialogOpen: false
+    uploadDialogOpen: false
   };
 
   constructor(props) {
@@ -51,17 +60,27 @@ class MediaPickerButton extends React.Component<Props, State> {
   }
 
   render() {
-    const { dialogOpen } = this.state;
+    const { open } = this.props;
     return (
       <div>
-        <Dialog open={dialogOpen}>
+        <Dialog open={open}>
           <DialogContent>{this.renderImagePicker()}</DialogContent>
           <DialogActions>
-            <ImageUploaderButton onUploaded={this.refresh} />
-            <Button onClick={() => this.setState({ dialogOpen: false })}>Close</Button>
+            <Button onClick={() => this.setState({ uploadDialogOpen: true })}>Upload</Button>
+            <Button onClick={this.props.handleClose}>Close</Button>
           </DialogActions>
         </Dialog>
-        <Button onClick={() => this.setState({ dialogOpen: !dialogOpen })}>Pick image</Button>
+        <ImageUploaderDialog
+          open={this.state.uploadDialogOpen}
+          handleClose={() => {
+            this.setState({
+              uploadDialogOpen: false
+            });
+          }}
+          onUploaded={() => {
+            this.refresh();
+          }}
+        />
       </div>
     );
   }
@@ -79,13 +98,18 @@ class MediaPickerButton extends React.Component<Props, State> {
   }
 
   renderImagePicker(mediaItem?: MediaItem) {
+    const { minWidth, minHeight, onSelect } = this.props;
     return (
       <List>
         {this.state.mediaFiles.map((file, index) => {
           const selected = mediaItem && mediaItem._id === file._id;
+          const disabled =
+            (minWidth && file.metadata.size.width < minWidth) === true ||
+            (minHeight && file.metadata.size.height < minHeight) === true;
           return (
             <ListItem
               key={index}
+              disabled={disabled}
               button
               onClick={() => {
                 const newValue: MediaItem = selected
@@ -93,10 +117,7 @@ class MediaPickerButton extends React.Component<Props, State> {
                   : {
                       _id: file._id
                     };
-                this.props.onSelect(newValue);
-                this.setState({
-                  dialogOpen: false
-                });
+                onSelect(newValue);
               }}
             >
               <div
@@ -107,7 +128,10 @@ class MediaPickerButton extends React.Component<Props, State> {
                   backgroundSize: 'cover'
                 }}
               />
-              <ListItemText primary={index} />
+              <ListItemText
+                primary={`${file._id}`}
+                secondary={`${file.metadata.size.width}x${file.metadata.size.height}`}
+              />
             </ListItem>
           );
         })}
@@ -116,4 +140,4 @@ class MediaPickerButton extends React.Component<Props, State> {
   }
 }
 
-export default MediaPickerButton;
+export default MediaPickerDialog;

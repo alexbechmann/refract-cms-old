@@ -1,4 +1,4 @@
-import { Crop } from './crop.model';
+import { Crop } from 'react-image-crop';
 import { Entity } from '../entities/entity.model';
 
 export interface MediaItem extends Entity {

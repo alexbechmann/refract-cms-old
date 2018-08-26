@@ -325,6 +325,12 @@
     "@types/node" "*"
     "@types/react" "*"
 
+"@types/react-image-crop@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@types/react-image-crop/-/react-image-crop-3.0.1.tgz#b9377c469e5586f2253de51af8c999406a9a6da0"
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-redux@^6.0.5":
   version "6.0.6"
   resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-6.0.6.tgz#87f1d0a6ea901b93fcaf95fa57641ff64079d277"

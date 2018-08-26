@@ -1,5 +1,6 @@
-export interface Crop {
-  ratio?: number;
-  height?: number;
-  width?: number;
-}
+export type CropDescription =
+  // {ratio?: number }| 
+  {
+    height?: number;
+    width?: number;
+  }

@@ -9,16 +9,18 @@ import {
   Theme,
   withStyles,
   WithStyles,
-  IconButton
+  IconButton,
+  Button
 } from '@material-ui/core';
 import entityService from '../entities/entity.service';
 import mediaService from './media.service';
 import * as Icons from '@material-ui/icons';
 import { Entity } from '../entities/entity.model';
-import ImageUploaderButton from './ImageUploaderButton';
+import ImageUploaderDialog from './ImageUploaderDialog';
 
 interface State {
   media: Entity[];
+  uploadDialogOpen: boolean;
 }
 
 const styles = (theme: Theme) => ({
@@ -36,7 +38,8 @@ class Media extends React.Component<Props, State> {
   }
 
   state: State = {
-    media: []
+    media: [],
+    uploadDialogOpen: false
   };
 
   componentDidMount() {
@@ -59,7 +62,21 @@ class Media extends React.Component<Props, State> {
     const { classes } = this.props;
     return (
       <div>
-        <ImageUploaderButton onUploaded={this.refresh} />
+        <Button onClick={() => this.setState({ uploadDialogOpen: true })}>Upload</Button>
+        <ImageUploaderDialog
+          open={this.state.uploadDialogOpen}
+          handleClose={() =>
+            this.setState({
+              uploadDialogOpen: false
+            })
+          }
+          onUploaded={() => {
+            this.refresh();
+            this.setState({
+              uploadDialogOpen: false
+            });
+          }}
+        />
         <List>
           <ListSubheader title="Media" />
           {this.state.media.map(mediaItem => {

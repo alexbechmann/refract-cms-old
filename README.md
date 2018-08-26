@@ -82,26 +82,30 @@ ReactDOM.render(<Admin />, document.getElementById('root') as HTMLElement);
 ```
 
 ## Server
+`docker-compose.yml`
+```yml
+version: "3"
+services:
+  mongo:
+    image: mongo
+
+  server:
+    image: refractcms/server
+    links: 
+      - mongo
+    expose: 
+      - 3500
+    ports:
+      - "3500:3500"
+    restart: unless-stopped
+
+  mongoexpress:
+    image: mongo-express
+    ports: 
+      - "8071:8071"
+    links:
+      - mongo
 ```
-mkdir server
-cd server
-npm init
-npm i -S express @refract-cms/server
 ```
-
-```ts
-import * as express from 'express';
-import * as refract from '@refract-cms/server';
-
-refract.configure({
-  mongoConnectionString: 'mongodb://localhost:27017/my-app' // Must provide mongodb connection string here
-});
-
-const app = express();
-app.use(refract.router); 
-
-const port = process.env.PORT || 3500; 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
+docker-compose up
 ```

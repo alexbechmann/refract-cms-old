@@ -84,7 +84,7 @@ export const ProductSchema = defineEntity<Product>({
         namedCrops: {
           main: {
             height: 400,
-            width: 300
+            width: 500
           }
         }
       }),

@@ -18,36 +18,28 @@ import mediaService from './media.service';
 interface State {
   file?: File;
   uploading: boolean;
-  dialogOpen: boolean;
 }
 
-export interface ImageUploaderButtonProps {
+export interface ImageUploaderDialogProps {
   onUploaded?: () => void;
+  open: boolean;
+  handleClose: () => void;
 }
 
-class ImageUploaderButton extends React.Component<ImageUploaderButtonProps, State> {
+class ImageUploaderDialog extends React.Component<ImageUploaderDialogProps, State> {
   state: State = {
-    uploading: false,
-    dialogOpen: false
+    uploading: false
   };
 
   constructor(props) {
     super(props);
     this.upload = this.upload.bind(this);
-    this.toggleOpen = this.toggleOpen.bind(this);
-  }
-
-  toggleOpen() {
-    this.setState(state => ({
-      dialogOpen: !state.dialogOpen
-    }));
   }
 
   render() {
     return (
       <div>
-        <Button onClick={this.toggleOpen}>Upload image</Button>
-        <Dialog open={this.state.dialogOpen}>
+        <Dialog open={this.props.open}>
           <DialogTitle>Upload an image</DialogTitle>
           <DialogContent>
             <DialogContentText>Choose an image & click upload.</DialogContentText>
@@ -67,7 +59,7 @@ class ImageUploaderButton extends React.Component<ImageUploaderButtonProps, Stat
             ) : (
               <React.Fragment />
             )}
-            <Button onClick={this.toggleOpen}>Done</Button>
+            <Button onClick={this.props.handleClose}>Done</Button>
           </DialogActions>
         </Dialog>
       </div>
@@ -96,4 +88,4 @@ class ImageUploaderButton extends React.Component<ImageUploaderButtonProps, Stat
   }
 }
 
-export default ImageUploaderButton as React.ComponentType<ImageUploaderButtonProps>;
+export default ImageUploaderDialog as React.ComponentType<ImageUploaderDialogProps>;

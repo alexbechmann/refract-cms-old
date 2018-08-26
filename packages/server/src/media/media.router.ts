@@ -16,6 +16,11 @@ const upload = multer({ storage });
 router.post('/', upload.single('file'), async (req, res) => {
   const file = req.file;
   const db = await mongoHelper.db();
+  const img = await jimp.read(file.buffer);
+  const size = {
+    height: img.getHeight(),
+    width: img.getWidth()
+  };
   var bucket = new GridFSBucket(db, {
     bucketName: 'media'
   });
@@ -23,7 +28,8 @@ router.post('/', upload.single('file'), async (req, res) => {
     .pipe(
       bucket.openUploadStream(undefined, {
         metadata: {
-          mimetype: file.mimetype
+          mimetype: file.mimetype,
+          size
         }
       })
     )
@@ -36,23 +42,28 @@ router.post('/', upload.single('file'), async (req, res) => {
 router.get('/file/:id?', async (req, res) => {
   const db = await mongoHelper.db();
   const { id } = req.params;
-  var bucket = new GridFSBucket(db, {
-    bucketName: 'media'
-  });
-  const stream = bucket.openDownloadStream(new ObjectID(id));
-  var buffers = [];
-  stream.on('data', data => {
-    buffers.push(data);
-  });
-  stream.on('end', async () => {
-    const entity = await db.collection('media.files').findOne({ _id: new ObjectID(id) });
-    var buffer = Buffer.concat(buffers);
-    const img = await jimp.read(buffer);
-    // img.cover(720, 480);
-    const imgBuffer = await img.getBufferAsync(entity.metadata.mimetype);
-    res.writeHead(200, { 'Content-Type': entity.metadata.mimetype });
-    res.end(imgBuffer, 'binary');
-  });
+  const entity = await db.collection('media.files').findOne({ _id: new ObjectID(id) });
+  if (entity) {
+    var bucket = new GridFSBucket(db, {
+      bucketName: 'media'
+    });
+    const stream = bucket.openDownloadStream(new ObjectID(id));
+    var buffers = [];
+    stream.on('data', data => {
+      buffers.push(data);
+    });
+    stream.on('end', async () => {
+      const entity = await db.collection('media.files').findOne({ _id: new ObjectID(id) });
+      var buffer = Buffer.concat(buffers);
+      const img = await jimp.read(buffer);
+      // img.cover(720, 480);
+      const imgBuffer = await img.getBufferAsync(entity.metadata.mimetype);
+      res.writeHead(200, { 'Content-Type': entity.metadata.mimetype });
+      res.end(imgBuffer, 'binary');
+    });
+  } else {
+    res.send(404);
+  }
 });
 
 export default router as Router;
