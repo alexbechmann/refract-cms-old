@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { PropertyEditorProps } from '../properties/property-editor-props';
-import { Button, Typography, List, ListItem, ListItemText, Avatar } from '@material-ui/core';
+import { Button, Typography, List, ListItem, ListItemText, Avatar, ListSubheader } from '@material-ui/core';
 import entityService from '../entities/entity.service';
 import { MediaItem } from '../media/media-item.model';
 import { Entity } from '../entities/entity.model';
 import ImageCropperDialog from '../media/ImageCropperDialog';
 import MediaPickerDialog from '../media/MediaPickerDialog';
 import { Crop } from 'react-image-crop';
-import { CropDescription } from '../media/crop.model';
+import { CropDescription } from '../media/models/crop-description.model';
 import mediaService from '../media/media.service';
 
 export interface MediaPickerEditorOptions {
@@ -73,7 +73,10 @@ class MediaPickerEditor extends React.Component<Props, State> {
           handleClose={() => this.setState({ imagePickerDialogOpen: false })}
           minWidth={this.smallestNamedCropWidth()}
           minHeight={this.smallestNamedCropHeight()}
-          onSelect={this.props.setValue}
+          onSelect={value => {
+            this.props.setValue(value);
+            this.setState({ imagePickerDialogOpen: false });
+          }}
         />
 
         {value ? (
@@ -117,31 +120,39 @@ class MediaPickerEditor extends React.Component<Props, State> {
           }}
         />
         {namedCrops && (
-          <List title="Crops">
+          <List subheader={<ListSubheader>Crops</ListSubheader>}>
             {Object.keys(namedCrops).map(cropKey => {
               const cropDefinition = namedCrops[cropKey];
-              const crop = mediaItem.crops ? mediaItem.crops[cropKey] : {};
+              const crops = mediaItem.crops ? mediaItem.crops[cropKey] : {};
               return (
-                <ListItem button key={cropKey} onClick={() => this.setState({ cropDialogOpen: cropKey })}>
+                <ListItem
+                  button
+                  key={cropKey}
+                  onClick={() => {
+                    if (this.state.cropDialogOpen !== cropKey) {
+                      this.setState({ cropDialogOpen: cropKey });
+                    }
+                  }}
+                >
                   <Avatar src={mediaService.buildUrl(mediaItem._id)} />
                   <ListItemText primary={`Crop: ${cropKey}`} />
                   <ImageCropperDialog
                     open={this.state.cropDialogOpen === cropKey}
                     handleClose={() => {
                       this.setState({
-                        cropDialogOpen: undefined // how the heck does this not work
+                        cropDialogOpen: undefined
                       });
                     }}
                     minWidth={cropDefinition.width}
                     minHeight={cropDefinition.height}
                     mediaItem={mediaItem}
-                    crop={crop}
-                    onChange={crop => {
+                    crops={crops}
+                    onChange={newCrops => {
                       setValue({
                         ...mediaItem,
                         crops: {
                           ...mediaItem.crops,
-                          [cropKey]: crop
+                          [cropKey]: newCrops
                         }
                       });
                     }}

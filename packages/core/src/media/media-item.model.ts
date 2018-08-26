@@ -1,6 +1,6 @@
-import { Crop } from 'react-image-crop';
 import { Entity } from '../entities/entity.model';
+import { Crops } from './models/crops.model';
 
 export interface MediaItem extends Entity {
-  crops?: Crop[];
+  crops?: Crops[];
 }
