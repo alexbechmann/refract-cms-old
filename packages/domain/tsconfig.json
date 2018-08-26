@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "declaration": true,
+    "baseUrl": "./",
+    "outDir": "./dist/",
+    "jsx": "react",
+    "allowSyntheticDefaultImports": false,
+    "esModuleInterop": false
+  },
+  "files": [
+    "./src/index.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    //"typings/index.d.ts",
+    "src/**/*"
+  ]
+}

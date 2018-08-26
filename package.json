@@ -12,6 +12,8 @@
     "consumer-core:install": "cd playground/react-app && yarn install",
     "consumer-core:start": "cd playground/react-app && npm run start",
     "consumer-core:clean": "cd playground/react-app && remove-node-modules && rimraf package-lock.json",
+    "domain:build": "cd packages/domain && npm run build",
+    "domain:start": "cd packages/domain && npm start",
     "docs-app:install": "cd docs-app && yarn install",
     "docs-app:start": "cd docs-app && npm run start",
     "docs-app:clean": "cd docs-app && remove-node-modules && rimraf package-lock.json",
@@ -23,8 +25,8 @@
     "consumer-server:start": "cd playground/server && npm start",
     "consumer-server:clean": "cd playground/server && remove-node-modules && rimraf package-lock.json",
     "docker:start": "docker-compose up --build",
-    "postinstall": "npm-run-all -p core:build server:build",
-    "start": "npm-run-all -p docker:start core:start docs-app:start server:start consumer-server:start consumer-core:start",
+    "postinstall": "npm-run-all domain:build core:build server:build",
+    "start": "npm-run-all -p docker:start core:start docs-app:start server:start consumer-server:start consumer-core:start domain:start",
     "clean": "npm-run-all core:clean consumer-core:clean docs-app:clean server:clean consumer-server:clean"
   },
   "repository": {
@@ -42,5 +44,5 @@
     "remove-node-modules": "^1.7.4",
     "rimraf": "^2.6.2"
   },
-  "workspaces": ["packages/core", "packages/server", "playground/react-app", "playground/server", "docs-app"]
+  "workspaces": ["packages/core", "packages/server", "packages/domain", "playground/react-app", "playground/server", "docs-app"]
 }

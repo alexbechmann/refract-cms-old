@@ -52,10 +52,11 @@ class Products extends React.Component<Props, State> {
           Products
         </Typography>
         {this.state.products.map(product => {
+          const crop = product.image.crops && product.image.crops.main ? product.image.crops.main.pixelCrop : undefined;
           return (
             <Card className={classes.card} key={product._id}>
               {product.image && (
-                <CardMedia className={classes.media} image={mediaService.buildUrl(product.image._id)} />
+                <CardMedia className={classes.media} image={mediaService.buildUrl(product.image._id, crop)} />
               )}
               <CardHeader title={product.title} />
               <CardContent>

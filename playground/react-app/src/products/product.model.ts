@@ -71,8 +71,8 @@ export const ProductSchema = defineEntity<Product>({
       allowedFileTypes: ['jpg'],
       namedCrops: {
         main: {
-          height: 400,
-          width: 300
+          height: 144,
+          width: 256
         }
       }
     })

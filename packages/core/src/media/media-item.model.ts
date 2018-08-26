@@ -2,5 +2,7 @@ import { Entity } from '../entities/entity.model';
 import { Crops } from './models/crops.model';
 
 export interface MediaItem extends Entity {
-  crops?: Crops[];
+  crops?: {
+    [key: string]: Crops;
+  };
 }

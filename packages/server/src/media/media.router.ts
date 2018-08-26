@@ -7,6 +7,7 @@ import jimp = require('jimp');
 import { GridFSBucket } from 'mongodb';
 import * as fs from 'fs';
 import * as toStream from 'buffer-to-stream';
+import { ImageProcessArgs } from '@refract-cms/domain';
 
 var router = express.Router();
 
@@ -40,6 +41,13 @@ router.post('/', upload.single('file'), async (req, res) => {
 });
 
 router.get('/file/:id?', async (req, res) => {
+  const imageProcessArgs: ImageProcessArgs = {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    ...req.query
+  };
   const db = await mongoHelper.db();
   const { id } = req.params;
   const entity = await db.collection('media.files').findOne({ _id: new ObjectID(id) });
@@ -57,6 +65,19 @@ router.get('/file/:id?', async (req, res) => {
       var buffer = Buffer.concat(buffers);
       const img = await jimp.read(buffer);
       // img.cover(720, 480);
+      if ('width' in req.query && 'height' in req.query) {
+        const { x, y, width, height, flip } = imageProcessArgs;
+        console.log(imageProcessArgs);
+        await img.crop(
+          parseInt((x as any) as string),
+          parseInt((y as any) as string),
+          parseInt((width as any) as string),
+          parseInt((height as any) as string)
+        );
+        if (flip) {
+          img.flip(true, true);
+        }
+      }
       const imgBuffer = await img.getBufferAsync(entity.metadata.mimetype);
       res.writeHead(200, { 'Content-Type': entity.metadata.mimetype });
       res.end(imgBuffer, 'binary');

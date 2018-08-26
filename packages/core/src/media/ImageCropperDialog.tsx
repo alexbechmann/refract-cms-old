@@ -10,8 +10,8 @@ import { Crops } from './models/crops.model';
 export interface Props {
   mediaItem: MediaItem;
   crops: Crops;
-  minHeight?: number;
-  minWidth?: number;
+  height?: number;
+  width?: number;
   aspect?: number;
   onChange: (crops: Crops) => void;
   open: boolean;
@@ -38,20 +38,22 @@ class ImageCropperDialog extends React.Component<Props> {
   };
 
   render() {
-    const { mediaItem, crops, onChange, minHeight, minWidth, open, handleClose, cropName, aspect } = this.props;
+    const { mediaItem, crops, onChange, height, width, open, handleClose, cropName, aspect } = this.props;
     const crop = crops ? crops.crop : undefined;
+    console.log(crops, height, width);
     let dimensionProps = {};
-    if (minWidth && minHeight) {
-      const minHeightPercentage = (minHeight / this.state.height) * 100;
-      const minWidthPercentage = (minWidth / this.state.width) * 100;
+    if (width && height) {
+      const heightPercentage = (height / this.state.height) * 100;
+      const widthPercentage = (width / this.state.width) * 100;
       dimensionProps = {
-        minHeight: minWidthPercentage,
-        minWidth: minWidthPercentage,
-        maxHeight: minHeightPercentage,
-        maxWidth: minWidthPercentage
+        minHeight: heightPercentage,
+        maxHeight: heightPercentage,
+        minWidth: widthPercentage,
+        maxWidth: widthPercentage
       };
     } else if (aspect) {
     }
+    console.log(dimensionProps);
     return (
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Edit crop {cropName}</DialogTitle>
@@ -60,10 +62,13 @@ class ImageCropperDialog extends React.Component<Props> {
             {...dimensionProps}
             src={mediaService.buildUrl(mediaItem._id)}
             onChange={(crop, pixelCrop) => {
-              onChange({
-                crop,
-                pixelCrop
-              });
+              if (true) {
+                // TODO: if respects min/max
+                onChange({
+                  crop,
+                  pixelCrop
+                });
+              }
             }}
             onImageLoaded={this.onImageLoaded}
             crop={crop}

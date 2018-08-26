@@ -109,6 +109,7 @@ class MediaPickerEditor extends React.Component<Props, State> {
 
   renderSelectedImage(mediaItem: MediaItem) {
     const { namedCrops, setValue } = this.props;
+    console.log(namedCrops);
     return (
       <div>
         <div
@@ -123,7 +124,7 @@ class MediaPickerEditor extends React.Component<Props, State> {
           <List subheader={<ListSubheader>Crops</ListSubheader>}>
             {Object.keys(namedCrops).map(cropKey => {
               const cropDefinition = namedCrops[cropKey];
-              const crops = mediaItem.crops ? mediaItem.crops[cropKey] : {};
+              const crops = mediaItem.crops ? mediaItem.crops[cropKey] : undefined;
               return (
                 <ListItem
                   button
@@ -134,7 +135,7 @@ class MediaPickerEditor extends React.Component<Props, State> {
                     }
                   }}
                 >
-                  <Avatar src={mediaService.buildUrl(mediaItem._id)} />
+                  <Avatar src={mediaService.buildUrl(mediaItem._id, crops ? crops.pixelCrop : undefined)} />
                   <ListItemText primary={`Crop: ${cropKey}`} />
                   <ImageCropperDialog
                     open={this.state.cropDialogOpen === cropKey}
@@ -143,8 +144,8 @@ class MediaPickerEditor extends React.Component<Props, State> {
                         cropDialogOpen: undefined
                       });
                     }}
-                    minWidth={cropDefinition.width}
-                    minHeight={cropDefinition.height}
+                    width={cropDefinition.width}
+                    height={cropDefinition.height}
                     mediaItem={mediaItem}
                     crops={crops}
                     onChange={newCrops => {
