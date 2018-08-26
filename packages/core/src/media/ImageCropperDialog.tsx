@@ -39,8 +39,8 @@ class ImageCropperDialog extends React.Component<Props> {
 
   render() {
     const { mediaItem, crops, onChange, minHeight, minWidth, open, handleClose, cropName, aspect } = this.props;
+    const crop = crops ? crops.crop : undefined;
     let dimensionProps = {};
-
     if (minWidth && minHeight) {
       const minHeightPercentage = (minHeight / this.state.height) * 100;
       const minWidthPercentage = (minWidth / this.state.width) * 100;
@@ -66,7 +66,7 @@ class ImageCropperDialog extends React.Component<Props> {
               });
             }}
             onImageLoaded={this.onImageLoaded}
-            crop={crops.crop}
+            crop={crop}
           />
         </DialogContent>
         <DialogActions>

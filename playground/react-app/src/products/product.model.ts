@@ -82,9 +82,17 @@ export const ProductSchema = defineEntity<Product>({
       itemComponent: MediaPickerEditor({
         allowedFileTypes: ['jpg'],
         namedCrops: {
-          main: {
-            height: 400,
-            width: 500
+          square: {
+            height: 100,
+            width: 100
+          },
+          largeSquare: {
+            height: 200,
+            width: 200
+          },
+          rect: {
+            width: 300,
+            height: 100
           }
         }
       }),
