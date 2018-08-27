@@ -19,27 +19,33 @@ export interface Props {
   cropName?: string;
 }
 
-class ImageCropperDialog extends React.Component<Props> {
-  state = {
-    width: -1,
-    height: -1
-  };
+interface State {
+  height: number;
+  width: number;
+  crops: Crops;
+}
+
+class ImageCropperDialog extends React.Component<Props, State> {
   onImageLoaded = image => {
     const { aspect, onChange } = this.props;
-    // if (aspect) {
-    //   onChange()
-    // }
-
     this.setState({
-      // crop: makeAspectCrop(this.props.crop, image.width / image.height),
       height: image.height,
       width: image.width
     });
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      width: -1,
+      height: -1,
+      crops: props.crops
+    };
+  }
+
   render() {
-    const { mediaItem, crops, onChange, height, width, open, handleClose, cropName, aspect } = this.props;
-    const crop = crops ? crops.crop : undefined;
+    const { mediaItem, onChange, height, width, open, handleClose, cropName, aspect } = this.props;
+    const { crop } = this.state.crops;
     let dimensionProps = {};
     if (width && height) {
       const heightPercentage = (height / this.state.height) * 100;
@@ -62,9 +68,11 @@ class ImageCropperDialog extends React.Component<Props> {
             onChange={(crop, pixelCrop) => {
               if (true) {
                 // TODO: if respects min/max
-                onChange({
-                  crop,
-                  pixelCrop
+                this.setState({
+                  crops: {
+                    crop,
+                    pixelCrop
+                  }
                 });
               }
             }}
@@ -73,7 +81,14 @@ class ImageCropperDialog extends React.Component<Props> {
           />
         </DialogContent>
         <DialogActions>
-          <Button color="primary" variant="raised" onClick={handleClose}>
+          <Button
+            color="primary"
+            variant="raised"
+            onClick={() => {
+              onChange(this.state.crops);
+              handleClose();
+            }}
+          >
             Done
           </Button>
         </DialogActions>
@@ -82,4 +97,4 @@ class ImageCropperDialog extends React.Component<Props> {
   }
 }
 
-export default ImageCropperDialog;
+export default ImageCropperDialog as React.ComponentType<Props>;
