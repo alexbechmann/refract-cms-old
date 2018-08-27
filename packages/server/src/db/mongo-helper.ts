@@ -18,6 +18,7 @@ export const mongoHelper = {
   },
   init() {
     return new Promise<Db>((resolve, reject) => {
+      console.log('init');
       MongoClient.connect(
         getCurrentConfig().mongoConnectionString,
         {

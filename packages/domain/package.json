@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "private": true,
-  "main": "./dist/index.js",
-  "typings": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "start": "tsc -w"
+    "build": "npm-run-all core:build server:build",
+    "start": "npm-run-all -p core:watch server:watch",
+    "core:build": "tsc --outDir ../core/src/generated",
+    "core:watch": "tsc -w --outDir ../core/src/generated",
+    "server:build": "tsc --outDir ../server/src/generated",
+    "server:watch": "tsc -w --outDir ../server/src/generated"
   },
   "author": "",
   "license": "ISC",

@@ -1,6 +1,6 @@
 import { store } from '../state/root.store';
 import axios from 'axios';
-import { ImageProcessArgs } from '@refract-cms/domain';
+import { ImageProcessArgs } from '../generated';
 import * as qs from 'qs';
 
 export default {

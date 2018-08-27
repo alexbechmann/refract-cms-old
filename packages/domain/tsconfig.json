@@ -12,7 +12,8 @@
     "outDir": "./dist/",
     "jsx": "react",
     "allowSyntheticDefaultImports": false,
-    "esModuleInterop": false
+    "esModuleInterop": false,
+    "emitDeclarationOnly": true
   },
   "files": [
     "./src/index.ts"
@@ -21,7 +22,6 @@
     "node_modules"
   ],
   "include": [
-    //"typings/index.d.ts",
     "src/**/*"
   ]
 }

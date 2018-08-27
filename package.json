@@ -44,5 +44,5 @@
     "remove-node-modules": "^1.7.4",
     "rimraf": "^2.6.2"
   },
-  "workspaces": ["packages/core", "packages/server", "packages/domain", "playground/react-app", "playground/server", "docs-app"]
+  "workspaces": ["packages/core", "packages/server", "playground/react-app", "playground/server", "docs-app"]
 }

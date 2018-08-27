@@ -7,7 +7,7 @@ import jimp = require('jimp');
 import { GridFSBucket } from 'mongodb';
 import * as fs from 'fs';
 import * as toStream from 'buffer-to-stream';
-import { ImageProcessArgs } from '@refract-cms/domain';
+import { ImageProcessArgs } from '../generated';
 
 var router = express.Router();
 

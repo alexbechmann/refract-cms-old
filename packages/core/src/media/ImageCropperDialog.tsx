@@ -12,7 +12,6 @@ export interface Props {
   crops: Crops;
   height?: number;
   width?: number;
-  aspect?: number;
   onChange: (crops: Crops) => void;
   open: boolean;
   handleClose: () => void;
@@ -26,11 +25,10 @@ interface State {
 }
 
 class ImageCropperDialog extends React.Component<Props, State> {
-  onImageLoaded = image => {
-    const { aspect, onChange } = this.props;
+  onImageLoaded = (image: HTMLImageElement) => {
     this.setState({
-      height: image.height,
-      width: image.width
+      height: image.naturalHeight,
+      width: image.naturalWidth
     });
   };
 
@@ -44,8 +42,8 @@ class ImageCropperDialog extends React.Component<Props, State> {
   }
 
   render() {
-    const { mediaItem, onChange, height, width, open, handleClose, cropName, aspect } = this.props;
-    const { crop } = this.state.crops;
+    const { mediaItem, onChange, height, width, open, handleClose, cropName } = this.props;
+    const crop = this.state.crops ? this.state.crops.crop : undefined;
     let dimensionProps = {};
     if (width && height) {
       const heightPercentage = (height / this.state.height) * 100;
@@ -56,7 +54,6 @@ class ImageCropperDialog extends React.Component<Props, State> {
         minWidth: widthPercentage,
         maxWidth: widthPercentage
       };
-    } else if (aspect) {
     }
     return (
       <Dialog open={open} onClose={handleClose}>
@@ -66,8 +63,8 @@ class ImageCropperDialog extends React.Component<Props, State> {
             {...dimensionProps}
             src={mediaService.buildUrl(mediaItem._id)}
             onChange={(crop, pixelCrop) => {
-              if (true) {
-                // TODO: if respects min/max
+              console.log(pixelCrop.height, height, pixelCrop.width, width, crop, pixelCrop, this.state);
+              if ((!width && !height) || (pixelCrop.height === height && pixelCrop.width === width)) {
                 this.setState({
                   crops: {
                     crop,
