@@ -1,5 +1,6 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 function srcPath(subdir) {
   return path.join(__dirname, "src", subdir);
@@ -33,5 +34,10 @@ module.exports = {
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js"]
-  }
+  },
+  plugins: [
+    new CopyWebpackPlugin([
+      { from: 'generated', to: 'generated', context: path.resolve(__dirname, 'src') },
+    ], { debug: true })
+  ]
 };
