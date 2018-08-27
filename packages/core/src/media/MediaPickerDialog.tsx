@@ -79,6 +79,9 @@ class MediaPickerDialog extends React.Component<Props, State> {
           }}
           onUploaded={() => {
             this.refresh();
+            this.setState({
+              uploadDialogOpen: false
+            });
           }}
         />
       </div>

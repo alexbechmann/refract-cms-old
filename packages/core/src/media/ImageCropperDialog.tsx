@@ -43,7 +43,7 @@ class ImageCropperDialog extends React.Component<Props, State> {
 
   render() {
     const { mediaItem, onChange, height, width, open, handleClose, cropName } = this.props;
-    const crop = this.state.crops ? this.state.crops.crop : undefined;
+    const crop = this.state.crops ? this.state.crops.crop : ({} as Crop);
     let dimensionProps = {};
     if (width && height) {
       const heightPercentage = (height / this.state.height) * 100;
