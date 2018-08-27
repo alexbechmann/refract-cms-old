@@ -4,14 +4,25 @@ import { PropertyEditorProps } from '../properties/property-editor-props';
 import MomentUtils from 'material-ui-pickers/utils/moment-utils';
 import * as Icons from '@material-ui/icons';
 import * as moment from 'moment';
+import { Theme, withStyles, WithStyles } from '@material-ui/core';
 
 export interface DatePickerOptions {}
 
-export default (options: DatePickerOptions = {}) => (props: PropertyEditorProps<Date>) => {
+const styles = (theme: Theme) => ({
+  editor: {
+    width: '100%'
+  }
+});
+
+interface Props extends PropertyEditorProps<Date>, WithStyles<typeof styles> {}
+
+const DatePickerEditor = (props: Props) => {
   const date = props.value || new Date();
+  const { classes } = props;
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
       <DatePicker
+        className={classes.editor}
         keyboard
         label="Masked input"
         format="DD/MM/YYYY"
@@ -29,3 +40,6 @@ export default (options: DatePickerOptions = {}) => (props: PropertyEditorProps<
     </MuiPickersUtilsProvider>
   );
 };
+
+export default (options: DatePickerOptions = {}) =>
+  withStyles(styles)(DatePickerEditor) as React.ComponentType<PropertyEditorProps<Date>>;

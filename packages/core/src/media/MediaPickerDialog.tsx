@@ -115,7 +115,9 @@ class MediaPickerDialog extends React.Component<Props, State> {
                 const newValue: MediaItem = selected
                   ? undefined
                   : {
-                      _id: file._id
+                      _id: file._id,
+                      crops: {},
+                      metadata: {}
                     };
                 onSelect(newValue);
               }}

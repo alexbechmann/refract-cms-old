@@ -81,8 +81,8 @@ class MediaPickerEditor extends React.Component<Props, State> {
 
         {value ? (
           <div>
+            <Button onClick={this.clear}>Remove image</Button>
             {this.renderSelectedImage(value)}
-            <Button onClick={this.clear}>Clear</Button>{' '}
           </div>
         ) : (
           <Button onClick={() => this.setState({ imagePickerDialogOpen: true })}>Select image</Button>

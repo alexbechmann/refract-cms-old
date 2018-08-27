@@ -40,7 +40,6 @@ class ImageCropperDialog extends React.Component<Props> {
   render() {
     const { mediaItem, crops, onChange, height, width, open, handleClose, cropName, aspect } = this.props;
     const crop = crops ? crops.crop : undefined;
-    console.log(crops, height, width);
     let dimensionProps = {};
     if (width && height) {
       const heightPercentage = (height / this.state.height) * 100;
@@ -53,7 +52,6 @@ class ImageCropperDialog extends React.Component<Props> {
       };
     } else if (aspect) {
     }
-    console.log(dimensionProps);
     return (
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Edit crop {cropName}</DialogTitle>

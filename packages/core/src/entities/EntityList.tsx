@@ -5,7 +5,17 @@ import { AppState } from '../state/app.state';
 import { connect } from 'react-redux';
 import { combineContainers } from 'combine-containers';
 import { Routes } from '../router/routes';
-import { Button, List, ListItem, ListItemText, CircularProgress, Typography } from '@material-ui/core';
+import {
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  CircularProgress,
+  Typography,
+  Theme,
+  withStyles,
+  WithStyles
+} from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import entityService from './entity.service';
 import { Entity } from './entity.model';
@@ -19,7 +29,13 @@ interface State {
   loading: boolean;
 }
 
-interface Props extends EntityListProps, RouteComponentProps<{}>, EntityListPropsExtended {}
+interface Props extends EntityListProps, RouteComponentProps<{}>, EntityListPropsExtended, WithStyles<typeof styles> {}
+
+const styles = (theme: Theme) => ({
+  root: {
+    padding: theme.spacing.unit
+  }
+});
 
 class EntityList extends React.Component<Props> {
   state: State = {
@@ -38,10 +54,11 @@ class EntityList extends React.Component<Props> {
 
   render() {
     const { options } = this.props.entity;
+    const { classes } = this.props;
     return this.state.loading ? (
       <CircularProgress />
     ) : (
-      <div>
+      <div className={classes.root}>
         <Typography variant="title" gutterBottom>
           {this.props.entity.options.displayName || this.props.entity.options.alias}
         </Typography>
@@ -89,7 +106,7 @@ class EntityList extends React.Component<Props> {
           />
         )}
       >
-        New
+        Add new {this.props.entity.options.displayName}
       </Button>
     );
   }
@@ -105,6 +122,6 @@ function mapStateToProps(state: AppState): EntityListProps {
   };
 }
 
-export default combineContainers(withRouter, connect(mapStateToProps))(EntityList) as React.ComponentType<
-  EntityListPropsExtended
->;
+export default combineContainers(withRouter, connect(mapStateToProps), withStyles(styles))(
+  EntityList
+) as React.ComponentType<EntityListPropsExtended>;

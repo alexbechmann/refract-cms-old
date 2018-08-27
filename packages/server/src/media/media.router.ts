@@ -40,12 +40,17 @@ router.post('/', upload.single('file'), async (req, res) => {
     });
 });
 
+type ImageProcessArgsQuery = { [P in keyof ImageProcessArgs]: string };
+
 router.get('/file/:id?', async (req, res) => {
-  const imageProcessArgs: ImageProcessArgs = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
+  const defaultImageProcessArgsQuery: ImageProcessArgsQuery = {
+    x: '0',
+    y: '0',
+    width: '0',
+    height: '0'
+  };
+  const imageProcessArgs: ImageProcessArgsQuery = {
+    ...defaultImageProcessArgsQuery,
     ...req.query
   };
   const db = await mongoHelper.db();
@@ -67,13 +72,7 @@ router.get('/file/:id?', async (req, res) => {
       // img.cover(720, 480);
       if ('width' in req.query && 'height' in req.query) {
         const { x, y, width, height, flip } = imageProcessArgs;
-        console.log(imageProcessArgs);
-        await img.crop(
-          parseInt((x as any) as string),
-          parseInt((y as any) as string),
-          parseInt((width as any) as string),
-          parseInt((height as any) as string)
-        );
+        await img.crop(parseInt(x), parseInt(y), parseInt(width), parseInt(height));
         if (flip) {
           img.flip(true, true);
         }

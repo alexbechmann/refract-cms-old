@@ -23,7 +23,8 @@ interface Props
 
 const styles = theme => ({
   tabs: {
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing.unit,
+    background: '#fff'
   }
 });
 
