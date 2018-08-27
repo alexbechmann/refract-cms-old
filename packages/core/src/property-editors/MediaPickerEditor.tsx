@@ -48,19 +48,19 @@ class MediaPickerEditor extends React.Component<Props, State> {
     this.refresh();
   }
 
-  smallestNamedCropWidth() {
+  largestNamedCropWidth() {
     return Object.keys(this.props.namedCrops)
       .map(key => this.props.namedCrops[key])
       .reduce((prev, current) => {
-        return prev.width < current.width ? prev : current;
+        return prev.width > current.width ? prev : current;
       }).width;
   }
 
-  smallestNamedCropHeight() {
+  largestNamedCropHeight() {
     return Object.keys(this.props.namedCrops)
       .map(key => this.props.namedCrops[key])
       .reduce((prev, current) => {
-        return prev.height < current.height ? prev : current;
+        return prev.height > current.height ? prev : current;
       }).height;
   }
 
@@ -71,8 +71,8 @@ class MediaPickerEditor extends React.Component<Props, State> {
         <MediaPickerDialog
           open={this.state.imagePickerDialogOpen}
           handleClose={() => this.setState({ imagePickerDialogOpen: false })}
-          minWidth={this.smallestNamedCropWidth()}
-          minHeight={this.smallestNamedCropHeight()}
+          minWidth={this.largestNamedCropWidth()}
+          minHeight={this.largestNamedCropHeight()}
           onSelect={value => {
             this.props.setValue(value);
             this.setState({ imagePickerDialogOpen: false });

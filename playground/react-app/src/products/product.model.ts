@@ -93,6 +93,10 @@ export const ProductSchema = defineEntity<Product>({
           rect: {
             width: 300,
             height: 100
+          },
+          huge: {
+            width: 1820,
+            height: 980
           }
         }
       }),
