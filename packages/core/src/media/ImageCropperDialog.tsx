@@ -63,7 +63,6 @@ class ImageCropperDialog extends React.Component<Props, State> {
             {...dimensionProps}
             src={mediaService.buildUrl(mediaItem._id)}
             onChange={(crop, pixelCrop) => {
-              console.log(pixelCrop.height, height, pixelCrop.width, width, crop, pixelCrop, this.state);
               if ((!width && !height) || (pixelCrop.height === height && pixelCrop.width === width)) {
                 this.setState({
                   crops: {
