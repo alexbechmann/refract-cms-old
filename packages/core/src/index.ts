@@ -3,7 +3,7 @@ export { default as Admin } from './Admin';
 export { default as defineEntity } from './entities/define-entity';
 export { Entity } from './entities/entity.model';
 export { Location } from './location/location.model';
-export { default as entityService } from './entities/entity.service';
+export { EntityService } from './entities/entity.service';
 export { default as mediaService } from './media/media.service';
 export { MediaItem } from './media/media-item.model';
 

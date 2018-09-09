@@ -1,5 +1,5 @@
 import React from 'react';
-import { entityService, mediaService } from '@refract-cms/core';
+import { mediaService } from '@refract-cms/core';
 import { Product } from './product.model';
 import {
   Typography,
@@ -18,6 +18,7 @@ import {
 } from '@material-ui/core';
 import * as Icons from '@material-ui/icons';
 import { Link } from 'react-router-dom';
+import { productService } from './product.service';
 
 interface State {
   products: Product[];
@@ -86,15 +87,11 @@ class Products extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    entityService
-      .getAll({
-        alias: 'product'
-      })
-      .then(products => {
-        this.setState({
-          products
-        });
+    productService.getAll().then(products => {
+      this.setState({
+        products
       });
+    });
   }
 }
 

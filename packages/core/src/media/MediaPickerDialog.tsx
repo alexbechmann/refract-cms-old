@@ -14,10 +14,10 @@ import {
 } from '@material-ui/core';
 import ImageUploaderDialog from '../media/ImageUploaderDialog';
 import mediaService from '../media/media.service';
-import entityService from '../entities/entity.service';
 import { MediaItem } from '../media/media-item.model';
 import { Entity } from '../entities/entity.model';
 import { MediaPickerEditorOptions } from '../property-editors/MediaPickerEditor';
+import { MediaFile } from './models/media-file.model';
 
 interface State {
   mediaFiles: MediaFile[];
@@ -25,17 +25,7 @@ interface State {
   uploadDialogOpen: boolean;
 }
 
-interface MediaFile extends Entity {
-  metadata: {
-    mimetype: string;
-    size: {
-      width: number;
-      height: number;
-    };
-  };
-}
-
-interface Props extends MediaPickerEditorOptions {
+export interface MediaPickerDialogProps extends MediaPickerEditorOptions {
   open: boolean;
   handleClose: () => void;
   onSelect: (mediaItem: MediaItem) => void;
@@ -43,7 +33,7 @@ interface Props extends MediaPickerEditorOptions {
   minHeight?: number;
 }
 
-class MediaPickerDialog extends React.Component<Props, State> {
+class MediaPickerDialog extends React.Component<MediaPickerDialogProps> {
   state: State = {
     mediaFiles: [],
     loading: true,
@@ -89,15 +79,11 @@ class MediaPickerDialog extends React.Component<Props, State> {
   }
 
   refresh() {
-    entityService
-      .getAll({
-        alias: 'media.files'
-      })
-      .then(images => {
-        this.setState({
-          mediaFiles: images
-        });
+    mediaService.getAll().then(images => {
+      this.setState({
+        mediaFiles: images
       });
+    });
   }
 
   renderImagePicker(mediaItem?: MediaItem) {
@@ -145,4 +131,4 @@ class MediaPickerDialog extends React.Component<Props, State> {
   }
 }
 
-export default MediaPickerDialog;
+export default MediaPickerDialog as React.ComponentType<MediaPickerDialogProps>;

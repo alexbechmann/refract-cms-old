@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { PropertyEditorProps } from '../properties/property-editor-props';
 import { Button, Typography, List, ListItem, ListItemText, Avatar, ListSubheader } from '@material-ui/core';
-import entityService from '../entities/entity.service';
 import { MediaItem } from '../media/media-item.model';
 import { Entity } from '../entities/entity.model';
 import ImageCropperDialog from '../media/ImageCropperDialog';
@@ -92,15 +91,11 @@ class MediaPickerEditor extends React.Component<Props, State> {
   }
 
   refresh() {
-    entityService
-      .getAll({
-        alias: 'media.files'
-      })
-      .then(images => {
-        this.setState({
-          mediaFiles: images
-        });
+    mediaService.getAll().then(images => {
+      this.setState({
+        mediaFiles: images
       });
+    });
   }
 
   clear() {

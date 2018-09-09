@@ -12,7 +12,6 @@ import {
   IconButton,
   Button
 } from '@material-ui/core';
-import entityService from '../entities/entity.service';
 import mediaService from './media.service';
 import * as Icons from '@material-ui/icons';
 import { Entity } from '../entities/entity.model';
@@ -47,15 +46,11 @@ class Media extends React.Component<Props, State> {
   }
 
   refresh() {
-    entityService
-      .getAll({
-        alias: 'media.files'
-      })
-      .then(media => {
-        this.setState({
-          media
-        });
+    mediaService.getAll().then(media => {
+      this.setState({
+        media
       });
+    });
   }
 
   render() {
@@ -108,12 +103,7 @@ class Media extends React.Component<Props, State> {
 
   deleteMediaItem = (id: string) => () => {
     if (confirm('Are you sure you want to delete this item?')) {
-      entityService
-        .delete({
-          alias: 'media.files',
-          id
-        })
-        .then(() => this.refresh());
+      mediaService.delete(id).then(() => this.refresh());
     }
   };
 }

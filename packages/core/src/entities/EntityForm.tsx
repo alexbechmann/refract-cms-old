@@ -23,7 +23,7 @@ import { connect } from 'react-redux';
 import { combineContainers } from 'combine-containers';
 import { AppState } from '../state/app.state';
 import { Routes } from '../router/routes';
-import entityService from './entity.service';
+import { EntityService } from './entity.service';
 
 interface EntityFormProps {
   entity: EntitySchema;
@@ -47,6 +47,10 @@ const styles = theme => ({
 interface Props extends EntityFormProps, WithStyles<typeof styles>, RouteComponentProps<{ id?: string }> {}
 
 class EntityForm extends React.Component<Props, State> {
+  entityService = new EntityService({
+    alias: this.props.entity.options.alias
+  });
+
   constructor(props: Props) {
     super(props);
     const updateValues: any = {};
@@ -64,17 +68,12 @@ class EntityForm extends React.Component<Props, State> {
         updateValues,
         loading: true
       };
-      entityService
-        .getById({
-          alias: this.props.entity.options.alias,
-          id: this.props.match.params.id
-        })
-        .then(entity => {
-          this.setState({
-            loading: false,
-            updateValues: entity
-          });
+      this.entityService.getById(this.props.match.params.id).then(entity => {
+        this.setState({
+          loading: false,
+          updateValues: entity
         });
+      });
     }
 
     this.save = this.save.bind(this);
@@ -154,38 +153,22 @@ class EntityForm extends React.Component<Props, State> {
   }
 
   delete() {
-    entityService
-      .delete({
-        id: this.props.match.params.id,
-        alias: this.props.entity.options.alias
-      })
-      .then(() => {
-        this.back();
-      });
+    this.entityService.delete(this.props.match.params.id).then(() => {
+      this.back();
+    });
   }
 
   update() {
-    entityService
-      .update({
-        id: this.props.match.params.id,
-        entity: this.state.updateValues,
-        alias: this.props.entity.options.alias
-      })
-      .then(() => this.back());
+    this.entityService.update(this.props.match.params.id, this.state.updateValues).then(() => this.back());
   }
 
   insert() {
-    entityService
-      .insert({
-        entity: this.state.updateValues,
-        alias: this.props.entity.options.alias
-      })
-      .then(() => {
-        this.back();
-        this.setState({
-          loading: false
-        });
+    this.entityService.insert(this.state.updateValues).then(() => {
+      this.back();
+      this.setState({
+        loading: false
       });
+    });
   }
 
   back() {

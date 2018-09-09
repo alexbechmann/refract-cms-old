@@ -9,8 +9,8 @@ import {
   Checkbox,
   CircularProgress
 } from '@material-ui/core';
-import entityService from '../entities/entity.service';
 import { Entity } from '../entities/entity.model';
+import { EntityService } from '../entities/entity.service';
 
 export interface EntityPickerEditorOptions {
   max: number;
@@ -64,7 +64,7 @@ class EntityPickerEditor extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    entityService.getAll({ alias: this.props.entityAlias }).then(entities => {
+    new EntityService({ alias: this.props.entityAlias }).getAll().then(entities => {
       this.setState({
         entities,
         loading: false

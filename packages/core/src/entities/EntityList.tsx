@@ -17,11 +17,14 @@ import {
   WithStyles
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import entityService from './entity.service';
 import { Entity } from './entity.model';
+import { ConnectedReduxProps } from '../state/connected-redux-props';
+import { getEntitiesForAlias } from './state/entity.actions';
 
 export interface EntityListProps {
   routes: Routes;
+  entities: Entity[];
+  loading: boolean;
 }
 
 interface State {
@@ -29,7 +32,12 @@ interface State {
   loading: boolean;
 }
 
-interface Props extends EntityListProps, RouteComponentProps<{}>, EntityListPropsExtended, WithStyles<typeof styles> {}
+interface Props
+  extends EntityListProps,
+    RouteComponentProps<{}>,
+    ConnectedReduxProps,
+    EntityListPropsExtended,
+    WithStyles<typeof styles> {}
 
 const styles = (theme: Theme) => ({
   root: {
@@ -38,37 +46,27 @@ const styles = (theme: Theme) => ({
 });
 
 class EntityList extends React.Component<Props> {
-  state: State = {
-    entities: [],
-    loading: true
-  };
-
   componentDidMount() {
-    entityService.getAll({ alias: this.props.entity.options.alias }).then(data =>
-      this.setState({
-        entities: data,
-        loading: false
-      })
-    );
+    this.props.dispatch(getEntitiesForAlias(this.props.entity.options.alias, this.props.dispatch));
   }
 
   render() {
     const { options } = this.props.entity;
-    const { classes } = this.props;
-    return this.state.loading ? (
+    const { classes, entities } = this.props;
+    return this.props.loading && entities.length === 0 ? (
       <CircularProgress />
     ) : (
       <div className={classes.root}>
         <Typography variant="title" gutterBottom>
           {this.props.entity.options.displayName || this.props.entity.options.alias}
         </Typography>
-        {this.props.entity.options.maxOne && this.state.entities.length >= 1 ? (
+        {this.props.entity.options.maxOne && this.props.entities.length >= 1 ? (
           <React.Fragment />
         ) : (
           this.renderNewButton()
         )}
         <List>
-          {this.state.entities.map(entity => {
+          {this.props.entities.map(entity => {
             const entityName = options.instanceDisplayName ? options.instanceDisplayName(entity) : entity._id;
             return (
               <ListItem
@@ -116,9 +114,11 @@ export interface EntityListPropsExtended {
   entity: EntitySchema;
 }
 
-function mapStateToProps(state: AppState): EntityListProps {
+function mapStateToProps(state: AppState, ownProps: EntityListPropsExtended): EntityListProps {
   return {
-    routes: state.router.routes
+    routes: state.router.routes,
+    entities: state.entity.entities[ownProps.entity.options.alias] || [],
+    loading: state.entity.loading[ownProps.entity.options.alias]
   };
 }
 
