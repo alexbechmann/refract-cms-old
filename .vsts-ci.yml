@@ -22,50 +22,22 @@ steps:
 #      $(GitVersion.PreReleaseLabel)
 #     workingDirectory: 'packages/server'
 
-- task: Npm@1
+- task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
+  displayName: Yarn install
   inputs:
-    command: "install"
-    verbose: "false"
-    workingDir: "packages/core"
-
-- task: Npm@1
-  inputs:
-    command: "custom"
-    verbose: "false"
-    customCommand: "run build"
-    workingDir: "packages/core"
+    Arguments: 'install'
 
 - powershell: . 'packages/core/update-package-version.ps1' $(GitVersion.SemVer) 
   displayName: Update package version
 
-- task: Npm@1
-  inputs:
-    command: "install"
-    verbose: "false"
-    workingDir: "packages/server"
-
-- task: Npm@1
-  inputs:
-    command: "custom"
-    verbose: "false"
-    customCommand: "run build"
-    workingDir: "packages/server"
-
 - powershell: . 'packages/server/update-package-version.ps1' $(GitVersion.SemVer) 
   displayName: Update package version
 
-- task: Npm@1
+- task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
+  displayName: Yarn run build
   inputs:
-    command: "install"
-    verbose: "false"
-    workingDir: "docs-app"
-
-- task: Npm@1
-  inputs:
-    command: "custom"
-    verbose: "false"
-    customCommand: "run build"
-    workingDir: "docs-app"
+    ProjectDirectory: docs-app
+    Arguments: 'run build'
 
 # - task: Docker@0
 #   displayName: Push an image

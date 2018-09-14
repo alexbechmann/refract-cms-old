@@ -36,15 +36,16 @@ cd ./frontend
 npm i -S @refract-cms/core
 ```
 
+Edit file: `src/index.tsx`
 ```tsx
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import {
   Entity,
   defineEntity,
   TextEditor,
-  EntityPickerEditor,
   DatePickerEditor,
-  ListEditor,
+  PropertyEditorProps,
   Admin,
   configure
 } from '@refract-cms/core';
@@ -66,9 +67,14 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
     }),
     defaultValue: 'default headline'
   },
+  articleDate: {
+    displayName: 'Article Date',
+    editorComponent: DatePickerEditor(),
+    defaultValue: new Date()
+  },
   articleText: {
     displayName: 'Article text',
-    editorComponent: props => <input value={props.value} onChange={e => props.setValue(e.target.value)} /> 
+    editorComponent: (props: PropertyEditorProps<string>) => <input value={props.value} onChange={e => props.setValue(e.target.value)} /> 
     // This is a bare bones custom component at it's most basic level
   }
 });
@@ -82,7 +88,7 @@ ReactDOM.render(<Admin />, document.getElementById('root') as HTMLElement);
 ```
 
 ## Server
-`docker-compose.yml`
+Create file: `docker-compose.yml`
 ```yml
 version: "3"
 services:
@@ -90,7 +96,7 @@ services:
     image: mongo
 
   server:
-    image: refractcms/server
+    image: refractcms/server:alpha
     links: 
       - mongo
     expose: 
