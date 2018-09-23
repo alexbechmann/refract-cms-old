@@ -1,11 +1,12 @@
 import * as React from 'react';
-import * as ReactCrop from 'react-image-crop';
+import Cropper from 'react-cropper';
 import { makeAspectCrop, Crop, PixelCrop } from 'react-image-crop';
 import mediaService from './media.service';
-import 'react-image-crop/dist/ReactCrop.css';
+import 'cropperjs/dist/cropper.css';
 import { MediaItem } from './media-item.model';
 import { Dialog, DialogContent, DialogActions, Button, DialogTitle } from '@material-ui/core';
 import { Crops } from './models/crops.model';
+import * as cropperjs from 'cropperjs';
 
 export interface Props {
   mediaItem: MediaItem;
@@ -41,39 +42,57 @@ class ImageCropperDialog extends React.Component<Props, State> {
     };
   }
 
+  cropper() {
+    return (this.refs.cropper as any) as cropperjs;
+  }
+
+  _crop() {
+    const cropper = this.cropper();
+    console.log(cropper.getData().height);
+    //console.log((this.refs.cropper as any).getCroppedCanvas().toDataURL());
+  }
+
   render() {
     const { mediaItem, onChange, height, width, open, handleClose, cropName } = this.props;
     const crop = this.state.crops ? this.state.crops.crop : ({} as Crop);
     let dimensionProps = {};
     if (width && height) {
-      const heightPercentage = (height / this.state.height) * 100;
-      const widthPercentage = (width / this.state.width) * 100;
       dimensionProps = {
-        minHeight: heightPercentage,
-        maxHeight: heightPercentage,
-        minWidth: widthPercentage,
-        maxWidth: widthPercentage
+        minContainerHeight: height,
+        maxContainerHeight: height,
+        minContainerWidth: width,
+        maxContainerWidth: width
       };
     }
     return (
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Edit crop {cropName}</DialogTitle>
         <DialogContent>
-          <ReactCrop
+          <Cropper
+            ref="cropper"
             {...dimensionProps}
-            src={mediaService.buildUrl(mediaItem._id)}
-            onChange={(crop, pixelCrop) => {
-              if ((!width && !height) || (pixelCrop.height === height && pixelCrop.width === width)) {
-                this.setState({
-                  crops: {
-                    crop,
-                    pixelCrop
-                  }
-                });
-              }
+            data={{
+              x: 0,
+              y: 5,
+              width: 100,
+              height: 800
             }}
+            aspectRatio={16 / 9}
+            src={mediaService.buildUrl(mediaItem._id)}
+            style={{ height: 400, width: '100%' }}
+            // onChange={(crop, pixelCrop) => {
+            //   // if ((!width && !height) || (pixelCrop.height === height && pixelCrop.width === width)) {
+
+            //   // }
+            //   this.setState({
+            //     crops: {
+            //       crop
+            //     }
+            //   });
+            // }}
             onImageLoaded={this.onImageLoaded}
-            crop={crop}
+            //crop={crop}
+            crop={this._crop.bind(this)}
           />
         </DialogContent>
         <DialogActions>

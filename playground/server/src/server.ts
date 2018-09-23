@@ -2,7 +2,10 @@ import * as express from 'express';
 import * as refract from '@refract-cms/server';
 
 refract.configure({
-  mongoConnectionString: 'mongodb://localhost:27018/refract-playground-server'
+  mongoConnectionString: 'mongodb://localhost:27018/refract-playground-server',
+  adminCredentials: {
+    password: 'pw'
+  }
 });
 
 const app = express();
