@@ -8,7 +8,7 @@ const defaultState: ConfigState = {
   firebaseConfig: {}
 };
 
-export function configReducer(state: ConfigState = defaultState, action: AppAction) {
+export function configReducer(state: ConfigState = defaultState, action: AppAction): ConfigState {
   switch (action.type) {
     case CONFIGURE: {
       return {

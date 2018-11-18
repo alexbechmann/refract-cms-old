@@ -15,7 +15,9 @@ import {
   CardContent,
   CardHeader,
   WithStyles,
-  withStyles
+  withStyles,
+  createStyles,
+  Theme
 } from '@material-ui/core';
 import { RouteComponentProps, withRouter } from 'react-router';
 import * as firebase from 'firebase';
@@ -25,26 +27,26 @@ import { AppState } from '../state/app.state';
 import { Routes } from '../router/routes';
 import entityService from './entity.service';
 
-interface EntityFormProps {
-  entity: EntitySchema;
-  routes: Routes;
-}
-
 interface State {
   updateValues: any;
   loading: boolean;
 }
 
-const styles = theme => ({
-  card: {
-    margin: theme.spacing.unit
-  },
-  propertyEditor: {
-    marginBottom: theme.spacing.unit * 4
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    card: {
+      margin: theme.spacing.unit
+    },
+    propertyEditor: {
+      marginBottom: theme.spacing.unit * 4
+    }
+  });
 
-interface Props extends EntityFormProps, WithStyles<typeof styles>, RouteComponentProps<{ id?: string }> {}
+interface Props
+  extends EntityFormProps,
+    WithStyles<typeof styles>,
+    ReturnType<typeof mapStateToProps>,
+    RouteComponentProps<{ id?: string }> {}
 
 class EntityForm extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -193,11 +195,11 @@ class EntityForm extends React.Component<Props, State> {
   }
 }
 
-export interface EntityFormPropsExtended {
+export interface EntityFormProps {
   entity: EntitySchema;
 }
 
-function mapStateToProps(state: AppState, ownProps: EntityFormPropsExtended): EntityFormProps {
+function mapStateToProps(state: AppState, ownProps: EntityFormProps) {
   return {
     routes: state.router.routes,
     entity: ownProps.entity
@@ -206,4 +208,4 @@ function mapStateToProps(state: AppState, ownProps: EntityFormPropsExtended): En
 
 export default combineContainers(connect(mapStateToProps), withStyles(styles), withRouter)(
   EntityForm
-) as React.ComponentType<EntityFormPropsExtended>;
+) as React.ComponentType<EntityFormProps>;
