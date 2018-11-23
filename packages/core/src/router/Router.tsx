@@ -8,22 +8,16 @@ import { AppState } from '../state/app.state';
 import { combineContainers } from 'combine-containers';
 import EntityForm from '../entities/EntityForm';
 import EntityList from '../entities/EntityList';
-import { ConnectedReduxProps } from '../state/connected-redux-props';
 import { setBaseRoute } from './state/router.actions';
 import { Routes } from './routes';
 import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
 import Media from '../media/Media';
 
-export interface RouterProps {
-  entities: EntitySchema[];
-  routes: Routes;
-}
-
-interface Props extends RouterProps, RouteComponentProps<{}>, ConnectedReduxProps {}
+interface Props extends MapDispatchToProps, ReturnType<typeof mapStateToProps>, RouteComponentProps<{}> {}
 
 class Router extends React.Component<Props> {
   componentDidMount() {
-    this.props.dispatch(setBaseRoute(this.props.match ? this.props.match.path : ''));
+    this.props.setBaseRoute(this.props.match ? this.props.match.path : '');
   }
 
   render() {
@@ -86,11 +80,23 @@ class Router extends React.Component<Props> {
   }
 }
 
-function mapStateToProps(state: AppState): RouterProps {
+function mapStateToProps(state: AppState) {
   return {
     entities: state.config.schema,
     routes: state.router.routes
   };
 }
 
-export default combineContainers(withRouter, connect(mapStateToProps))(Router) as React.ComponentType;
+const mapDispatchToProps = {
+  setBaseRoute
+};
+
+type MapDispatchToProps = typeof mapDispatchToProps;
+
+export default combineContainers(
+  withRouter,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(Router) as React.ComponentType;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Tabs, Tab, LinearProgress, WithStyles, withStyles } from '@material-ui/core';
+import { Tabs, Tab, LinearProgress, WithStyles, withStyles, createStyles, Theme } from '@material-ui/core';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { combineContainers } from 'combine-containers';
 import { AppState } from '../state/app.state';
@@ -7,26 +7,22 @@ import { connect } from 'react-redux';
 import { EntitySchema } from './entity-schema';
 import { Routes } from '../router/routes';
 
-export interface EntitiesProps {
-  entities: EntitySchema[];
-  routes: Routes;
-}
-
 interface State {}
 
 interface Props
-  extends EntitiesProps,
+  extends ReturnType<typeof mapStateToProps>,
     WithStyles<typeof styles>,
     RouteComponentProps<{
       entityAlias?: string;
     }> {}
 
-const styles = theme => ({
-  tabs: {
-    marginBottom: theme.spacing.unit,
-    background: '#fff'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    tabs: {
+      marginBottom: theme.spacing.unit,
+      background: '#fff'
+    }
+  });
 
 class Entities extends React.Component<Props, State> {
   state: State = {};
@@ -72,7 +68,7 @@ class Entities extends React.Component<Props, State> {
   }
 }
 
-function mapStateToProps(state: AppState): EntitiesProps {
+function mapStateToProps(state: AppState) {
   return {
     entities: state.config.schema,
     routes: state.router.routes

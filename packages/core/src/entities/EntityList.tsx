@@ -20,16 +20,16 @@ import { Link } from 'react-router-dom';
 import entityService from './entity.service';
 import { Entity } from './entity.model';
 
-export interface EntityListProps {
-  routes: Routes;
-}
-
 interface State {
   entities: Entity[];
   loading: boolean;
 }
 
-interface Props extends EntityListProps, RouteComponentProps<{}>, EntityListPropsExtended, WithStyles<typeof styles> {}
+interface Props
+  extends EntityListProps,
+    RouteComponentProps<{}>,
+    ReturnType<typeof mapStateToProps>,
+    WithStyles<typeof styles> {}
 
 const styles = (theme: Theme) => ({
   root: {
@@ -112,11 +112,11 @@ class EntityList extends React.Component<Props> {
   }
 }
 
-export interface EntityListPropsExtended {
+export interface EntityListProps {
   entity: EntitySchema;
 }
 
-function mapStateToProps(state: AppState): EntityListProps {
+function mapStateToProps(state: AppState) {
   return {
     routes: state.router.routes
   };
@@ -124,4 +124,4 @@ function mapStateToProps(state: AppState): EntityListProps {
 
 export default combineContainers(withRouter, connect(mapStateToProps), withStyles(styles))(
   EntityList
-) as React.ComponentType<EntityListPropsExtended>;
+) as React.ComponentType<EntityListProps>;
