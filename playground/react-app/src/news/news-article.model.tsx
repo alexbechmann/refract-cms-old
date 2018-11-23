@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Entity, defineEntity, TextEditor, EntityPickerEditor, DatePickerEditor, ListEditor } from '@refract-cms/core';
-import { NewsArticle } from './news-article.model';
 
 export interface NewsArticle extends Entity {
   title: string;
