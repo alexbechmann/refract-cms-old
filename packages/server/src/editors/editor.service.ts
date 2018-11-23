@@ -23,6 +23,6 @@ export const editorService = {
   async getEditorByCredentials(username: string, password: string): Promise<Editor> {
     const db = await mongoHelper.db();
     const collection = db.collection<Editor>('editors');
-    return collection.findOne({username, password})
+    return collection.findOne({ username, password });
   }
 };

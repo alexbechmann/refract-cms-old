@@ -8,7 +8,7 @@ export interface Config {
   };
   auth: {
     tokenSecret: string;
-  }
+  };
 }
 
 export const configure = async (config: Config) => {

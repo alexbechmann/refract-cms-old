@@ -6,7 +6,6 @@ import { OAuthToken } from './auth-token.model';
 
 export const tokenService = {
   sign: async (editor: Editor) => {
-    // const profile: OAuthToken = jwtDecode(idToken);
     const token: OAuthToken = {
       unique_name: editor.displayName,
       nameid: `${editor._id}`,

@@ -5,6 +5,9 @@ refract.configure({
   mongoConnectionString: process.env.MONGO_URL || 'mongodb://mongo:27017/refract',
   adminCredentials: {
     password: process.env.ADMIN_PASSWORD
+  },
+  auth: {
+    tokenSecret: 'tokenSecret'
   }
 });
 

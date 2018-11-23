@@ -5,6 +5,9 @@ refract.configure({
   mongoConnectionString: 'mongodb://localhost:27018/refract-playground-server',
   adminCredentials: {
     password: 'pw'
+  },
+  auth: {
+    tokenSecret: 'secret'
   }
 });
 

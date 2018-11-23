@@ -13,13 +13,10 @@ import { setBaseRoute } from './state/router.actions';
 import { Routes } from './routes';
 import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
 import Media from '../media/Media';
+import { ConnectedRouter } from 'connected-react-router';
+import { history } from '../state/root.store';
 
-export interface RouterProps {
-  entities: EntitySchema[];
-  routes: Routes;
-}
-
-interface Props extends RouterProps, RouteComponentProps<{}>, ConnectedReduxProps {}
+interface Props extends ReturnType<typeof mapStateToProps>, RouteComponentProps<{}>, ConnectedReduxProps {}
 
 class Router extends React.Component<Props> {
   componentDidMount() {
@@ -28,11 +25,12 @@ class Router extends React.Component<Props> {
 
   render() {
     const { match, entities, routes } = this.props;
-    const RouterOrAny = match
-      ? props => <BrowserRouter>{props.children}</BrowserRouter>
-      : props => <div>{props.children}</div>;
+    // const RouterOrAny = match
+    //   ? props => <ConnectedRouter>{props.children}</ConnectedRouter>
+    //   : props => <ConnectedRouter history={history}>{props.children}</ConnectedRouter>;
+
     return routes ? (
-      <RouterOrAny>
+      <ConnectedRouter history={history}>
         <div>
           <AppBar position="sticky">
             <Toolbar>
@@ -79,18 +77,22 @@ class Router extends React.Component<Props> {
             })}
           </Switch>
         </div>
-      </RouterOrAny>
+      </ConnectedRouter>
     ) : (
       <React.Fragment />
     );
   }
 }
 
-function mapStateToProps(state: AppState): RouterProps {
+function mapStateToProps(state: AppState) {
   return {
     entities: state.config.schema,
     routes: state.router.routes
   };
 }
 
-export default combineContainers(withRouter, connect(mapStateToProps))(Router) as React.ComponentType;
+export interface RouterProps {
+  rootPath: string;
+}
+
+export default combineContainers(withRouter, connect(mapStateToProps))(Router) as React.ComponentType<RouterProps>;

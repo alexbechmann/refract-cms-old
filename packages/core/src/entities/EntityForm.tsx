@@ -18,7 +18,6 @@ import {
   withStyles
 } from '@material-ui/core';
 import { RouteComponentProps, withRouter } from 'react-router';
-import * as firebase from 'firebase';
 import { connect } from 'react-redux';
 import { combineContainers } from 'combine-containers';
 import { AppState } from '../state/app.state';

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as firebase from 'firebase';
 import { PropertyEditorProps } from '../properties/property-editor-props';
 import { Location } from '../location/location.model';
 
