@@ -1,8 +1,8 @@
 import { PropertyOptions } from '../properties/property-options';
-import { EntitySchema } from './entity-schema';
+import { EntitySchema } from './entity.schema';
 import { EntityOptions } from './entity-options';
 import { Omit } from '@material-ui/core';
-import { Entity } from '../entities/entity.model';
+import { Entity } from '../generated';
 
 type PropertiesRecord<T> = Omit<{ [P in keyof T]: PropertyOptions<T[P]> }, '_id'>;
 

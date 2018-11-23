@@ -12,7 +12,12 @@
     "outDir": "./dist/",
     "jsx": "react",
     "allowSyntheticDefaultImports": false,
-    "esModuleInterop": false
+    "esModuleInterop": false,
+    "lib": [
+      "esnext",
+      "es6",
+      "dom"
+    ],
   },
   "files": [
     "./src/index.ts"

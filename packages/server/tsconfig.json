@@ -10,7 +10,11 @@
     "declaration": true,
     "baseUrl": "./",
     "outDir": "./",
-    "jsx": "react"
+    "jsx": "react",
+    "lib": [
+      "esnext",
+      "es6"
+    ],
   },
   "files": [
     "./src/index.ts"

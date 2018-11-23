@@ -13,7 +13,12 @@
     "jsx": "react",
     "allowSyntheticDefaultImports": false,
     "esModuleInterop": false,
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "lib": [
+      "esnext",
+      "es6",
+      "dom"
+    ],
   },
   "files": [
     "./src/index.ts"
