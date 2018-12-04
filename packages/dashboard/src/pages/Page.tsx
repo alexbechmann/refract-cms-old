@@ -22,7 +22,7 @@ const Page: ComponentType<Props> = ({ children, classes, disablePadding, title }
       [classes.padded]: !disablePadding
     })}
   >
-    <Typography gutterBottom variant="h4">
+    <Typography gutterBottom variant="h5">
       {title}
     </Typography>
     {children}

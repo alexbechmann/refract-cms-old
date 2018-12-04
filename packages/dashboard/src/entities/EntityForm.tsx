@@ -4,23 +4,15 @@ import RenderEditor from './RenderEditor';
 import { navigate } from '@reach/router';
 import {
   Button,
-  CircularProgress,
+  LinearProgress,
   Typography,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  Grid,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
   WithStyles,
   withStyles,
   createStyles,
   Theme,
   Toolbar,
-  AppBar
+  AppBar,
+  Grid
 } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { combineContainers } from 'combine-containers';
@@ -30,6 +22,7 @@ import { RouteComponentProps } from '@reach/router';
 import { WithApolloClient, withApollo } from 'react-apollo';
 import ApolloClient from 'apollo-client';
 import gql from 'graphql-tag';
+import Page from '../pages/Page';
 
 interface State {
   updateValues: any;
@@ -99,49 +92,50 @@ class EntityForm extends Component<Props, State> {
   render() {
     const { schema, classes } = this.props;
     return this.state.loading ? (
-      <CircularProgress />
+      <LinearProgress />
     ) : (
-      <Grid justify="center" container>
-        <Grid item xs={12} sm={12} md={10} lg={8} xl={7}>
-          <div className={classes.card}>
-            <Typography variant="h6">{schema.options.displayName || schema.options.alias}</Typography>
-            {Object.keys(schema.properties).map((propertyKey: string, index: number) => {
-              const propertyOptions = schema.properties[propertyKey];
-              return (
-                <div key={index} className={classes.propertyEditor}>
-                  <Grid container spacing={16}>
-                    <Grid item xs={12} sm={12} md={3} lg={3} xl={3}>
-                      <Typography variant="subheading" gutterBottom>
-                        {propertyOptions.displayName || propertyKey}
-                      </Typography>
+      <Page title={schema.options.displayName || schema.options.alias}>
+        <Grid justify="center" container>
+          <Grid item xs={12} sm={12} md={10} lg={8} xl={7}>
+            <div className={classes.card}>
+              {Object.keys(schema.properties).map((propertyKey: string, index: number) => {
+                const propertyOptions = schema.properties[propertyKey];
+                return (
+                  <div key={index} className={classes.propertyEditor}>
+                    <Grid container spacing={16}>
+                      <Grid item xs={12} sm={12} md={3} lg={3} xl={3}>
+                        <Typography variant="subheading" gutterBottom>
+                          {propertyOptions.displayName || propertyKey}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={9} lg={9} xl={9}>
+                        <RenderEditor
+                          setValue={value => {
+                            this.setState({
+                              updateValues: {
+                                ...this.state.updateValues,
+                                [propertyKey]: value
+                              }
+                            });
+                          }}
+                          value={this.state.updateValues[propertyKey]}
+                          propertyKey={propertyKey}
+                          propertyOptions={propertyOptions}
+                        />
+                      </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={12} md={9} lg={9} xl={9}>
-                      <RenderEditor
-                        setValue={value => {
-                          this.setState({
-                            updateValues: {
-                              ...this.state.updateValues,
-                              [propertyKey]: value
-                            }
-                          });
-                        }}
-                        value={this.state.updateValues[propertyKey]}
-                        propertyKey={propertyKey}
-                        propertyOptions={propertyOptions}
-                      />
-                    </Grid>
-                  </Grid>
-                </div>
-              );
-            })}
-            <Button onClick={this.back}>Back</Button>
-            <Button onClick={this.delete}>Delete</Button>
-            <Button color="primary" onClick={this.save}>
-              Save
-            </Button>
-          </div>
+                  </div>
+                );
+              })}
+              <Button onClick={this.back}>Back</Button>
+              <Button onClick={this.delete}>Delete</Button>
+              <Button color="primary" onClick={this.save}>
+                Save
+              </Button>
+            </div>
+          </Grid>
         </Grid>
-      </Grid>
+      </Page>
     );
   }
 
