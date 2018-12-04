@@ -1,49 +1,66 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
-var ProgressBarPlugin = require('progress-bar-webpack-plugin');
-var ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-
-function srcPath(subdir) {
-  return path.join(__dirname, "src", subdir);
-}
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const webpack = require('webpack');
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 module.exports = {
   entry: './src/index.ts',
+  mode: "production",
+  stats: 'errors-only',
+  target: 'node',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'index.js',
+    library: require('./package.json').name,
+    libraryTarget: "umd"
+  },
+  performance: {
+    hints: 'warning'
+  },
+  optimization: {
+    sideEffects: false,
+    minimizer: [
+      new UglifyJsPlugin({
+        extractComments: true,
+        parallel: true,
+        cache: true,
+        uglifyOptions: {
+          output: {
+            comments: false
+          }
+        }
+      })
+    ]
+  },
   externals: [
     nodeExternals(),
     nodeExternals({
       modulesDir: path.resolve(__dirname, '../../node_modules')
     })
   ],
-  devtool: 'inline-source-map',
-  mode: "production",
-  target: 'node',
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
-    library: "@refract-cms/core",
-    libraryTarget: "umd"
-  },
+  devtool: "source-map",
   module: {
     rules: [
-      { test: /\.tsx?$/, loader: "ts-loader", options: { transpileOnly: true } },
+      { test: /\.(js|jsx|ts|tsx)$/, loader: "babel-loader" },
       {
-        test: /\.(tsx|ts)?$/,
+        test: /\.(js|jsx|ts|tsx)?$/,
         loader: 'prettier-loader',
-        enforce: 'pre',
-        exclude: /node_modules/,
+        exclude: /node_modules/
       }
     ]
   },
-  resolve: {
-    extensions: [".ts", ".tsx", ".js"]
-  },
   plugins: [
-    new ProgressBarPlugin(),
-    new ForkTsCheckerWebpackPlugin(),
-    new CopyWebpackPlugin([
-      { from: 'generated', to: 'generated', context: path.resolve(__dirname, 'src') },
-    ], { debug: true })
-  ]
-};
+    new ForkTsCheckerWebpackPlugin({
+      // memoryLimit: 4000,
+      tslint: path.resolve(__dirname, '..', 'tslint.json'),
+      reportFiles: "./src/**",
+      async: false
+    }),
+    new FriendlyErrorsWebpackPlugin()
+  ],
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js']
+  },
+}

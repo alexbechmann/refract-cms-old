@@ -1,2 +1,1 @@
-export { default as router } from './router';
-export { getCurrentConfig, configure } from './config/config';
+export { default as refractCmsHandler } from './refract-cms-handler';

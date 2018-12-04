@@ -7,7 +7,7 @@ export interface MultipleDropdownEditorOptions {
 }
 
 export default (options?: MultipleDropdownEditorOptions) => (props: PropertyEditorProps<string[]>) => {
-  const selectOptions = options.selectOptions || [];
+  const selectOptions = options ? options.selectOptions || [] : [];
   const value = props.value || [];
   return (
     <FormControl fullWidth>
@@ -21,7 +21,12 @@ export default (options?: MultipleDropdownEditorOptions) => (props: PropertyEdit
             ((e.target.value as any) as string[]).filter(value => selectOptions.some(option => value === option))
           );
         }}
-        renderValue={(e: string[]) => `${e.join(', ')}`}
+        renderValue={e => {
+          if (e instanceof Array) {
+            return `${e.join(', ')}`;
+          }
+          return '';
+        }}
       >
         {selectOptions.map(selectOption => {
           const checked = value.some(value => value === selectOption);

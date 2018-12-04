@@ -30,14 +30,17 @@ steps:
 - powershell: . 'packages/core/update-package-version.ps1' $(GitVersion.SemVer) 
   displayName: Update package version
 
+- powershell: . 'packages/dashboard/update-package-version.ps1' $(GitVersion.SemVer) 
+  displayName: Update package version
+
 - powershell: . 'packages/server/update-package-version.ps1' $(GitVersion.SemVer) 
   displayName: Update package version
 
-- task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
-  displayName: Yarn run build
-  inputs:
-    ProjectDirectory: docs-app
-    Arguments: 'run build'
+# - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
+#   displayName: Yarn run build
+#   inputs:
+#     ProjectDirectory: docs-app
+#     Arguments: 'run build'
 
 # - task: Docker@0
 #   displayName: Push an image
@@ -68,6 +71,18 @@ steps:
   displayName: npm custom
   inputs:
     command: custom
+    workingDir: packages/dashboard
+    verbose: false
+    customCommand: 'publish --access public --tag $(GitVersion.PreReleaseLabel)'
+    customEndpoint: npm
+    publishEndpoint: npm
+    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+
+
+- task: Npm@1
+  displayName: npm custom
+  inputs:
+    command: custom
     workingDir: packages/server
     verbose: false
     customCommand: 'publish --access public --tag $(GitVersion.PreReleaseLabel)'
@@ -75,26 +90,26 @@ steps:
     publishEndpoint: npm
     condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
 
-- task: sergeyzwezdin.magic-chunks.magic.chunks.MagicChunks@2
-  condition: eq(variables['DEPLOY'], 'true')
-  displayName: Config transform - .firebaserc
-  inputs:
-    sourcePath: 'docs-app/.firebaserc'
-    transformations: |
-     {
-       "projects/default": "$(REACT_APP_FIREBASE_CONFIG_PROJECT_ID)"
-     }
+# - task: sergeyzwezdin.magic-chunks.magic.chunks.MagicChunks@2
+#   condition: eq(variables['DEPLOY'], 'true')
+#   displayName: Config transform - .firebaserc
+#   inputs:
+#     sourcePath: 'docs-app/.firebaserc'
+#     transformations: |
+#      {
+#        "projects/default": "$(REACT_APP_FIREBASE_CONFIG_PROJECT_ID)"
+#      }
 
-- task: Npm@1
-  condition: eq(variables['DEPLOY'], 'true')
-  inputs:
-    command: custom
-    verbose: false
-    customCommand: 'install firebase-tools -g'
+# - task: Npm@1
+#   condition: eq(variables['DEPLOY'], 'true')
+#   inputs:
+#     command: custom
+#     verbose: false
+#     customCommand: 'install firebase-tools -g'
 
-- task: CmdLine@1
-  condition: eq(variables['DEPLOY'], 'true')
-  inputs:
-    filename: 'firebase'
-    arguments: 'deploy --token $(FIREBASE_TOKEN)'
-    workingFolder: 'docs-app'
+# - task: CmdLine@1
+#   condition: eq(variables['DEPLOY'], 'true')
+#   inputs:
+#     filename: 'firebase'
+#     arguments: 'deploy --token $(FIREBASE_TOKEN)'
+#     workingFolder: 'docs-app'
