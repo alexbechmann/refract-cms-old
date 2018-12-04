@@ -1,0 +1,9 @@
+**/public/**
+**/dist/**
+**/build/**
+**/static/**
+**/package-lock.json
+**/webpack.config.js
+**/.vscode
+**/.storybook
+**/node_modules/**

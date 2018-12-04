@@ -96,7 +96,7 @@ class ListEditor<T> extends React.Component<Props<T>, State<T>> {
               onClick={() => {
                 const { stagedValue } = this.state;
                 const newValues = [...value, stagedValue];
-                setValue(newValues);
+                setValue(newValues as T[]);
                 this.setState({
                   stagedValue: undefined,
                   showAddNewEditor: false

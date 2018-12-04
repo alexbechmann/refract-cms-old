@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { DatePicker, MuiPickersUtilsProvider } from 'material-ui-pickers';
 import { PropertyEditorProps } from '../properties/property-editor-props';
-import MomentUtils from 'material-ui-pickers/utils/moment-utils';
+import MomentUtils from '@date-io/moment';
 import * as Icons from '@material-ui/icons';
-import * as moment from 'moment';
+import moment from 'moment';
 import { Theme, withStyles, WithStyles } from '@material-ui/core';
 
 export interface DatePickerOptions {}

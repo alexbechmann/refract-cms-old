@@ -1,6 +1,12 @@
+parser: babylon
 bracketSpacing: true
 semi: true
 overrides:
+- files: "**/*.js"
+  options:
+    printWidth: 120
+    useTabs: false
+    singleQuote: true
 - files: "**/*.ts*"
   options:
     parser: typescript
@@ -12,6 +18,9 @@ overrides:
     parser: css
     useTabs: false
     singleQuote: true
-- files: "**/*.md*"
+- files: "**/src/*.json"
   options:
-    parser: markdown
+    parser: json
+- files: "**/src/*.jsx"
+  options:
+    parser: jsx

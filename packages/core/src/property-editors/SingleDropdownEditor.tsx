@@ -7,7 +7,7 @@ export interface SingleDropdownEditorOptions {
 }
 
 export default (options?: SingleDropdownEditorOptions) => (props: PropertyEditorProps<string>) => {
-  const selectOptions = options.selectOptions || [];
+  const selectOptions = options ? options.selectOptions || [] : [];
   return (
     <FormControl fullWidth>
       <InputLabel>{props.propertyOptions.displayName}</InputLabel>
