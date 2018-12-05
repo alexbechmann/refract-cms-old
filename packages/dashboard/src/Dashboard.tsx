@@ -16,6 +16,7 @@ import ImageIcon from '@material-ui/icons/Image';
 import CloudIcon from '@material-ui/icons/Cloud';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import ExitToApp from '@material-ui/icons/ExitToApp';
 import {
   ListItem,
   ListItemIcon,
@@ -43,6 +44,8 @@ import { provide } from './state/provide';
 import EditEntity from './entities/EditEntity';
 import 'typeface-roboto';
 import FilesPage from './files/FilesPage';
+import Auth from './auth/Auth';
+import { checkLocalStorageForAccessToken, logout } from './auth/state/auth.actions';
 
 const drawerWidth = 240;
 
@@ -149,13 +152,14 @@ class Dashboard extends React.Component<Props> {
   };
 
   componentDidMount() {
-    const { config, serverUrl, rootPath, configure, setBaseRoute } = this.props;
+    const { config, serverUrl, rootPath, configure, setBaseRoute, checkLocalStorageForAccessToken } = this.props;
+    checkLocalStorageForAccessToken();
     setBaseRoute(rootPath);
     configure(config, serverUrl);
   }
 
   render() {
-    const { classes, config, serverUrl, routes } = this.props;
+    const { classes, config, serverUrl, routes, isLoggedIn, logout } = this.props;
     return !routes ? (
       <CircularProgress />
     ) : (
@@ -234,16 +238,31 @@ class Dashboard extends React.Component<Props> {
                 );
               })}
             </List>
+            <Divider />
+            <List>
+              <ListItem button onClick={logout}>
+                <ListItemIcon>
+                  <ExitToApp />
+                </ListItemIcon>
+                <ListItemText inset primary="Logout" />
+              </ListItem>
+            </List>
           </Drawer>
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
-            <Router>
-              <HomePage path={routes.root.path} />
-              <Graphql path={routes.graphql.path} serverUrl={serverUrl} />
-              <EntityList path={routes.entity.list.path} />
-              <FilesPage path={routes.files.path} />
-              <EditEntity path={routes.entity.edit.path} />
-            </Router>
+            {!isLoggedIn ? (
+              <Router>
+                <Auth default path="/" />
+              </Router>
+            ) : (
+              <Router>
+                <HomePage path={routes.root.path} />
+                <Graphql path={routes.graphql.path} serverUrl={serverUrl} />
+                <EntityList path={routes.entity.list.path} />
+                <FilesPage path={routes.files.path} />
+                <EditEntity path={routes.entity.edit.path} />
+              </Router>
+            )}
           </main>
         </div>
       </ApolloProvider>
@@ -254,13 +273,16 @@ class Dashboard extends React.Component<Props> {
 function mapStateToProps(state: AppState) {
   return {
     entities: state.config.schema,
-    routes: state.router.routes
+    routes: state.router.routes,
+    isLoggedIn: Boolean(state.auth.activeUserToken)
   };
 }
 
 const mapDispatchToProps = {
   setBaseRoute,
-  configure
+  configure,
+  checkLocalStorageForAccessToken,
+  logout
 };
 
 type MapDispatchToProps = typeof mapDispatchToProps;

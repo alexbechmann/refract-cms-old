@@ -10,6 +10,7 @@ export { PropertyOptions } from './properties/property-options';
 export { ImageRef } from './files/image-ref.model';
 export { Crop } from './files/crop.model';
 export { File } from './files/file.model';
+export { AuthToken } from './auth/auth-token';
 
 // Property Editors
 export { PropertyEditorProps } from './properties/property-editor-props';

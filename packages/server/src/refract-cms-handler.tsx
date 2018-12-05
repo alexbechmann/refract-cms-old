@@ -18,6 +18,7 @@ import { RequestHandlerParams } from 'express-serve-static-core';
 import multer from 'multer';
 import jimp from 'jimp';
 import { buildTypes } from './graphql/build-types';
+import { authService } from './auth/auth.service';
 
 let db: Db;
 
@@ -55,13 +56,19 @@ const refractCmsHandler = ({
       getFiles: [File]
     }
     type Mutation {
-      do: Boolean
+      generateAccessToken(username: String!, password: String!): String!
     }
     type File {
       _id: String!
       url: String!
       mimetype: String
     }
+    type User {
+      _id: String!
+      displayName: String
+      email: String
+      username: String
+     }
   `;
 
   const baseResolvers = {
@@ -77,6 +84,16 @@ const refractCmsHandler = ({
       _id: file => `${file._id}`,
       url: (file: File, a, b, c) => {
         return `${rootPath}/files/${file._id}`;
+      }
+    },
+    Mutation: {
+      generateAccessToken: async (_, { username, password }, context) => {
+        const userId = await authService.findUserIdWithCredentials(username, password, serverConfig);
+        if (userId) {
+          return authService.createAccessToken(userId, serverConfig);
+        } else {
+          return null;
+        }
       }
     }
   };
@@ -111,9 +128,6 @@ const refractCmsHandler = ({
           }
         },
         Mutation: {
-          do: (_, args, context) => {
-            return Promise.resolve(true);
-          },
           [`${schema.options.alias}Create`]: (_, { item }, context) => {
             console.log(item);
             return db
@@ -169,10 +183,15 @@ const refractCmsHandler = ({
 
   router.use(
     '/graphql',
-    graphqlHTTP({
+    graphqlHTTP((req, res) => ({
       schema: graphqlSchema,
-      graphiql: true
-    })
+      graphiql: true,
+      context: {
+        userId: req.headers.authorization
+          ? authService.verifyAccessToken(req.headers.authorization!, serverConfig).nameid
+          : null
+      }
+    }))
   );
 
   router.get('/files/:id', async (req, res) => {

@@ -11,7 +11,7 @@ export const createApolloClient = ({ serverUrl }: { serverUrl: string }) => {
     Promise.resolve({
       headers: {
         ...headers,
-        authorization: `Bearer ${localStorage.getItem('access_token')}`
+        authorization: localStorage.getItem('access_token') || ''
       }
     })
   );
