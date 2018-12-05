@@ -12,7 +12,8 @@ import {
   Theme,
   Toolbar,
   AppBar,
-  Grid
+  Grid,
+  IconButton
 } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { combineContainers } from 'combine-containers';
@@ -23,6 +24,7 @@ import { WithApolloClient, withApollo } from 'react-apollo';
 import ApolloClient from 'apollo-client';
 import gql from 'graphql-tag';
 import Page from '../pages/Page';
+import * as Icons from '@material-ui/icons';
 
 interface State {
   updateValues: any;
@@ -37,7 +39,14 @@ const styles = (theme: Theme) =>
     propertyEditor: {
       marginBottom: theme.spacing.unit * 4
     },
-    appBar: {}
+    appBar: {
+      top: 'auto',
+      bottom: 0
+    },
+    toolbar: {
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    }
   });
 
 interface Props
@@ -127,11 +136,23 @@ class EntityForm extends Component<Props, State> {
                   </div>
                 );
               })}
-              <Button onClick={this.back}>Back</Button>
-              <Button onClick={this.delete}>Delete</Button>
-              <Button color="primary" onClick={this.save}>
-                Save
-              </Button>
+
+              <AppBar position="fixed" color="default" className={classes.appBar}>
+                <Toolbar className={classes.toolbar}>
+                  <div>asdf</div>
+                  <div>
+                    <IconButton onClick={this.back}>
+                      <Icons.ArrowBack />
+                    </IconButton>
+                    <IconButton onClick={this.delete}>
+                      <Icons.Delete />
+                    </IconButton>
+                    <IconButton color="primary" onClick={this.save}>
+                      <Icons.Save />
+                    </IconButton>
+                  </div>
+                </Toolbar>
+              </AppBar>
             </div>
           </Grid>
         </Grid>
