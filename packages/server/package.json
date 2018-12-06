@@ -21,6 +21,8 @@
     "graphql": "^14.0.2",
     "graphql-tools": "^4.0.3",
     "jimp": "^0.6.0",
+    "jsonwebtoken": "^8.4.0",
+    "jwt-decode": "^2.2.0",
     "lodash": "^4.17.11",
     "material-ui-pickers": "^2.0.2",
     "moment": "^2.22.2",
