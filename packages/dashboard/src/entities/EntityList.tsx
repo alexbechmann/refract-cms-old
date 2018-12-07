@@ -18,7 +18,6 @@ import { connect } from 'react-redux';
 import { AppState } from '../state/app.state';
 import { combineContainers } from 'combine-containers';
 import Page from '../pages/Page';
-import pluralize from 'pluralize';
 
 export interface EntitiesListProps extends RouteComponentProps<{ alias: string }> {}
 
@@ -30,24 +29,15 @@ class EntitiesList extends Component<Props> {
     const entitySchema = schema.find(s => s.options.alias === this.props.alias)!;
     const query = graphqlQueryHelper.getAllQueryWithAllFields(entitySchema);
     return (
-      <Page title={pluralize(entitySchema.options.displayName || entitySchema.options.alias)}>
+      <Page title={entitySchema.options.displayName || entitySchema.options.alias}>
         <Query query={query}>
           {({ loading, error, data }) => {
-            if (data && data.items && entitySchema.options.maxOne) {
-              return (
-                <Redirect
-                  to={
-                    data.items.length === 0
-                      ? routes.entity.edit.createUrl({ id: 'new', schema: entitySchema })
-                      : routes.entity.edit.createUrl({ id: data.items[0]._id, schema: entitySchema })
-                  }
-                />
-              );
+            if (loading) {
+              return <CircularProgress />;
             }
             return (
               <div>
-                {loading && <CircularProgress />}
-                {!loading && (
+                {!entitySchema.options.maxOne ? (
                   <div>
                     <Button
                       variant="raised"
@@ -85,6 +75,25 @@ class EntitiesList extends Component<Props> {
                         </ListItem>
                       ))}
                     </List>
+                  </div>
+                ) : (
+                  <div>
+                    <Button
+                      variant="raised"
+                      color="primary"
+                      component={props => (
+                        <Link
+                          to={
+                            data.items.length === 0
+                              ? routes.entity.edit.createUrl({ id: 'new', schema: entitySchema })
+                              : routes.entity.edit.createUrl({ id: data.items[0]._id, schema: entitySchema })
+                          }
+                          {...props}
+                        />
+                      )}
+                    >
+                      Edit {entitySchema.options.displayName || entitySchema.options.alias}
+                    </Button>
                   </div>
                 )}
               </div>

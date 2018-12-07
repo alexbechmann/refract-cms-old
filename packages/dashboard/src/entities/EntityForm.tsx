@@ -147,16 +147,13 @@ class EntityForm extends Component<Props, State> {
                   <Toolbar className={classes.toolbar}>
                     <div />
                     <div>
-                      {!this.props.schema.options.maxOne && (
-                        <Fragment>
-                          <IconButton onClick={this.back}>
-                            <Icons.ArrowBack />
-                          </IconButton>
-                          <IconButton onClick={this.delete}>
-                            <Icons.Delete />
-                          </IconButton>
-                        </Fragment>
-                      )}
+                      <IconButton onClick={this.back}>
+                        <Icons.ArrowBack />
+                      </IconButton>
+                      <IconButton onClick={this.delete}>
+                        <Icons.Delete />
+                      </IconButton>
+
                       <IconButton color="primary" onClick={this.save}>
                         <Icons.Save />
                       </IconButton>
