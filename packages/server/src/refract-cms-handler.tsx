@@ -4,14 +4,7 @@ import { makeExecutableSchema } from 'graphql-tools';
 import { Dashboard } from '@refract-cms/dashboard';
 import { Config, graphqlQueryHelper, File } from '@refract-cms/core';
 import { merge } from 'lodash';
-import {
-  printType,
-  GraphQLInt,
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLBoolean,
-  GraphQLInputObjectType
-} from 'graphql';
+import { printType } from 'graphql';
 import { MongoClient, Db, ObjectId } from 'mongodb';
 import { ServerConfig } from './server-config.model';
 import { RequestHandlerParams } from 'express-serve-static-core';
@@ -19,6 +12,8 @@ import multer from 'multer';
 import jimp from 'jimp';
 import { buildTypes } from './graphql/build-types';
 import { authService } from './auth/auth.service';
+import uniqueString from 'unique-string';
+import fs from 'fs';
 
 let db: Db;
 
@@ -47,7 +42,8 @@ const refractCmsHandler = ({
   const storage = multer.diskStorage({
     destination: serverConfig.filesPath,
     filename(req, file, cb) {
-      cb(null, `${file.originalname}`);
+      console.log(file);
+      cb(null, `${uniqueString()}_${file.originalname}`);
     }
   });
   const upload = multer({ storage });
@@ -57,6 +53,7 @@ const refractCmsHandler = ({
     }
     type Mutation {
       generateAccessToken(username: String!, password: String!): String!
+      fileDelete(id: String!): Boolean
     }
     type File {
       _id: String!
@@ -190,6 +187,15 @@ const refractCmsHandler = ({
                   console.log(r);
                   return true;
                 });
+            },
+            [`fileDelete`]: async (_, { id }, context) => {
+              const file = await db.collection('files').findOne({ _id: new ObjectId(id) });
+              console.log('deleting' + id);
+              fs.unlinkSync(file.path);
+              console.log(id, file);
+              await db.collection('files').deleteOne({ _id: new ObjectId(id) });
+              // fs.unlinkSync(file.path);
+              return true;
             }
           },
           [schemaName]: {

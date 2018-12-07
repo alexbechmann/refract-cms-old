@@ -169,16 +169,17 @@ class EntityForm extends Component<Props, State> {
   }
 
   save() {
+    const { schema } = this.props;
     this.props.saveEntity(this.state.updateValues).then(() => {
       this.props.client.resetStore();
       this.back();
-      this.props.addNotification('Successfully saved!');
+      this.props.addNotification(`Successfully saved ${schema.options.displayName || schema.options.alias}.`);
     });
   }
 
   delete() {
     if (window.confirm('Are you sure you want to delete?')) {
-      const client: ApolloClient<any> = this.props.client;
+      const { client, schema } = this.props;
       client
         .mutate({
           mutation: gql(`
@@ -189,7 +190,7 @@ class EntityForm extends Component<Props, State> {
         .then(() => {
           client.resetStore();
           this.back();
-          this.props.addNotification('Successfully deleted!');
+          this.props.addNotification(`Successfully deleted ${schema.options.displayName || schema.options.alias}.`);
         });
     }
   }

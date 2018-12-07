@@ -1,8 +1,12 @@
 import React from 'react';
-import { LinearProgress, IconButton, Button, CircularProgress } from '@material-ui/core';
+import { LinearProgress, IconButton, Button, CircularProgress, Typography } from '@material-ui/core';
 import * as Icons from '@material-ui/icons';
 import createUniqueString from 'unique-string';
 import fileService from './file.service';
+import { withApollo, WithApolloClient } from 'react-apollo';
+import { connect } from 'react-redux';
+import { combineContainers } from 'combine-containers';
+import { addNotification } from '../notifications/state/notification.actions';
 
 interface State {
   file?: File;
@@ -13,7 +17,9 @@ interface ImageUploaderProps {
   onUploaded?: () => void;
 }
 
-class ImageUploader extends React.Component<ImageUploaderProps, State> {
+interface Props extends ImageUploaderProps, WithApolloClient<{}>, MapDispatchToProps {}
+
+class ImageUploader extends React.Component<Props, State> {
   state: State = {
     uploading: false
   };
@@ -27,17 +33,26 @@ class ImageUploader extends React.Component<ImageUploaderProps, State> {
     const { file, uploading } = this.state;
     return (
       <div>
-        {!uploading && (
+        {!uploading && !file ? (
           <div>
             <input hidden onChange={this.handleImageChange} accept="image/*" id="icon-button-file" type="file" />
             <label htmlFor="icon-button-file">
-              <IconButton color="primary" component="span">
-                <Icons.Photo />
-              </IconButton>
+              <Button color="primary" component="span">
+                Select File to upload
+              </Button>
             </label>
           </div>
+        ) : null}
+        {file && !this.state.uploading ? (
+          <div>
+            <Typography gutterBottom>File selected.</Typography>
+            <Button color="primary" variant="raised" onClick={this.upload}>
+              Upload
+            </Button>
+          </div>
+        ) : (
+          <React.Fragment />
         )}
-        {file && !this.state.uploading ? <Button onClick={this.upload}>Upload</Button> : <React.Fragment />}
         {uploading && <CircularProgress />}
       </div>
     );
@@ -46,6 +61,7 @@ class ImageUploader extends React.Component<ImageUploaderProps, State> {
   handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e && e.target && e.target.files) {
       const file = e.target.files[0];
+      e.target.value = '';
       this.setState({
         file
       });
@@ -62,12 +78,29 @@ class ImageUploader extends React.Component<ImageUploaderProps, State> {
       });
       fileService.upload(file, filename).then(() => {
         this.setState({ uploading: false });
+        this.props.client.resetStore();
+        this.props.addNotification('Successfully uploaded file.');
         if (this.props.onUploaded) {
           this.props.onUploaded();
         }
+        this.setState({
+          file: undefined
+        });
       });
     }
   }
 }
 
-export default ImageUploader;
+const mapDispatchToProps = {
+  addNotification
+};
+
+type MapDispatchToProps = typeof mapDispatchToProps;
+
+export default combineContainers(
+  withApollo,
+  connect(
+    null,
+    mapDispatchToProps
+  )
+)(ImageUploader) as React.ComponentType<ImageUploaderProps>;
