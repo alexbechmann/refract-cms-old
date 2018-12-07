@@ -101,10 +101,35 @@ const refractCmsHandler = ({
   const entityGraphQLTypes = config.schema.map(schema => {
     const types = buildTypes(schema);
     const schemaName = graphqlQueryHelper.schemaName(schema.options.alias);
+    let maxOneQuery = '';
+    let maxOneResolver = {};
+
+    if (schema.options.maxOne) {
+      maxOneQuery = `${schema.options.alias}Get: ${schemaName}`;
+      maxOneResolver = {
+        Query: {
+          [`${schema.options.alias}Get`]: async (obj: any, {  }: {}, context: any) => {
+            const items = await db
+              .collection(schema.options.alias)
+              .find({})
+              .toArray();
+            console.log(items);
+            return items.length > 0
+              ? items[0]
+              : Object.keys(schema.properties).reduce((acc, propertyKey) => {
+                  acc[propertyKey] = schema.properties[propertyKey].defaultValue;
+                  return acc;
+                }, {});
+          }
+        }
+      };
+    }
+
     const queryType = `
       extend type Query {
         ${schema.options.alias}GetAll: [${schemaName}]
         ${schema.options.alias}GetById(id: String!): ${schemaName}
+        ${maxOneQuery}
       }
       extend type Mutation {
         ${schema.options.alias}Create(item: Input${schemaName}): ${schemaName}
@@ -115,61 +140,64 @@ const refractCmsHandler = ({
     return {
       schema: [queryType, ...types.map(type => printType(type))].join(`
       `),
-      resolvers: {
-        Query: {
-          [`${schema.options.alias}GetById`]: (obj: any, { id }: { id: string }, context: any) => {
-            return db.collection(schema.options.alias).findOne({ _id: new ObjectId(id) });
+      resolvers: merge(
+        {
+          Query: {
+            [`${schema.options.alias}GetById`]: (obj: any, { id }: { id: string }, context: any) => {
+              return db.collection(schema.options.alias).findOne({ _id: new ObjectId(id) });
+            },
+            [`${schema.options.alias}GetAll`]: (obj: any, {  }: any, context: any) => {
+              return db
+                .collection(schema.options.alias)
+                .find({})
+                .toArray();
+            }
           },
-          [`${schema.options.alias}GetAll`]: (obj: any, {  }: any, context: any) => {
-            return db
-              .collection(schema.options.alias)
-              .find({})
-              .toArray();
+          Mutation: {
+            [`${schema.options.alias}Create`]: (_, { item }, context) => {
+              console.log(item);
+              return db
+                .collection(schema.options.alias)
+                .insert(item)
+                .then(result => {
+                  console.log(item, result);
+                  return item;
+                });
+            },
+            [`${schema.options.alias}Update`]: (_, { id, item }, context) => {
+              return db
+                .collection(schema.options.alias)
+                .updateOne(
+                  { _id: new ObjectId(id) },
+                  {
+                    $set: item
+                  }
+                )
+                .then(result => {
+                  console.log(item, result);
+                  return {
+                    _id: id,
+                    item
+                  };
+                });
+            },
+            [`${schema.options.alias}Delete`]: (_, { id }, context) => {
+              console.log('deleting' + id);
+              return db
+                .collection(schema.options.alias)
+                .deleteOne({ _id: new ObjectId(id) })
+                .then(r => {
+                  console.log(r);
+                  return true;
+                });
+            }
+          },
+          [schemaName]: {
+            _id: item => `${item._id}`
           }
         },
-        Mutation: {
-          [`${schema.options.alias}Create`]: (_, { item }, context) => {
-            console.log(item);
-            return db
-              .collection(schema.options.alias)
-              .insert(item)
-              .then(result => {
-                console.log(item, result);
-                return item;
-              });
-          },
-          [`${schema.options.alias}Update`]: (_, { id, item }, context) => {
-            return db
-              .collection(schema.options.alias)
-              .updateOne(
-                { _id: new ObjectId(id) },
-                {
-                  $set: item
-                }
-              )
-              .then(result => {
-                console.log(item, result);
-                return {
-                  _id: id,
-                  item
-                };
-              });
-          },
-          [`${schema.options.alias}Delete`]: (_, { id }, context) => {
-            console.log('deleting' + id);
-            return db
-              .collection(schema.options.alias)
-              .deleteOne({ _id: new ObjectId(id) })
-              .then(r => {
-                console.log(r);
-                return true;
-              });
-          }
-        },
-        [schemaName]: {
-          _id: item => `${item._id}`
-        }
-      }
+        maxOneResolver
+      )
     };
   });
 

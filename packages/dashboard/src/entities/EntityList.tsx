@@ -1,14 +1,24 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { Query, withApollo, WithApolloClient } from 'react-apollo';
-import { CircularProgress, List, ListItem, ListItemText } from '@material-ui/core';
-import { EntitySchema } from '@refract-cms/core';
-import { RouteComponentProps, Link } from '@reach/router';
+import {
+  CircularProgress,
+  List,
+  ListItem,
+  ListItemText,
+  Button,
+  ListSubheader,
+  ListItemAvatar,
+  Avatar
+} from '@material-ui/core';
+import { EntitySchema, Entity } from '@refract-cms/core';
+import { RouteComponentProps, Link, Redirect } from '@reach/router';
 import { graphqlQueryHelper } from '@refract-cms/core';
 import { connect } from 'react-redux';
 import { AppState } from '../state/app.state';
 import { combineContainers } from 'combine-containers';
 import Page from '../pages/Page';
+import pluralize from 'pluralize';
 
 export interface EntitiesListProps extends RouteComponentProps<{ alias: string }> {}
 
@@ -20,40 +30,62 @@ class EntitiesList extends Component<Props> {
     const entitySchema = schema.find(s => s.options.alias === this.props.alias)!;
     const query = graphqlQueryHelper.getAllQueryWithAllFields(entitySchema);
     return (
-      <Page title={entitySchema.options.displayName || entitySchema.options.alias}>
+      <Page title={pluralize(entitySchema.options.displayName || entitySchema.options.alias)}>
         <Query query={query}>
           {({ loading, error, data }) => {
+            if (data && data.items && entitySchema.options.maxOne) {
+              return (
+                <Redirect
+                  to={
+                    data.items.length === 0
+                      ? routes.entity.edit.createUrl({ id: 'new', schema: entitySchema })
+                      : routes.entity.edit.createUrl({ id: data.items[0]._id, schema: entitySchema })
+                  }
+                />
+              );
+            }
             return (
               <div>
                 {loading && <CircularProgress />}
                 {!loading && (
-                  <List>
-                    <ListItem
+                  <div>
+                    <Button
+                      variant="raised"
+                      color="primary"
                       component={props => (
                         <Link to={routes.entity.edit.createUrl({ id: 'new', schema: entitySchema })} {...props} />
                       )}
-                      button
                     >
-                      <ListItemText primary={`Add new ${entitySchema.options.displayName}`} />
-                    </ListItem>
-                    {data.items.map(item => (
-                      <ListItem
-                        key={item._id}
-                        component={props => (
-                          <Link to={routes.entity.edit.createUrl({ id: item._id, schema: entitySchema })} {...props} />
-                        )}
-                        button
-                      >
-                        <ListItemText
-                          primary={
-                            entitySchema.options.instanceDisplayName
-                              ? entitySchema.options.instanceDisplayName(item)
-                              : item._id
-                          }
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
+                      Add new
+                    </Button>
+                    <List>
+                      {data.items.map((item: Entity) => (
+                        <ListItem
+                          key={item._id}
+                          component={props => (
+                            <Link
+                              to={routes.entity.edit.createUrl({ id: item._id, schema: entitySchema })}
+                              {...props}
+                            />
+                          )}
+                          button
+                        >
+                          {entitySchema.options.instanceImageUrl && (
+                            <ListItemAvatar>
+                              <Avatar src={entitySchema.options.instanceImageUrl(item)} />
+                            </ListItemAvatar>
+                          )}
+                          <ListItemText
+                            primary={
+                              entitySchema.options.instanceDisplayName
+                                ? entitySchema.options.instanceDisplayName(item)
+                                : item._id
+                            }
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </div>
                 )}
               </div>
             );

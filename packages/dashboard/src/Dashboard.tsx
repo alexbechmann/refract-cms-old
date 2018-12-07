@@ -46,6 +46,7 @@ import 'typeface-roboto';
 import FilesPage from './files/FilesPage';
 import Auth from './auth/Auth';
 import { checkLocalStorageForAccessToken, logout } from './auth/state/auth.actions';
+import Notifications from './notifications/Notifications';
 
 const drawerWidth = 240;
 
@@ -264,6 +265,7 @@ class Dashboard extends React.Component<Props> {
               </Router>
             )}
           </main>
+          <Notifications />
         </div>
       </ApolloProvider>
     );

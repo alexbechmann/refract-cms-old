@@ -2,6 +2,7 @@ import React from 'react';
 import { Switch, Route, BrowserRouter, Link, RouteComponentProps } from 'react-router-dom';
 import { Dashboard, createDashboard } from '@refract-cms/dashboard';
 import config from '../refract-cms/refract.config';
+import 'typeface-roboto';
 
 const App = () => (
   <div>

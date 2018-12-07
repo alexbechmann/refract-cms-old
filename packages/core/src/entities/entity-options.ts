@@ -5,5 +5,7 @@ export interface EntityOptions<T = {}> {
   displayName?: string;
   maxOne?: boolean;
   instanceDisplayName?: (item: T) => string;
+  instanceImageUrl?: (item: T) => string;
   icon?: React.ComponentType<SvgIconProps>;
+
 }

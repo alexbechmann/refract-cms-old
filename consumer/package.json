@@ -6,10 +6,10 @@
   "sideEffects": false,
   "scripts": {
     "build": "npm-run-all client:build server:build",
-    "start:server": "nodemon ./dist/server.js",
-    "start": "npm-run-all -p client:start start:server docker:start",
+    "start": "npm-run-all -p client:start server:start server:watch docker:start",
     "server:watch": "webpack --config webpack.server.config.js -w",
     "server:build": "webpack --config webpack.server.config.js",
+    "server:start": "nodemon ./dist/server.js",
     "client:start": "webpack-dev-server --config webpack.client.config.js",
     "client:build": "webpack --config webpack.client.config.js",
     "docker:start": "docker-compose up"

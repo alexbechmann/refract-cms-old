@@ -38,6 +38,7 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
     alias: 'newsArticle',
     displayName: 'News Article',
     instanceDisplayName: newsArticle => newsArticle.title,
+    instanceImageUrl: newsArticle => (newsArticle.image ? newsArticle.image.imageUrl : undefined),
     icon: DescriptionIcon
   },
   properties: {

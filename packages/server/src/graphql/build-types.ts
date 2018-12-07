@@ -88,7 +88,7 @@ function buildFields(type: 'type' | 'input', baseName: string, propertyTypes: { 
       }
       default: {
         acc[propertyKey] = {
-          type: graphRefractTypeMap[propertyType.alias] || 'nothing'
+          type: graphRefractTypeMap[propertyType.alias]
         };
         break;
       }

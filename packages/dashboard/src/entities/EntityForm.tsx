@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { EntitySchema, graphqlQueryHelper, Entity } from '@refract-cms/core';
 import RenderEditor from './RenderEditor';
 import { navigate } from '@reach/router';
@@ -25,6 +25,7 @@ import ApolloClient from 'apollo-client';
 import gql from 'graphql-tag';
 import Page from '../pages/Page';
 import * as Icons from '@material-ui/icons';
+import { addNotification } from '../notifications/state/notification.actions';
 
 interface State {
   updateValues: any;
@@ -46,6 +47,9 @@ const styles = (theme: Theme) =>
     toolbar: {
       alignItems: 'center',
       justifyContent: 'space-between'
+    },
+    root: {
+      paddingBottom: 70
     }
   });
 
@@ -53,7 +57,8 @@ interface Props
   extends EntityFormProps,
     WithStyles<typeof styles>,
     ReturnType<typeof mapStateToProps>,
-    WithApolloClient<EntityFormProps> {}
+    WithApolloClient<EntityFormProps>,
+    MapDispatchToProps {}
 
 class EntityForm extends Component<Props, State> {
   constructor(props: Props) {
@@ -103,60 +108,66 @@ class EntityForm extends Component<Props, State> {
     return this.state.loading ? (
       <LinearProgress />
     ) : (
-      <Page title={schema.options.displayName || schema.options.alias}>
-        <Grid justify="center" container>
-          <Grid item xs={12} sm={12} md={10} lg={8} xl={7}>
-            <div className={classes.card}>
-              {Object.keys(schema.properties).map((propertyKey: string, index: number) => {
-                const propertyOptions = schema.properties[propertyKey];
-                return (
-                  <div key={index} className={classes.propertyEditor}>
-                    <Grid container spacing={16}>
-                      <Grid item xs={12} sm={12} md={3} lg={3} xl={3}>
-                        <Typography variant="subheading" gutterBottom>
-                          {propertyOptions.displayName || propertyKey}
-                        </Typography>
+      <div className={classes.root}>
+        <Page title={schema.options.displayName || schema.options.alias}>
+          <Grid justify="center" container>
+            <Grid item xs={12} sm={12} md={10} lg={8} xl={7}>
+              <div className={classes.card}>
+                {Object.keys(schema.properties).map((propertyKey: string, index: number) => {
+                  const propertyOptions = schema.properties[propertyKey];
+                  return (
+                    <div key={index} className={classes.propertyEditor}>
+                      <Grid container spacing={16}>
+                        <Grid item xs={12} sm={12} md={3} lg={3} xl={3}>
+                          <Typography variant="subheading" gutterBottom>
+                            {propertyOptions.displayName || propertyKey}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={9} lg={9} xl={9}>
+                          <RenderEditor
+                            setValue={value => {
+                              this.setState({
+                                updateValues: {
+                                  ...this.state.updateValues,
+                                  [propertyKey]: value
+                                }
+                              });
+                            }}
+                            value={this.state.updateValues[propertyKey]}
+                            propertyKey={propertyKey}
+                            propertyOptions={propertyOptions}
+                          />
+                        </Grid>
                       </Grid>
-                      <Grid item xs={12} sm={12} md={9} lg={9} xl={9}>
-                        <RenderEditor
-                          setValue={value => {
-                            this.setState({
-                              updateValues: {
-                                ...this.state.updateValues,
-                                [propertyKey]: value
-                              }
-                            });
-                          }}
-                          value={this.state.updateValues[propertyKey]}
-                          propertyKey={propertyKey}
-                          propertyOptions={propertyOptions}
-                        />
-                      </Grid>
-                    </Grid>
-                  </div>
-                );
-              })}
+                    </div>
+                  );
+                })}
 
-              <AppBar position="fixed" color="default" className={classes.appBar}>
-                <Toolbar className={classes.toolbar}>
-                  <div>asdf</div>
-                  <div>
-                    <IconButton onClick={this.back}>
-                      <Icons.ArrowBack />
-                    </IconButton>
-                    <IconButton onClick={this.delete}>
-                      <Icons.Delete />
-                    </IconButton>
-                    <IconButton color="primary" onClick={this.save}>
-                      <Icons.Save />
-                    </IconButton>
-                  </div>
-                </Toolbar>
-              </AppBar>
-            </div>
+                <AppBar position="fixed" color="default" className={classes.appBar}>
+                  <Toolbar className={classes.toolbar}>
+                    <div />
+                    <div>
+                      {!this.props.schema.options.maxOne && (
+                        <Fragment>
+                          <IconButton onClick={this.back}>
+                            <Icons.ArrowBack />
+                          </IconButton>
+                          <IconButton onClick={this.delete}>
+                            <Icons.Delete />
+                          </IconButton>
+                        </Fragment>
+                      )}
+                      <IconButton color="primary" onClick={this.save}>
+                        <Icons.Save />
+                      </IconButton>
+                    </div>
+                  </Toolbar>
+                </AppBar>
+              </div>
+            </Grid>
           </Grid>
-        </Grid>
-      </Page>
+        </Page>
+      </div>
     );
   }
 
@@ -164,6 +175,7 @@ class EntityForm extends Component<Props, State> {
     this.props.saveEntity(this.state.updateValues).then(() => {
       this.props.client.resetStore();
       this.back();
+      this.props.addNotification('Successfully saved!');
     });
   }
 
@@ -180,6 +192,7 @@ class EntityForm extends Component<Props, State> {
         .then(() => {
           client.resetStore();
           this.back();
+          this.props.addNotification('Successfully deleted!');
         });
     }
   }
@@ -203,6 +216,17 @@ function mapStateToProps(state: AppState, ownProps: EntityFormProps) {
   };
 }
 
-export default combineContainers(withApollo, connect(mapStateToProps), withStyles(styles))(
-  EntityForm
-) as React.ComponentType<EntityFormProps>;
+const mapDispatchToProps = {
+  addNotification
+};
+
+type MapDispatchToProps = typeof mapDispatchToProps;
+
+export default combineContainers(
+  withApollo,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
+  withStyles(styles)
+)(EntityForm) as React.ComponentType<EntityFormProps>;
