@@ -94,11 +94,64 @@ const ImagePickerEditor = withStyles(styles)(
       this.updateCrop(cropName)({ zoom });
     };
 
-    render() {
+    renderHasValueUI() {
       const { cropDefinitions, value, setValue, classes } = this.props;
-      if (!value) {
-        return (
+      return (
+        <div>
+          <Avatar src={value!.imageUrl} className={classes.imagePreview} />
+          <Grid container spacing={16}>
+            {Object.keys(cropDefinitions).map(cropKey => {
+              const cropDefinition = cropDefinitions[cropKey];
+              return (
+                <Grid item xs={12} sm={6} md={4} key={cropKey}>
+                  <Typography gutterBottom variant="caption">
+                    {cropKey}
+                  </Typography>
+                  <ButtonBase
+                    onClick={() => {
+                      this.setState({
+                        activeCropName: cropKey
+                      });
+                    }}
+                  >
+                    <img
+                      style={{ width: '100%' }}
+                      src={fileService.buildImageUrl(this.props.value!, this.props.value!.crops[cropKey])}
+                    />
+                  </ButtonBase>
+                  <Dialog open={cropKey === this.state.activeCropName} fullScreen>
+                    <DialogContent>
+                      <div className={classNames('crop-container', classes.cropContainer)}>
+                        <Cropper
+                          image={value!.imageUrl}
+                          crop={value!.crops[cropKey].crop}
+                          zoom={value!.crops[cropKey].zoom}
+                          aspect={cropDefinition.aspectRatio}
+                          onCropChange={this.onCropChange(cropKey)}
+                          onCropComplete={this.onCropComplete(cropKey)}
+                          onZoomChange={this.onZoomChange(cropKey)}
+                        />
+                      </div>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button
+                        onClick={() => {
+                          this.setState({
+                            activeCropName: null
+                          });
+                        }}
+                      >
+                        Done
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </Grid>
+              );
+            })}
+          </Grid>
+          <br />
           <div>
+            <Button onClick={() => setValue(undefined)}>Remove picture</Button>
             <Button
               onClick={() =>
                 this.setState({
@@ -106,115 +159,71 @@ const ImagePickerEditor = withStyles(styles)(
                 })
               }
             >
-              Select an image
+              Change picture
             </Button>
           </div>
-        );
-      } else {
-        return (
-          <div>
-            <Avatar src={value.imageUrl} className={classes.imagePreview} />
-            <Grid container spacing={16}>
-              {Object.keys(cropDefinitions).map(cropKey => {
-                const cropDefinition = cropDefinitions[cropKey];
-                return (
-                  <Grid item xs={12} sm={6} md={4} key={cropKey}>
-                    <Typography gutterBottom variant="caption">
-                      {cropKey}
-                    </Typography>
-                    <ButtonBase
-                      onClick={() => {
-                        this.setState({
-                          activeCropName: cropKey
-                        });
-                      }}
-                    >
-                      <img
-                        style={{ width: '100%' }}
-                        src={fileService.buildImageUrl(this.props.value!, this.props.value!.crops[cropKey])}
-                      />
-                    </ButtonBase>
-                    <Dialog open={cropKey === this.state.activeCropName} fullScreen>
-                      <DialogContent>
-                        <div className={classNames('crop-container', classes.cropContainer)}>
-                          <Cropper
-                            image={value.imageUrl}
-                            crop={value.crops[cropKey].crop}
-                            zoom={value.crops[cropKey].zoom}
-                            aspect={cropDefinition.aspectRatio}
-                            onCropChange={this.onCropChange(cropKey)}
-                            onCropComplete={this.onCropComplete(cropKey)}
-                            onZoomChange={this.onZoomChange(cropKey)}
-                          />
-                        </div>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button
-                          onClick={() => {
-                            this.setState({
-                              activeCropName: null
-                            });
-                          }}
-                        >
-                          Done
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-                  </Grid>
-                );
-              })}
-            </Grid>
-            <br />
-            <div>
-              <Button onClick={() => setValue(undefined)}>Remove picture</Button>
+        </div>
+      );
+    }
+
+    renderHasNoValueUI() {
+      return (
+        <div>
+          <Button
+            onClick={() =>
+              this.setState({
+                selectFileDialogOpen: true
+              })
+            }
+          >
+            Select an image
+          </Button>
+        </div>
+      );
+    }
+
+    render() {
+      const { cropDefinitions, value, setValue, classes } = this.props;
+      return (
+        <div>
+          {value ? this.renderHasValueUI() : this.renderHasNoValueUI()}
+          <Dialog open={this.state.selectFileDialogOpen}>
+            <DialogTitle>Select an image</DialogTitle>
+            <DialogContent>
+              <FileList
+                onSelectFile={file => {
+                  const newValue = {
+                    imageId: file._id,
+                    imageUrl: file.url,
+                    crops: Object.keys(cropDefinitions).reduce((acc, cropKey) => {
+                      acc[cropKey] = {
+                        crop: { x: 0, y: 0 },
+                        zoom: 1
+                      };
+                      return acc;
+                    }, {})
+                  };
+                  setValue(newValue);
+                  this.setState({
+                    selectFileDialogOpen: false
+                  });
+                }}
+              />
+            </DialogContent>
+            <DialogActions>
               <Button
                 onClick={() =>
                   this.setState({
-                    selectFileDialogOpen: true
+                    selectFileDialogOpen: false
                   })
                 }
               >
-                Change picture
+                Done
               </Button>
-            </div>
-            <Dialog open={this.state.selectFileDialogOpen}>
-              <DialogTitle>Select an image</DialogTitle>
-              <DialogContent>
-                <FileList
-                  onSelectFile={file => {
-                    const newValue = {
-                      imageId: file._id,
-                      imageUrl: file.url,
-                      crops: Object.keys(cropDefinitions).reduce((acc, cropKey) => {
-                        acc[cropKey] = {
-                          crop: { x: 0, y: 0 },
-                          zoom: 1
-                        };
-                        return acc;
-                      }, {})
-                    };
-                    setValue(newValue);
-                    this.setState({
-                      selectFileDialogOpen: false
-                    });
-                  }}
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  onClick={() =>
-                    this.setState({
-                      selectFileDialogOpen: false
-                    })
-                  }
-                >
-                  Done
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </div>
-        );
-      }
+            </DialogActions>
+          </Dialog>
+        </div>
+      );
     }
   }
 );
