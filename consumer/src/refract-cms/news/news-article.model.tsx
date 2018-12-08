@@ -7,8 +7,7 @@ import {
   createListEditor,
   RefractTypes,
   createImagePickerEditor,
-  ImageRef,
-  cropShape
+  ImageRef
 } from '@refract-cms/core';
 import { NewsArticle } from './news-article.model';
 import DescriptionIcon from '@material-ui/icons/Description';
@@ -120,13 +119,9 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
           }
         }
       }),
-      type: RefractTypes.shape({
-        imageId: RefractTypes.string,
-        imageUrl: RefractTypes.string,
-        crops: RefractTypes.shape({
-          profile: cropShape,
-          large: cropShape
-        })
+      type: RefractTypes.imageShape({
+        profile: RefractTypes.cropShape,
+        large: RefractTypes.cropShape
       })
     }
   }

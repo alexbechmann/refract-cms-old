@@ -1,4 +1,5 @@
 import { Crop } from '../files/crop.model';
+import { ImageRef, Crops } from '../files/image-ref.model';
 
 export interface PropertyDescription<T, TAlias extends Alias, TMeta = any> {
   alias: TAlias;
@@ -23,28 +24,39 @@ export function shape<T>(type: ShapeArgs<T>) {
   } as PropertyDescription<T, 'Shape', ShapeArgs<T>>;
 }
 
+const cropShape = shape<Crop>({
+  crop: shape({
+    x: number,
+    y: number
+  }),
+  zoom: number,
+  pixelCrop: shape({
+    height: number,
+    width: number,
+    x: number,
+    y: number
+  }),
+  url: string
+});
+
+function imageShape<TCrops extends string, TImageRef extends ImageRef<TCrops>>(crops: ShapeArgs<Crops<TCrops>>) {
+  return RefractTypes.shape({
+    imageId: RefractTypes.string,
+    imageUrl: RefractTypes.string,
+    crops: shape(crops)
+  });
+}
+
 export const RefractTypes = {
   arrayOf,
   bool,
   number,
   string,
   date,
-  shape
+  shape,
+  imageShape,
+  cropShape
 };
-
-export const cropShape = RefractTypes.shape<Crop>({
-  crop: RefractTypes.shape({
-    x: RefractTypes.number,
-    y: RefractTypes.number
-  }),
-  zoom: RefractTypes.number,
-  pixelCrop: RefractTypes.shape({
-    height: RefractTypes.number,
-    width: RefractTypes.number,
-    x: RefractTypes.number,
-    y: RefractTypes.number
-  })
-});
 
 export type AliasType<T> = T extends string
   ? 'String'

@@ -15,7 +15,12 @@ class AuthService {
   }
 
   verifyAccessToken(token: string, { auth }: ServerConfig) {
-    return jwt.verify(token, auth.jwt.secret) as AuthToken;
+    try {
+      return jwt.verify(token, auth.jwt.secret) as AuthToken;
+    } catch (error) {
+      console.log(error);
+      return { nameid: null };
+    }
   }
 
   findUserIdWithCredentials(username: string, password: string, { auth }: ServerConfig): string | null {
