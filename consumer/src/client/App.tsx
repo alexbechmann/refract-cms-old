@@ -1,18 +1,25 @@
 import React from 'react';
-import { Switch, Route, BrowserRouter, Link, RouteComponentProps } from 'react-router-dom';
-import { Dashboard, createDashboard } from '@refract-cms/dashboard';
-import config from '../refract-cms/refract.config';
-import 'typeface-roboto';
+import { Switch, Route, Link } from 'react-router-dom';
+import { apolloClient } from './graphql/apollo-client';
+import { ApolloProvider } from 'react-apollo';
+import Home from './home/Home';
+import News from './news/News';
+import Products from './products/Products';
+import Menu from './menu/Menu';
+import { CssBaseline } from '@material-ui/core';
 
 const App = () => (
-  <div>
-    <BrowserRouter>
+  <ApolloProvider client={apolloClient}>
+    <div>
+      <CssBaseline />
+      <Menu />
       <Switch>
-        <Route exact path="/" component={() => <Link to="/admin">Dashboard</Link>} />
-        <Route path="/admin" component={createDashboard({ config, serverUrl: '/cms' })} />
+        <Route exact path="/" component={Home} />
+        <Route path="/news" component={News} />
+        <Route path="/products" component={Products} />
       </Switch>
-    </BrowserRouter>
-  </div>
+    </div>
+  </ApolloProvider>
 );
 
 export default App;

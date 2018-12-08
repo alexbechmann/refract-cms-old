@@ -2,7 +2,7 @@ import * as express from 'express';
 import graphqlHTTP from 'express-graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import { Dashboard } from '@refract-cms/dashboard';
-import { Config, graphqlQueryHelper, File } from '@refract-cms/core';
+import { Config, graphqlQueryHelper, File, Crop } from '@refract-cms/core';
 import { merge } from 'lodash';
 import { printType } from 'graphql';
 import { MongoClient, Db, ObjectId } from 'mongodb';
@@ -230,9 +230,10 @@ const refractCmsHandler = ({
 
   router.get('/files/:id', async (req, res) => {
     const { id } = req.params;
+    const crop = req.query;
     const entity = await db.collection('files').findOne({ _id: new ObjectId(id) });
     const img = await jimp.read(entity.path);
-    // img.cover(720, 480);
+    img.crop(parseInt(crop.x), parseInt(crop.y), parseInt(crop.width), parseInt(crop.height));
     const imgBuffer = await img.getBufferAsync(entity.mimetype);
     res.writeHead(200, { 'Content-Type': entity.mimetype });
     res.end(imgBuffer, 'binary');
