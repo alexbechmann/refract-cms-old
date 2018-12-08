@@ -233,7 +233,11 @@ const refractCmsHandler = ({
     const crop = req.query;
     const entity = await db.collection('files').findOne({ _id: new ObjectId(id) });
     const img = await jimp.read(entity.path);
-    img.crop(parseInt(crop.x), parseInt(crop.y), parseInt(crop.width), parseInt(crop.height));
+
+    if (crop.x && crop.y && crop.width && crop.height) {
+      img.crop(parseInt(crop.x), parseInt(crop.y), parseInt(crop.width), parseInt(crop.height));
+    }
+
     const imgBuffer = await img.getBufferAsync(entity.mimetype);
     res.writeHead(200, { 'Content-Type': entity.mimetype });
     res.end(imgBuffer, 'binary');
