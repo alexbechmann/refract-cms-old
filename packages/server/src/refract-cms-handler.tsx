@@ -66,6 +66,10 @@ const refractCmsHandler = ({
       email: String
       username: String
      }
+     enum OrderByDirection {
+       ASC
+       DESC
+     }
   `;
 
   const baseResolvers = {
@@ -124,7 +128,9 @@ const refractCmsHandler = ({
 
     const queryType = `
       extend type Query {
-        ${schema.options.alias}GetAll: [${schemaName}]
+        ${
+          schema.options.alias
+        }GetAll(filter: Input${schemaName}, skip: Int, limit: Int, orderBy: OrderBy${schemaName}): [${schemaName}]
         ${schema.options.alias}GetById(id: String!): ${schemaName}
         ${maxOneQuery}
       }
@@ -143,11 +149,26 @@ const refractCmsHandler = ({
             [`${schema.options.alias}GetById`]: (obj: any, { id }: { id: string }, context: any) => {
               return db.collection(schema.options.alias).findOne({ _id: new ObjectId(id) });
             },
-            [`${schema.options.alias}GetAll`]: (obj: any, {  }: any, context: any) => {
-              return db
+            [`${schema.options.alias}GetAll`]: (
+              obj: any,
+              { filter = {}, skip = 0, limit = 999, orderBy }: any,
+              context: any
+            ) => {
+              console.log(filter, skip, limit, orderBy);
+              let query = db
                 .collection(schema.options.alias)
-                .find({})
-                .toArray();
+                .find(filter)
+                .skip(skip)
+                .limit(limit);
+
+              if (orderBy) {
+                query = query.sort(
+                  orderBy.field.replace('_', '.'),
+                  orderBy.direction ? (orderBy.direction === 'ASC' ? 1 : -1) : 1
+                );
+              }
+
+              return query.toArray();
             }
           },
           Mutation: {

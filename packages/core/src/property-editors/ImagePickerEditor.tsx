@@ -43,8 +43,8 @@ const styles = (theme: Theme) =>
       position: 'relative'
     },
     imagePreview: {
-      width: 60,
-      height: 60,
+      width: 30,
+      height: 30,
       marginBottom: theme.spacing.unit * 2
     }
   });

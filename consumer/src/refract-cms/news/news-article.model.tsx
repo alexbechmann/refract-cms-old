@@ -7,11 +7,12 @@ import {
   createListEditor,
   RefractTypes,
   createImagePickerEditor,
-  ImageRef
+  ImageRef,
+  PropertyEditorProps
 } from '@refract-cms/core';
 import { NewsArticle } from './news-article.model';
 import DescriptionIcon from '@material-ui/icons/Description';
-import { Button } from '@material-ui/core';
+import { Button, Checkbox } from '@material-ui/core';
 
 export interface NewsArticle extends Entity {
   title: string;
@@ -30,6 +31,7 @@ export interface NewsArticle extends Entity {
       };
     };
   };
+  primary: boolean;
 }
 
 export const NewsArticleSchema = defineEntity<NewsArticle>({
@@ -123,6 +125,13 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
         profile: RefractTypes.cropShape,
         large: RefractTypes.cropShape
       })
+    },
+    primary: {
+      displayName: 'Primary',
+      editorComponent: (props: PropertyEditorProps<boolean>) => (
+        <Checkbox checked={props.value} onChange={(e, checked) => props.setValue(checked)} />
+      ),
+      type: RefractTypes.bool
     }
   }
 });
