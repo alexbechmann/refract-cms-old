@@ -14,4 +14,6 @@
 export interface Entity {
   _id: string;
   // [key: string]: AllowedType;
+  updateDate: Date;
+  createDate: Date;
 }

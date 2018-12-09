@@ -25,7 +25,10 @@ export const ProductSchema = defineEntity<Product>({
   options: {
     alias: 'product',
     displayName: 'Product',
-    instanceDisplayName: product => `${product.title} (${product.productType})`,
+    instanceDisplayProps: product => ({
+      primaryText: `${product.title}`,
+      secondaryText: product.productType
+    }),
     icon: ScatterPlotIcon
   },
   properties: {

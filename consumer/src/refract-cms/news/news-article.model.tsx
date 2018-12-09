@@ -13,6 +13,7 @@ import {
 import { NewsArticle } from './news-article.model';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { Button, Checkbox } from '@material-ui/core';
+import moment from 'moment';
 
 export interface NewsArticle extends Entity {
   title: string;
@@ -38,8 +39,11 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
   options: {
     alias: 'newsArticle',
     displayName: 'News Article',
-    instanceDisplayName: newsArticle => newsArticle.title,
-    instanceImageUrl: newsArticle => (newsArticle.image ? newsArticle.image.imageUrl : undefined),
+    instanceDisplayProps: newsArticle => ({
+      primaryText: newsArticle.title,
+      secondaryText: moment(newsArticle.articleDate).toLocaleString(),
+      imageUrl: newsArticle.image ? newsArticle.image.imageUrl : undefined
+    }),
     icon: DescriptionIcon
   },
   properties: {

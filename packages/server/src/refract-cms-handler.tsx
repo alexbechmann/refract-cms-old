@@ -154,7 +154,6 @@ const refractCmsHandler = ({
               { filter = {}, skip = 0, limit = 999, orderBy }: any,
               context: any
             ) => {
-              console.log(filter, skip, limit, orderBy);
               let query = db
                 .collection(schema.options.alias)
                 .find(filter)
@@ -174,9 +173,14 @@ const refractCmsHandler = ({
           Mutation: {
             [`${schema.options.alias}Create`]: (_, { item }, context) => {
               console.log(item);
+              const now = new Date().toISOString();
               return db
                 .collection(schema.options.alias)
-                .insert(item)
+                .insert({
+                  ...item,
+                  createDate: now,
+                  updateDate: now
+                })
                 .then(result => {
                   console.log(item, result);
                   return item;
@@ -188,7 +192,10 @@ const refractCmsHandler = ({
                 .updateOne(
                   { _id: new ObjectId(id) },
                   {
-                    $set: item
+                    $set: {
+                      ...item,
+                      updateDate: new Date().toISOString()
+                    }
                   }
                 )
                 .then(result => {

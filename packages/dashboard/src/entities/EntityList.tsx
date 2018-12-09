@@ -18,6 +18,7 @@ import { connect } from 'react-redux';
 import { AppState } from '../state/app.state';
 import { combineContainers } from 'combine-containers';
 import Page from '../pages/Page';
+import { merge, pickBy, isUndefined, negate } from 'lodash';
 
 export interface EntitiesListProps extends RouteComponentProps<{ alias: string }> {}
 
@@ -49,31 +50,48 @@ class EntitiesList extends Component<Props> {
                       Add new
                     </Button>
                     <List>
-                      {data.items.map((item: Entity) => (
-                        <ListItem
-                          key={item._id}
-                          component={props => (
-                            <Link
-                              to={routes.entity.edit.createUrl({ id: item._id, schema: entitySchema })}
-                              {...props}
+                      {data.items.map((item: Entity) => {
+                        const defaultInstanceDisplayProps: {
+                          primaryText: string;
+                          secondaryText: string | undefined;
+                          imageUrl: string | undefined;
+                        } = {
+                          primaryText: item._id,
+                          secondaryText: undefined,
+                          imageUrl: undefined
+                        };
+                        let overrideInstanceDisplayProps;
+                        try {
+                          overrideInstanceDisplayProps = pickBy(
+                            entitySchema.options.instanceDisplayProps!(item),
+                            negate(a => !Boolean(a))
+                          );
+                        } catch (error) {}
+
+                        const instanceDisplayProps = merge(defaultInstanceDisplayProps, overrideInstanceDisplayProps);
+                        return (
+                          <ListItem
+                            key={item._id}
+                            component={props => (
+                              <Link
+                                to={routes.entity.edit.createUrl({ id: item._id, schema: entitySchema })}
+                                {...props}
+                              />
+                            )}
+                            button
+                          >
+                            {instanceDisplayProps.imageUrl && (
+                              <ListItemAvatar>
+                                <Avatar src={instanceDisplayProps.imageUrl} />
+                              </ListItemAvatar>
+                            )}
+                            <ListItemText
+                              primary={instanceDisplayProps.primaryText}
+                              secondary={instanceDisplayProps.secondaryText}
                             />
-                          )}
-                          button
-                        >
-                          {entitySchema.options.instanceImageUrl && (
-                            <ListItemAvatar>
-                              <Avatar src={entitySchema.options.instanceImageUrl(item)} />
-                            </ListItemAvatar>
-                          )}
-                          <ListItemText
-                            primary={
-                              entitySchema.options.instanceDisplayName
-                                ? entitySchema.options.instanceDisplayName(item)
-                                : item._id
-                            }
-                          />
-                        </ListItem>
-                      ))}
+                          </ListItem>
+                        );
+                      })}
                     </List>
                   </div>
                 ) : (

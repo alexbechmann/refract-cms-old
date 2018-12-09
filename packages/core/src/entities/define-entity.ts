@@ -4,7 +4,7 @@ import { EntityOptions } from './entity-options';
 import { Omit } from '@material-ui/core';
 import { Entity } from './entity.model';
 
-type PropertiesRecord<T> = Omit<{ [P in keyof T]: PropertyOptions<T[P]> }, '_id'>;
+type PropertiesRecord<T> = Omit<{ [P in keyof T]: PropertyOptions<T[P]> }, '_id' | 'createDate' | 'updateDate'>;
 
 const defineEntity = <T extends Entity>({
   options,

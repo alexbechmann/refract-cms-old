@@ -63,6 +63,12 @@ export function buildTypes(schema: EntitySchema) {
         _id: {
           type: GraphQLString
         },
+        createDate: {
+          type: GraphQLString
+        },
+        updateDate: {
+          type: GraphQLString
+        },
         ...fields
       })
     }),
