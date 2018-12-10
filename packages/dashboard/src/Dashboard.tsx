@@ -73,12 +73,12 @@ const styles = (theme: Theme) =>
       })
     },
     appBarShift: {
-      marginLeft: drawerWidth,
-      width: `calc(100% - ${drawerWidth}px)`,
-      transition: theme.transitions.create(['width', 'margin'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen
-      })
+      // marginLeft: drawerWidth,
+      // width: `calc(100% - ${drawerWidth}px)`,
+      // transition: theme.transitions.create(['width', 'margin'], {
+      //   easing: theme.transitions.easing.sharp,
+      //   duration: theme.transitions.duration.enteringScreen
+      // })
     },
     menuButton: {
       marginLeft: 12,
@@ -178,13 +178,13 @@ class Dashboard extends React.Component<Props> {
                 <MenuIcon />
               </IconButton>
               <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                Refract-CMS Dashboard
+                Content Dashboard
               </Typography>
-              <IconButton color="inherit">
+              {/* <IconButton color="inherit">
                 <Badge badgeContent={4} color="secondary">
                   <NotificationsIcon />
                 </Badge>
-              </IconButton>
+              </IconButton> */}
             </Toolbar>
           </AppBar>
           <Drawer

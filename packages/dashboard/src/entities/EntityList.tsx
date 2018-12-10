@@ -9,7 +9,8 @@ import {
   Button,
   ListSubheader,
   ListItemAvatar,
-  Avatar
+  Avatar,
+  IconButton
 } from '@material-ui/core';
 import { EntitySchema, Entity } from '@refract-cms/core';
 import { RouteComponentProps, Link, Redirect } from '@reach/router';
@@ -18,6 +19,8 @@ import { connect } from 'react-redux';
 import { AppState } from '../state/app.state';
 import { combineContainers } from 'combine-containers';
 import Page from '../pages/Page';
+import { merge, pickBy, isUndefined, negate } from 'lodash';
+import { FilterList, AddCircle } from '@material-ui/icons';
 
 export interface EntitiesListProps extends RouteComponentProps<{ alias: string }> {}
 
@@ -29,7 +32,31 @@ class EntitiesList extends Component<Props> {
     const entitySchema = schema.find(s => s.options.alias === this.props.alias)!;
     const query = graphqlQueryHelper.getAllQueryWithAllFields(entitySchema);
     return (
-      <Page title={entitySchema.options.displayName || entitySchema.options.alias}>
+      <Page
+        title={entitySchema.options.displayName || entitySchema.options.alias}
+        actionComponents={
+          !entitySchema.options.maxOne
+            ? [
+                // () => (
+                //   <IconButton>
+                //     <FilterList />
+                //   </IconButton>
+                // ),
+                () => (
+                  <Button
+                    variant="raised"
+                    color="primary"
+                    component={props => (
+                      <Link to={routes.entity.edit.createUrl({ id: 'new', schema: entitySchema })} {...props} />
+                    )}
+                  >
+                    Add new
+                  </Button>
+                )
+              ]
+            : undefined
+        }
+      >
         <Query query={query}>
           {({ loading, error, data }) => {
             if (loading) {
@@ -39,41 +66,54 @@ class EntitiesList extends Component<Props> {
               <div>
                 {!entitySchema.options.maxOne ? (
                   <div>
-                    <Button
-                      variant="raised"
-                      color="primary"
-                      component={props => (
-                        <Link to={routes.entity.edit.createUrl({ id: 'new', schema: entitySchema })} {...props} />
-                      )}
-                    >
-                      Add new
-                    </Button>
                     <List>
-                      {data.items.map((item: Entity) => (
-                        <ListItem
-                          key={item._id}
-                          component={props => (
-                            <Link
-                              to={routes.entity.edit.createUrl({ id: item._id, schema: entitySchema })}
-                              {...props}
-                            />
-                          )}
-                          button
-                        >
-                          {entitySchema.options.instanceImageUrl && (
+                      {data.items.map((item: Entity) => {
+                        const defaultInstanceDisplayProps: {
+                          primaryText: string;
+                          secondaryText: string | undefined;
+                          imageUrl: string | undefined;
+                        } = {
+                          primaryText: item._id,
+                          secondaryText: undefined,
+                          imageUrl: undefined
+                        };
+                        let overrideInstanceDisplayProps;
+                        try {
+                          overrideInstanceDisplayProps = pickBy(
+                            entitySchema.options.instanceDisplayProps!(item),
+                            negate(a => !Boolean(a))
+                          );
+                        } catch (error) {}
+
+                        const instanceDisplayProps = merge(defaultInstanceDisplayProps, overrideInstanceDisplayProps);
+                        return (
+                          <ListItem
+                            key={item._id}
+                            component={props => (
+                              <Link
+                                to={routes.entity.edit.createUrl({ id: item._id, schema: entitySchema })}
+                                {...props}
+                              />
+                            )}
+                            button
+                          >
                             <ListItemAvatar>
-                              <Avatar src={entitySchema.options.instanceImageUrl(item)} />
+                              <Avatar src={instanceDisplayProps.imageUrl}>
+                                {entitySchema.options.icon ? (
+                                  <entitySchema.options.icon />
+                                ) : (
+                                  entitySchema.options.alias[0].toUpperCase()
+                                )}
+                              </Avatar>
                             </ListItemAvatar>
-                          )}
-                          <ListItemText
-                            primary={
-                              entitySchema.options.instanceDisplayName
-                                ? entitySchema.options.instanceDisplayName(item)
-                                : item._id
-                            }
-                          />
-                        </ListItem>
-                      ))}
+                            <ListItemText
+                              inset
+                              primary={instanceDisplayProps.primaryText}
+                              secondary={instanceDisplayProps.secondaryText}
+                            />
+                          </ListItem>
+                        );
+                      })}
                     </List>
                   </div>
                 ) : (

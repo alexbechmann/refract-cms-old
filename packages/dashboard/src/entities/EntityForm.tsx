@@ -40,14 +40,6 @@ const styles = (theme: Theme) =>
     propertyEditor: {
       marginBottom: theme.spacing.unit * 4
     },
-    appBar: {
-      top: 'auto',
-      bottom: 0
-    },
-    toolbar: {
-      alignItems: 'center',
-      justifyContent: 'space-between'
-    },
     root: {
       paddingBottom: 70
     }
@@ -109,7 +101,26 @@ class EntityForm extends Component<Props, State> {
       <LinearProgress />
     ) : (
       <div className={classes.root}>
-        <Page title={schema.options.displayName || schema.options.alias}>
+        <Page
+          title={schema.options.displayName || schema.options.alias}
+          actionComponents={[
+            () => (
+              <IconButton onClick={this.back}>
+                <Icons.ArrowBack />
+              </IconButton>
+            ),
+            () => (
+              <IconButton onClick={this.delete}>
+                <Icons.Delete />
+              </IconButton>
+            ),
+            () => (
+              <Button color="primary" variant="raised" onClick={this.save}>
+                Save
+              </Button>
+            )
+          ]}
+        >
           <Grid justify="center" container>
             <Grid item xs={12} sm={12} md={10} lg={8} xl={7}>
               <div className={classes.card}>
@@ -142,24 +153,6 @@ class EntityForm extends Component<Props, State> {
                     </div>
                   );
                 })}
-
-                <AppBar position="fixed" color="default" className={classes.appBar}>
-                  <Toolbar className={classes.toolbar}>
-                    <div />
-                    <div>
-                      <IconButton onClick={this.back}>
-                        <Icons.ArrowBack />
-                      </IconButton>
-                      <IconButton onClick={this.delete}>
-                        <Icons.Delete />
-                      </IconButton>
-
-                      <IconButton color="primary" onClick={this.save}>
-                        <Icons.Save />
-                      </IconButton>
-                    </div>
-                  </Toolbar>
-                </AppBar>
               </div>
             </Grid>
           </Grid>
