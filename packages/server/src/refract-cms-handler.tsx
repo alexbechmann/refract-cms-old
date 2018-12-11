@@ -130,7 +130,7 @@ const refractCmsHandler = ({
       extend type Query {
         ${
           schema.options.alias
-        }GetAll(filter: Input${schemaName}, skip: Int, limit: Int, orderBy: OrderBy${schemaName}): [${schemaName}]
+        }GetAll(filter: Filter${schemaName}, skip: Int, limit: Int, orderBy: OrderBy${schemaName}): [${schemaName}]
         ${schema.options.alias}GetById(id: String!): ${schemaName}
         ${maxOneQuery}
       }
@@ -154,6 +154,7 @@ const refractCmsHandler = ({
               { filter = {}, skip = 0, limit = 999, orderBy }: any,
               context: any
             ) => {
+              console.log(filter);
               let query = db
                 .collection(schema.options.alias)
                 .find(filter)

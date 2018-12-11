@@ -33,11 +33,21 @@ export function buildTypes(schema: EntitySchema) {
   const fields = buildFields('type', schemaName, propertyTypes);
   const inputSchemaName = `Input${schemaName}`;
   const inputFields = buildFields('input', inputSchemaName, propertyTypes);
+
   const enumValues = buildEnumValues('', propertyTypes);
   shapes.push(
     new GraphQLEnumType({
       name: `Enum${schemaName}`,
       values: enumValues
+    })
+  );
+
+  const filterFields = buildFilterFields(`Filter${schemaName}`, propertyTypes);
+
+  shapes.push(
+    new GraphQLInputObjectType({
+      name: `Filter${schemaName}`,
+      fields: () => filterFields
     })
   );
 
@@ -95,7 +105,6 @@ function buildFields(
       case 'Shape': {
         const name = baseName + propertyKey;
         const fields = buildFields(type, name, propertyType.meta!);
-
         switch (type) {
           case 'type': {
             shapes.push(
@@ -106,7 +115,6 @@ function buildFields(
             );
             break;
           }
-
           case 'input': {
             shapes.push(
               new GraphQLInputObjectType({
@@ -118,7 +126,6 @@ function buildFields(
           default:
             break;
         }
-
         acc[propertyKey] = {
           type: name
         };
@@ -151,14 +158,12 @@ function buildEnumValues(baseName: string, propertyTypes: { [key: string]: Prope
         const fields = buildEnumValues(name, propertyType.meta!);
         Object.keys(fields).forEach(key => {
           const field = fields[key];
-          console.log(field.value, field);
           acc[field.value] = field;
         });
         break;
       }
       default: {
         const value = baseName + propertyKey;
-        // console.log('12' + value);
         acc[value] = {
           value
         };
@@ -168,6 +173,64 @@ function buildEnumValues(baseName: string, propertyTypes: { [key: string]: Prope
 
     return acc;
   }, {});
-  console.log(values);
+  return values;
+}
+
+function buildFilterFields(baseName: string, propertyTypes: { [key: string]: PropertyType<any> }) {
+  const values = Object.keys(propertyTypes).reduce((acc, propertyKey) => {
+    const propertyType = propertyTypes[propertyKey];
+    switch (propertyType.alias) {
+      case 'Shape': {
+        const name = baseName + propertyKey;
+        const fields = buildFilterFields(name, propertyType.meta!);
+        shapes.push(
+          new GraphQLInputObjectType({
+            name,
+            fields: () => fields
+          })
+        );
+        acc[propertyKey] = {
+          type: name
+        };
+        break;
+      }
+      case 'Array': {
+        const name = baseName + propertyKey;
+        shapes.push(
+          new GraphQLInputObjectType({
+            name,
+            fields: () => ({
+              contains: {
+                type: graphRefractTypeMap[propertyType.meta!]
+              }
+            })
+          })
+        );
+        acc[propertyKey] = {
+          type: name
+        };
+        break;
+      }
+      default: {
+        const name = baseName + propertyKey;
+        shapes.push(
+          new GraphQLInputObjectType({
+            name,
+            fields: () => ({
+              matches: {
+                type: graphRefractTypeMap[propertyType.alias]
+              }
+            })
+          })
+        );
+        acc[propertyKey] = {
+          type: name
+        };
+        break;
+      }
+    }
+
+    return acc;
+  }, {});
   return values;
 }
