@@ -27,6 +27,11 @@ steps:
   inputs:
     Arguments: 'install'
 
+- task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
+  displayName: Yarn install
+  inputs:
+    Arguments: 'test'
+
 - powershell: . 'packages/core/update-package-version.ps1' $(GitVersion.SemVer) 
   displayName: Update package version
 

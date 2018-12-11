@@ -2,15 +2,33 @@ import mocha from 'mocha';
 import chai from 'chai';
 import { buildTypes } from '../packages/server/src/graphql/build-types';
 import config from './config/refract.config';
+import { printType } from 'graphql';
 
 const expect = chai.expect;
 
-describe('build types', () => {
-  it('should create filters shape', () => {
-    const f = buildTypes(config.schema[0]);
-    buildTypes(config.schema[1]);
-    buildTypes(config.schema[2]);
-    // console.log(f)
-    expect(true).to.equal(false);
+mocha.describe('build types', () => {
+  mocha.it('should create filters shape', () => {
+    const types = buildTypes(config.schema[0]);
+    const productlocation = types.find(t => t.name === "Productlocation")
+
+    const expected = `
+type Productlocation {
+  latitude: Float
+  longitude: Float
+}
+    `
+
+    expect(printType(productlocation).trim()).to.equal(expected.trim());
+  });
+
+  mocha.it('should create filters shape', () => {
+    const types = buildTypes(config.schema[0]);
+    const productlocation = types.find(t => t.name === "FilterProductlocationlatitude")
+    const expected = `
+input FilterProductlocationlatitude {
+  matches: Float
+}
+    `;
+    expect(printType(productlocation).trim()).to.equal(expected.trim());
   });
 });

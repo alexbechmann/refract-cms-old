@@ -19,7 +19,7 @@
     "dashboard:build": "cd ./packages/dashboard && yarn run build",
     "server:start": "cd ./packages/server && yarn run start",
     "server:build": "cd ./packages/server && yarn run build",
-    "test": "ts-mocha --paths -p ./__tests__/tsconfig.json **/*.test*.ts",
+    "test": "ts-mocha --paths -p ./__tests__/tsconfig.json __tests__/*.test*.ts",
     "test:watch": "yarn run test --watch --watch-extensions ts"
   },
   "author": "",
@@ -27,6 +27,7 @@
   "dependencies": {},
   "devDependencies": {
     "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.5",
     "chai": "4.1.2",
     "mocha": "^5.2.0",
     "npm-run-all": "4.1.5",
