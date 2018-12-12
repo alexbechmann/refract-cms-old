@@ -179,7 +179,7 @@ class EntitiesList extends Component<Props> {
               const propertyOptions = entitySchema.properties[propertyKey];
               return (
                 <RenderEditor
-                key={index}
+                  key={index}
                   propertyKey={propertyKey}
                   propertyOptions={propertyOptions}
                   value={undefined}

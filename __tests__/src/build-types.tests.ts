@@ -1,6 +1,6 @@
 import mocha from 'mocha';
 import chai from 'chai';
-import { buildTypes } from '../packages/server/src/graphql/build-types';
+import { buildTypes } from '../../packages/server/src/graphql/build-types';
 import config from './config/refract.config';
 import { printType } from 'graphql';
 

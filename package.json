@@ -19,7 +19,7 @@
     "dashboard:build": "cd ./packages/dashboard && yarn run build",
     "server:start": "cd ./packages/server && yarn run start",
     "server:build": "cd ./packages/server && yarn run build",
-    "test": "ts-mocha --paths -p ./__tests__/tsconfig.json __tests__/*.test*.ts",
+    "test": "tsc -p __tests__ && ts-mocha --paths -p ./__tests__/tsconfig.json __tests__/*.test*.ts",
     "test:watch": "yarn run test --watch --watch-extensions ts"
   },
   "author": "",

@@ -132,7 +132,7 @@ function buildFields(
         break;
       }
       case 'Array': {
-        const type = `[${graphRefractTypeMap[propertyType.meta!]}]`;
+        const type = `[${graphRefractTypeMap[propertyType.meta!.alias]}]`;
         acc[propertyKey] = {
           type
         };
@@ -201,7 +201,7 @@ function buildFilterFields(baseName: string, propertyTypes: { [key: string]: Pro
             name,
             fields: () => ({
               contains: {
-                type: graphRefractTypeMap[propertyType.meta!]
+                type: graphRefractTypeMap[propertyType.meta!.alias]
               }
             })
           })

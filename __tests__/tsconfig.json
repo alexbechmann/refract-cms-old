@@ -18,10 +18,9 @@
     "skipDefaultLibCheck": true,
     "outDir": "dist",
     "strict": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "noEmit": true
   },
-  "files": [
-  ],
   "exclude": [
     "**/node_modules"
   ],

@@ -8,8 +8,10 @@ export interface PropertyDescription<T, TAlias extends Alias, TMeta = any> {
 
 export type Alias = 'String' | 'Number' | 'Array' | 'Boolean' | 'Date' | 'Shape';
 
-export const arrayOf = <T extends K[], K>(p: PropertyDescription<K, AliasType<K>, PropertyType<K>>) =>
-  ({ alias: 'Array', meta: p.alias } as PropertyDescription<T, 'Array', AliasType<K>>);
+type GetElementType<T extends any[]> = T extends (infer U)[] ? U : never;
+
+export const arrayOf = <T extends U[], U>(p: PropertyType<U>) =>
+  ({ alias: 'Array', meta: p } as PropertyDescription<T, 'Array', PropertyType<U>>);
 export const bool = { alias: 'Boolean' } as PropertyDescription<boolean, 'Boolean'>;
 export const number = { alias: 'Number' } as PropertyDescription<number, 'Number'>;
 export const date = { alias: 'Date' } as PropertyDescription<Date, 'Date'>;
@@ -39,8 +41,8 @@ const cropShape = shape<Crop>({
   url: string
 });
 
-function imageShape<TCrops extends string, TImageRef extends ImageRef<TCrops>>(crops: ShapeArgs<Crops<TCrops>>) {
-  return RefractTypes.shape({
+function imageShape<TCrops extends string>(crops: ShapeArgs<Crops<TCrops>>) {
+  return RefractTypes.shape<ImageRef<TCrops>>({
     imageId: RefractTypes.string,
     imageUrl: RefractTypes.string,
     crops: shape(crops)
@@ -68,7 +70,16 @@ export type AliasType<T> = T extends string
   ? 'Date'
   : 'Shape';
 
-type GetElementType<T extends any[]> = T extends (infer U)[] ? U : never;
+// Workaround to avoid circular type ref
+export type PropertyTypeSimple<T> = T extends string
+  ? PropertyDescription<string, 'String'>
+  : T extends number
+  ? PropertyDescription<number, 'Number'>
+  : T extends boolean
+  ? PropertyDescription<boolean, 'Boolean'>
+  : T extends Date
+  ? PropertyDescription<Date, 'Date'> // : T extends (infer U)[] // ? PropertyDescription<T, 'Array', PropertyType<U>>
+  : PropertyDescription<T, 'Shape', ShapeArgs<T>>;
 
 export type PropertyType<T> = T extends string
   ? PropertyDescription<string, 'String'>
@@ -78,6 +89,6 @@ export type PropertyType<T> = T extends string
   ? PropertyDescription<boolean, 'Boolean'>
   : T extends Date
   ? PropertyDescription<Date, 'Date'>
-  : T extends any[]
-  ? PropertyDescription<T, 'Array', AliasType<GetElementType<T>>>
+  : T extends (infer U)[]
+  ? PropertyDescription<T, 'Array', PropertyTypeSimple<U>>
   : PropertyDescription<T, 'Shape', ShapeArgs<T>>;

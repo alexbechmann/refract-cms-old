@@ -220,8 +220,11 @@ const refractCmsHandler = ({
             [`fileDelete`]: async (_, { id }, context) => {
               const file = await db.collection('files').findOne({ _id: new ObjectId(id) });
               console.log('deleting' + id);
-              fs.unlinkSync(file.path);
-              console.log(id, file);
+              try {
+                fs.unlinkSync(file.path);
+              } catch (error) {
+                console.log(error);
+              }
               await db.collection('files').deleteOne({ _id: new ObjectId(id) });
               // fs.unlinkSync(file.path);
               return true;
