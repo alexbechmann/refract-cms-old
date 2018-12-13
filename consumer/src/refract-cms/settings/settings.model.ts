@@ -3,6 +3,10 @@ import SettingsIcon from '@material-ui/icons/Settings';
 
 export interface Settings extends Entity {
   setting1: string;
+  favouriteFood: {
+    type: string;
+    name: string;
+  }[];
 }
 
 export const SettingsSchema = defineEntity<Settings>({
@@ -20,6 +24,14 @@ export const SettingsSchema = defineEntity<Settings>({
       }),
       defaultValue: 'Something',
       type: RefractTypes.string
+    },
+    favouriteFood: {
+      type: RefractTypes.arrayOf(
+        RefractTypes.shape({
+          type: RefractTypes.string,
+          name: RefractTypes.string
+        })
+      )
     }
   }
 });
