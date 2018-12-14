@@ -16,10 +16,16 @@ export interface Product extends Entity {
   productType: string;
   customNumber: number;
   location: Location;
+  locations: Location[];
   title: string;
   category: string;
   types: string[];
 }
+
+const locationShape = RefractTypes.shape<Location>({
+  latitude: RefractTypes.number,
+  longitude: RefractTypes.number
+});
 
 export const ProductSchema = defineEntity<Product>({
   options: {
@@ -51,10 +57,7 @@ export const ProductSchema = defineEntity<Product>({
         longitude: 15,
         latitude: 23
       },
-      type: RefractTypes.shape({
-        latitude: RefractTypes.number,
-        longitude: RefractTypes.number
-      })
+      type: locationShape
     },
     title: {
       displayName: 'Title',
@@ -77,8 +80,10 @@ export const ProductSchema = defineEntity<Product>({
         selectOptions: ['Type1', 'Type2']
       }),
       type: RefractTypes.arrayOf(RefractTypes.string)
-    }
+    },
+    locations: {
+      displayName: 'Locations',
+      type: RefractTypes.arrayOf(locationShape)
+    },
   }
 });
-
-const F = RefractTypes.arrayOf(RefractTypes.number);
