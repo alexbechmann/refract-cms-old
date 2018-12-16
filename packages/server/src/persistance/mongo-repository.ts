@@ -2,23 +2,10 @@ import { Repository } from './repository.model';
 import { EntitySchema, Entity } from '@refract-cms/core';
 import { ServerConfig } from '../server-config.model';
 import { MongoClient, Db, ObjectId } from 'mongodb';
+import { EntityOptions } from '@refract-cms/core/dist/entities/entity-options';
 
 export class MongoRepository<TEntity extends Entity = Entity> implements Repository<TEntity> {
-  db: Db | null = null;
-
-  constructor(private collectionName: string, serverConfig: ServerConfig) {
-    MongoClient.connect(
-      serverConfig.mongoConnectionString,
-      {
-        reconnectTries: Number.MAX_VALUE,
-        reconnectInterval: 1000
-      },
-      (err, mongoClient) => {
-        console.log(err || 'Connected successfully to mongodb.');
-        this.db = mongoClient.db('refract-cms');
-      }
-    );
-  }
+  constructor(private collectionName: string, private db: Db) {}
 
   collection() {
     return this.db!.collection(this.collectionName);

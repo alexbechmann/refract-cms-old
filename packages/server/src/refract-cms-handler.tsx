@@ -2,7 +2,7 @@ import * as express from 'express';
 import graphqlHTTP from 'express-graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import { Dashboard } from '@refract-cms/dashboard';
-import { Config, graphqlQueryHelper, File, Crop } from '@refract-cms/core';
+import { Config, graphqlQueryHelper, File, Crop, defineEntity } from '@refract-cms/core';
 import { merge } from 'lodash';
 import { printType } from 'graphql';
 import { MongoClient, Db, ObjectId } from 'mongodb';
@@ -236,9 +236,20 @@ const refractCmsHandler = ({
   //   resolvers
   // });
 
-  const schemaBuilder = new SchemaBuilder(
-    entitySchema => new MongoRepository(entitySchema.options.alias, serverConfig)
+  let db: Db;
+  MongoClient.connect(
+    serverConfig.mongoConnectionString,
+    {
+      reconnectTries: Number.MAX_VALUE,
+      reconnectInterval: 1000
+    },
+    (err, mongoClient) => {
+      console.log(err || 'Connected successfully to mongodb.');
+      db = mongoClient.db('refract-cms');
+    }
   );
+
+  const schemaBuilder = new SchemaBuilder(entitySchema => new MongoRepository<any>(entitySchema.options.alias, db));
 
   router.use(
     '/graphql',
@@ -253,7 +264,7 @@ const refractCmsHandler = ({
     }))
   );
 
-  const filesRepository = new MongoRepository<FileModel>('files', serverConfig);
+  const filesRepository = new MongoRepository<FileModel>('files', db!);
 
   router.get('/files/:id', async (req, res) => {
     const { id } = req.params;

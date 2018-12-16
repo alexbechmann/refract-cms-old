@@ -6,7 +6,8 @@ import {
   GraphQLObjectType,
   GraphQLList,
   GraphQLType,
-  GraphQLSchema
+  GraphQLSchema,
+  GraphQLInt
 } from 'graphql';
 import { ShapeArgs, PropertyDescription } from '../../../../packages/core/src/properties/property-types';
 import { Repository } from '../persistance/repository.model';
@@ -60,9 +61,10 @@ export class SchemaBuilder {
         }
       },
       [`${entitySchema.options.alias}GetAll`]: {
-        type,
+        type: new GraphQLList(type),
         args: {
-          id: { type: GraphQLString }
+          skip: { type: GraphQLInt },
+          limit: { type: GraphQLInt }
         },
         resolve: (obj: any, { filter = {}, skip = 0, limit = 999, orderBy }: any, context: any) => {
           return repository.getAll({ filter, skip, limit, orderBy });
@@ -136,21 +138,34 @@ export class SchemaBuilder {
   }
 
   buildEntity<T>(entitySchema: EntitySchema<T>) {
-    const shapeArgs = Object.keys(entitySchema.properties).reduce(
-      (acc, propertKey) => {
-        acc[propertKey] = entitySchema.properties[propertKey].type;
-        return acc;
-      },
-      {
-        _id: RefractTypes.string
-      }
-    ) as any;
+    const shapeArgs = Object.keys(entitySchema.properties).reduce((acc, propertKey) => {
+      acc[propertKey] = entitySchema.properties[propertKey].type;
+      return acc;
+    }, {}) as any;
 
-    return this.buildShape(entitySchema.options.alias, RefractTypes.shape(shapeArgs));
+    const shape = RefractTypes.shape(shapeArgs);
+
+    return new GraphQLObjectType({
+      name: entitySchema.options.alias,
+      fields: Object.keys(shape.meta!).reduce(
+        (acc, propertyKey) => {
+          const type = this.buildType(`${entitySchema.options.alias}${propertyKey}`, shape.meta![propertyKey]);
+          acc[propertyKey] = {
+            type
+          };
+          return acc;
+        },
+        {
+          _id: {
+            type: GraphQLString,
+            resolve: entity => `${entity._id}`
+          }
+        }
+      )
+    });
   }
 
   buildShape<T>(propertyName: string, propertyType: PropertyDescription<T, 'Shape', ShapeArgs<T>>) {
-    console.log('hi', propertyName);
     return new GraphQLObjectType({
       name: propertyName,
       fields: Object.keys(propertyType.meta!).reduce((acc, propertyKey) => {
