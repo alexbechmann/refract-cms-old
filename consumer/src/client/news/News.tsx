@@ -1,59 +1,41 @@
 import React from 'react';
-import { Query } from 'react-apollo';
+import { graphql } from 'react-apollo';
+import { NewsArticle } from '../../refract-config/news/news-article.model';
+import { CircularProgress } from '@material-ui/core';
 import gql from 'graphql-tag';
-import { NewsArticle } from '../../refract-cms/news/news-article.model';
-import { CircularProgress, Typography } from '@material-ui/core';
-import { fileService } from '@refract-cms/core';
+
+interface Data {
+  news: NewsArticle[];
+}
 
 const NEWS_QUERY = gql`
   {
     news: newsArticleGetAll {
+      _id
       title
       articleText
-      image {
-        imageId
-        imageUrl
-        crops {
-          profile {
-            pixelCrop {
-              height
-              width
-              y
-              x
-            }
-          }
-        }
-      }
     }
   }
 `;
 
-const News = () => (
-  <div>
-    <Query<{ news: NewsArticle[] }> query={NEWS_QUERY}>
-      {({ loading, error, data }) => (
-        <div>
-          {loading ? (
-            <CircularProgress />
-          ) : (
-            <div>
-              <Typography>News</Typography>
-              <ul>
-                {data.news.map(article => {
-                  return (
-                    <li key={article._id}>
-                      {article.title}
-                      <img src={fileService.buildImageUrl(article.image, article.image.crops.profile)} />
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          )}
-        </div>
-      )}
-    </Query>
-  </div>
-);
+const News = graphql<{}, Data>(NEWS_QUERY)(props => {
+  if (props.data.loading) {
+    return <CircularProgress />;
+  } else if (props.data.error) {
+    return <p>Error</p>;
+  }
+  return (
+    <div>
+      <h3>News</h3>
+      <ul>
+        {props.data.news.map(newsArticle => (
+          <li>
+            {newsArticle.title} - {newsArticle.articleText} (id: {newsArticle._id})
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+});
 
 export default News;

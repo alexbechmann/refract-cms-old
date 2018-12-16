@@ -16,14 +16,6 @@ class GraphqlQueryHelper {
       acc[p] = schema.properties[p].type;
       return acc;
     }, {});
-    console.log(`
-    {
-      items: ${schema.options.alias}GetAll {
-        _id
-        ${this.buildProperties(propertyTypes)}
-      }
-    }
-  `);
     return gql(`
       {
         items: ${schema.options.alias}GetAll {

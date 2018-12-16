@@ -10,8 +10,7 @@
   ],
   "scripts": {
     "start": "npm-run-all -p consumer:start core:start dashboard:start server:start",
-    "postinstall": "npm-run-all core:build dashboard:build server:build consumer:build",
-    "consumer:build": "cd ./consumer && yarn run build",
+    "postinstall": "npm-run-all core:build dashboard:build server:build",
     "consumer:start": "cd ./consumer && yarn run start",
     "core:start": "cd ./packages/core && yarn run start",
     "core:build": "cd ./packages/core && yarn run build",

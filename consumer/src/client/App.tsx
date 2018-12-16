@@ -1,25 +1,43 @@
 import React from 'react';
-import { Switch, Route, Link } from 'react-router-dom';
-import { apolloClient } from './graphql/apollo-client';
-import { ApolloProvider } from 'react-apollo';
-import Home from './home/Home';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { createDashboard } from '@refract-cms/dashboard';
+import { config } from '../refract-config/refract.config';
+import { HttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { ApolloClient } from 'apollo-client';
+import { ApolloProvider, graphql } from 'react-apollo';
+import { CssBaseline } from '@material-ui/core';
 import News from './news/News';
 import Products from './products/Products';
-import Menu from './menu/Menu';
-import { CssBaseline } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+
+const apolloClient = new ApolloClient({
+  link: new HttpLink({ uri: `/cms/graphql` }),
+  cache: new InMemoryCache({
+    addTypename: false
+  })
+});
+
+const DemoUI = () => (
+  <ApolloProvider client={apolloClient}>
+    <CssBaseline />
+    <News />
+    <Products />
+    <Link target="_blank" to="/admin">
+      Go to dashboard to add/edit some data
+    </Link>
+  </ApolloProvider>
+);
 
 const App = () => (
-  <ApolloProvider client={apolloClient}>
-    <div>
-      <CssBaseline />
-      <Menu />
+  <div>
+    <BrowserRouter>
       <Switch>
-        <Route exact path="/" component={Home} />
-        <Route path="/news" component={News} />
-        <Route path="/products" component={Products} />
+        <Route path="/admin" component={createDashboard({ config, serverUrl: '/cms' })} />
+        <Route path="/" component={DemoUI} />
       </Switch>
-    </div>
-  </ApolloProvider>
+    </BrowserRouter>
+  </div>
 );
 
 export default App;

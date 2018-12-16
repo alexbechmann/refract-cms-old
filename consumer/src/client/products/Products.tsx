@@ -1,12 +1,13 @@
 import React from 'react';
-import { Query } from 'react-apollo';
+import { graphql } from 'react-apollo';
+import { CircularProgress } from '@material-ui/core';
+import { Product } from '../../refract-config/products/product.model';
 import gql from 'graphql-tag';
-import { Product } from '../../refract-cms/products/product.model';
-import { CircularProgress, Typography } from '@material-ui/core';
 
 const PRODUCTS_QUERY = gql`
   {
     products: productGetAll {
+      _id
       title
       category
       types
@@ -14,27 +15,24 @@ const PRODUCTS_QUERY = gql`
   }
 `;
 
-const Products = () => (
-  <div>
-    <Query<{ products: Product[] }> query={PRODUCTS_QUERY}>
-      {({ loading, error, data }) => (
-        <div>
-          {loading ? (
-            <CircularProgress />
-          ) : (
-            <div>
-              <Typography>Typography</Typography>
-              <ul>
-                {data.products.map(product => {
-                  return <li key={product._id}>{product.title}</li>;
-                })}
-              </ul>
-            </div>
-          )}
-        </div>
-      )}
-    </Query>
-  </div>
-);
+const Products = graphql<{}, { products: Product[] }>(PRODUCTS_QUERY)(props => {
+  if (props.data.loading) {
+    return <CircularProgress />;
+  } else if (props.data.error) {
+    return <p>Error</p>;
+  }
+  return (
+    <div>
+      <h3>Products</h3>
+      <ul>
+        {props.data.products.map(product => (
+          <li>
+            {product.title} - {product.category} (id: {product._id})
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+});
 
 export default Products;

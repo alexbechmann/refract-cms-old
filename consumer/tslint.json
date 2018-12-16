@@ -29,8 +29,7 @@
     "curly": false,
     "no-string-literal": false,
     "no-empty": false,
-    "radix": false,
-    "array-type": false
+    "radix": false
   },
   "jsRules": {
     "object-literal-sort-keys": false,
