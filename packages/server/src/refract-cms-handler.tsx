@@ -10,7 +10,6 @@ import { ServerConfig } from './server-config.model';
 import { RequestHandlerParams } from 'express-serve-static-core';
 import multer from 'multer';
 import jimp from 'jimp';
-import { buildTypes } from './graphql/build-types';
 import { authService } from './auth/auth.service';
 import uniqueString from 'unique-string';
 import fs from 'fs';

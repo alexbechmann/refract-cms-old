@@ -11,6 +11,7 @@ import {
 } from 'graphql';
 import { ShapeArgs, PropertyDescription } from '../../../../packages/core/src/properties/property-types';
 import { Repository } from '../persistance/repository.model';
+import { merge } from 'lodash';
 
 export class SchemaBuilder {
   constructor(private repositoryBuilder: (entitySchema: EntitySchema<any>) => Repository<any>) {}
@@ -131,6 +132,15 @@ export class SchemaBuilder {
         const type = this.buildType(propertyName, propertyType.meta);
         return new GraphQLList(type);
       }
+      case 'Ref': {
+        const shapeArgs = Object.keys(propertyType.meta.properties).reduce((acc, propertKey) => {
+          acc[propertKey] = propertyType.meta.properties[propertKey].type;
+          return acc;
+        }, {}) as any;
+
+        const shape = RefractTypes.shape(shapeArgs);
+        return this.buildShape(propertyName, shape);
+      }
       default: {
         return GraphQLString;
       }
@@ -149,10 +159,22 @@ export class SchemaBuilder {
       name: entitySchema.options.alias,
       fields: Object.keys(shape.meta!).reduce(
         (acc, propertyKey) => {
-          const type = this.buildType(`${entitySchema.options.alias}${propertyKey}`, shape.meta![propertyKey]);
+          const propertyType: PropertyDescription<any, any, any> = shape.meta![propertyKey];
+          const type = this.buildType(`${entitySchema.options.alias}${propertyKey}`, propertyType);
           acc[propertyKey] = {
             type
           };
+          if (propertyType.alias === 'Ref') {
+            const refEntitySchema: EntitySchema = propertyType.meta;
+            acc[propertyKey].resolve = entity => {
+              const ref = entity[propertyKey];
+              if (ref) {
+                return this.repositoryBuilder(refEntitySchema).getById({ id: entity[propertyKey].entityId });
+              } else {
+                return null;
+              }
+            };
+          }
           return acc;
         },
         {

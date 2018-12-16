@@ -77,10 +77,11 @@ type product {
     expect(printType(type)).to.equal(expected.trim());
   });
 
-  mocha.describe('build entire schema', () => {
-    mocha.it('should not crash', () => {
-      const schema = schemaBuilder.buildSchema(refractConfig.schema)
-      console.log(schema)
-    })
+  mocha.it('should not crash', () => {
+    const schema = schemaBuilder.buildSchema(refractConfig.schema)
   })
 });
+
+mocha.describe('build entire schema', () => {
+
+})

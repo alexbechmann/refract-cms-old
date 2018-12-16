@@ -8,12 +8,14 @@ import {
   RefractTypes,
   createImagePickerEditor,
   ImageRef,
-  PropertyEditorProps
+  PropertyEditorProps,
+  EntityRef
 } from '@refract-cms/core';
 import { NewsArticle } from './news-article.model';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { Button, Checkbox } from '@material-ui/core';
 import moment from 'moment';
+import { Product, ProductSchema } from '../products/product.model';
 
 export interface NewsArticle extends Entity {
   title: string;
@@ -33,6 +35,8 @@ export interface NewsArticle extends Entity {
     };
   };
   primary: boolean;
+  // relatedProducts: Product[];
+  highlightedProduct: EntityRef<Product>;
 }
 
 export const NewsArticleSchema = defineEntity<NewsArticle>({
@@ -136,6 +140,10 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
         <Checkbox checked={props.value} onChange={(e, checked) => props.setValue(checked)} />
       ),
       type: RefractTypes.bool
+    },
+    highlightedProduct: {
+      displayName: 'Highlighted Product',
+      type: RefractTypes.ref(ProductSchema)
     }
   }
 });

@@ -12,6 +12,7 @@ export { Crop } from './files/crop.model';
 export { File } from './files/file.model';
 export { AuthToken } from './auth/auth-token';
 export { fileService } from './files/file.service';
+export { EntityRef } from './entities/entity-ref.model';
 
 // Property Editors
 export { PropertyEditorProps } from './properties/property-editor-props';
