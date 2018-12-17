@@ -15,18 +15,18 @@ export interface Props extends EditEntityProps, WithApolloClient<any>, ReturnTyp
 const EditEntity = ({ alias, id, client, schema }: Props) => {
   const createMutation = gql(
     `
-  mutation save($item: Input${graphqlQueryHelper.schemaName(alias!)}){
-    ${alias}Create(item: $item) {
-      _id
+  mutation save($record: CreateOne${schema.options.alias}Input!){
+    ${alias}CreateOne(record: $record) {
+      recordId
     }
   }
   `
   );
   const updateMutation = gql(
     `
-  mutation save($id: String!, $item: Input${graphqlQueryHelper.schemaName(alias!)}){
-    ${alias}Update(id: $id, item: $item) {
-      _id
+  mutation save($record: UpdateById${schema.options.alias}Input!){
+    ${alias}UpdateById(record: $record) {
+      recordId
     }
   }
   `
@@ -43,19 +43,10 @@ const EditEntity = ({ alias, id, client, schema }: Props) => {
             id={id}
             saveEntity={updateValues => {
               return new Promise((resolve, reject) => {
-                const item = Object.keys(schema.properties).reduce((value, propertyKey) => {
-                  value[propertyKey] = updateValues[propertyKey];
-                  return value;
-                }, {});
                 save({
-                  variables: newEntity
-                    ? {
-                        item
-                      }
-                    : {
-                        id,
-                        item
-                      },
+                  variables: {
+                    record: updateValues
+                  },
                   update: (proxy, updateResult) => {
                     client.resetStore();
                     resolve();

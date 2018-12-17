@@ -24,20 +24,20 @@ export interface NewsArticle extends Entity {
   extraText: string;
   articleDate: Date;
   listOfStrings: string[];
-  image: ImageRef<'profile' | 'large'>;
-  item: {
-    id: string;
-    meta: {
-      location: string;
-      count: number;
-      deep: {
-        level: number;
-      };
-    };
-  };
+  // image: ImageRef<'profile' | 'large'>;
+  // item: {
+  //   id: string;
+  //   meta: {
+  //     location: string;
+  //     count: number;
+  //     deep: {
+  //       level: number;
+  //     };
+  //   };
+  // };
   primary: boolean;
   // relatedProducts: Product[];
-  highlightedProduct: EntityRef<Product>;
+  // highlightedProduct: EntityRef<Product>;
 }
 
 export const NewsArticleSchema = defineEntity<NewsArticle>({
@@ -46,8 +46,8 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
     displayName: 'News Article',
     instanceDisplayProps: newsArticle => ({
       primaryText: newsArticle.title,
-      secondaryText: moment(newsArticle.articleDate).format('ll'),
-      imageUrl: newsArticle.image ? newsArticle.image.imageUrl : undefined
+      secondaryText: moment(newsArticle.articleDate).format('ll')
+      // imageUrl: newsArticle.image ? newsArticle.image.imageUrl : undefined
     }),
     icon: DescriptionIcon
   },
@@ -88,63 +88,63 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
       defaultValue: ['s1', 's2'],
       type: RefractTypes.arrayOf(RefractTypes.string)
     },
-    item: {
-      editorComponent: props => (
-        <Button
-          onClick={() =>
-            props.setValue({
-              id: '234234',
-              meta: {
-                location: 'asdfafsd',
-                count: 3,
-                deep: {
-                  level: 4
-                }
-              }
-            })
-          }
-        >
-          {JSON.stringify(props.value) || 'Click'}
-        </Button>
-      ),
-      type: RefractTypes.shape({
-        id: RefractTypes.string,
-        meta: RefractTypes.shape({
-          location: RefractTypes.string,
-          count: RefractTypes.number,
-          deep: RefractTypes.shape({
-            level: RefractTypes.number
-          })
-        })
-      })
-    },
-    image: {
-      displayName: 'Image',
-      editorComponent: createImagePickerEditor({
-        cropDefinitions: {
-          profile: {
-            aspectRatio: 4 / 4
-          },
-          large: {
-            aspectRatio: 16 / 9
-          }
-        }
-      }),
-      type: RefractTypes.imageShape({
-        profile: RefractTypes.cropShape,
-        large: RefractTypes.cropShape
-      })
-    },
+    // item: {
+    //   editorComponent: props => (
+    //     <Button
+    //       onClick={() =>
+    //         props.setValue({
+    //           id: '234234',
+    //           meta: {
+    //             location: 'asdfafsd',
+    //             count: 3,
+    //             deep: {
+    //               level: 4
+    //             }
+    //           }
+    //         })
+    //       }
+    //     >
+    //       {JSON.stringify(props.value) || 'Click'}
+    //     </Button>
+    //   ),
+    //   type: RefractTypes.shape({
+    //     id: RefractTypes.string,
+    //     meta: RefractTypes.shape({
+    //       location: RefractTypes.string,
+    //       count: RefractTypes.number,
+    //       deep: RefractTypes.shape({
+    //         level: RefractTypes.number
+    //       })
+    //     })
+    //   })
+    // },
+    // image: {
+    //   displayName: 'Image',
+    //   editorComponent: createImagePickerEditor({
+    //     cropDefinitions: {
+    //       profile: {
+    //         aspectRatio: 4 / 4
+    //       },
+    //       large: {
+    //         aspectRatio: 16 / 9
+    //       }
+    //     }
+    //   }),
+    //   type: RefractTypes.imageShape({
+    //     profile: RefractTypes.cropShape,
+    //     large: RefractTypes.cropShape
+    //   })
+    // },
     primary: {
       displayName: 'Primary',
       editorComponent: (props: PropertyEditorProps<boolean>) => (
         <Checkbox checked={props.value} onChange={(e, checked) => props.setValue(checked)} />
       ),
       type: RefractTypes.bool
-    },
-    highlightedProduct: {
-      displayName: 'Highlighted Product',
-      type: RefractTypes.ref(ProductSchema)
     }
+    // highlightedProduct: {
+    //   displayName: 'Highlighted Product',
+    //   type: RefractTypes.ref(ProductSchema)
+    // }
   }
 });

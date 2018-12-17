@@ -14,8 +14,9 @@ import { authService } from './auth/auth.service';
 import uniqueString from 'unique-string';
 import fs from 'fs';
 import { SchemaBuilder } from './graphql/schema-builder';
-import { MongoRepository } from './persistance/mongo-repository';
 import { FileModel } from './files/file-model';
+import mongoose from 'mongoose';
+import { schemaComposer } from 'graphql-compose';
 
 const refractCmsHandler = ({
   rootPath,
@@ -235,25 +236,15 @@ const refractCmsHandler = ({
   //   resolvers
   // });
 
-  let db: Db;
-  MongoClient.connect(
-    serverConfig.mongoConnectionString,
-    {
-      reconnectTries: Number.MAX_VALUE,
-      reconnectInterval: 1000
-    },
-    (err, mongoClient) => {
-      console.log(err || 'Connected successfully to mongodb.');
-      db = mongoClient.db('refract-cms');
-    }
-  );
-
-  const schemaBuilder = new SchemaBuilder(entitySchema => new MongoRepository<any>(entitySchema.options.alias, db));
+  mongoose.connect(serverConfig.mongoConnectionString);
+  const schemaBuilder = new SchemaBuilder();
+  schemaBuilder.buildSchema(config.schema);
+  const schema = schemaComposer.buildSchema();
 
   router.use(
     '/graphql',
     graphqlHTTP((req, res) => ({
-      schema: schemaBuilder.buildSchema(config.schema),
+      schema,
       graphiql: true,
       context: {
         userId: req.headers.authorization
@@ -263,36 +254,36 @@ const refractCmsHandler = ({
     }))
   );
 
-  const filesRepository = new MongoRepository<FileModel>('files', db!);
+  // const filesRepository = new MongoRepository<FileModel>('files', db!);
 
-  router.get('/files/:id', async (req, res) => {
-    const { id } = req.params;
-    const crop = req.query;
-    const entity = await filesRepository.getById({ id });
-    const img = await jimp.read(entity.path);
+  // router.get('/files/:id', async (req, res) => {
+  //   const { id } = req.params;
+  //   const crop = req.query;
+  //   const entity = await filesRepository.getById({ id });
+  //   const img = await jimp.read(entity.path);
 
-    if (crop.x && crop.y && crop.width && crop.height) {
-      img.crop(parseInt(crop.x), parseInt(crop.y), parseInt(crop.width), parseInt(crop.height));
-    }
+  //   if (crop.x && crop.y && crop.width && crop.height) {
+  //     img.crop(parseInt(crop.x), parseInt(crop.y), parseInt(crop.width), parseInt(crop.height));
+  //   }
 
-    const imgBuffer = await img.getBufferAsync(entity.mimetype);
-    res.writeHead(200, { 'Content-Type': entity.mimetype });
-    res.end(imgBuffer, 'binary');
-  });
+  //   const imgBuffer = await img.getBufferAsync(entity.mimetype);
+  //   res.writeHead(200, { 'Content-Type': entity.mimetype });
+  //   res.end(imgBuffer, 'binary');
+  // });
 
-  router.post('/files', upload.single('file'), (req, res) => {
-    const { mimetype, path, filename, size } = req.file;
-    filesRepository
-      .insert({
-        mimetype,
-        path,
-        filename,
-        size
-      })
-      .then(() => {
-        res.send(200);
-      });
-  });
+  // router.post('/files', upload.single('file'), (req, res) => {
+  //   const { mimetype, path, filename, size } = req.file;
+  //   filesRepository
+  //     .insert({
+  //       mimetype,
+  //       path,
+  //       filename,
+  //       size
+  //     })
+  //     .then(() => {
+  //       res.send(200);
+  //     });
+  // });
 
   return [rootPath, router] as RequestHandlerParams[];
 };

@@ -18,7 +18,7 @@ class GraphqlQueryHelper {
     }, {});
     console.log(`
     {
-      items: ${schema.options.alias}GetAll {
+      items: ${schema.options.alias}Many {
         _id
         ${this.buildProperties(propertyTypes)}
       }
@@ -26,7 +26,7 @@ class GraphqlQueryHelper {
   `);
     return gql(`
       {
-        items: ${schema.options.alias}GetAll {
+        items: ${schema.options.alias}Many {
           _id
           ${this.buildProperties(propertyTypes)}
         }
@@ -58,7 +58,7 @@ class GraphqlQueryHelper {
     }, {});
     return gql(`
       {
-        item: ${schema.options.alias}GetById(id: "${id}") {
+        item: ${schema.options.alias}ById(_id: "${id}") {
           _id
           ${this.buildProperties(propertyTypes)}
         }

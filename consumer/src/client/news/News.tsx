@@ -43,7 +43,7 @@ const News = () => (
                   return (
                     <li key={article._id}>
                       {article.title}
-                      <img src={fileService.buildImageUrl(article.image, article.image.crops.profile)} />
+                      {/* <img src={fileService.buildImageUrl(article.image, article.image.crops.profile)} /> */}
                     </li>
                   );
                 })}

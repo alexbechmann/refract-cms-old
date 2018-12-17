@@ -9,194 +9,187 @@ import {
   GraphQLSchema,
   GraphQLInt
 } from 'graphql';
-import { ShapeArgs, PropertyDescription } from '../../../../packages/core/src/properties/property-types';
-import { Repository } from '../persistance/repository.model';
-import { merge } from 'lodash';
+import { ShapeArgs, PropertyDescription } from '@refract-cms/core/src/properties/property-types';
+import mongoose, { SchemaTypeOpts, Schema, SchemaType } from 'mongoose';
+import { composeWithMongoose } from 'graphql-compose-mongoose';
+import { schemaComposer } from 'graphql-compose';
 
 export class SchemaBuilder {
-  constructor(private repositoryBuilder: (entitySchema: EntitySchema<any>) => Repository<any>) {}
+  constructor() {}
 
   buildSchema(schema: EntitySchema[]) {
-    let queryFields = {};
-    let mutationFields = {};
-
     schema.forEach(entitySchema => {
-      const repository = this.repositoryBuilder(entitySchema);
-      const type = this.buildEntity(entitySchema);
-      queryFields = {
-        ...queryFields,
-        ...this.buildFieldQueries(entitySchema, repository, type)
-      };
-      mutationFields = {
-        ...mutationFields,
-        ...this.buildFieldMutations(entitySchema, repository, type)
-      };
+      this.configureEntitySchema(entitySchema);
     });
-
-    const query = new GraphQLObjectType({
-      name: 'Query',
-      fields: queryFields
-    });
-
-    const mutation = new GraphQLObjectType({
-      name: 'Mutation',
-      fields: mutationFields
-    });
-
-    return new GraphQLSchema({ query, mutation });
   }
 
-  buildFieldQueries<TEntity extends Entity>(
-    entitySchema: EntitySchema<TEntity>,
-    repository: Repository<TEntity>,
-    type: GraphQLObjectType
-  ) {
-    return {
-      [`${entitySchema.options.alias}GetById`]: {
-        type,
-        args: {
-          id: { type: GraphQLString }
-        },
-        resolve: (_, { id }) => {
-          return repository.getById({ id });
-        }
-      },
-      [`${entitySchema.options.alias}GetAll`]: {
-        type: new GraphQLList(type),
-        args: {
-          skip: { type: GraphQLInt },
-          limit: { type: GraphQLInt }
-        },
-        resolve: (obj: any, { filter = {}, skip = 0, limit = 999, orderBy }: any, context: any) => {
-          return repository.getAll({ filter, skip, limit, orderBy });
-        }
-      }
-    };
+  configureEntitySchema(entitySchema: EntitySchema) {
+    const definition = Object.keys(entitySchema.properties).reduce((acc, propertyKey) => {
+      const typeDef = entitySchema.properties[propertyKey].type;
+      acc[propertyKey] = this.buildType(propertyKey, typeDef);
+      return acc;
+    }, {}) as any;
+
+    const EntitySchema = new mongoose.Schema(definition);
+    const Entity = mongoose.model(entitySchema.options.alias, EntitySchema);
+
+    // STEP 2: CONVERT MONGOOSE MODEL TO GraphQL PIECES
+    const customizationOptions = {}; // left it empty for simplicity, described below
+    const EntityTypeComposer = composeWithMongoose(Entity, customizationOptions);
+
+    // STEP 3: Add needed CRUD User operations to the GraphQL Schema
+    // via graphql-compose it will be much much easier, with less typing
+    schemaComposer.Query.addFields({
+      [`${entitySchema.options.alias}ById`]: EntityTypeComposer.getResolver('findById'),
+      [`${entitySchema.options.alias}ByIds`]: EntityTypeComposer.getResolver('findByIds'),
+      [`${entitySchema.options.alias}One`]: EntityTypeComposer.getResolver('findOne'),
+      [`${entitySchema.options.alias}Many`]: EntityTypeComposer.getResolver('findMany'),
+      [`${entitySchema.options.alias}Count`]: EntityTypeComposer.getResolver('count'),
+      [`${entitySchema.options.alias}Pagination`]: EntityTypeComposer.getResolver('pagination')
+    });
+
+    schemaComposer.Mutation.addFields({
+      [`${entitySchema.options.alias}CreateOne`]: EntityTypeComposer.getResolver('createOne'),
+      [`${entitySchema.options.alias}CreateMany`]: EntityTypeComposer.getResolver('createMany'),
+      [`${entitySchema.options.alias}UpdateById`]: EntityTypeComposer.getResolver('updateById'),
+      [`${entitySchema.options.alias}UpdateOne`]: EntityTypeComposer.getResolver('updateOne'),
+      [`${entitySchema.options.alias}UpdateMany`]: EntityTypeComposer.getResolver('updateMany'),
+      [`${entitySchema.options.alias}RemoveById`]: EntityTypeComposer.getResolver('removeById'),
+      [`${entitySchema.options.alias}RemoveOne`]: EntityTypeComposer.getResolver('removeOne'),
+      [`${entitySchema.options.alias}RemoveMany`]: EntityTypeComposer.getResolver('removeMany')
+    });
   }
 
-  buildFieldMutations<TEntity extends Entity>(
-    entitySchema: EntitySchema<TEntity>,
-    repository: Repository<TEntity>,
-    type: GraphQLObjectType
-  ) {
-    return {
-      [`${entitySchema.options.alias}Create`]: {
-        type,
-        args: {
-          id: { type: GraphQLString }
-        },
-        resolve: (_, { item }, context) => {
-          return repository.insert(item);
-        }
-      },
-      [`${entitySchema.options.alias}Update`]: {
-        type,
-        args: {
-          id: { type: GraphQLString }
-        },
-        resolve: (_, { id, item }, context) => {
-          return repository.update({ id, item });
-        }
-      },
-      [`${entitySchema.options.alias}Delete`]: {
-        type,
-        args: {
-          id: { type: GraphQLString }
-        },
-        resolve: (_, { id }, context) => {
-          return repository.delete({ id });
-        }
-      }
-    };
-  }
+  // buildFieldQueries<TEntity extends Entity>(
+  //   entitySchema: EntitySchema<TEntity>,
+  //   repository: Repository<TEntity>,
+  //   type: GraphQLObjectType
+  // ) {
+  //   return {
+  //     [`${entitySchema.options.alias}GetById`]: {
+  //       type,
+  //       args: {
+  //         id: { type: GraphQLString }
+  //       },
+  //       resolve: (_, { id }) => {
+  //         return repository.getById({ id });
+  //       }
+  //     },
+  //     [`${entitySchema.options.alias}GetAll`]: {
+  //       type: new GraphQLList(type),
+  //       args: {
+  //         skip: { type: GraphQLInt },
+  //         limit: { type: GraphQLInt }
+  //       },
+  //       resolve: (obj: any, { filter = {}, skip = 0, limit = 999, orderBy }: any, context: any) => {
+  //         return repository.getAll({ filter, skip, limit, orderBy });
+  //       }
+  //     }
+  //   };
+  // }
 
-  buildType<T>(propertyName: string, propertyType: PropertyType<T>): GraphQLType {
+  // buildFieldMutations<TEntity extends Entity>(
+  //   entitySchema: EntitySchema<TEntity>,
+  //   repository: Repository<TEntity>,
+  //   type: GraphQLObjectType
+  // ) {
+  //   return {
+  //     [`${entitySchema.options.alias}Create`]: {
+  //       type,
+  //       args: {
+  //         id: { type: GraphQLString }
+  //       },
+  //       resolve: (_, { item }, context) => {
+  //         return repository.insert(item);
+  //       }
+  //     },
+  //     [`${entitySchema.options.alias}Update`]: {
+  //       type,
+  //       args: {
+  //         id: { type: GraphQLString }
+  //       },
+  //       resolve: (_, { id, item }, context) => {
+  //         return repository.update({ id, item });
+  //       }
+  //     },
+  //     [`${entitySchema.options.alias}Delete`]: {
+  //       type,
+  //       args: {
+  //         id: { type: GraphQLString }
+  //       },
+  //       resolve: (_, { id }, context) => {
+  //         return repository.delete({ id });
+  //       }
+  //     }
+  //   };
+  // }
+
+  buildType<T>(propertyName: string, propertyType: PropertyType<T>): SchemaTypeOpts<any> | Schema | SchemaType {
     switch (propertyType.alias) {
       case 'String':
       case 'Date': {
-        return GraphQLString;
+        return String;
       }
       case 'Number': {
-        return GraphQLFloat;
+        return Number;
       }
       case 'Boolean': {
-        return GraphQLBoolean;
-      }
-      case 'Boolean': {
-        return GraphQLBoolean;
+        return Boolean;
       }
       case 'Shape': {
-        return this.buildShape(propertyName, propertyType as PropertyDescription<T, 'Shape', ShapeArgs<T>>);
+        return this.schemaFromShape(propertyName, propertyType as PropertyDescription<T, 'Shape', ShapeArgs<T>>);
       }
       case 'Array': {
         const type = this.buildType(propertyName, propertyType.meta);
-        return new GraphQLList(type);
+        return [type];
       }
-      case 'Ref': {
-        const shapeArgs = Object.keys(propertyType.meta.properties).reduce((acc, propertKey) => {
-          acc[propertKey] = propertyType.meta.properties[propertKey].type;
-          return acc;
-        }, {}) as any;
+      // case 'Ref': {
+      //   const shapeArgs = Object.keys(propertyType.meta.properties).reduce((acc, propertKey) => {
+      //     acc[propertKey] = propertyType.meta.properties[propertKey].type;
+      //     return acc;
+      //   }, {}) as any;
 
-        const shape = RefractTypes.shape(shapeArgs);
-        return this.buildShape(propertyName, shape);
-      }
+      //   const shape = RefractTypes.shape(shapeArgs);
+      //   return this.buildShape(propertyName, shape);
+      // }
       default: {
-        return GraphQLString;
+        return String;
       }
     }
   }
 
-  buildEntity<T>(entitySchema: EntitySchema<T>) {
-    const shapeArgs = Object.keys(entitySchema.properties).reduce((acc, propertKey) => {
-      acc[propertKey] = entitySchema.properties[propertKey].type;
+  // buildEntity<T>(entitySchema: EntitySchema<T>) {
+  //   const shapeArgs = Object.keys(entitySchema.properties).reduce((acc, propertKey) => {
+  //     acc[propertKey] = entitySchema.properties[propertKey].type;
+  //     return acc;
+  //   }, {}) as any;
+
+  //   const shape = RefractTypes.shape(shapeArgs);
+
+  //   return this.buildSchemaFromShape(shape);
+  // }
+
+  // buildShape<T>(propertyName: string, propertyType: PropertyDescription<T, 'Shape', ShapeArgs<T>>) {
+  //   return new GraphQLObjectType({
+  //     name: propertyName,
+  //     fields: Object.keys(propertyType.meta!).reduce((acc, propertyKey) => {
+  //       const type = this.buildType(`${propertyName}${propertyKey}`, propertyType.meta![propertyKey]);
+  //       acc[propertyKey] = {
+  //         type
+  //       };
+  //       return acc;
+  //     }, {})
+  //   });
+  // }
+
+  schemaFromShape<T>(propertyName: string, propertyType: PropertyDescription<T, 'Shape', ShapeArgs<T>>) {
+    const definition = Object.keys(propertyType.meta!).reduce((acc, propertyKey) => {
+      const type = this.buildType(`${propertyName}${propertyKey}`, propertyType.meta![propertyKey]);
+      acc[propertyKey] = {
+        type
+      };
       return acc;
-    }, {}) as any;
-
-    const shape = RefractTypes.shape(shapeArgs);
-
-    return new GraphQLObjectType({
-      name: entitySchema.options.alias,
-      fields: Object.keys(shape.meta!).reduce(
-        (acc, propertyKey) => {
-          const propertyType: PropertyDescription<any, any, any> = shape.meta![propertyKey];
-          const type = this.buildType(`${entitySchema.options.alias}${propertyKey}`, propertyType);
-          acc[propertyKey] = {
-            type
-          };
-          if (propertyType.alias === 'Ref') {
-            const refEntitySchema: EntitySchema = propertyType.meta;
-            acc[propertyKey].resolve = entity => {
-              const ref = entity[propertyKey];
-              if (ref) {
-                return this.repositoryBuilder(refEntitySchema).getById({ id: entity[propertyKey].entityId });
-              } else {
-                return null;
-              }
-            };
-          }
-          return acc;
-        },
-        {
-          _id: {
-            type: GraphQLString,
-            resolve: entity => `${entity._id}`
-          }
-        }
-      )
-    });
-  }
-
-  buildShape<T>(propertyName: string, propertyType: PropertyDescription<T, 'Shape', ShapeArgs<T>>) {
-    return new GraphQLObjectType({
-      name: propertyName,
-      fields: Object.keys(propertyType.meta!).reduce((acc, propertyKey) => {
-        const type = this.buildType(`${propertyName}${propertyKey}`, propertyType.meta![propertyKey]);
-        acc[propertyKey] = {
-          type
-        };
-        return acc;
-      }, {})
-    });
+    }, {});
+    return new mongoose.Schema(definition);
   }
 }

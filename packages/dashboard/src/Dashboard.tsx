@@ -251,7 +251,7 @@ class Dashboard extends React.Component<Props> {
           </Drawer>
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
-            {!isLoggedIn ? (
+            {!isLoggedIn && false ? (
               <Router>
                 <Auth default path="/" />
               </Router>
