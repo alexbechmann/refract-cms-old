@@ -52,24 +52,24 @@ class EntitiesList extends Component<Props> {
         actionComponents={
           !entitySchema.options.maxOne
             ? [
-                () => (
-                  <FormControl>
-                    <InputLabel>Age</InputLabel>
-                    <Select
-                      value={this.props.filters.orderByField}
-                      onChange={e =>
-                        setOrderByField({
-                          alias: entitySchema.options.alias,
-                          orderByField: e.target.value
-                        })
-                      }
-                    >
-                      <MenuItem value={'createDate'}>Create Date</MenuItem>
-                      <MenuItem value={'a'}>Twenty</MenuItem>
-                      <MenuItem value={'b'}>Thirty</MenuItem>
-                    </Select>
-                  </FormControl>
-                ),
+                // () => (
+                //   <FormControl>
+                //     <InputLabel>Age</InputLabel>
+                //     <Select
+                //       value={this.props.filters.orderByField}
+                //       onChange={e =>
+                //         setOrderByField({
+                //           alias: entitySchema.options.alias,
+                //           orderByField: e.target.value
+                //         })
+                //       }
+                //     >
+                //       <MenuItem value={'createDate'}>Create Date</MenuItem>
+                //       <MenuItem value={'a'}>Twenty</MenuItem>
+                //       <MenuItem value={'b'}>Thirty</MenuItem>
+                //     </Select>
+                //   </FormControl>
+                // ),
                 () => (
                   <IconButton onClick={() => this.setState({ filterDialogOpen: true })}>
                     <FilterList />

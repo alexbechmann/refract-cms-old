@@ -6,7 +6,7 @@ const devMode = process.env.NODE_ENV !== 'production';
 
 module.exports = {
   ...baseConfig,
-  name: 'client',
+  // name: 'client',
   entry: [
     'webpack-dev-server/client?https://localhost:3443',
     'webpack/hot/dev-server',

@@ -24,3 +24,4 @@ export { default as createMultipleDropdownEditor } from './property-editors/Mult
 export { default as createDatePickerEditor } from './property-editors/DatePickerEditor';
 export { default as createListEditor } from './property-editors/ListEditor';
 export { default as createImagePickerEditor } from './property-editors/ImagePickerEditor';
+export { default as createSingleEntityPickerEditor } from './property-editors/SingleEntityPickerEditor';

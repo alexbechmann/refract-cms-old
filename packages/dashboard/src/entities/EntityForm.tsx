@@ -177,7 +177,9 @@ class EntityForm extends Component<Props, State> {
         .mutate({
           mutation: gql(`
       mutation {
-        ${this.props.alias}Delete(id: "${this.props.id!}")
+        ${this.props.alias}RemoveById(_id: "${this.props.id!}") {
+          recordId
+        }
       }`)
         })
         .then(() => {

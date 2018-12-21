@@ -9,7 +9,8 @@ import {
   createImagePickerEditor,
   ImageRef,
   PropertyEditorProps,
-  EntityRef
+  EntityRef,
+  createSingleEntityPickerEditor
 } from '@refract-cms/core';
 import { NewsArticle } from './news-article.model';
 import DescriptionIcon from '@material-ui/icons/Description';
@@ -38,6 +39,8 @@ export interface NewsArticle extends Entity {
   primary: boolean;
   // relatedProducts: Product[];
   // highlightedProduct: EntityRef<Product>;
+  highlightedProductId: string;
+  // otherRelatedProductIds: string[];
 }
 
 export const NewsArticleSchema = defineEntity<NewsArticle>({
@@ -141,10 +144,17 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
         <Checkbox checked={props.value} onChange={(e, checked) => props.setValue(checked)} />
       ),
       type: RefractTypes.bool
-    }
+    },
     // highlightedProduct: {
     //   displayName: 'Highlighted Product',
     //   type: RefractTypes.ref(ProductSchema)
     // }
+    highlightedProductId: {
+      displayName: 'Highlighted Product',
+      type: RefractTypes.string,
+      editorComponent: createSingleEntityPickerEditor({
+        schema: ProductSchema
+      })
+    }
   }
 });

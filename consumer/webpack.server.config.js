@@ -6,7 +6,7 @@ const webpack = require('webpack');
 
 module.exports = {
   ...baseConfig,
-  name: 'server',
+  // name: 'server',
   entry: path.resolve(__dirname, 'src', 'server', 'index.ts'),
   target: 'node',
   output: {
@@ -23,12 +23,8 @@ module.exports = {
   plugins: [
     ...baseConfig.plugins,
     // new StartServerPlugin({
-    //   name: 'server.js',
-    //   signal: 'SIGUSR2', // signal to send for HMR (defaults to `false`, uses 'SIGUSR2' if `true`)
+    //   name: 'server.js'
     // }),
     // new webpack.HotModuleReplacementPlugin()
   ],
-  node: {
-    __dirname: true,
-  }
 }

@@ -7,9 +7,9 @@
   "scripts": {
     "build": "npm-run-all client:build server:build",
     "start": "npm-run-all -p client:start server:start server:watch docker:start",
-    "server:watch": "webpack --config webpack.server.config.js -w",
+    "server:watch": "webpack --config webpack.server.config.js --watch --info-verbosity verbose",
     "server:build": "webpack --config webpack.server.config.js",
-    "server:start": "nodemon ./dist/server.js",
+    "server:start": "nodemon ./dist/server.js -w ./dist/server.js",
     "client:start": "webpack-dev-server --config webpack.client.config.js",
     "client:build": "webpack --config webpack.client.config.js",
     "docker:start": "docker-compose up"

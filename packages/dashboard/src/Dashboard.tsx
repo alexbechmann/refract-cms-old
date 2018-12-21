@@ -207,12 +207,12 @@ class Dashboard extends React.Component<Props> {
                 </ListItemIcon>
                 <ListItemText primary="Home" />
               </ListItem>
-              <ListItem button component={(props: any) => <Link {...props} to={routes.files.createUrl()} />}>
+              {/* <ListItem button component={(props: any) => <Link {...props} to={routes.files.createUrl()} />}>
                 <ListItemIcon>
                   <ImageIcon />
                 </ListItemIcon>
                 <ListItemText primary="Files" />
-              </ListItem>
+              </ListItem> */}
               <ListItem button component={(props: any) => <Link {...props} to={routes.graphql.createUrl()} />}>
                 <ListItemIcon>
                   <CloudIcon />

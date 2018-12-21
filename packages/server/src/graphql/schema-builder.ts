@@ -88,6 +88,8 @@ export class SchemaBuilder {
       };
       return acc;
     }, {});
-    return new mongoose.Schema(definition);
+    return new mongoose.Schema(definition, {
+      id: false
+    });
   }
 }

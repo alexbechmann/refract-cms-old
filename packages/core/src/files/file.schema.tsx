@@ -2,11 +2,13 @@ import defineEntity from '../entities/define-entity';
 import { File } from './file.model';
 import { RefractTypes } from '../properties/property-types';
 import createTextEditor from '../property-editors/TextEditor';
+import ImageIcon from '@material-ui/icons/Image';
 
 export const FileSchema = defineEntity<File>({
   options: {
     alias: 'file',
-    displayName: 'File'
+    displayName: 'File',
+    icon: ImageIcon
   },
   properties: {
     mimetype: {
