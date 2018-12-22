@@ -6,7 +6,7 @@ import { ListItemProps } from '@material-ui/core/ListItem';
 import { entityService } from './services/entity.service';
 
 interface EntityListItemProps extends ListItemProps {
-  schema: EntitySchema;
+  schema: EntitySchema<any>;
   entity: Entity;
   SecondaryAction?: JSX.Element;
 }
@@ -23,7 +23,13 @@ const EntityListItem = (props: Props) => {
           {schema.options.icon ? <schema.options.icon /> : schema.options.alias[0].toUpperCase()}
         </Avatar>
       </ListItemAvatar>
-      <ListItemText inset primary={instanceDisplayProps.primaryText} secondary={instanceDisplayProps.secondaryText} />
+      <ListItemText
+        primaryTypographyProps={{ noWrap: true }}
+        secondaryTypographyProps={{ noWrap: true }}
+        inset
+        primary={instanceDisplayProps.primaryText}
+        secondary={instanceDisplayProps.secondaryText}
+      />
       {SecondaryAction && <ListItemSecondaryAction>{SecondaryAction}</ListItemSecondaryAction>}
     </ListItem>
   );

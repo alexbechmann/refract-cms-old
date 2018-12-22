@@ -8,7 +8,12 @@ export const FileSchema = defineEntity<File>({
   options: {
     alias: 'file',
     displayName: 'File',
-    icon: ImageIcon
+    icon: ImageIcon,
+    instanceDisplayProps: file => ({
+      primaryText: file.url,
+      secondaryText: file.mimetype,
+      imageUrl: file.url
+    })
   },
   properties: {
     mimetype: {

@@ -4,6 +4,9 @@ import { Query } from 'react-apollo';
 import { CircularProgress, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@material-ui/core';
 import { File } from './file.model';
 
+import EntityListItem from '../entities/EntityListItem';
+import { FileSchema } from './file.schema';
+
 interface FileListProps {
   onSelectFile: (file: File) => void;
 }
@@ -15,7 +18,7 @@ class FileList extends Component<Props> {
     const { onSelectFile } = this.props;
     const query = gql`
       {
-        files: getFiles {
+        files: fileMany {
           _id
           url
         }
@@ -26,16 +29,18 @@ class FileList extends Component<Props> {
         {({ loading, error, data }) => {
           return (
             <div>
-              {loading && <CircularProgress />}
-              {!loading && (
+              {loading ? (
+                <CircularProgress />
+              ) : (
                 <List>
                   {data.files.map((file: File) => (
-                    <ListItem key={file._id} button onClick={() => onSelectFile(file)}>
-                      <ListItemAvatar>
-                        <Avatar src={file.url} />
-                      </ListItemAvatar>
-                      <ListItemText primary={file._id} secondary={file.url} />
-                    </ListItem>
+                    <EntityListItem
+                      entity={file}
+                      schema={FileSchema}
+                      key={file._id}
+                      button
+                      onClick={() => onSelectFile(file)}
+                    />
                   ))}
                 </List>
               )}
