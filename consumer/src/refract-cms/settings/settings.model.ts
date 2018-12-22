@@ -1,5 +1,13 @@
-import { Entity, defineEntity, createTextEditor, RefractTypes } from '@refract-cms/core';
+import {
+  Entity,
+  defineEntity,
+  createTextEditor,
+  RefractTypes,
+  createMultipleEntityPickerEditor
+} from '@refract-cms/core';
 import SettingsIcon from '@material-ui/icons/Settings';
+import { ProductSchema } from '../products/product.model';
+import { NewsArticleSchema } from '../news/news-article.model';
 
 export interface Settings extends Entity {
   setting1: string;
@@ -7,6 +15,7 @@ export interface Settings extends Entity {
   //   type: string;
   //   name: string;
   // }[];
+  highlightedArticles: string[];
 }
 
 export const SettingsSchema = defineEntity<Settings>({
@@ -24,7 +33,7 @@ export const SettingsSchema = defineEntity<Settings>({
       }),
       defaultValue: 'Something',
       type: RefractTypes.string
-    }
+    },
     // favouriteFood: {
     //   type: RefractTypes.arrayOf(
     //     RefractTypes.shape({
@@ -32,6 +41,13 @@ export const SettingsSchema = defineEntity<Settings>({
     //       name: RefractTypes.string
     //     })
     //   )
-    // }
+    // },
+    highlightedArticles: {
+      displayName: 'Highlighted articles',
+      type: RefractTypes.arrayOf(RefractTypes.string),
+      editorComponent: createMultipleEntityPickerEditor({
+        schema: NewsArticleSchema
+      })
+    }
   }
 });

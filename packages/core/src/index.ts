@@ -26,3 +26,4 @@ export { default as createDatePickerEditor } from './property-editors/DatePicker
 export { default as createListEditor } from './property-editors/ListEditor';
 export { default as createImagePickerEditor } from './property-editors/ImagePickerEditor';
 export { default as createSingleEntityPickerEditor } from './property-editors/SingleEntityPickerEditor';
+export { default as createMultipleEntityPickerEditor } from './property-editors/MultipleEntityPickerEditor';

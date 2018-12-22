@@ -99,7 +99,7 @@ class EntitiesList extends Component<Props> {
                 {!entitySchema.options.maxOne ? (
                   <div>
                     <List>
-                      {data.items.map((item: Entity) => {
+                      {(data.items || []).map((item: Entity) => {
                         return (
                           <EntityListItem
                             key={item._id}

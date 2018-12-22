@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   Entity,
   defineEntity,
@@ -10,7 +10,8 @@ import {
   ImageRef,
   PropertyEditorProps,
   EntityRef,
-  createSingleEntityPickerEditor
+  createSingleEntityPickerEditor,
+  createMultipleEntityPickerEditor
 } from '@refract-cms/core';
 import { NewsArticle } from './news-article.model';
 import DescriptionIcon from '@material-ui/icons/Description';
@@ -159,12 +160,8 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
     otherRelatedProductIds: {
       displayName: 'More products',
       type: RefractTypes.arrayOf(RefractTypes.string),
-      editorComponent: createListEditor({
-        max: 3,
-        displayNameFormat: productId => productId,
-        itemComponent: createSingleEntityPickerEditor({
-          schema: ProductSchema
-        })
+      editorComponent: createMultipleEntityPickerEditor({
+        schema: ProductSchema
       })
     }
   }
