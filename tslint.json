@@ -30,9 +30,8 @@
     "no-string-literal": false,
     "no-empty": false,
     "radix": false,
-    "interface-over-type-literal": false,
-    "variable-name": false,
-    "array-type": false
+    "array-type": false,
+    "no-string-throw": false
   },
   "jsRules": {
     "object-literal-sort-keys": false,
@@ -49,6 +48,8 @@
     "curly": false,
     "no-string-literal": false,
     "no-empty": false,
-    "radix": false
+    "radix": false,
+    "array-type": false,
+    "no-string-throw": false
   }
 }

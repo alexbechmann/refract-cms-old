@@ -66,8 +66,8 @@ class GraphqlQueryHelper {
     `);
   }
 
-  firstLetterToUpper(string: string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+  firstLetterToUpper(s: string) {
+    return s.charAt(0).toUpperCase() + s.slice(1);
   }
 }
 

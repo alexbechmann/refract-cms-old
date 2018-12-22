@@ -1,6 +1,6 @@
 import { PropertyType, EntitySchema, RefractTypes, PropertyOptions, Entity } from '@refract-cms/core';
 import { ShapeArgs, PropertyDescription } from '@refract-cms/core/src/properties/property-types';
-import mongoose, { SchemaTypeOpts, Schema, SchemaType } from 'mongoose';
+import mongoose, { SchemaTypeOpts, Schema, SchemaType, mongo } from 'mongoose';
 import { composeWithMongoose } from 'graphql-compose-mongoose';
 import { schemaComposer } from 'graphql-compose';
 
@@ -10,6 +10,12 @@ export class SchemaBuilder {
   buildSchema(schema: EntitySchema[]) {
     schema.forEach(entitySchema => {
       this.configureEntitySchema(entitySchema);
+    });
+  }
+
+  resetSchema() {
+    Object.keys(mongoose.connection.models).forEach(key => {
+      delete mongoose.connection.models[key];
     });
   }
 

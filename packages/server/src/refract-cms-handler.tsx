@@ -238,6 +238,7 @@ const refractCmsHandler = ({
 
   mongoose.connect(serverConfig.mongoConnectionString);
   const schemaBuilder = new SchemaBuilder();
+  schemaBuilder.resetSchema();
   schemaBuilder.buildSchema(config.schema);
   const schema = schemaComposer.buildSchema();
 
