@@ -1,3 +1,4 @@
+/* tslint:disable */
 import { Crop } from '../files/crop.model';
 import { ImageRef, Crops } from '../files/image-ref.model';
 import { EntitySchema } from '../entities/entity-schema';
