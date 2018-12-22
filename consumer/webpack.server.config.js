@@ -1,7 +1,6 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 const baseConfig = require('./webpack.base.config');
-const StartServerPlugin = require("start-server-webpack-plugin");
 const webpack = require('webpack');
 
 module.exports = {

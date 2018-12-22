@@ -19,9 +19,8 @@ import {
   MenuItem,
   Select
 } from '@material-ui/core';
-import { EntitySchema, Entity } from '@refract-cms/core';
+import { EntitySchema, Entity, graphqlQueryHelper, EntityListItem } from '@refract-cms/core';
 import { RouteComponentProps, Link, Redirect } from '@reach/router';
-import { graphqlQueryHelper } from '@refract-cms/core';
 import { connect } from 'react-redux';
 import { AppState } from '../state/app.state';
 import { combineContainers } from 'combine-containers';
@@ -101,26 +100,8 @@ class EntitiesList extends Component<Props> {
                   <div>
                     <List>
                       {data.items.map((item: Entity) => {
-                        const defaultInstanceDisplayProps: {
-                          primaryText: string;
-                          secondaryText: string | undefined;
-                          imageUrl: string | undefined;
-                        } = {
-                          primaryText: item._id,
-                          secondaryText: undefined,
-                          imageUrl: undefined
-                        };
-                        let overrideInstanceDisplayProps;
-                        try {
-                          overrideInstanceDisplayProps = pickBy(
-                            entitySchema.options.instanceDisplayProps!(item),
-                            negate(a => !Boolean(a))
-                          );
-                        } catch (error) {}
-
-                        const instanceDisplayProps = merge(defaultInstanceDisplayProps, overrideInstanceDisplayProps);
                         return (
-                          <ListItem
+                          <EntityListItem
                             key={item._id}
                             component={props => (
                               <Link
@@ -129,22 +110,9 @@ class EntitiesList extends Component<Props> {
                               />
                             )}
                             button
-                          >
-                            <ListItemAvatar>
-                              <Avatar src={instanceDisplayProps.imageUrl}>
-                                {entitySchema.options.icon ? (
-                                  <entitySchema.options.icon />
-                                ) : (
-                                  entitySchema.options.alias[0].toUpperCase()
-                                )}
-                              </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                              inset
-                              primary={instanceDisplayProps.primaryText}
-                              secondary={instanceDisplayProps.secondaryText}
-                            />
-                          </ListItem>
+                            entity={item}
+                            schema={entitySchema}
+                          />
                         );
                       })}
                     </List>

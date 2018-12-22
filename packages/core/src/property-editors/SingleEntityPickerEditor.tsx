@@ -15,24 +15,34 @@ import {
   Typography,
   Button,
   DialogActions,
-  DialogTitle
+  DialogTitle,
+  createStyles
 } from '@material-ui/core';
 import { combineContainers } from 'combine-containers';
 import { graphql, DataProps } from 'react-apollo';
-import gql from 'graphql-tag';
 import { graphqlQueryHelper } from '../graphql/graphql-query-helper';
-import { EntitySchema } from '../items/entity-schema';
-import { Entity } from '../items/entity.model';
+import { EntitySchema } from '../entities/entity-schema';
+import { Entity } from '../entities/entity.model';
+import EntityListItem from '../entities/EntityListItem';
+import { entityService } from '../entities/services/entity.service';
 
 export interface SingleEntityPickerOptions {
   schema: EntitySchema;
 }
 
-const styles = (theme: Theme) => ({
-  editor: {
-    width: '100%'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    editor: {
+      width: '100%'
+    },
+    textLink: {
+      cursor: 'pointer',
+      color: theme.palette.secondary.main,
+      '&:hover': {
+        textDecoration: 'underline'
+      }
+    }
+  });
 
 interface Props
   extends PropertyEditorProps<string>,
@@ -55,24 +65,20 @@ class SingleEntityPickerEditor extends React.Component<Props, State> {
     if (data.loading) {
       return <CircularProgress />;
     }
-    const instanceDisplayProps =
-      schema.options.instanceDisplayProps ||
-      (entity => ({
-        primaryText: entity._id,
-        secondaryText: undefined
-      }));
-
+    const instanceDisplayProps = entityService.instanceDisplayPropsOrDefault(schema);
     const match = data.items ? data.items.find(entity => entity._id === value) : undefined;
     return data.items ? (
       <div>
         {value ? (
           <div>
-            <Typography gutterBottom>
-              {match
-                ? `${instanceDisplayProps(match).primaryText} selected.`
-                : `${schema.options.displayName} selected.`}
+            <Typography
+              className={classes.textLink}
+              component="a"
+              gutterBottom
+              onClick={() => this.setState({ dialogOpen: true })}
+            >
+              {match ? `${instanceDisplayProps(match).primaryText}` : `${schema.options.displayName}`}
             </Typography>
-            <Button onClick={() => this.setState({ dialogOpen: true })}>Change</Button>
           </div>
         ) : (
           <Button onClick={() => this.setState({ dialogOpen: true })}>
@@ -86,26 +92,22 @@ class SingleEntityPickerEditor extends React.Component<Props, State> {
             <List style={{ width: 500 }}>
               {data.items.map(entity => {
                 const checked = entity._id === value;
+                const handleOnChange = () => {
+                  if (checked) {
+                    setValue(undefined);
+                  } else {
+                    setValue(entity._id);
+                  }
+                };
                 return (
-                  <ListItem
+                  <EntityListItem
+                    entity={entity}
+                    schema={schema}
                     key={entity._id}
                     button
-                    onClick={() => {
-                      if (checked) {
-                        setValue(undefined);
-                      } else {
-                        setValue(entity._id);
-                      }
-                    }}
-                  >
-                    <ListItemText
-                      primary={instanceDisplayProps(entity).primaryText}
-                      secondary={instanceDisplayProps(entity).secondaryText}
-                    />
-                    <ListItemSecondaryAction>
-                      <Checkbox checked={checked} />
-                    </ListItemSecondaryAction>
-                  </ListItem>
+                    onClick={handleOnChange}
+                    SecondaryAction={<Checkbox onChange={handleOnChange} checked={checked} />}
+                  />
                 );
               })}
             </List>

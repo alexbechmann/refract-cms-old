@@ -14,6 +14,7 @@ export { AuthToken } from './auth/auth-token';
 export { fileService } from './files/file.service';
 export { EntityRef } from './entities/entity-ref.model';
 export { FileSchema } from './files/file.schema';
+export { default as EntityListItem } from './entities/EntityListItem';
 
 // Property Editors
 export { PropertyEditorProps } from './properties/property-editor-props';

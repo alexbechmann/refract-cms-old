@@ -40,7 +40,7 @@ export interface NewsArticle extends Entity {
   // relatedProducts: Product[];
   // highlightedProduct: EntityRef<Product>;
   highlightedProductId: string;
-  // otherRelatedProductIds: string[];
+  otherRelatedProductIds: string[];
 }
 
 export const NewsArticleSchema = defineEntity<NewsArticle>({
@@ -150,10 +150,21 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
     //   type: RefractTypes.ref(ProductSchema)
     // }
     highlightedProductId: {
-      displayName: 'Highlighted Product',
+      displayName: 'Highlighted product',
       type: RefractTypes.string,
       editorComponent: createSingleEntityPickerEditor({
         schema: ProductSchema
+      })
+    },
+    otherRelatedProductIds: {
+      displayName: 'More products',
+      type: RefractTypes.arrayOf(RefractTypes.string),
+      editorComponent: createListEditor({
+        max: 3,
+        displayNameFormat: productId => productId,
+        itemComponent: createSingleEntityPickerEditor({
+          schema: ProductSchema
+        })
       })
     }
   }
