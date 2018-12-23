@@ -99,6 +99,7 @@ class MultipleEntityPickerEditor extends React.Component<Props, State> {
               const url = match ? instanceDisplayProps(match).imageUrl : undefined;
               return match ? (
                 <Chip
+                  key={id}
                   avatar={url ? <Avatar src={instanceDisplayProps(match).imageUrl} /> : undefined}
                   label={instanceDisplayProps(match).primaryText}
                   onDelete={this.handleOnChange({ entity: match })}

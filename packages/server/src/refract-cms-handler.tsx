@@ -2,7 +2,7 @@ import * as express from 'express';
 import graphqlHTTP from 'express-graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import { Dashboard } from '@refract-cms/dashboard';
-import { Config, graphqlQueryHelper, File, Crop, defineEntity } from '@refract-cms/core';
+import { Config, graphqlQueryHelper, FileModel, Crop, defineEntity } from '@refract-cms/core';
 import { merge } from 'lodash';
 import { printType } from 'graphql';
 import { MongoClient, Db, ObjectId } from 'mongodb';
@@ -14,7 +14,6 @@ import { authService } from './auth/auth.service';
 import uniqueString from 'unique-string';
 import fs from 'fs';
 import { SchemaBuilder } from './graphql/schema-builder';
-import { FileModel } from './files/file-model';
 import mongoose from 'mongoose';
 import { schemaComposer } from 'graphql-compose';
 
@@ -239,7 +238,7 @@ const refractCmsHandler = ({
   mongoose.connect(serverConfig.mongoConnectionString);
   const schemaBuilder = new SchemaBuilder();
   schemaBuilder.resetSchema();
-  schemaBuilder.buildSchema(config.schema);
+  schemaBuilder.buildSchema(config.schema, serverConfig);
   const schema = schemaComposer.buildSchema();
 
   router.use(

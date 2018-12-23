@@ -115,7 +115,7 @@ class EntityForm extends Component<Props, State> {
               </IconButton>
             ),
             () => (
-              <Button color="primary" variant="raised" onClick={this.save}>
+              <Button color="primary" variant="contained" onClick={this.save}>
                 Save
               </Button>
             )

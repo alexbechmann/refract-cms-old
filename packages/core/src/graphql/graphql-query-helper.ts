@@ -16,14 +16,6 @@ class GraphqlQueryHelper {
       acc[p] = schema.properties[p].type;
       return acc;
     }, {});
-    console.log(`
-    {
-      items: ${schema.options.alias}Many {
-        _id
-        ${this.buildProperties(propertyTypes)}
-      }
-    }
-  `);
     return gql(`
       {
         items: ${schema.options.alias}Many {
@@ -38,7 +30,6 @@ class GraphqlQueryHelper {
     return Object.keys(properties).map(propertyKey => {
       const propertyType = properties[propertyKey];
       if (propertyType.alias === 'Shape') {
-        console.log('shape', propertyKey, propertyType.meta);
         return `
         ${propertyKey} {
           ${this.buildProperties(propertyType.meta!)}

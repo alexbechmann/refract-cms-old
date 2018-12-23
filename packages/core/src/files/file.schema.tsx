@@ -1,17 +1,18 @@
 import defineEntity from '../entities/define-entity';
-import { File } from './file.model';
+import { FileModel } from './file.model';
 import { RefractTypes } from '../properties/property-types';
 import createTextEditor from '../property-editors/TextEditor';
 import ImageIcon from '@material-ui/icons/Image';
+import createFileUploadEditor from '../property-editors/FileUploaderEditor';
 
-export const FileSchema = defineEntity<File>({
+export const FileSchema = defineEntity<FileModel>({
   options: {
     alias: 'file',
     displayName: 'File',
     icon: ImageIcon,
     instanceDisplayProps: file => ({
-      primaryText: file.url,
-      secondaryText: file.mimetype,
+      primaryText: file._id,
+      secondaryText: file.url,
       imageUrl: file.url
     })
   },
@@ -24,6 +25,11 @@ export const FileSchema = defineEntity<File>({
     url: {
       displayName: 'Url',
       editorComponent: createTextEditor(),
+      type: RefractTypes.string
+    },
+    fileName: {
+      displayName: 'File',
+      editorComponent: createFileUploadEditor({}),
       type: RefractTypes.string
     }
   }

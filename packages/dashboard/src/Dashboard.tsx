@@ -43,7 +43,6 @@ import { store } from './state/root.store';
 import { provide } from './state/provide';
 import EditEntity from './entities/EditEntity';
 import 'typeface-roboto';
-import FilesPage from './files/FilesPage';
 import Auth from './auth/Auth';
 import { checkLocalStorageForAccessToken, logout } from './auth/state/auth.actions';
 import Notifications from './notifications/Notifications';
@@ -251,7 +250,7 @@ class Dashboard extends React.Component<Props> {
           </Drawer>
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
-            {!isLoggedIn && false ? (
+            {!isLoggedIn ? (
               <Router>
                 <Auth default path="/" />
               </Router>
@@ -260,7 +259,6 @@ class Dashboard extends React.Component<Props> {
                 <HomePage path={routes.root.path} />
                 <Graphql path={routes.graphql.path} serverUrl={serverUrl} />
                 <EntityList path={routes.entity.list.path} />
-                <FilesPage path={routes.files.path} />
                 <EditEntity path={routes.entity.edit.path} />
               </Router>
             )}

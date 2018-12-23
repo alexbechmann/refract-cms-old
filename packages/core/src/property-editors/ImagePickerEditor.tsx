@@ -19,7 +19,7 @@ import {
 } from '@material-ui/core';
 import { ImageRef } from '../files/image-ref.model';
 import FileList from '../files/FileList';
-import { File } from '../files/file.model';
+import { FileModel } from '../files/file.model';
 import { Crop } from '../files/crop.model';
 import classNames from 'classnames';
 import { fileService } from '../files/file.service';

@@ -76,7 +76,7 @@ class EntitiesList extends Component<Props> {
                 ),
                 () => (
                   <Button
-                    variant="raised"
+                    variant="contained"
                     color="primary"
                     component={props => (
                       <Link to={routes.entity.edit.createUrl({ id: 'new', schema: entitySchema })} {...props} />
@@ -120,7 +120,7 @@ class EntitiesList extends Component<Props> {
                 ) : (
                   <div>
                     <Button
-                      variant="raised"
+                      variant="contained"
                       color="primary"
                       component={props => (
                         <Link
