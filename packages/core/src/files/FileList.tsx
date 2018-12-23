@@ -20,7 +20,12 @@ class FileList extends Component<Props> {
       {
         files: fileMany {
           _id
-          url
+          fileRef {
+            fileName
+            path
+            mimetype
+            size
+          }
         }
       }
     `;

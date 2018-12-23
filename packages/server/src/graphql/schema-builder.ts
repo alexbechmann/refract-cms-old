@@ -36,13 +36,8 @@ export class SchemaBuilder {
     });
   }
 
-  resetSchema() {
-    Object.keys(mongoose.connection.models).forEach(key => {
-      delete mongoose.connection.models[key];
-    });
-  }
-
   configureEntitySchema(entitySchema: EntitySchema) {
+    delete mongoose.connection.models[entitySchema.options.alias];
     const definition = Object.keys(entitySchema.properties).reduce((acc, propertyKey) => {
       const typeDef = entitySchema.properties[propertyKey].type;
       acc[propertyKey] = this.buildType(propertyKey, typeDef);

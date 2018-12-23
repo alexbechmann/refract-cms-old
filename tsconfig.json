@@ -25,6 +25,7 @@
     "paths": {
       "@refract-cms/*": ["./packages/*/src"]
     },
+    "isolatedModules": false
   },
   "exclude": [
     "node_modules",

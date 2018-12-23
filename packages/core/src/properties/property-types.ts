@@ -50,7 +50,6 @@ const cropShape = shape<Crop>({
 function imageShape<TCrops extends string>(crops: ShapeArgs<Crops<TCrops>>) {
   return RefractTypes.shape<ImageRef<TCrops>>({
     imageId: RefractTypes.string,
-    imageUrl: RefractTypes.string,
     crops: shape(crops)
   });
 }

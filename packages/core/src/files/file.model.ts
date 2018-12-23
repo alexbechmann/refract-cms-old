@@ -1,7 +1,6 @@
 import { Entity } from '../entities/entity.model';
+import { FileRef } from './file-ref.model';
 
 export interface FileModel extends Entity {
-  mimetype: string;
-  url: string;
-  fileName: string;
+  fileRef: FileRef;
 }

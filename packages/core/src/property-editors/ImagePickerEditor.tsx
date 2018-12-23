@@ -38,8 +38,8 @@ export interface ImagePickerEditorOptions<TCrops extends string> {
 const styles = (theme: Theme) =>
   createStyles({
     cropContainer: {
-      width: '100%',
-      height: '100%',
+      height: '100vh',
+      minHeight: 400,
       position: 'relative'
     },
     imagePreview: {
@@ -98,7 +98,7 @@ const ImagePickerEditor = withStyles(styles)(
       const { cropDefinitions, value, setValue, classes } = this.props;
       return (
         <div>
-          <Avatar src={value!.imageUrl} className={classes.imagePreview} />
+          <Avatar src={fileService.buildImageUrl(value!.imageId)} className={classes.imagePreview} />
           <Grid container spacing={16}>
             {Object.keys(cropDefinitions).map(cropKey => {
               const cropDefinition = cropDefinitions[cropKey];
@@ -116,14 +116,14 @@ const ImagePickerEditor = withStyles(styles)(
                   >
                     <img
                       style={{ width: '100%' }}
-                      src={fileService.buildImageUrl(this.props.value!, this.props.value!.crops[cropKey])}
+                      src={fileService.buildImageUrl(this.props.value!.imageId, this.props.value!.crops[cropKey])}
                     />
                   </ButtonBase>
                   <Dialog open={cropKey === this.state.activeCropName} fullScreen>
                     <DialogContent>
                       <div className={classNames('crop-container', classes.cropContainer)}>
                         <Cropper
-                          image={value!.imageUrl}
+                          image={fileService.buildImageUrl(value!.imageId)}
                           crop={value!.crops[cropKey].crop}
                           zoom={value!.crops[cropKey].zoom}
                           aspect={cropDefinition.aspectRatio}
@@ -194,7 +194,6 @@ const ImagePickerEditor = withStyles(styles)(
                 onSelectFile={file => {
                   const newValue = {
                     imageId: file._id,
-                    imageUrl: file.url,
                     crops: Object.keys(cropDefinitions).reduce((acc, cropKey) => {
                       acc[cropKey] = {
                         crop: { x: 0, y: 0 },

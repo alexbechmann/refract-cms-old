@@ -6,7 +6,7 @@ import { fileService } from './file.service';
 import { withApollo, WithApolloClient } from 'react-apollo';
 import { connect } from 'react-redux';
 import { combineContainers } from 'combine-containers';
-import { FileModel } from './file.model';
+import { FileRef } from './file-ref.model';
 
 interface State {
   file?: File;
@@ -14,7 +14,7 @@ interface State {
 }
 
 interface ImageUploaderProps {
-  onUploaded?: (file: FileModel) => void;
+  onUploaded?: (fileRef: FileRef) => void;
 }
 
 interface Props extends ImageUploaderProps, WithApolloClient<{}>, MapDispatchToProps {}
@@ -76,12 +76,17 @@ class ImageUploader extends React.Component<Props, State> {
       this.setState({
         uploading: true
       });
-      fileService.upload(file, filename).then(fileEntity => {
+      fileService.upload(file, filename).then(multerFile => {
         this.setState({ uploading: false });
         this.props.client.resetStore();
         // this.props.addNotification('Successfully uploaded file.');
         if (this.props.onUploaded) {
-          this.props.onUploaded(fileEntity);
+          this.props.onUploaded({
+            path: multerFile.path,
+            fileName: multerFile.originalname,
+            mimetype: multerFile.mimetype,
+            size: multerFile.size
+          });
         }
         this.setState({
           file: undefined

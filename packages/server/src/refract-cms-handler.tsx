@@ -237,7 +237,6 @@ const refractCmsHandler = ({
 
   mongoose.connect(serverConfig.mongoConnectionString);
   const schemaBuilder = new SchemaBuilder();
-  schemaBuilder.resetSchema();
   schemaBuilder.buildSchema(config.schema, serverConfig);
   const schema = schemaComposer.buildSchema();
 
@@ -256,34 +255,32 @@ const refractCmsHandler = ({
 
   // const filesRepository = new MongoRepository<FileModel>('files', db!);
 
-  // router.get('/files/:id', async (req, res) => {
-  //   const { id } = req.params;
-  //   const crop = req.query;
-  //   const entity = await filesRepository.getById({ id });
-  //   const img = await jimp.read(entity.path);
+  const fileRepository = mongoose.connection.models['file'];
 
-  //   if (crop.x && crop.y && crop.width && crop.height) {
-  //     img.crop(parseInt(crop.x), parseInt(crop.y), parseInt(crop.width), parseInt(crop.height));
-  //   }
+  router.get('/files/:id', async (req, res) => {
+    const { id } = req.params;
+    const crop = req.query;
+    const entity: FileModel = await fileRepository.findById(id);
 
-  //   const imgBuffer = await img.getBufferAsync(entity.mimetype);
-  //   res.writeHead(200, { 'Content-Type': entity.mimetype });
-  //   res.end(imgBuffer, 'binary');
-  // });
+    if (entity.fileRef) {
+      const img = await jimp.read(entity.fileRef.path);
 
-  // router.post('/files', upload.single('file'), (req, res) => {
-  //   const { mimetype, path, filename, size } = req.file;
-  //   filesRepository
-  //     .insert({
-  //       mimetype,
-  //       path,
-  //       filename,
-  //       size
-  //     })
-  //     .then(() => {
-  //       res.send(200);
-  //     });
-  // });
+      if (crop.x && crop.y && crop.width && crop.height) {
+        img.crop(parseInt(crop.x), parseInt(crop.y), parseInt(crop.width), parseInt(crop.height));
+      }
+
+      const imgBuffer = await img.getBufferAsync(entity.fileRef.mimetype);
+      res.writeHead(200, { 'Content-Type': entity.fileRef.mimetype });
+      res.end(imgBuffer, 'binary');
+    } else {
+      res.sendStatus(500);
+    }
+  });
+
+  router.post('/files', upload.single('file'), (req, res) => {
+    const { mimetype, path, filename, size } = req.file;
+    res.send(req.file);
+  });
 
   return [rootPath, router] as RequestHandlerParams[];
 };
