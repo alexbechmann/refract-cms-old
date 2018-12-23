@@ -91,6 +91,7 @@ class EntitiesList extends Component<Props> {
       >
         <Query query={query}>
           {({ loading, error, data }) => {
+            const items = data.items || [];
             if (loading) {
               return <CircularProgress />;
             }
@@ -99,7 +100,7 @@ class EntitiesList extends Component<Props> {
                 {!entitySchema.options.maxOne ? (
                   <div>
                     <List>
-                      {(data.items || []).map((item: Entity) => {
+                      {items.map((item: Entity) => {
                         return (
                           <EntityListItem
                             key={item._id}
@@ -125,9 +126,9 @@ class EntitiesList extends Component<Props> {
                       component={props => (
                         <Link
                           to={
-                            data.items.length === 0
+                            items.length === 0
                               ? routes.entity.edit.createUrl({ id: 'new', schema: entitySchema })
-                              : routes.entity.edit.createUrl({ id: data.items[0]._id, schema: entitySchema })
+                              : routes.entity.edit.createUrl({ id: items[0]._id, schema: entitySchema })
                           }
                           {...props}
                         />

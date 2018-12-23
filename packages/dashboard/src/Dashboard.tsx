@@ -165,6 +165,7 @@ class Dashboard extends React.Component<Props> {
     ) : (
       <ApolloProvider client={createApolloClient({ serverUrl })}>
         <div className={classes.root}>
+          <Notifications />
           <CssBaseline />
           <AppBar position="absolute" className={classNames(classes.appBar, this.state.open && classes.appBarShift)}>
             <Toolbar disableGutters={!this.state.open} className={classes.toolbar}>
@@ -263,7 +264,6 @@ class Dashboard extends React.Component<Props> {
               </Router>
             )}
           </main>
-          <Notifications />
         </div>
       </ApolloProvider>
     );

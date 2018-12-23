@@ -8,18 +8,16 @@ export interface SingleEntityPickerOptions {
 }
 
 export default (options: SingleEntityPickerOptions) => {
-  const Editor = createMultipleEntityPickerEditor(options);
-  return (props: PropertyEditorProps<string>) => {
-    return (
-      <Editor
-        value={[props.value].filter(Boolean)}
-        setValue={newValue => {
-          props.setValue(newValue[newValue.length - 1]);
-        }}
-        propertyKey={props.propertyKey}
-        propertyOptions={props.propertyOptions}
-        {...options}
-      />
-    );
-  };
+  const MultipleEntityPickerEditor = createMultipleEntityPickerEditor(options);
+  return (props: PropertyEditorProps<string>) => (
+    <MultipleEntityPickerEditor
+      value={[props.value].filter(Boolean)}
+      setValue={newValue => {
+        props.setValue(newValue[newValue.length - 1]);
+      }}
+      propertyKey={props.propertyKey}
+      propertyOptions={props.propertyOptions}
+      {...options}
+    />
+  );
 };
