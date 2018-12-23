@@ -69,11 +69,11 @@ class EntitiesList extends Component<Props> {
                 //     </Select>
                 //   </FormControl>
                 // ),
-                () => (
-                  <IconButton onClick={() => this.setState({ filterDialogOpen: true })}>
-                    <FilterList />
-                  </IconButton>
-                ),
+                // () => (
+                //   <IconButton onClick={() => this.setState({ filterDialogOpen: true })}>
+                //     <FilterList />
+                //   </IconButton>
+                // ),
                 () => (
                   <Button
                     variant="contained"

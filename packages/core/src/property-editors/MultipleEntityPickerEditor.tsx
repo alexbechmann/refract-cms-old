@@ -28,6 +28,7 @@ import { Entity } from '../entities/entity.model';
 import EntityListItem from '../entities/EntityListItem';
 import { entityService } from '../entities/services/entity.service';
 import pluralize from 'pluralize';
+import { AddCircle } from '@material-ui/icons';
 
 export interface MultipleEntityPickerOptions {
   schema: EntitySchema;
@@ -93,7 +94,7 @@ class MultipleEntityPickerEditor extends React.Component<Props, State> {
     return data.items ? (
       <div>
         {value ? (
-          <div>
+          <React.Fragment>
             {selectedEntityIds.map(id => {
               const match = data.items ? data.items.find(entity => entity._id === id) : undefined;
               const url = match ? instanceDisplayProps(match).imageUrl : undefined;
@@ -109,13 +110,17 @@ class MultipleEntityPickerEditor extends React.Component<Props, State> {
                 <span />
               );
             })}
-          </div>
+          </React.Fragment>
         ) : (
           <span />
         )}
-        <Button onClick={() => this.setState({ dialogOpen: true })}>
-          Click to select a {schema.options.displayName}
-        </Button>
+        <Chip
+          icon={<AddCircle />}
+          color="secondary"
+          label={`Select ${schema.options.displayName}`}
+          className={classes.chip}
+          onClick={() => this.setState({ dialogOpen: true })}
+        />
         <Dialog open={this.state.dialogOpen}>
           <DialogTitle>Select a {schema.options.displayName}</DialogTitle>
           <DialogContent>
