@@ -22,7 +22,9 @@ import FileList from '../files/FileList';
 import { FileModel } from '../files/file.model';
 import { Crop } from '../files/crop.model';
 import classNames from 'classnames';
-import { fileService } from '../files/file.service';
+import { combineContainers } from 'combine-containers';
+import { withCoreContext } from '../context/with-core-context';
+import { WithCoreContextProps } from '../context/with-core-context-props.model';
 
 type Crops<TCrops extends string> = {
   [P in TCrops]: {
@@ -49,14 +51,18 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props extends ImagePickerEditorOptions<any>, PropertyEditorProps<ImageRef<any>>, WithStyles<typeof styles> {}
+interface Props
+  extends ImagePickerEditorOptions<any>,
+    PropertyEditorProps<ImageRef<any>>,
+    WithStyles<typeof styles>,
+    WithCoreContextProps {}
 
 interface State {
   activeCropName: string | null;
   selectFileDialogOpen: boolean;
 }
 
-const ImagePickerEditor = withStyles(styles)(
+const ImagePickerEditor = combineContainers(withStyles(styles), withCoreContext)(
   class extends React.Component<Props, State> {
     constructor(props) {
       super(props);
@@ -95,7 +101,8 @@ const ImagePickerEditor = withStyles(styles)(
     };
 
     renderHasValueUI() {
-      const { cropDefinitions, value, setValue, classes } = this.props;
+      const { cropDefinitions, value, setValue, classes, context } = this.props;
+      const { fileService } = context;
       return (
         <div>
           <Avatar src={fileService.buildImageUrl(value!.imageId)} className={classes.imagePreview} />

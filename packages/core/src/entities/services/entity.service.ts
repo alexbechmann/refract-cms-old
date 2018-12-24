@@ -1,9 +1,10 @@
 import { pickBy, negate, merge } from 'lodash';
 import { EntitySchema } from '../entity-schema';
 import { Entity } from '../entity.model';
+import { CoreContextModel } from '../../context/core-context.model';
 
 class EntityService {
-  instanceDisplayPropsOrDefault = (entitySchema: EntitySchema) => (entity: Entity) => {
+  instanceDisplayPropsOrDefault = (entitySchema: EntitySchema, context: CoreContextModel) => (entity: Entity) => {
     const defaultInstanceDisplayProps: {
       primaryText: string;
       secondaryText: string | undefined;
@@ -16,7 +17,7 @@ class EntityService {
     let overrideInstanceDisplayProps;
     try {
       overrideInstanceDisplayProps = pickBy(
-        entitySchema.options.instanceDisplayProps!(entity),
+        entitySchema.options.instanceDisplayProps!(entity, { context }),
         negate(a => !Boolean(a))
       );
     } catch (error) {}

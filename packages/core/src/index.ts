@@ -11,13 +11,17 @@ export { ImageRef } from './files/image-ref.model';
 export { Crop } from './files/crop.model';
 export { FileModel } from './files/file.model';
 export { AuthToken } from './auth/auth-token';
-export { fileService } from './files/file.service';
+export { FileService } from './files/file.service';
 export { EntityRef } from './entities/entity-ref.model';
 export { FileSchema } from './files/file.schema';
 export { default as EntityListItem } from './entities/EntityListItem';
+export { CoreContext } from './context/core.context';
+export { withCoreContext } from './context/with-core-context';
+export { WithCoreContextProps } from './context/with-core-context-props.model';
 
 // Property Editors
 export { PropertyEditorProps } from './properties/property-editor-props';
+export { default as RenderEditor } from './property-editors/RenderEditor';
 export { default as createTextEditor } from './property-editors/TextEditor';
 export { default as createLocationEditor } from './property-editors/LocationEditor';
 export { default as createSingleDropdownEditor } from './property-editors/SingleDropdownEditor';

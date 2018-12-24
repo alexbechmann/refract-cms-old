@@ -2,11 +2,12 @@ import React from 'react';
 import { LinearProgress, IconButton, Button, CircularProgress, Typography } from '@material-ui/core';
 import * as Icons from '@material-ui/icons';
 import createUniqueString from 'unique-string';
-import { fileService } from './file.service';
 import { withApollo, WithApolloClient } from 'react-apollo';
 import { connect } from 'react-redux';
 import { combineContainers } from 'combine-containers';
 import { FileRef } from './file-ref.model';
+import { withCoreContext } from '../context/with-core-context';
+import { WithCoreContextProps } from '../context/with-core-context-props.model';
 
 interface State {
   file?: File;
@@ -17,7 +18,7 @@ interface ImageUploaderProps {
   onUploaded?: (fileRef: FileRef) => void;
 }
 
-interface Props extends ImageUploaderProps, WithApolloClient<{}>, MapDispatchToProps {}
+interface Props extends ImageUploaderProps, WithApolloClient<{}>, MapDispatchToProps, WithCoreContextProps {}
 
 class ImageUploader extends React.Component<Props, State> {
   state: State = {
@@ -76,7 +77,7 @@ class ImageUploader extends React.Component<Props, State> {
       this.setState({
         uploading: true
       });
-      fileService.upload(file, filename).then(multerFile => {
+      this.props.context.fileService.upload(file, filename).then(multerFile => {
         this.setState({ uploading: false });
         this.props.client.resetStore();
         // this.props.addNotification('Successfully uploaded file.');
@@ -107,5 +108,6 @@ export default combineContainers(
   connect(
     null,
     mapDispatchToProps
-  )
+  ),
+  withCoreContext
 )(ImageUploader) as React.ComponentType<ImageUploaderProps>;

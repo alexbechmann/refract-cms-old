@@ -28,7 +28,7 @@ import {
 } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import HelpIcon from '@material-ui/icons/Help';
-import { Config, EntitySchema } from '@refract-cms/core';
+import { Config, EntitySchema, CoreContext } from '@refract-cms/core';
 import Graphql from './Graphql/Graphql';
 import { ApolloProvider } from 'react-apollo';
 import { createApolloClient } from './graphql/create-apollo-client';
@@ -46,6 +46,7 @@ import 'typeface-roboto';
 import Auth from './auth/Auth';
 import { checkLocalStorageForAccessToken, logout } from './auth/state/auth.actions';
 import Notifications from './notifications/Notifications';
+import { FileService } from '@refract-cms/core';
 
 const drawerWidth = 240;
 
@@ -164,107 +165,114 @@ class Dashboard extends React.Component<Props> {
       <CircularProgress />
     ) : (
       <ApolloProvider client={createApolloClient({ serverUrl })}>
-        <div className={classes.root}>
-          <Notifications />
-          <CssBaseline />
-          <AppBar position="absolute" className={classNames(classes.appBar, this.state.open && classes.appBarShift)}>
-            <Toolbar disableGutters={!this.state.open} className={classes.toolbar}>
-              <IconButton
-                color="inherit"
-                aria-label="Open drawer"
-                onClick={this.handleDrawerOpen}
-                className={classNames(classes.menuButton, this.state.open && classes.menuButtonHidden)}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                Content Dashboard
-              </Typography>
-              {/* <IconButton color="inherit">
+        <CoreContext.Provider
+          value={{
+            serverUrl,
+            fileService: new FileService(serverUrl)
+          }}
+        >
+          <div className={classes.root}>
+            <Notifications />
+            <CssBaseline />
+            <AppBar position="absolute" className={classNames(classes.appBar, this.state.open && classes.appBarShift)}>
+              <Toolbar disableGutters={!this.state.open} className={classes.toolbar}>
+                <IconButton
+                  color="inherit"
+                  aria-label="Open drawer"
+                  onClick={this.handleDrawerOpen}
+                  className={classNames(classes.menuButton, this.state.open && classes.menuButtonHidden)}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+                  Content Dashboard
+                </Typography>
+                {/* <IconButton color="inherit">
                 <Badge badgeContent={4} color="secondary">
                   <NotificationsIcon />
                 </Badge>
               </IconButton> */}
-            </Toolbar>
-          </AppBar>
-          <Drawer
-            variant="permanent"
-            classes={{
-              paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose)
-            }}
-            open={this.state.open}
-          >
-            <div className={classes.toolbarIcon}>
-              <IconButton onClick={this.handleDrawerClose}>
-                <ChevronLeftIcon />
-              </IconButton>
-            </div>
-            <Divider />
-            <List>
-              <ListItem button component={(props: any) => <Link {...props} to={routes.root.createUrl()} />}>
-                <ListItemIcon>
-                  <HomeIcon />
-                </ListItemIcon>
-                <ListItemText primary="Home" />
-              </ListItem>
-              {/* <ListItem button component={(props: any) => <Link {...props} to={routes.files.createUrl()} />}>
+              </Toolbar>
+            </AppBar>
+            <Drawer
+              variant="permanent"
+              classes={{
+                paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose)
+              }}
+              open={this.state.open}
+            >
+              <div className={classes.toolbarIcon}>
+                <IconButton onClick={this.handleDrawerClose}>
+                  <ChevronLeftIcon />
+                </IconButton>
+              </div>
+              <Divider />
+              <List>
+                <ListItem button component={(props: any) => <Link {...props} to={routes.root.createUrl()} />}>
+                  <ListItemIcon>
+                    <HomeIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Home" />
+                </ListItem>
+                {/* <ListItem button component={(props: any) => <Link {...props} to={routes.files.createUrl()} />}>
                 <ListItemIcon>
                   <ImageIcon />
                 </ListItemIcon>
                 <ListItemText primary="Files" />
               </ListItem> */}
-              <ListItem button component={(props: any) => <Link {...props} to={routes.graphql.createUrl()} />}>
-                <ListItemIcon>
-                  <CloudIcon />
-                </ListItemIcon>
-                <ListItemText primary="Graphql" />
-              </ListItem>
-            </List>
-            <Divider />
-            <List>
-              {config.schema.map(schema => {
-                return (
-                  <ListItem
-                    key={schema.options.alias}
-                    button
-                    component={(props: any) => <Link {...props} to={routes.entity.list.createUrl(schema)} />}
-                  >
-                    {schema.options.icon && (
-                      <ListItemIcon>
-                        <schema.options.icon />
-                      </ListItemIcon>
-                    )}
-                    <ListItemText inset primary={schema.options.displayName || schema.options.alias} />
-                  </ListItem>
-                );
-              })}
-            </List>
-            <Divider />
-            <List>
-              <ListItem button onClick={logout}>
-                <ListItemIcon>
-                  <ExitToApp />
-                </ListItemIcon>
-                <ListItemText inset primary="Logout" />
-              </ListItem>
-            </List>
-          </Drawer>
-          <main className={classes.content}>
-            <div className={classes.appBarSpacer} />
-            {!isLoggedIn ? (
-              <Router>
-                <Auth default path="/" />
-              </Router>
-            ) : (
-              <Router>
-                <HomePage path={routes.root.path} />
-                <Graphql path={routes.graphql.path} serverUrl={serverUrl} />
-                <EntityList path={routes.entity.list.path} />
-                <EditEntity path={routes.entity.edit.path} />
-              </Router>
-            )}
-          </main>
-        </div>
+                <ListItem button component={(props: any) => <Link {...props} to={routes.graphql.createUrl()} />}>
+                  <ListItemIcon>
+                    <CloudIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Graphql" />
+                </ListItem>
+              </List>
+              <Divider />
+              <List>
+                {config.schema.map(schema => {
+                  return (
+                    <ListItem
+                      key={schema.options.alias}
+                      button
+                      component={(props: any) => <Link {...props} to={routes.entity.list.createUrl(schema)} />}
+                    >
+                      {schema.options.icon && (
+                        <ListItemIcon>
+                          <schema.options.icon />
+                        </ListItemIcon>
+                      )}
+                      <ListItemText inset primary={schema.options.displayName || schema.options.alias} />
+                    </ListItem>
+                  );
+                })}
+              </List>
+              <Divider />
+              <List>
+                <ListItem button onClick={logout}>
+                  <ListItemIcon>
+                    <ExitToApp />
+                  </ListItemIcon>
+                  <ListItemText inset primary="Logout" />
+                </ListItem>
+              </List>
+            </Drawer>
+            <main className={classes.content}>
+              <div className={classes.appBarSpacer} />
+              {!isLoggedIn ? (
+                <Router>
+                  <Auth default path="/" />
+                </Router>
+              ) : (
+                <Router>
+                  <HomePage path={routes.root.path} />
+                  <Graphql path={routes.graphql.path} serverUrl={serverUrl} />
+                  <EntityList path={routes.entity.list.path} />
+                  <EditEntity path={routes.entity.edit.path} />
+                </Router>
+              )}
+            </main>
+          </div>
+        </CoreContext.Provider>
       </ApolloProvider>
     );
   }

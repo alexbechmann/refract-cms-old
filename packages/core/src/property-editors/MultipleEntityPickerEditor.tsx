@@ -29,6 +29,8 @@ import EntityListItem from '../entities/EntityListItem';
 import { entityService } from '../entities/services/entity.service';
 import pluralize from 'pluralize';
 import { AddCircle } from '@material-ui/icons';
+import { withCoreContext } from '../context/with-core-context';
+import { WithCoreContextProps } from '../context/with-core-context-props.model';
 
 export interface MultipleEntityPickerOptions {
   schema: EntitySchema;
@@ -54,6 +56,7 @@ const styles = (theme: Theme) =>
 interface Props
   extends PropertyEditorProps<string[]>,
     WithStyles<typeof styles>,
+    WithCoreContextProps,
     MultipleEntityPickerOptions,
     DataProps<{
       items: Entity[];
@@ -85,12 +88,12 @@ class MultipleEntityPickerEditor extends React.Component<Props, State> {
   };
 
   render() {
-    const { classes, value, data, setValue, schema } = this.props;
+    const { classes, value, data, setValue, schema, context } = this.props;
     if (data.loading) {
       return <CircularProgress />;
     }
     const selectedEntityIds = value || [];
-    const instanceDisplayProps = entityService.instanceDisplayPropsOrDefault(schema);
+    const instanceDisplayProps = entityService.instanceDisplayPropsOrDefault(schema, context);
     return data.items ? (
       <div>
         {value ? (
@@ -154,6 +157,8 @@ class MultipleEntityPickerEditor extends React.Component<Props, State> {
 
 export default (options: MultipleEntityPickerOptions) => {
   const ENTITY_PICKER_QUERY = graphqlQueryHelper.getAllQueryWithAllFields(options.schema);
-  const Editor = combineContainers(withStyles(styles), graphql(ENTITY_PICKER_QUERY))(MultipleEntityPickerEditor);
+  const Editor = combineContainers(withCoreContext, withStyles(styles), graphql(ENTITY_PICKER_QUERY))(
+    MultipleEntityPickerEditor
+  );
   return (props: PropertyEditorProps<string[]>) => <Editor {...props} {...options} />;
 };

@@ -5,4 +5,5 @@ export interface PropertyEditorProps<T> {
   propertyKey: string;
   value: T | undefined;
   propertyOptions: PropertyOptions;
+  serverUrl: string;
 }

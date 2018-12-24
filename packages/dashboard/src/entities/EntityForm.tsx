@@ -1,6 +1,12 @@
 import React, { Component, Fragment } from 'react';
-import { EntitySchema, graphqlQueryHelper, Entity } from '@refract-cms/core';
-import RenderEditor from './RenderEditor';
+import {
+  EntitySchema,
+  graphqlQueryHelper,
+  Entity,
+  withCoreContext,
+  WithCoreContextProps,
+  RenderEditor
+} from '@refract-cms/core';
 import { navigate } from '@reach/router';
 import {
   Button,
@@ -50,7 +56,8 @@ interface Props
     WithStyles<typeof styles>,
     ReturnType<typeof mapStateToProps>,
     WithApolloClient<EntityFormProps>,
-    MapDispatchToProps {}
+    MapDispatchToProps,
+    WithCoreContextProps {}
 
 class EntityForm extends Component<Props, State> {
   constructor(props: Props) {
@@ -96,7 +103,7 @@ class EntityForm extends Component<Props, State> {
   }
 
   render() {
-    const { schema, classes } = this.props;
+    const { schema, classes, context } = this.props;
     return this.state.loading ? (
       <LinearProgress />
     ) : (
@@ -136,6 +143,7 @@ class EntityForm extends Component<Props, State> {
                         </Grid>
                         <Grid item xs={12} sm={12} md={9} lg={9} xl={9}>
                           <RenderEditor
+                            serverUrl={context.serverUrl}
                             setValue={value => {
                               this.setState({
                                 updateValues: {
@@ -221,5 +229,6 @@ export default combineContainers(
     mapStateToProps,
     mapDispatchToProps
   ),
-  withStyles(styles)
+  withStyles(styles),
+  withCoreContext
 )(EntityForm) as React.ComponentType<EntityFormProps>;

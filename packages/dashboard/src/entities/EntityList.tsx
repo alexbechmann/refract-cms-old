@@ -28,7 +28,6 @@ import Page from '../pages/Page';
 import { merge, pickBy, isUndefined, negate } from 'lodash';
 import { FilterList, AddCircle } from '@material-ui/icons';
 import { setOrderByField } from './state/entity.actions';
-import RenderEditor from './RenderEditor';
 
 export interface EntitiesListProps extends RouteComponentProps<{ alias: string }> {}
 
@@ -142,7 +141,7 @@ class EntitiesList extends Component<Props> {
             );
           }}
         </Query>
-        <Dialog open={this.state.filterDialogOpen} onClose={() => this.setState({ filterDialogOpen: false })}>
+        {/* <Dialog open={this.state.filterDialogOpen} onClose={() => this.setState({ filterDialogOpen: false })}>
           <DialogContent>
             {Object.keys(entitySchema.properties).map((propertyKey: string, index: number) => {
               const propertyOptions = entitySchema.properties[propertyKey];
@@ -160,7 +159,7 @@ class EntitiesList extends Component<Props> {
           <DialogActions>
             <Button onClick={() => this.setState({ filterDialogOpen: false })}>Done</Button>
           </DialogActions>
-        </Dialog>
+        </Dialog> */}
       </Page>
     );
   }

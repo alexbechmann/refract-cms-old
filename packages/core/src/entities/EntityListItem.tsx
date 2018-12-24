@@ -4,6 +4,8 @@ import { EntitySchema } from './entity-schema';
 import { Entity } from './entity.model';
 import { ListItemProps } from '@material-ui/core/ListItem';
 import { entityService } from './services/entity.service';
+import { WithCoreContextProps } from '../context/with-core-context-props.model';
+import { withCoreContext } from '../context/with-core-context';
 
 interface EntityListItemProps extends ListItemProps {
   schema: EntitySchema<any>;
@@ -11,11 +13,11 @@ interface EntityListItemProps extends ListItemProps {
   SecondaryAction?: JSX.Element;
 }
 
-interface Props extends EntityListItemProps {}
+interface Props extends EntityListItemProps, WithCoreContextProps {}
 
 const EntityListItem = (props: Props) => {
-  const { schema, entity, SecondaryAction } = props;
-  const instanceDisplayProps = entityService.instanceDisplayPropsOrDefault(schema)(entity);
+  const { schema, entity, SecondaryAction, context } = props;
+  const instanceDisplayProps = entityService.instanceDisplayPropsOrDefault(schema, context)(entity);
   return (
     <ListItem {...props}>
       <ListItemAvatar>
@@ -35,4 +37,4 @@ const EntityListItem = (props: Props) => {
   );
 };
 
-export default EntityListItem as React.ComponentType<EntityListItemProps>;
+export default withCoreContext(EntityListItem) as React.ComponentType<EntityListItemProps>;

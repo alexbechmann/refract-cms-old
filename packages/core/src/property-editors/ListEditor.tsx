@@ -34,7 +34,7 @@ class ListEditor<T> extends React.Component<Props<T>, State<T>> {
   };
 
   render() {
-    const { setValue, propertyOptions, propertyKey } = this.props;
+    const { setValue, propertyOptions, propertyKey, serverUrl } = this.props;
     const value = this.props.value || [];
     return (
       <div>
@@ -49,6 +49,7 @@ class ListEditor<T> extends React.Component<Props<T>, State<T>> {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <this.props.itemComponent
+                serverUrl={serverUrl}
                 propertyOptions={propertyOptions}
                 propertyKey={propertyKey}
                 value={v}
@@ -70,6 +71,7 @@ class ListEditor<T> extends React.Component<Props<T>, State<T>> {
         ))}
         {this.state.showAddNewEditor && (
           <this.props.itemComponent
+            serverUrl={serverUrl}
             propertyOptions={propertyOptions}
             propertyKey={propertyKey}
             value={this.state.stagedValue}
