@@ -19,6 +19,7 @@ export default (options: SingleEntityPickerOptions) => {
       propertyKey={propertyKey}
       propertyOptions={propertyOptions}
       {...options}
+      max={1}
     />
   );
 };

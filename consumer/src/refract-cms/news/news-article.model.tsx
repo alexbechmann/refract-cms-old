@@ -161,7 +161,8 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
       displayName: 'More products',
       type: RefractTypes.arrayOf(RefractTypes.string),
       editorComponent: createMultipleEntityPickerEditor({
-        schema: ProductSchema
+        schema: ProductSchema,
+        max: 2
       })
     }
   }

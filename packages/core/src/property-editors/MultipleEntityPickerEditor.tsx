@@ -34,6 +34,7 @@ import { WithCoreContextProps } from '../context/with-core-context-props.model';
 
 export interface MultipleEntityPickerOptions {
   schema: EntitySchema;
+  max?: number;
 }
 
 const styles = (theme: Theme) =>
@@ -72,12 +73,15 @@ class MultipleEntityPickerEditor extends React.Component<Props, State> {
   };
 
   handleOnChange = ({ entity }: { entity: Entity }) => () => {
-    const { setValue, value } = this.props;
+    const { setValue, value, max } = this.props;
     const selectedEntityIds = value || [];
     const checked = this.isChecked({ entity });
+    if ((value || []).length < max) {
+    }
+
     if (checked) {
       setValue(selectedEntityIds.filter(id => id !== entity._id));
-    } else {
+    } else if ((value || []).length < max) {
       setValue([...selectedEntityIds, entity._id]);
     }
   };
@@ -88,7 +92,8 @@ class MultipleEntityPickerEditor extends React.Component<Props, State> {
   };
 
   render() {
-    const { classes, value, data, setValue, schema, context } = this.props;
+    const { classes, value, data, setValue, schema, context, max } = this.props;
+
     if (data.loading) {
       return <CircularProgress />;
     }
@@ -117,13 +122,15 @@ class MultipleEntityPickerEditor extends React.Component<Props, State> {
         ) : (
           <span />
         )}
-        <Chip
-          icon={<AddCircle />}
-          color="secondary"
-          label={`Select ${schema.options.displayName}`}
-          className={classes.chip}
-          onClick={() => this.setState({ dialogOpen: true })}
-        />
+        {(!max || selectedEntityIds.length < max) && (
+          <Chip
+            icon={<AddCircle />}
+            color="secondary"
+            label={`Select ${schema.options.displayName}`}
+            className={classes.chip}
+            onClick={() => this.setState({ dialogOpen: true })}
+          />
+        )}
         <Dialog open={this.state.dialogOpen}>
           <DialogTitle>Select a {schema.options.displayName}</DialogTitle>
           <DialogContent>
@@ -160,5 +167,5 @@ export default (options: MultipleEntityPickerOptions) => {
   const Editor = combineContainers(withCoreContext, withStyles(styles), graphql(ENTITY_PICKER_QUERY))(
     MultipleEntityPickerEditor
   );
-  return (props: PropertyEditorProps<string[]>) => <Editor {...props} {...options} />;
+  return (props: PropertyEditorProps<string[]> & MultipleEntityPickerOptions) => <Editor {...props} {...options} />;
 };
