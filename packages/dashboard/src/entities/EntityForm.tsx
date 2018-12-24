@@ -172,7 +172,7 @@ class EntityForm extends Component<Props, State> {
   save() {
     const { schema } = this.props;
     this.props.saveEntity(this.state.updateValues).then(() => {
-      this.props.client.resetStore();
+      // this.props.client.resetStore();
       this.back();
       this.props.addNotification(`Successfully saved ${schema.options.displayName || schema.options.alias}.`);
     });
@@ -183,6 +183,11 @@ class EntityForm extends Component<Props, State> {
       const { client, schema } = this.props;
       client
         .mutate({
+          refetchQueries: [
+            {
+              query: graphqlQueryHelper.getAllQueryWithAllFields(schema)
+            }
+          ],
           mutation: gql(`
       mutation {
         ${this.props.alias}RemoveById(_id: "${this.props.id!}") {
@@ -191,7 +196,6 @@ class EntityForm extends Component<Props, State> {
       }`)
         })
         .then(() => {
-          client.resetStore();
           this.back();
           this.props.addNotification(`Successfully deleted ${schema.options.displayName || schema.options.alias}.`);
         });

@@ -34,21 +34,20 @@ const EditEntity = ({ alias, id, client, schema }: Props) => {
   const newEntity = !id || id === 'new';
   const mutation = newEntity ? createMutation : updateMutation;
   return (
-    <Mutation mutation={mutation}>
+    <Mutation mutation={mutation} refetchQueries={[{ query: graphqlQueryHelper.getAllQueryWithAllFields(schema) }]}>
       {(save, mutationResult) => {
         return (
           <EntityForm
             alias={alias!}
             newEntity={newEntity}
             id={id}
-            saveEntity={updateValues => {
+            saveEntity={record => {
               return new Promise((resolve, reject) => {
                 save({
                   variables: {
-                    record: updateValues
+                    record
                   },
                   update: (proxy, updateResult) => {
-                    client.resetStore();
                     resolve();
                   }
                 });

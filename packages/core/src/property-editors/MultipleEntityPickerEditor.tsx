@@ -76,12 +76,10 @@ class MultipleEntityPickerEditor extends React.Component<Props, State> {
     const { setValue, value, max } = this.props;
     const selectedEntityIds = value || [];
     const checked = this.isChecked({ entity });
-    if ((value || []).length < max) {
-    }
 
     if (checked) {
       setValue(selectedEntityIds.filter(id => id !== entity._id));
-    } else if ((value || []).length < max) {
+    } else if (!max || (value || []).length < max) {
       setValue([...selectedEntityIds, entity._id]);
     }
   };

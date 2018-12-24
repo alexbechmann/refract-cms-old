@@ -88,7 +88,7 @@ class EntitiesList extends Component<Props> {
             : undefined
         }
       >
-        <Query query={query}>
+        <Query query={query} displayName={`${entitySchema.options.alias}_list`}>
           {({ loading, error, data }) => {
             const items = data.items || [];
             if (loading) {
