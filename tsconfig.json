@@ -13,12 +13,12 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "declaration": false,
+    "declaration": true,
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "allowJs": true,
-    "checkJs": true,
+    "allowJs": false,
+    "checkJs": false,
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": "./",
@@ -32,10 +32,6 @@
     "**/*.test.*"
   ],
   "include": [
-    "./consumer",
-    "./packages"
-  ],
-  "files": [
     "./consumer",
     "./packages"
   ]

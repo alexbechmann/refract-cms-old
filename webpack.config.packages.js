@@ -1,12 +1,14 @@
 const webpack = require("webpack");
 const path = require("path");
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const SimpleProgressWebpackPlugin = require('simple-progress-webpack-plugin');
+const nodeExternals = require("webpack-node-externals");
+const DeclarationBundler = require("declaration-bundler-webpack-plugin")
 
 const baseConfig = {
   // devtool: "inline-source-map",
   mode: 'production',
-  target: "web",
+  target: "node",
+  externals: [nodeExternals()],
   module: {
     rules: [
       {
@@ -18,17 +20,13 @@ const baseConfig = {
           presets: [
             [
               '@babel/preset-env',
-              {
-                targets: {
-                  browsers: 'last 2 versions'
-                },
-                modules: false
-              }
+              { modules: false, targets: { browsers: 'last 2 versions' } }, // or whatever your project requires
             ],
             '@babel/preset-typescript',
             '@babel/preset-react',
           ],
           plugins: [
+            // plugin-proposal-decorators is only needed if you're using experimental decorators in TypeScript
             ['@babel/plugin-proposal-decorators', { legacy: true }],
             ['@babel/plugin-proposal-class-properties', { loose: true }],
             'react-hot-loader/babel',
@@ -60,127 +58,49 @@ const baseConfig = {
     ],
   },
   plugins: [
-    new ForkTsCheckerWebpackPlugin({
-      tsconfig: path.resolve(__dirname, 'tsconfig.json'),
-      memoryLimit: 2048,
-      tslint: path.resolve(__dirname, 'tslint.json'),
-      reportFiles: [
-        "./workplace-core/**"
-      ],
-      ignoreLints: [
-        "**/*.test.*"
-      ],
-      async: false
-    }),
-    new SimpleProgressWebpackPlugin({ // Default options
-      format: 'expanded'
-    })
   ],
   resolve: {
     extensions: ['.ts', '.tsx', '.mjs', '.js', '.graphql'],
     alias: {
-      "@refract-cms/core": path.join(__dirname, "packages", "core", "src"),
-      "@refract-cms/dashboard": path.join(__dirname, "packages", "dashboard", "src"),
-      "@refract-cms/server": path.join(__dirname, "packages", "server", "src"),
+      "@refract-cms/core": path.join(__dirname, "packages", "core", "src/"),
+      "@refract-cms/dashboard": path.join(__dirname, "packages", "dashboard", "src/"),
+      "@refract-cms/server": path.join(__dirname, "packages", "server", "src/"),
     }
-  },
-  output: {
-    path: path.join(__dirname, ".build"),
-    publicPath: "http://localhost:3001/",
-    filename: "client.js",
-  },
+  }
 };
 
-module.exports = [
-  // {
-  //   ...baseConfig,
-  //   entry: [
-  //     "./workplace-core/index.js",
-  //   ],
-  //   output: {
-  //     path: path.resolve(__dirname, 'workplace-core', 'dist'),
-  //     filename: 'index.js',
-  //     library: "@refract/workplace-core",
-  //     libraryTarget: "umd"
-  //   },
-  //   name: "core",
-  // },
-  {
+function createConfig(name) {
+  return {
     ...baseConfig,
-    entry: [
-      "./umbraco/backend/react/main.js",
-    ],
+    entry: `./packages/${name}/src/index.ts`,
+    mode: "production",
+    target: 'node',
     output: {
-      path: path.resolve(__dirname, 'umbraco', 'backend', 'dist'),
-    },
-    name: "umbraco"
-  },
-  {
-    entry: ["reflect-metadata", "@babel/polyfill", "./api/src/server.ts"],
-    target: "node",
-    mode: 'production',
-    module: {
-      rules: [
-        {
-          test: /\.(js|jsx|ts|tsx)$/,
-          loader: "babel-loader",
-          exclude: /node_modules/,
-          options: {
-            babelrc: false,
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  modules: false,
-                  targets: { "node": "8.10" }
-                },
-              ],
-              '@babel/preset-typescript',
-              '@babel/preset-react',
-            ],
-            plugins: [
-              ['@babel/plugin-proposal-decorators', { legacy: true }],
-              ['@babel/plugin-proposal-class-properties', { loose: true }],
-              'react-hot-loader/babel',
-            ],
-          }
-        },
-        {
-          test: /\.(js|jsx|ts|tsx)?$/,
-          loader: 'prettier-loader',
-          exclude: /node_modules/
-        },
-        {
-          test: /\.(graphql|gql)$/,
-          exclude: /node_modules/,
-          loader: 'graphql-tag/loader'
-        }
-      ],
+      path: path.resolve(__dirname, 'packages', name, 'dist'),
+      filename: 'index.js',
+      library: `@refract-cms/${name}`,
+      libraryTarget: "umd"
     },
     plugins: [
-      // new webpack.NamedModulesPlugin(),
-      // new ForkTsCheckerWebpackPlugin({
-      //   tsconfig: path.resolve(__dirname, 'tsconfig.json'),
-      //   memoryLimit: 2048,
-      //   tslint: path.resolve(__dirname, 'tslint.json'),
-      //   reportFiles: [
-      //     "./api/**",
-      //     "./workplace-core/**"
-      //   ],
-      //   ignoreLints: [
-      //     "**/*.test.*"
-      //   ],
-      //   async: false
-      // }),
-    ],
-    resolve: {
-      extensions: ['.ts', '.tsx', '.mjs', '.js', '.graphql'],
-      alias: {
-        "@refract-cms/core": path.join(__dirname, "packages", "core", "src"),
-        "@refract-cms/dashboard": path.join(__dirname, "packages", "dashboard", "src"),
-        "@refract-cms/server": path.join(__dirname, "packages", "server", "src"),
-      }
-    },
-    output: { path: path.join(__dirname, "api", "dist"), filename: "server.js" },
+      ...baseConfig.plugins,
+      new ForkTsCheckerWebpackPlugin({
+        tsconfig: path.resolve(__dirname, 'tsconfig.json'),
+        memoryLimit: 2048,
+        tslint: path.resolve(__dirname, 'tslint.json'),
+        reportFiles: [
+          `./packages/${name}/src/**`,
+        ],
+        ignoreLints: [
+          "**/*.test.*"
+        ],
+        async: true
+      }),
+    ]
   }
+}
+
+module.exports = [
+  createConfig('core'),
+  createConfig('dashboard'),
+  createConfig('server')
 ]
