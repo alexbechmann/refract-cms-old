@@ -27,10 +27,7 @@ const Notifications = ({ notification, addNotification, removeNotification }: Pr
     }}
     open={Boolean(notification)}
     autoHideDuration={6000}
-    onClose={removeNotification}
-    ContentProps={{
-      'aria-describedby': 'message-id'
-    }}
+    onClose={() => setTimeout(removeNotification, 1)}
     message={notification ? notification.message : ''}
     action={[
       <IconButton key="close" aria-label="Close" color="inherit" onClick={removeNotification}>

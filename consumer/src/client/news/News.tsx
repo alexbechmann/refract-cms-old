@@ -3,7 +3,6 @@ import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import { NewsArticle } from '../../refract-cms/news/news-article.model';
 import { CircularProgress, Typography } from '@material-ui/core';
-import { fileService } from '@refract-cms/core';
 
 const NEWS_QUERY = gql`
   {
@@ -43,7 +42,7 @@ const News = () => (
                   return (
                     <li key={article._id}>
                       {article.title}
-                      <img src={fileService.buildImageUrl(article.image, article.image.crops.profile)} />
+                      {/* <img src={fileService.buildImageUrl(article.image, article.image.crops.profile)} /> */}
                     </li>
                   );
                 })}

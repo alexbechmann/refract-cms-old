@@ -10,10 +10,11 @@ interface Props extends RenderEditorProps {}
 
 class RenderEditor extends React.Component<Props> {
   render() {
-    const { propertyOptions, propertyKey } = this.props;
+    const { propertyOptions, propertyKey, serverUrl } = this.props;
     if (propertyOptions.editorComponent) {
       return (
         <propertyOptions.editorComponent
+          serverUrl={serverUrl}
           propertyOptions={propertyOptions}
           propertyKey={propertyKey}
           value={this.props.value}

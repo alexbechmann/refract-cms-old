@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { Switch, Route, BrowserRouter, Link, RouteComponentProps } from 'react-router-dom';
+import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import { Dashboard, createDashboard } from '@refract-cms/dashboard';
 import config from '../refract-cms/refract.config';
 import 'typeface-roboto';
-import { apolloClient } from './graphql/apollo-client';
-import { ApolloProvider } from 'react-apollo';
+import { render } from 'react-dom';
+import { AppContainer } from 'react-hot-loader';
 
 const Root = () => (
   <BrowserRouter>
@@ -17,4 +17,14 @@ const Root = () => (
   </BrowserRouter>
 );
 
-ReactDOM.render(<Root />, document.getElementById('app'));
+render(
+  <AppContainer>
+    <Root />
+  </AppContainer>,
+  document.getElementById('app')
+);
+
+if (module.hot) {
+  // module.hot.accept('./App', renderApp);
+  module.hot.accept();
+}

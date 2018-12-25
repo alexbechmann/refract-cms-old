@@ -31,7 +31,8 @@ export const createApolloClient = ({ serverUrl }: { serverUrl: string }) => {
   });
   const link = ApolloLink.from([withTokenLink, handleAuthErrorLink, httpLink]);
   const cache = new InMemoryCache({
-    addTypename: false
+    addTypename: false,
+    dataIdFromObject: (o: any) => o._id
   });
   return new ApolloClient({
     link,

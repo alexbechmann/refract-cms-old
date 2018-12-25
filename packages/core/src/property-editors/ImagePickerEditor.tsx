@@ -19,10 +19,12 @@ import {
 } from '@material-ui/core';
 import { ImageRef } from '../files/image-ref.model';
 import FileList from '../files/FileList';
-import { File } from '../files/file.model';
+import { FileModel } from '../files/file.model';
 import { Crop } from '../files/crop.model';
 import classNames from 'classnames';
-import { fileService } from '../files/file.service';
+import { combineContainers } from 'combine-containers';
+import { withCoreContext } from '../context/with-core-context';
+import { WithCoreContextProps } from '../context/with-core-context-props.model';
 
 type Crops<TCrops extends string> = {
   [P in TCrops]: {
@@ -38,8 +40,8 @@ export interface ImagePickerEditorOptions<TCrops extends string> {
 const styles = (theme: Theme) =>
   createStyles({
     cropContainer: {
-      width: '100%',
-      height: '100%',
+      height: '100vh',
+      minHeight: 400,
       position: 'relative'
     },
     imagePreview: {
@@ -49,14 +51,18 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props extends ImagePickerEditorOptions<any>, PropertyEditorProps<ImageRef<any>>, WithStyles<typeof styles> {}
+interface Props
+  extends ImagePickerEditorOptions<any>,
+    PropertyEditorProps<ImageRef<any>>,
+    WithStyles<typeof styles>,
+    WithCoreContextProps {}
 
 interface State {
   activeCropName: string | null;
   selectFileDialogOpen: boolean;
 }
 
-const ImagePickerEditor = withStyles(styles)(
+const ImagePickerEditor = combineContainers(withStyles(styles), withCoreContext)(
   class extends React.Component<Props, State> {
     constructor(props) {
       super(props);
@@ -95,10 +101,11 @@ const ImagePickerEditor = withStyles(styles)(
     };
 
     renderHasValueUI() {
-      const { cropDefinitions, value, setValue, classes } = this.props;
+      const { cropDefinitions, value, setValue, classes, context } = this.props;
+      const { fileService } = context;
       return (
         <div>
-          <Avatar src={value!.imageUrl} className={classes.imagePreview} />
+          <Avatar src={fileService.buildImageUrl(value!.imageId)} className={classes.imagePreview} />
           <Grid container spacing={16}>
             {Object.keys(cropDefinitions).map(cropKey => {
               const cropDefinition = cropDefinitions[cropKey];
@@ -116,14 +123,14 @@ const ImagePickerEditor = withStyles(styles)(
                   >
                     <img
                       style={{ width: '100%' }}
-                      src={fileService.buildImageUrl(this.props.value!, this.props.value!.crops[cropKey])}
+                      src={fileService.buildImageUrl(this.props.value!.imageId, this.props.value!.crops[cropKey])}
                     />
                   </ButtonBase>
                   <Dialog open={cropKey === this.state.activeCropName} fullScreen>
                     <DialogContent>
                       <div className={classNames('crop-container', classes.cropContainer)}>
                         <Cropper
-                          image={value!.imageUrl}
+                          image={fileService.buildImageUrl(value!.imageId)}
                           crop={value!.crops[cropKey].crop}
                           zoom={value!.crops[cropKey].zoom}
                           aspect={cropDefinition.aspectRatio}
@@ -194,7 +201,6 @@ const ImagePickerEditor = withStyles(styles)(
                 onSelectFile={file => {
                   const newValue = {
                     imageId: file._id,
-                    imageUrl: file.url,
                     crops: Object.keys(cropDefinitions).reduce((acc, cropKey) => {
                       acc[cropKey] = {
                         crop: { x: 0, y: 0 },

@@ -1,6 +1,12 @@
 import React, { Component, Fragment } from 'react';
-import { EntitySchema, graphqlQueryHelper, Entity } from '@refract-cms/core';
-import RenderEditor from './RenderEditor';
+import {
+  EntitySchema,
+  graphqlQueryHelper,
+  Entity,
+  withCoreContext,
+  WithCoreContextProps,
+  RenderEditor
+} from '@refract-cms/core';
 import { navigate } from '@reach/router';
 import {
   Button,
@@ -50,7 +56,8 @@ interface Props
     WithStyles<typeof styles>,
     ReturnType<typeof mapStateToProps>,
     WithApolloClient<EntityFormProps>,
-    MapDispatchToProps {}
+    MapDispatchToProps,
+    WithCoreContextProps {}
 
 class EntityForm extends Component<Props, State> {
   constructor(props: Props) {
@@ -96,7 +103,7 @@ class EntityForm extends Component<Props, State> {
   }
 
   render() {
-    const { schema, classes } = this.props;
+    const { schema, classes, context } = this.props;
     return this.state.loading ? (
       <LinearProgress />
     ) : (
@@ -115,7 +122,7 @@ class EntityForm extends Component<Props, State> {
               </IconButton>
             ),
             () => (
-              <Button color="primary" variant="raised" onClick={this.save}>
+              <Button color="primary" variant="contained" onClick={this.save}>
                 Save
               </Button>
             )
@@ -136,6 +143,7 @@ class EntityForm extends Component<Props, State> {
                         </Grid>
                         <Grid item xs={12} sm={12} md={9} lg={9} xl={9}>
                           <RenderEditor
+                            serverUrl={context.serverUrl}
                             setValue={value => {
                               this.setState({
                                 updateValues: {
@@ -164,7 +172,7 @@ class EntityForm extends Component<Props, State> {
   save() {
     const { schema } = this.props;
     this.props.saveEntity(this.state.updateValues).then(() => {
-      this.props.client.resetStore();
+      // this.props.client.resetStore();
       this.back();
       this.props.addNotification(`Successfully saved ${schema.options.displayName || schema.options.alias}.`);
     });
@@ -175,13 +183,19 @@ class EntityForm extends Component<Props, State> {
       const { client, schema } = this.props;
       client
         .mutate({
+          refetchQueries: [
+            {
+              query: graphqlQueryHelper.getAllQueryWithAllFields(schema)
+            }
+          ],
           mutation: gql(`
       mutation {
-        ${this.props.alias}Delete(id: "${this.props.id!}")
+        ${this.props.alias}RemoveById(_id: "${this.props.id!}") {
+          recordId
+        }
       }`)
         })
         .then(() => {
-          client.resetStore();
           this.back();
           this.props.addNotification(`Successfully deleted ${schema.options.displayName || schema.options.alias}.`);
         });
@@ -219,5 +233,6 @@ export default combineContainers(
     mapStateToProps,
     mapDispatchToProps
   ),
-  withStyles(styles)
+  withStyles(styles),
+  withCoreContext
 )(EntityForm) as React.ComponentType<EntityFormProps>;

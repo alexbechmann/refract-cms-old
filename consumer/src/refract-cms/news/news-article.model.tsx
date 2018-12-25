@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   Entity,
   defineEntity,
@@ -8,12 +8,17 @@ import {
   RefractTypes,
   createImagePickerEditor,
   ImageRef,
-  PropertyEditorProps
+  PropertyEditorProps,
+  EntityRef,
+  createSingleEntityPickerEditor,
+  createMultipleEntityPickerEditor
 } from '@refract-cms/core';
 import { NewsArticle } from './news-article.model';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { Button, Checkbox } from '@material-ui/core';
 import moment from 'moment';
+import { Product, ProductSchema } from '../products/product.model';
+import { SettingsSchema } from '../settings/settings.model';
 
 export interface NewsArticle extends Entity {
   title: string;
@@ -33,6 +38,10 @@ export interface NewsArticle extends Entity {
     };
   };
   primary: boolean;
+  // relatedProducts: Product[];
+  // highlightedProduct: EntityRef<Product>;
+  highlightedProductId: string;
+  otherRelatedProductIds: string[];
 }
 
 export const NewsArticleSchema = defineEntity<NewsArticle>({
@@ -41,8 +50,8 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
     displayName: 'News Article',
     instanceDisplayProps: newsArticle => ({
       primaryText: newsArticle.title,
-      secondaryText: moment(newsArticle.articleDate).toLocaleString(),
-      imageUrl: newsArticle.image ? newsArticle.image.imageUrl : undefined
+      secondaryText: moment(newsArticle.articleDate).format('ll')
+      // imageUrl: newsArticle.image ? newsArticle.image.imageUrl : undefined
     }),
     icon: DescriptionIcon
   },
@@ -136,6 +145,25 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
         <Checkbox checked={props.value} onChange={(e, checked) => props.setValue(checked)} />
       ),
       type: RefractTypes.bool
+    },
+    // highlightedProduct: {
+    //   displayName: 'Highlighted Product',
+    //   type: RefractTypes.ref(ProductSchema)
+    // }
+    highlightedProductId: {
+      displayName: 'Highlighted product',
+      type: RefractTypes.string,
+      editorComponent: createSingleEntityPickerEditor({
+        schema: ProductSchema
+      })
+    },
+    otherRelatedProductIds: {
+      displayName: 'More products',
+      type: RefractTypes.arrayOf(RefractTypes.string),
+      editorComponent: createMultipleEntityPickerEditor({
+        schema: ProductSchema,
+        max: 2
+      })
     }
   }
 });

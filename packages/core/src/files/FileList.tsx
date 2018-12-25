@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import { CircularProgress, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@material-ui/core';
-import { File } from './file.model';
+import { FileModel } from './file.model';
+
+import EntityListItem from '../entities/EntityListItem';
+import { FileSchema } from './file.schema';
 
 interface FileListProps {
-  onSelectFile: (file: File) => void;
+  onSelectFile: (file: FileModel) => void;
 }
 
 interface Props extends FileListProps {}
@@ -15,9 +18,14 @@ class FileList extends Component<Props> {
     const { onSelectFile } = this.props;
     const query = gql`
       {
-        files: getFiles {
+        files: fileMany {
           _id
-          url
+          fileRef {
+            fileName
+            path
+            mimetype
+            size
+          }
         }
       }
     `;
@@ -26,16 +34,18 @@ class FileList extends Component<Props> {
         {({ loading, error, data }) => {
           return (
             <div>
-              {loading && <CircularProgress />}
-              {!loading && (
+              {loading ? (
+                <CircularProgress />
+              ) : (
                 <List>
-                  {data.files.map((file: File) => (
-                    <ListItem key={file._id} button onClick={() => onSelectFile(file)}>
-                      <ListItemAvatar>
-                        <Avatar src={file.url} />
-                      </ListItemAvatar>
-                      <ListItemText primary={file._id} secondary={file.url} />
-                    </ListItem>
+                  {data.files.map((file: FileModel) => (
+                    <EntityListItem
+                      entity={file}
+                      schema={FileSchema}
+                      key={file._id}
+                      button
+                      onClick={() => onSelectFile(file)}
+                    />
                   ))}
                 </List>
               )}

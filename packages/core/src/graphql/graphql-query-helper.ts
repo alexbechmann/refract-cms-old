@@ -16,17 +16,9 @@ class GraphqlQueryHelper {
       acc[p] = schema.properties[p].type;
       return acc;
     }, {});
-    console.log(`
-    {
-      items: ${schema.options.alias}GetAll {
-        _id
-        ${this.buildProperties(propertyTypes)}
-      }
-    }
-  `);
     return gql(`
       {
-        items: ${schema.options.alias}GetAll {
+        items: ${schema.options.alias}Many {
           _id
           ${this.buildProperties(propertyTypes)}
         }
@@ -38,7 +30,6 @@ class GraphqlQueryHelper {
     return Object.keys(properties).map(propertyKey => {
       const propertyType = properties[propertyKey];
       if (propertyType.alias === 'Shape') {
-        console.log('shape', propertyKey, propertyType.meta);
         return `
         ${propertyKey} {
           ${this.buildProperties(propertyType.meta!)}
@@ -58,7 +49,7 @@ class GraphqlQueryHelper {
     }, {});
     return gql(`
       {
-        item: ${schema.options.alias}GetById(id: "${id}") {
+        item: ${schema.options.alias}ById(_id: "${id}") {
           _id
           ${this.buildProperties(propertyTypes)}
         }
@@ -66,8 +57,8 @@ class GraphqlQueryHelper {
     `);
   }
 
-  firstLetterToUpper(string: string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+  firstLetterToUpper(s: string) {
+    return s.charAt(0).toUpperCase() + s.slice(1);
   }
 }
 
