@@ -11,14 +11,25 @@ class GraphqlQueryHelper {
     return `${this.firstLetterToUpper(alias)}${this.firstLetterToUpper(propertyKey)}`;
   }
 
-  getAllQueryWithAllFields(schema: EntitySchema) {
+  getAllQueryWithAllFields(
+    schema: EntitySchema,
+    filters?: {
+      orderByField: string;
+      orderByDirection: 'ASC' | 'DESC';
+    }
+  ) {
     const propertyTypes = Object.keys(schema.properties).reduce((acc, p) => {
       acc[p] = schema.properties[p].type;
       return acc;
     }, {});
+
+    const queryArgs =
+      filters && filters.orderByField && filters.orderByDirection
+        ? `(sort: ${filters.orderByField.toUpperCase()}_${filters.orderByDirection})`
+        : ``;
     return gql(`
       {
-        items: ${schema.options.alias}Many {
+        items: ${schema.options.alias}Many${queryArgs} {
           _id
           ${this.buildProperties(propertyTypes)}
         }

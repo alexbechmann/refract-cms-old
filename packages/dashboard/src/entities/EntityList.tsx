@@ -17,7 +17,11 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
-  Select
+  Select,
+  Theme,
+  createStyles,
+  withStyles,
+  DialogTitle
 } from '@material-ui/core';
 import { EntitySchema, Entity, graphqlQueryHelper, EntityListItem } from '@refract-cms/core';
 import { RouteComponentProps, Link, Redirect } from '@reach/router';
@@ -26,8 +30,8 @@ import { AppState } from '../state/app.state';
 import { combineContainers } from 'combine-containers';
 import Page from '../pages/Page';
 import { merge, pickBy, isUndefined, negate } from 'lodash';
-import { FilterList, AddCircle } from '@material-ui/icons';
-import { setOrderByField } from './state/entity.actions';
+import { FilterList, AddCircle, Sort } from '@material-ui/icons';
+import { setOrderByField, setOrderByDirection } from './state/entity.actions';
 
 export interface EntitiesListProps extends RouteComponentProps<{ alias: string }> {}
 
@@ -37,13 +41,21 @@ interface State {
   filterDialogOpen: boolean;
 }
 
+const styles = (theme: Theme) =>
+  createStyles({
+    formControl: {
+      marginBottom: theme.spacing.unit
+    }
+  });
+
 class EntitiesList extends Component<Props> {
   state: State = {
     filterDialogOpen: false
   };
+
   render() {
-    const { schema, routes, entitySchema, setOrderByField } = this.props;
-    const query = graphqlQueryHelper.getAllQueryWithAllFields(entitySchema);
+    const { schema, routes, entitySchema, setOrderByField, filters, classes } = this.props;
+    const query = graphqlQueryHelper.getAllQueryWithAllFields(entitySchema, filters);
     return (
       <Page
         title={entitySchema.options.displayName || entitySchema.options.alias}
@@ -68,11 +80,11 @@ class EntitiesList extends Component<Props> {
                 //     </Select>
                 //   </FormControl>
                 // ),
-                // () => (
-                //   <IconButton onClick={() => this.setState({ filterDialogOpen: true })}>
-                //     <FilterList />
-                //   </IconButton>
-                // ),
+                () => (
+                  <IconButton onClick={() => this.setState({ filterDialogOpen: true })}>
+                    <Sort />
+                  </IconButton>
+                ),
                 () => (
                   <Button
                     variant="contained"
@@ -141,42 +153,81 @@ class EntitiesList extends Component<Props> {
             );
           }}
         </Query>
-        {/* <Dialog open={this.state.filterDialogOpen} onClose={() => this.setState({ filterDialogOpen: false })}>
-          <DialogContent>
-            {Object.keys(entitySchema.properties).map((propertyKey: string, index: number) => {
-              const propertyOptions = entitySchema.properties[propertyKey];
-              return (
-                <RenderEditor
-                  key={index}
-                  propertyKey={propertyKey}
-                  propertyOptions={propertyOptions}
-                  value={undefined}
-                  setValue={console.log}
-                />
-              );
-            })}
+        <Dialog open={this.state.filterDialogOpen} onClose={() => this.setState({ filterDialogOpen: false })}>
+          <DialogTitle>Sort</DialogTitle>
+          <DialogContent style={{ width: 400 }}>
+            <FormControl className={classes.formControl} fullWidth>
+              <InputLabel>Sort by</InputLabel>
+              <Select
+                value={this.props.filters.orderByField || ''}
+                onChange={e =>
+                  this.props.setOrderByField({
+                    alias: entitySchema.options.alias,
+                    orderByField: e.target.value
+                  })
+                }
+              >
+                <MenuItem value="">None</MenuItem>
+                {Object.keys(entitySchema.properties)
+                  .filter(propertyKey => entitySchema.properties[propertyKey].type.alias !== 'Shape')
+                  .map((propertyKey: string, index: number) => {
+                    const propertyOptions = entitySchema.properties[propertyKey];
+                    return (
+                      <MenuItem key={index} value={propertyKey}>
+                        {propertyOptions.displayName || propertyKey}
+                      </MenuItem>
+                    );
+                  })}
+              </Select>
+            </FormControl>
+            <FormControl className={classes.formControl} fullWidth>
+              <InputLabel>Direction</InputLabel>
+              <Select
+                value={this.props.filters.orderByDirection}
+                onChange={e =>
+                  this.props.setOrderByDirection({
+                    alias: entitySchema.options.alias,
+                    direction: e.target.value as 'ASC' | 'DESC'
+                  })
+                }
+              >
+                <MenuItem value="ASC">ASC</MenuItem>
+                <MenuItem value="DESC">DESC</MenuItem>
+              </Select>
+            </FormControl>
           </DialogContent>
           <DialogActions>
             <Button onClick={() => this.setState({ filterDialogOpen: false })}>Done</Button>
           </DialogActions>
-        </Dialog> */}
+        </Dialog>
       </Page>
     );
   }
 }
 
-const mapDispatchToProps = { setOrderByField };
+const mapDispatchToProps = { setOrderByField, setOrderByDirection };
 
 type DispatchProps = typeof mapDispatchToProps;
 
 function mapStateToProps(state: AppState, ownProps: EntitiesListProps) {
   const entitySchema = state.config.schema.find(s => s.options.alias === ownProps.alias)!;
+  const filters = state.entity[entitySchema.options.alias] || {
+    orderByDirection: 'ASC',
+    orderByField: undefined
+  };
   return {
     schema: state.config.schema,
     routes: state.router.routes!,
     entitySchema,
-    filters: state.entity[ownProps.alias!] || { orderByField: '' }
+    filters
   };
 }
 
-export default combineContainers(connect(mapStateToProps), withApollo)(EntitiesList);
+export default combineContainers(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
+  withApollo,
+  withStyles(styles)
+)(EntitiesList);

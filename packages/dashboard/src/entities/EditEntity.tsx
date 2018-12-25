@@ -12,7 +12,7 @@ export interface EditEntityProps extends RouteComponentProps<{ alias: string; id
 
 export interface Props extends EditEntityProps, WithApolloClient<any>, ReturnType<typeof mapStateToProps> {}
 
-const EditEntity = ({ alias, id, client, schema }: Props) => {
+const EditEntity = ({ alias, id, client, schema, filters }: Props) => {
   const createMutation = gql(
     `
   mutation save($record: CreateOne${schema.options.alias}Input!){
@@ -34,7 +34,10 @@ const EditEntity = ({ alias, id, client, schema }: Props) => {
   const newEntity = !id || id === 'new';
   const mutation = newEntity ? createMutation : updateMutation;
   return (
-    <Mutation mutation={mutation} refetchQueries={[{ query: graphqlQueryHelper.getAllQueryWithAllFields(schema) }]}>
+    <Mutation
+      mutation={mutation}
+      refetchQueries={[{ query: graphqlQueryHelper.getAllQueryWithAllFields(schema, filters) }]}
+    >
       {(save, mutationResult) => {
         return (
           <EntityForm
@@ -61,9 +64,15 @@ const EditEntity = ({ alias, id, client, schema }: Props) => {
 };
 
 function mapStateToProps(state: AppState, ownProps: EditEntityProps) {
+  const entitySchema = state.config.schema.find(s => s.options.alias === ownProps.alias)!;
+  const filters = state.entity[entitySchema.options.alias] || {
+    orderByDirection: 'ASC',
+    orderByField: undefined
+  };
   return {
     routes: state.router.routes!,
-    schema: state.config.schema.find(s => s.options.alias === ownProps.alias)!
+    schema: entitySchema,
+    filters
   };
 }
 
