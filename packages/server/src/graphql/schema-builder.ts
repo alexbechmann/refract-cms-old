@@ -83,7 +83,11 @@ export class SchemaBuilder {
         return Boolean;
       }
       case 'Shape': {
-        return this.schemaFromShape(propertyName, propertyType as PropertyDescription<T, 'Shape', ShapeArgs<T>>);
+        return this.schemaFromShape(propertyName, (propertyType as any) as PropertyDescription<
+          T,
+          'Shape',
+          ShapeArgs<T>
+        >);
       }
       case 'Array': {
         const type = this.buildType(propertyName, propertyType.meta);

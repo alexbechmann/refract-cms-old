@@ -11,7 +11,7 @@ app.use(
     config,
     serverConfig: {
       mongoConnectionString: 'mongodb://localhost:27018/refract-consumer-example',
-      filesPath: 'files/',
+      filesPath: 'consumer/files/',
       auth: {
         adminCredentials: {
           username: 'admin',

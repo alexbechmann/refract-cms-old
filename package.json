@@ -19,7 +19,7 @@
     "build:js": "webpack --config webpack.config.packages.js",
     "build:types:core": "tsc -p ./packages/core --emitDeclarationOnly",
     "build:types:dashboard": "tsc -p ./packages/dashboard --emitDeclarationOnly",
-    "build:types:server": "tsc -p ./packages/server --emitDeclarationOnly"  
+    "build:types:server": "tsc -p ./packages/server --emitDeclarationOnly"
   },
   "author": "",
   "license": "ISC",
@@ -55,7 +55,7 @@
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.16.0",
     "tslint-react": "^3.6.0",
-    "typescript": "^3.1.6",
+    "typescript": "^3.2.2",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",
