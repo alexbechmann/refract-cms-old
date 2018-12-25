@@ -2,5 +2,3 @@
 **/dist/
 **/yarn-error.log
 **/.build/
-files/
-!*/files/
