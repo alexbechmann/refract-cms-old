@@ -40,7 +40,10 @@ export class SchemaBuilder {
     delete mongoose.connection.models[entitySchema.options.alias];
     const definition = Object.keys(entitySchema.properties).reduce((acc, propertyKey) => {
       const typeDef = entitySchema.properties[propertyKey].type;
-      acc[propertyKey] = this.buildType(propertyKey, typeDef);
+      acc[propertyKey] = {
+        type: this.buildType(propertyKey, typeDef),
+        index: true
+      };
       return acc;
     }, {}) as any;
 
@@ -55,7 +58,8 @@ export class SchemaBuilder {
       [`${entitySchema.options.alias}One`]: EntityTypeComposer.getResolver('findOne'),
       [`${entitySchema.options.alias}Many`]: EntityTypeComposer.getResolver('findMany'),
       [`${entitySchema.options.alias}Count`]: EntityTypeComposer.getResolver('count'),
-      [`${entitySchema.options.alias}Pagination`]: EntityTypeComposer.getResolver('pagination')
+      [`${entitySchema.options.alias}Pagination`]: EntityTypeComposer.getResolver('pagination'),
+      [`${entitySchema.options.alias}Connection`]: EntityTypeComposer.getResolver('connection')
     });
 
     schemaComposer.Mutation.addFields({
@@ -68,13 +72,22 @@ export class SchemaBuilder {
       [`${entitySchema.options.alias}RemoveOne`]: EntityTypeComposer.getResolver('removeOne'),
       [`${entitySchema.options.alias}RemoveMany`]: EntityTypeComposer.getResolver('removeMany')
     });
+
+    Object.keys(entitySchema.properties).forEach(propertyKey => {
+      console.log({ [propertyKey]: 1 });
+      // EntitySchema.index({ [propertyKey]: 1 }, { background: false });
+    });
+
+    console.log(EntitySchema.indexes());
   }
 
   buildType<T>(propertyName: string, propertyType: PropertyType<T>): SchemaTypeOpts<any> | Schema | SchemaType {
     switch (propertyType.alias) {
-      case 'String':
-      case 'Date': {
+      case 'String': {
         return String;
+      }
+      case 'Date': {
+        return Date;
       }
       case 'Number': {
         return Number;
