@@ -101,7 +101,7 @@ class EntitiesList extends Component<Props> {
                         //   </FormControl>
                         // ),
                         () => (
-                          <IconButton onClick={() => refetch(variables)}>
+                          <IconButton disabled={loading} onClick={() => refetch(variables)}>
                             <Refresh />
                           </IconButton>
                         ),
