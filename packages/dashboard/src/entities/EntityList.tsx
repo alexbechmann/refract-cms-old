@@ -21,7 +21,8 @@ import {
   Theme,
   createStyles,
   withStyles,
-  DialogTitle
+  DialogTitle,
+  WithStyles
 } from '@material-ui/core';
 import { EntitySchema, Entity, graphqlQueryHelper, EntityListItem } from '@refract-cms/core';
 import { RouteComponentProps, Link, Redirect } from '@reach/router';
@@ -30,12 +31,16 @@ import { AppState } from '../state/app.state';
 import { combineContainers } from 'combine-containers';
 import Page from '../pages/Page';
 import { merge, pickBy, isUndefined, negate } from 'lodash';
-import { FilterList, AddCircle, Sort } from '@material-ui/icons';
+import { FilterList, AddCircle, Sort, Refresh } from '@material-ui/icons';
 import { setOrderByField, setOrderByDirection } from './state/entity.actions';
 
 export interface EntitiesListProps extends RouteComponentProps<{ alias: string }> {}
 
-interface Props extends EntitiesListProps, ReturnType<typeof mapStateToProps>, DispatchProps {}
+interface Props
+  extends EntitiesListProps,
+    ReturnType<typeof mapStateToProps>,
+    DispatchProps,
+    WithStyles<typeof styles> {}
 
 interface State {
   filterDialogOpen: boolean;
@@ -45,6 +50,13 @@ const styles = (theme: Theme) =>
   createStyles({
     formControl: {
       marginBottom: theme.spacing.unit
+    },
+    textLink: {
+      cursor: 'pointer',
+      color: theme.palette.secondary.main,
+      '&:hover': {
+        textDecoration: 'underline'
+      }
     }
   });
 
@@ -57,60 +69,79 @@ class EntitiesList extends Component<Props> {
     const { schema, routes, entitySchema, setOrderByField, filters, classes } = this.props;
     const query = graphqlQueryHelper.getAllQueryWithAllFields(entitySchema, filters);
     return (
-      <Page
-        title={entitySchema.options.displayName || entitySchema.options.alias}
-        actionComponents={
-          !entitySchema.options.maxOne
-            ? [
-                // () => (
-                //   <FormControl>
-                //     <InputLabel>Age</InputLabel>
-                //     <Select
-                //       value={this.props.filters.orderByField}
-                //       onChange={e =>
-                //         setOrderByField({
-                //           alias: entitySchema.options.alias,
-                //           orderByField: e.target.value
-                //         })
-                //       }
-                //     >
-                //       <MenuItem value={'createDate'}>Create Date</MenuItem>
-                //       <MenuItem value={'a'}>Twenty</MenuItem>
-                //       <MenuItem value={'b'}>Thirty</MenuItem>
-                //     </Select>
-                //   </FormControl>
-                // ),
-                () => (
-                  <IconButton onClick={() => this.setState({ filterDialogOpen: true })}>
-                    <Sort />
-                  </IconButton>
-                ),
-                () => (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    component={props => (
-                      <Link to={routes.entity.edit.createUrl({ id: 'new', schema: entitySchema })} {...props} />
-                    )}
-                  >
-                    Add new
-                  </Button>
-                )
-              ]
-            : undefined
-        }
-      >
+      <div>
         <Query query={query} displayName={`${entitySchema.options.alias}_list`}>
-          {({ loading, error, data }) => {
+          {({ loading, error, data, refetch, variables }) => {
             const items = data.items || [];
             if (loading) {
               return <CircularProgress />;
             }
             return (
-              <div>
+              <Page
+                title={entitySchema.options.displayName || entitySchema.options.alias}
+                actionComponents={
+                  !entitySchema.options.maxOne
+                    ? [
+                        // () => (
+                        //   <FormControl>
+                        //     <InputLabel>Age</InputLabel>
+                        //     <Select
+                        //       value={this.props.filters.orderByField}
+                        //       onChange={e =>
+                        //         setOrderByField({
+                        //           alias: entitySchema.options.alias,
+                        //           orderByField: e.target.value
+                        //         })
+                        //       }
+                        //     >
+                        //       <MenuItem value={'createDate'}>Create Date</MenuItem>
+                        //       <MenuItem value={'a'}>Twenty</MenuItem>
+                        //       <MenuItem value={'b'}>Thirty</MenuItem>
+                        //     </Select>
+                        //   </FormControl>
+                        // ),
+                        () => (
+                          <IconButton onClick={() => refetch(variables)}>
+                            <Refresh />
+                          </IconButton>
+                        ),
+                        () => (
+                          <IconButton onClick={() => this.setState({ filterDialogOpen: true })}>
+                            <Sort />
+                          </IconButton>
+                        ),
+                        () => (
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            component={props => (
+                              <Link to={routes.entity.edit.createUrl({ id: 'new', schema: entitySchema })} {...props} />
+                            )}
+                          >
+                            Add new
+                          </Button>
+                        )
+                      ]
+                    : undefined
+                }
+              >
                 {!entitySchema.options.maxOne ? (
                   <div>
-                    <List>
+                    <List
+                      subheader={
+                        filters && filters.orderByField && filters.orderByDirection ? (
+                          <ListSubheader
+                            className={classes.textLink}
+                            onClick={() => this.setState({ filterDialogOpen: true })}
+                          >
+                            Sorted by {entitySchema.properties[filters.orderByField].displayName},{' '}
+                            {filters.orderByDirection}
+                          </ListSubheader>
+                        ) : (
+                          undefined
+                        )
+                      }
+                    >
                       {items.map((item: Entity) => {
                         return (
                           <EntityListItem
@@ -149,7 +180,7 @@ class EntitiesList extends Component<Props> {
                     </Button>
                   </div>
                 )}
-              </div>
+              </Page>
             );
           }}
         </Query>
@@ -169,7 +200,12 @@ class EntitiesList extends Component<Props> {
               >
                 <MenuItem value="">None</MenuItem>
                 {Object.keys(entitySchema.properties)
-                  .filter(propertyKey => entitySchema.properties[propertyKey].type.alias !== 'Shape')
+                  .filter(
+                    propertyKey =>
+                      entitySchema.properties[propertyKey].type.alias === 'String' ||
+                      entitySchema.properties[propertyKey].type.alias === 'Date' ||
+                      entitySchema.properties[propertyKey].type.alias === 'Number'
+                  )
                   .map((propertyKey: string, index: number) => {
                     const propertyOptions = entitySchema.properties[propertyKey];
                     return (
@@ -200,7 +236,7 @@ class EntitiesList extends Component<Props> {
             <Button onClick={() => this.setState({ filterDialogOpen: false })}>Done</Button>
           </DialogActions>
         </Dialog>
-      </Page>
+      </div>
     );
   }
 }
