@@ -28,7 +28,7 @@ steps:
     Arguments: 'install'
 
 - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
-  displayName: Yarn install
+  displayName: Yarn test
   inputs:
     Arguments: 'test'
 
