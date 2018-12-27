@@ -247,10 +247,7 @@ type DispatchProps = typeof mapDispatchToProps;
 
 function mapStateToProps(state: AppState, ownProps: EntitiesListProps) {
   const entitySchema = state.config.schema.find(s => s.options.alias === ownProps.alias)!;
-  const filters = state.entity[entitySchema.options.alias] || {
-    orderByDirection: 'ASC',
-    orderByField: undefined
-  };
+  const filters = state.entity[entitySchema.options.alias];
   return {
     schema: state.config.schema,
     routes: state.router.routes!,

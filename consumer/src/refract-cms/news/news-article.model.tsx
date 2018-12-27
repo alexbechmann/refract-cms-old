@@ -53,7 +53,11 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
       secondaryText: moment(newsArticle.articleDate).format('ll')
       // imageUrl: newsArticle.image ? newsArticle.image.imageUrl : undefined
     }),
-    icon: DescriptionIcon
+    icon: DescriptionIcon,
+    defaultSort: {
+      orderByDirection: 'DESC',
+      orderByField: 'articleDate'
+    }
   },
   properties: {
     title: {
