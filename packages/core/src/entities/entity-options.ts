@@ -11,5 +11,8 @@ export interface EntityOptions<T = {}> {
     imageUrl?: string | undefined;
   });
   icon?: React.ComponentType<SvgIconProps>;
-
+  defaultSort?: {
+    orderByDirection: 'DESC' | 'ASC',
+    orderByField: keyof T
+  }
 }
