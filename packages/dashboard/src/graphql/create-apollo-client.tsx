@@ -37,5 +37,15 @@ export const createApolloClient = ({ serverUrl }: { serverUrl: string }) => {
   return new ApolloClient({
     link,
     cache
+    // defaultOptions: {
+    //   watchQuery: {
+    //     fetchPolicy: 'network-only',
+    //     errorPolicy: 'ignore'
+    //   },
+    //   query: {
+    //     fetchPolicy: 'network-only',
+    //     errorPolicy: 'all'
+    //   }
+    // }
   });
 };

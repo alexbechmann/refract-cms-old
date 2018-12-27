@@ -72,8 +72,9 @@ class EntitiesList extends Component<Props> {
       <div>
         <Query query={query} displayName={`${entitySchema.options.alias}_list`}>
           {({ loading, error, data, refetch, variables }) => {
+            console.log({ loading, error, data });
             const items = data.items || [];
-            if (loading) {
+            if (!data.items) {
               return <CircularProgress />;
             }
             return (
