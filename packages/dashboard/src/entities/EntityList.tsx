@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { Query, withApollo, WithApolloClient } from 'react-apollo';
 import {
-  CircularProgress,
+  LinearProgress,
   List,
   ListItem,
   ListItemText,
@@ -74,8 +74,8 @@ class EntitiesList extends Component<Props> {
           {({ loading, error, data, refetch, variables }) => {
             console.log({ loading, error, data });
             const items = data.items || [];
-            if (!data.items) {
-              return <CircularProgress />;
+            if (loading) {
+              return <LinearProgress />;
             }
             return (
               <Page
