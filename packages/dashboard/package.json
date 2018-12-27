@@ -17,7 +17,8 @@
   "dependencies": {
     "@date-io/moment": "^0.0.2",
     "@reach/router": "^1.2.1",
-    "apollo-boost": "^0.1.22",
+    "apollo-boost": "^0.1.23",
+    "apollo-client": "^2.4.8",
     "apollo-link-context": "^1.0.10",
     "axios": "^0.18.0",
     "combine-containers": "^0.1.3-alpha",
