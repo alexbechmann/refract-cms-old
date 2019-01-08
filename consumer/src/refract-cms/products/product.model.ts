@@ -80,5 +80,3 @@ export const ProductSchema = defineEntity<Product>({
     }
   }
 });
-
-const F = RefractTypes.arrayOf(RefractTypes.number);
