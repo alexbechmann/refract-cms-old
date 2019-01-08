@@ -172,7 +172,6 @@ const apolloClient = new ApolloClient({
   cache
 });
 
-
 const NEWS_QUERY = gql`
   {
     news: newsArticleMany(sort: TITLE_ASC, limit: 5) {
