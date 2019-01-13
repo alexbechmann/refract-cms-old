@@ -1,7 +1,7 @@
 import { PropertyType, EntitySchema, RefractTypes, PropertyOptions, Entity } from '@refract-cms/core';
 import { ShapeArgs, PropertyDescription } from '@refract-cms/core/src/properties/property-types';
 import mongoose, { SchemaTypeOpts, Schema, SchemaType, mongo } from 'mongoose';
-import { composeWithMongoose } from 'graphql-compose-mongoose';
+import { composeWithMongoose } from 'graphql-compose-mongoose/node8';
 import { schemaComposer, Resolver } from 'graphql-compose';
 import { authService } from '../auth/auth.service';
 import { ServerConfig } from '../server-config.model';
