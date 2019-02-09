@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
-  "typings": "./dist/index.d.ts",
+  "typings": "./dist/dashboard/index.d.ts",
   "scripts": {
     "build": "npm-run-all build:js build:types",
     "build:js": "webpack",
@@ -37,7 +37,7 @@
     "react-redux": "^5.1.1",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "typeface-roboto": "^0.0.54",
+    "redux": "^4.0.1",
     "typesafe-actions": "^2.0.4"
   },
   "devDependencies": {

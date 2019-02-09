@@ -4,7 +4,6 @@ import App from './App';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import { Dashboard, createDashboard } from '@refract-cms/dashboard';
 import config from '../refract-cms/refract.config';
-import 'typeface-roboto';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 
