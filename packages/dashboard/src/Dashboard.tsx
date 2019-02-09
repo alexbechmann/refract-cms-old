@@ -42,7 +42,6 @@ import { configure } from './config/state/config.actions';
 import { store } from './state/root.store';
 import { provide } from './state/provide';
 import EditEntity from './entities/EditEntity';
-import 'typeface-roboto';
 import Auth from './auth/Auth';
 import { checkLocalStorageForAccessToken, logout } from './auth/state/auth.actions';
 import Notifications from './notifications/Notifications';

@@ -72,7 +72,6 @@ class EntitiesList extends Component<Props> {
       <div>
         <Query query={query} displayName={`${entitySchema.options.alias}_list`} notifyOnNetworkStatusChange>
           {({ loading, error, data, refetch, variables }) => {
-            console.log({ loading, error, data });
             const items = data.items || [];
             if (loading) {
               return <LinearProgress />;
