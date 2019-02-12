@@ -14,10 +14,9 @@ export class FileService {
     return `${this.serverUrl}/files/${fileId}${cropQuery}`;
   };
 
-  upload = (file: File, name: string) => {
+  upload = (file: File) => {
     const data = new FormData();
     data.append('file', file);
-    data.append('name', name);
     return axios.post(`${this.serverUrl}/files`, data).then(r => r.data);
   };
 }

@@ -1,7 +1,5 @@
 import React from 'react';
 import { LinearProgress, IconButton, Button, CircularProgress, Typography } from '@material-ui/core';
-import * as Icons from '@material-ui/icons';
-import createUniqueString from 'unique-string';
 import { withApollo, WithApolloClient } from 'react-apollo';
 import { connect } from 'react-redux';
 import { combineContainers } from 'combine-containers';
@@ -72,12 +70,10 @@ class ImageUploader extends React.Component<Props, State> {
   upload() {
     const { file } = this.state;
     if (file) {
-      const uniqueString = createUniqueString();
-      const filename = `${uniqueString}_${file.name}`;
       this.setState({
         uploading: true
       });
-      this.props.context.fileService.upload(file, filename).then(multerFile => {
+      this.props.context.fileService.upload(file).then(multerFile => {
         this.setState({ uploading: false });
         this.props.client.resetStore();
         // this.props.addNotification('Successfully uploaded file.');
