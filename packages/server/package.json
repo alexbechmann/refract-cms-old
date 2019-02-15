@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
-  "typings": "./dist/server/index.d.ts",
+  "typings": "./dist/server/src/index.d.ts",
   "scripts": {
     "build": "npm-run-all build:js build:types",
     "build:js": "webpack",
