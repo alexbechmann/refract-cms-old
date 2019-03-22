@@ -32,8 +32,8 @@
     "mongodb": "^3.1.10",
     "mongoose": "^5.4.0",
     "multer": "^1.4.1",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "unique-string": "^1.0.0"
