@@ -9,17 +9,25 @@ import {
   GraphQLSchema,
   GraphQLInt
 } from 'graphql';
-import { ShapeArgs, PropertyDescription } from '@refract-cms/core/src/properties/property-types';
+import { ShapeArgs, PropertyDescription } from '@refract-cms/core';
 import { merge } from 'lodash';
 import mongoose from 'mongoose';
+import { ServerConfig } from '../server-config.model';
+import { Properties } from '../extend-schema';
 
 class PublicSchemaBuilder {
-  buildSchema(schema: EntitySchema[]) {
+  buildSchema(schema: EntitySchema[], serverConfig: ServerConfig) {
     let queryFields = {};
 
     schema.forEach(entitySchema => {
       const repository = mongoose.models[entitySchema.options.alias];
-      const type = this.buildEntity(entitySchema);
+      const extension = serverConfig.schemaExtensions.find(
+        extension => extension.schema.options.alias === entitySchema.options.alias
+      );
+
+      const properties = extension ? extension.properties : entitySchema.properties;
+      const type = this.buildEntity(entitySchema.options.alias, properties, extension ? extension.properties : null);
+
       queryFields = {
         ...queryFields,
         ...this.buildFieldQueries(entitySchema, repository, type)
@@ -102,23 +110,33 @@ class PublicSchemaBuilder {
     }
   }
 
-  buildEntity<T>(entitySchema: EntitySchema<T>) {
-    const shapeArgs = Object.keys(entitySchema.properties).reduce((acc, propertKey) => {
-      acc[propertKey] = entitySchema.properties[propertKey].type;
+  buildEntity<T extends Entity>(
+    alias: string,
+    properties: {
+      [key: string]: PropertyOptions;
+    },
+    extensionProperties?: Properties<any, T>
+  ) {
+    const shapeArgs = Object.keys(properties).reduce((acc, propertKey) => {
+      acc[propertKey] = properties[propertKey].type;
       return acc;
     }, {}) as any;
 
     const shape = RefractTypes.shape(shapeArgs);
 
     return new GraphQLObjectType({
-      name: entitySchema.options.alias,
+      name: alias,
       fields: Object.keys(shape.meta!).reduce(
         (acc, propertyKey) => {
           const propertyType: PropertyDescription<any, any, any> = shape.meta![propertyKey];
-          const type = this.buildType(`${entitySchema.options.alias}${propertyKey}`, propertyType);
+          const type = this.buildType(`${alias}${propertyKey}`, propertyType);
           acc[propertyKey] = {
             type
           };
+          console.log({ extensionProperties });
+          if (extensionProperties && extensionProperties[propertyKey]) {
+            acc[propertyKey].resolve = extensionProperties[propertyKey].resolve;
+          }
           if (propertyType.alias === 'Ref') {
             const refEntitySchema: EntitySchema = propertyType.meta;
             acc[propertyKey].resolve = entity => {

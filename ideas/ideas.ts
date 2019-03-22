@@ -1,3 +1,5 @@
+import { extendSchema } from "graphql";
+
 interface Entity {
   id: string;
 }
@@ -31,7 +33,7 @@ const NewsArticleSchema = createSchema<NewsArticleEntity>();
 
 // server
 setupServer({
-  [NewsArticleSchema.alias]: {
+  [NewsArticleSchema.alias]: extendSchema(NewsArticleSchema, {
     resolve: createResolve({
       image: RefractTypes.image
     })(newsArticleEntity => {
@@ -41,6 +43,9 @@ setupServer({
           max: `/images/${newsArticleEntity.imageId}?w=1200&h=760`
         }
       });
-    })
+    }),
+    events: {
+      onSave: () => {}
+    }
   }
 });

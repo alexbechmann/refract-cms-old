@@ -57,7 +57,7 @@ const refractCmsHandler = ({
     }))
   );
 
-  const publicSchema = publicSchemaBuilder.buildSchema(config.schema);
+  const publicSchema = publicSchemaBuilder.buildSchema(config.schema, serverConfig);
 
   router.use(
     '/public/graphql',

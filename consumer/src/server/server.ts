@@ -1,7 +1,10 @@
 import express from 'express';
 import path from 'path';
-import { refractCmsHandler } from '@refract-cms/server';
+import { refractCmsHandler, extendSchema } from '@refract-cms/server';
 import config from '../refract-cms/refract.config';
+import { NewsArticleSchema } from '../refract-cms/news/news-article.model';
+import { RefractTypes } from '@refract-cms/core';
+import { ProductSchema, Product } from '../refract-cms/products/product.model';
 
 const app = express();
 
@@ -21,7 +24,15 @@ app.use(
           issuer: 'consumer',
           secret: 'secret'
         }
-      }
+      },
+      schemaExtensions: [
+        extendSchema<Product, { someVar: string }>(ProductSchema, {
+          someVar: {
+            type: RefractTypes.string,
+            resolve: product => `${product._id}_hello !`
+          }
+        })
+      ]
     }
   })
 );

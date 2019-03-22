@@ -1,3 +1,5 @@
+import { extendSchema } from './extend-schema';
+
 export interface ServerConfig {
   mongoConnectionString: string;
   filesPath: string;
@@ -5,10 +7,16 @@ export interface ServerConfig {
     adminCredentials: {
       username: string;
       password: string;
-    },
+    };
     jwt: {
       issuer?: string;
-      secret: string
-    }
-  }
+      secret: string;
+    };
+  };
+  // resolvers: {
+  //   [key: string]: {
+  //     [key: string]: PropertyOptions;
+  //   };
+  // };
+  schemaExtensions: ReturnType<typeof extendSchema>[];
 }
