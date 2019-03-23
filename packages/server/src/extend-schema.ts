@@ -1,4 +1,5 @@
 import { EntitySchema, Entity, PropertyType, ImageRef, RefractTypes, PropertyOptions } from '@refract-cms/core';
+import queryString from 'query-string';
 
 export interface Property<TEntity extends Entity, P> {
   type: PropertyType<P>;
@@ -27,9 +28,10 @@ export interface ImageModel<TCrops extends string> {
 
 export function resolveImageProperty<TEntity extends Entity, TCrops extends string>(
   entitySchema: EntitySchema<TEntity>,
-  getProperty: (entitySchema: EntitySchema<TEntity>) => PropertyOptions<ImageRef<TCrops>>
+  getPropertyOptions: (entitySchema: EntitySchema<TEntity>) => PropertyOptions<ImageRef<TCrops>>,
+  getProperty: (entity: TEntity) => ImageRef<TCrops>
 ): Property<TEntity, ImageModel<TCrops>> {
-  const imageProperty = getProperty(entitySchema);
+  const imageProperty = getPropertyOptions(entitySchema);
   const crops = imageProperty.type.meta.crops.meta;
   const cropKeys = Object.keys(crops);
   return {
@@ -44,8 +46,15 @@ export function resolveImageProperty<TEntity extends Entity, TCrops extends stri
     ),
     resolve: entity => {
       return cropKeys.reduce(
-        (acc, key) => {
-          acc[key] = 'this is a url';
+        (acc, cropKey) => {
+          const property = getProperty(entity);
+          if (property) {
+            const crop = property.crops[cropKey];
+            console.log({ pixelCrop: crop._doc });
+            const cropQuery = crop ? `?${queryString.stringify(crop._doc.pixelCrop)}` : '';
+            acc[cropKey] = `find_server-url/files/${property.imageId}${cropQuery}`;
+          }
+
           return acc;
         },
         {} as any

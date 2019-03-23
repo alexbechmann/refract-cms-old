@@ -27,13 +27,18 @@ app.use(
       },
       graphql: [
         extendSchema<Product, { someVar: string }>(ProductSchema, {
+          ...ProductSchema.properties,
           someVar: {
             type: RefractTypes.string,
             resolve: product => `${product._id}_hello !`
           }
         }),
-        extendSchema<NewsArticle, { image: ImageModel<'profile' | 'large'> }>(NewsArticleSchema, {
-          image: resolveImageProperty(NewsArticleSchema, article => article.properties.image)
+        extendSchema<NewsArticle, { image: ImageModel<'profile' | 'large'>; title: string }>(NewsArticleSchema, {
+          image: resolveImageProperty(NewsArticleSchema, schema => schema.properties.image, article => article.image),
+          title: {
+            type: RefractTypes.string,
+            resolve: article => article.title
+          }
         })
       ]
     }
