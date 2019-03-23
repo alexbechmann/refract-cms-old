@@ -18,5 +18,5 @@ export interface ServerConfig {
   //     [key: string]: PropertyOptions;
   //   };
   // };
-  schemaExtensions: ReturnType<typeof extendSchema>[];
+  graphql: ReturnType<typeof extendSchema>[];
 }

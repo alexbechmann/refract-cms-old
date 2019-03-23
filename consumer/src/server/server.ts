@@ -1,8 +1,8 @@
 import express from 'express';
 import path from 'path';
-import { refractCmsHandler, extendSchema } from '@refract-cms/server';
+import { refractCmsHandler, extendSchema, resolveImageProperty } from '@refract-cms/server';
 import config from '../refract-cms/refract.config';
-import { NewsArticleSchema } from '../refract-cms/news/news-article.model';
+import { NewsArticleSchema, NewsArticle } from '../refract-cms/news/news-article.model';
 import { RefractTypes } from '@refract-cms/core';
 import { ProductSchema, Product } from '../refract-cms/products/product.model';
 
@@ -25,12 +25,15 @@ app.use(
           secret: 'secret'
         }
       },
-      schemaExtensions: [
+      graphql: [
         extendSchema<Product, { someVar: string }>(ProductSchema, {
           someVar: {
             type: RefractTypes.string,
             resolve: product => `${product._id}_hello !`
           }
+        }),
+        extendSchema<NewsArticle, { image: any }>(NewsArticleSchema, {
+          image: resolveImageProperty(NewsArticleSchema, article => article.properties.image)
         })
       ]
     }

@@ -21,7 +21,7 @@ class PublicSchemaBuilder {
 
     schema.forEach(entitySchema => {
       const repository = mongoose.models[entitySchema.options.alias];
-      const extension = serverConfig.schemaExtensions.find(
+      const extension = serverConfig.graphql.find(
         extension => extension.schema.options.alias === entitySchema.options.alias
       );
 
