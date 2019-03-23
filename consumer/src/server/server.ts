@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'path';
-import { refractCmsHandler, extendSchema, resolveImageProperty } from '@refract-cms/server';
+import { refractCmsHandler, extendSchema, resolveImageProperty, ImageModel } from '@refract-cms/server';
 import config from '../refract-cms/refract.config';
 import { NewsArticleSchema, NewsArticle } from '../refract-cms/news/news-article.model';
 import { RefractTypes } from '@refract-cms/core';
@@ -32,7 +32,7 @@ app.use(
             resolve: product => `${product._id}_hello !`
           }
         }),
-        extendSchema<NewsArticle, { image: any }>(NewsArticleSchema, {
+        extendSchema<NewsArticle, { image: ImageModel<'profile' | 'large'> }>(NewsArticleSchema, {
           image: resolveImageProperty(NewsArticleSchema, article => article.properties.image)
         })
       ]

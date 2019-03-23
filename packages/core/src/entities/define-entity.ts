@@ -15,7 +15,7 @@ const defineEntity = <T extends Entity>({
 }) => {
   const entityMetadata: EntitySchema<T> = {
     options,
-    properties: properties as any
+    properties: properties
   };
   return entityMetadata;
 };

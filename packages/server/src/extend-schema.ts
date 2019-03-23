@@ -1,9 +1,9 @@
 import { EntitySchema, Entity, PropertyType, ImageRef, RefractTypes, PropertyOptions } from '@refract-cms/core';
 
-export type Property<TEntity extends Entity, P> = {
+export interface Property<TEntity extends Entity, P> {
   type: PropertyType<P>;
   resolve: (entity: TEntity) => P | Promise<P>;
-};
+}
 
 export type Properties<TModel, TEntity extends Entity> = { [P in keyof TModel]: Property<TEntity, TModel[P]> };
 
@@ -20,7 +20,7 @@ export function extendSchema<TEntity extends Entity, TModel = any>(
 
 export type CropsUrls<T extends string> = { [P in T]: string };
 
-interface ImageModel<TCrops extends string> {
+export interface ImageModel<TCrops extends string> {
   imageId: string;
   crops: CropsUrls<TCrops>;
 }
