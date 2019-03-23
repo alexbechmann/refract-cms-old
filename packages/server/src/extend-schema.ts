@@ -51,7 +51,13 @@ export function resolveImageProperty<TEntity extends Entity, TCrops extends stri
           if (property) {
             const crop = property.crops[cropKey];
             console.log({ pixelCrop: crop._doc });
-            const cropQuery = crop ? `?${queryString.stringify(crop._doc.pixelCrop)}` : '';
+            const pixelCrop = {
+              height: crop.pixelCrop.height,
+              width: crop.pixelCrop.width,
+              x: crop.pixelCrop.x,
+              y: crop.pixelCrop.y
+            };
+            const cropQuery = crop ? `?${queryString.stringify(pixelCrop)}` : '';
             acc[cropKey] = `find_server-url/files/${property.imageId}${cropQuery}`;
           }
 
