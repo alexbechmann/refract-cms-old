@@ -8,7 +8,7 @@ export interface Property<TEntity extends Entity, P> {
 
 export type Properties<TModel, TEntity extends Entity> = { [P in keyof TModel]: Property<TEntity, TModel[P]> };
 
-export function extendSchema<TEntity extends Entity, TModel = any>(
+export function createPublicSchema<TEntity extends Entity, TModel = any>(
   schema: EntitySchema<TEntity>,
   properties: Properties<TModel, TEntity>
   // resolve: (entity: TEntity) => TModel | Promise<TModel>
@@ -27,12 +27,10 @@ export interface ImageModel<TCrops extends string> {
 }
 
 export function resolveImageProperty<TEntity extends Entity, TCrops extends string>(
-  entitySchema: EntitySchema<TEntity>,
-  getPropertyOptions: (entitySchema: EntitySchema<TEntity>) => PropertyOptions<ImageRef<TCrops>>,
+  propertyOptions: PropertyOptions<ImageRef<TCrops>>,
   getProperty: (entity: TEntity) => ImageRef<TCrops>
 ): Property<TEntity, ImageModel<TCrops>> {
-  const imageProperty = getPropertyOptions(entitySchema);
-  const crops = imageProperty.type.meta.crops.meta;
+  const crops = propertyOptions.type.meta.crops.meta;
   const cropKeys = Object.keys(crops);
   return {
     type: RefractTypes.shape(

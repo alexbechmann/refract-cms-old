@@ -1,4 +1,4 @@
-import { extendSchema } from './extend-schema';
+import { createPublicSchema } from './create-public-schema';
 
 export interface ServerConfig {
   mongoConnectionString: string;
@@ -13,10 +13,5 @@ export interface ServerConfig {
       secret: string;
     };
   };
-  // resolvers: {
-  //   [key: string]: {
-  //     [key: string]: PropertyOptions;
-  //   };
-  // };
-  graphql: ReturnType<typeof extendSchema>[];
+  publicGraphql: ReturnType<typeof createPublicSchema>[];
 }

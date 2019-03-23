@@ -13,7 +13,7 @@ import { ShapeArgs, PropertyDescription } from '@refract-cms/core';
 import { merge } from 'lodash';
 import mongoose from 'mongoose';
 import { ServerConfig } from '../server-config.model';
-import { Properties } from '../extend-schema';
+import { Properties } from '../create-public-schema';
 
 class PublicSchemaBuilder {
   buildSchema(schema: EntitySchema[], serverConfig: ServerConfig) {
@@ -21,7 +21,7 @@ class PublicSchemaBuilder {
 
     schema.forEach(entitySchema => {
       const repository = mongoose.models[entitySchema.options.alias];
-      const extension = serverConfig.graphql.find(
+      const extension = serverConfig.publicGraphql.find(
         extension => extension.schema.options.alias === entitySchema.options.alias
       );
 
