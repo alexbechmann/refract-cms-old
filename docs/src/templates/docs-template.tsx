@@ -11,7 +11,7 @@ class DocsTemplate extends Component {
             <h1>{page.frontmatter.title}</h1>
             <span>{page.frontmatter.baseline}</span>
           </header>
-          {/* <div dangerouslySetInnerHTML={{ __html: page.html }} /> */}
+          <div dangerouslySetInnerHTML={{ __html: page.html }} />
         </div>
       </div>
     );
@@ -22,6 +22,7 @@ export default DocsTemplate;
 export const pageQuery = graphql`
   query DocsByPath($path: String!) {
     markdownRemark(frontmatter: { path: { eq: $path } }) {
+      html
       frontmatter {
         path
         title
