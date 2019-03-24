@@ -25,12 +25,14 @@ exports.createPages = ({ boundActionCreators, graphql }) => {
     if (result.errors) {
       return Promise.reject(result.errors);
     }
-    result.data.allMarkdownRemark.edges.forEach(({ node }) => {
-      createPage({
-        path: node.frontmatter.path,
-        component: docTemplate,
-        context: {}
+    result.data.allMarkdownRemark.edges
+      .filter(({ node }) => node.path)
+      .forEach(({ node }) => {
+        createPage({
+          path: node.frontmatter.path,
+          component: docTemplate,
+          context: {}
+        });
       });
-    });
   });
 };

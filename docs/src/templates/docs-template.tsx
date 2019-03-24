@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import Layout from '../layouts/layout';
+import { Typography } from '@material-ui/core';
 
 class DocsTemplate extends Component<any> {
   render() {
@@ -8,13 +9,10 @@ class DocsTemplate extends Component<any> {
     return (
       <Layout title={page.frontmatter.title}>
         <Helmet title={page.frontmatter.title} />
-        <div className="page">
-          <header>
-            <h1>{page.frontmatter.title}</h1>
-            <span>{page.frontmatter.baseline}</span>
-          </header>
-          <div dangerouslySetInnerHTML={{ __html: page.html }} />
-        </div>
+        <Typography gutterBottom variant="h4">
+          {page.frontmatter.title}
+        </Typography>
+        <div dangerouslySetInnerHTML={{ __html: page.html }} />
       </Layout>
     );
   }
