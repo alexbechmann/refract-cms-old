@@ -4,6 +4,8 @@
   "version": "1.0.0",
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
+    "@material-ui/core": "^3.9.2",
+    "@material-ui/icons": "^3.0.2",
     "@types/node": "^8.0.7",
     "@types/react": "16.8.8",
     "@types/react-dom": "16.8.3",

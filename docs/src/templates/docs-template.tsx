@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-class DocsTemplate extends Component {
+import Layout from '../layouts/layout';
+
+class DocsTemplate extends Component<any> {
   render() {
     const { markdownRemark: page } = this.props.data;
     return (
-      <div>
-        <Helmet title={`Docs | ${page.frontmatter.title}`} />
+      <Layout title={page.frontmatter.title}>
+        <Helmet title={page.frontmatter.title} />
         <div className="page">
           <header>
             <h1>{page.frontmatter.title}</h1>
@@ -13,7 +15,7 @@ class DocsTemplate extends Component {
           </header>
           <div dangerouslySetInnerHTML={{ __html: page.html }} />
         </div>
-      </div>
+      </Layout>
     );
   }
 }
