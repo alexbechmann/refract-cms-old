@@ -147,7 +147,7 @@ export interface NewsArticleModel extends Entity {
 
 ### server.ts
 
-```ts
+```typescript
 import express from "express";
 import {
   refractCmsHandler,

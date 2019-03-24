@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import Layout from '../layouts/layout';
-import { Typography } from '@material-ui/core';
+import { Typography, Divider } from '@material-ui/core';
 
 class DocsTemplate extends Component<any> {
   render() {
@@ -12,6 +12,7 @@ class DocsTemplate extends Component<any> {
         <Typography gutterBottom variant="h4">
           {page.frontmatter.title}
         </Typography>
+        <Divider />
         <div dangerouslySetInnerHTML={{ __html: page.html }} />
       </Layout>
     );

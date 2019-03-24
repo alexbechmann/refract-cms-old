@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Link from 'gatsby-link';
+import Link, { navigate } from 'gatsby-link';
 import Helmet from 'react-helmet';
 import {
   AppBar,
@@ -12,9 +12,13 @@ import {
   withStyles,
   WithStyles,
   createMuiTheme,
-  MuiThemeProvider
+  MuiThemeProvider,
+  IconButton,
+  Button
 } from '@material-ui/core';
 import 'typeface-roboto';
+import GitHub from '../icons/GitHub';
+import { yellow, indigo } from '@material-ui/core/colors';
 
 interface LayoutProps {
   title: string;
@@ -29,6 +33,9 @@ const styles = (theme: Theme) =>
     content: {
       padding: theme.spacing.unit,
       maxWidth: 1000
+    },
+    grow: {
+      flexGrow: 1
     }
   });
 
@@ -36,7 +43,13 @@ interface Props extends LayoutProps, WithStyles<typeof styles> {}
 
 const theme = createMuiTheme({
   palette: {
-    type: 'dark'
+    type: 'dark',
+    primary: {
+      main: indigo[600]
+    },
+    secondary: {
+      main: yellow[500]
+    }
   }
 });
 
@@ -45,8 +58,20 @@ const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
     <AppBar position="sticky">
       <Toolbar>
         <Typography color="inherit" variant="h6">
-          Refract CMS Docs
+          <Link to="/" style={{ color: 'white' }}>
+            Refract Cms docs
+          </Link>
         </Typography>
+        <div className={classes.grow} />
+        <Button component="a" onClick={() => navigate('/existing-project')}>
+          Add to an existing project
+        </Button>
+        <Button disabled component="a" onClick={() => navigate('/cli-start')}>
+          Install using CLI (Coming soon...)
+        </Button>
+        <IconButton href="https://github.com/alexbechmann/refract-cms">
+          <GitHub />
+        </IconButton>
       </Toolbar>
     </AppBar>
     <Helmet
