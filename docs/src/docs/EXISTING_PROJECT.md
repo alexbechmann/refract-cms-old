@@ -48,7 +48,7 @@ import { NewsArticleEntity } from "./news-article.entity";
 import DescriptionIcon from "@material-ui/icons/Description";
 import moment from "moment";
 
-export const NewsArticleSchema = defineEntity<NewsArticle>({
+export const NewsArticleSchema = defineEntity<NewsArticleEntity>({
   options: {
     alias: "newsArticle",
     displayName: "News Article",
@@ -137,7 +137,8 @@ export default configure({
 This interface describes the data model that will be publically queryable in the GraphQL endpoint. You will resolve this interface on the server from the original enitity.
 
 ```ts
-import { Entity, ImageModel } from "@refract-cms/core";
+import { Entity } from "@refract-cms/core";
+import { ImageModel } from "@refract-cms/server";
 
 export interface NewsArticleModel extends Entity {
   title: string;
