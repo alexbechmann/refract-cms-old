@@ -130,7 +130,7 @@ export default configure({
 });
 ```
 
-## Server
+# Server
 
 ### news-article.model.tsx
 
@@ -201,7 +201,7 @@ app.use(
 );
 ```
 
-## Client
+# Client
 
 ### index.tsx
 
