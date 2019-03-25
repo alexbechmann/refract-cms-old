@@ -84,6 +84,7 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
     },
     extraText: {
       displayName: "Extra text",
+      // Example of a basic custom editor component
       editorComponent: props => (
         <input
           value={props.value}
@@ -164,7 +165,7 @@ app.use(
     rootPath: "/cms",
     config,
     serverConfig: {
-      mongoConnectionString: process.ENV.MONGO_URI,
+      mongoConnectionString: process.env.MONGO_URI,
       filesPath: "consumer/files/",
       auth: {
         adminCredentials: {
@@ -202,6 +203,8 @@ app.use(
 
 ## Client
 
+### index.tsx
+
 ```tsx
 import React from "react";
 import ReactDOM from "react-dom";
@@ -222,10 +225,5 @@ const Root = () => (
   </BrowserRouter>
 );
 
-render(
-  <AppContainer>
-    <Root />
-  </AppContainer>,
-  document.getElementById("app")
-);
+render(<Root />, document.getElementById("app"));
 ```
