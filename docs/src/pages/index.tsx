@@ -1,7 +1,18 @@
 import * as React from 'react';
 import GatsbyLink, { navigate } from 'gatsby-link';
 import Layout from '../layouts/layout';
-import { Link, Button, Typography, Divider, ListItem, ListItemText, List } from '@material-ui/core';
+import {
+  Link,
+  Button,
+  Typography,
+  Divider,
+  ListItem,
+  ListItemText,
+  List,
+  Avatar,
+  ListItemAvatar
+} from '@material-ui/core';
+import Img from 'gatsby-image';
 
 // Please note that you can use https://github.com/dotansimha/graphql-code-generator
 // to generate all types from graphQL schema
@@ -12,6 +23,7 @@ interface IndexPageProps {
         title: string;
       };
     };
+    [key: string]: any;
   };
 }
 
@@ -20,6 +32,7 @@ export default class extends React.Component<IndexPageProps, {}> {
     super(props, context);
   }
   public render() {
+    console.log(this.props.data);
     return (
       <Layout title=" Welcome to the Refract Cms docs">
         <Typography>
@@ -48,24 +61,55 @@ export default class extends React.Component<IndexPageProps, {}> {
         <Typography variant="h5">Technologies</Typography>
         <List style={{ width: '100%' }}>
           <ListItem>
-            <ListItemText
-              primary="TypeScript"
-              secondary="This library works with TypeScript & JavaScript. TypeScript is recommended to allow it to verify your schema configuration."
-            />
-          </ListItem>
-          <ListItem>
+            <ListItemAvatar>
+              <Avatar
+                component={(props: any) => <Img {...props} fixed={this.props.data.mongodbImg.childImageSharp.fixed} />}
+              >
+                M
+              </Avatar>
+            </ListItemAvatar>
             <ListItemText primary="MongoDB" secondary="This is used to persist the CMS data" />
           </ListItem>
           <ListItem>
+            <ListItemAvatar>
+              <Avatar
+                component={(props: any) => <Img {...props} fixed={this.props.data.nodejsImg.childImageSharp.fixed} />}
+              >
+                N
+              </Avatar>
+            </ListItemAvatar>
             <ListItemText primary="NodeJS" secondary="The runtime for the server code" />
           </ListItem>
           <ListItem>
+            <ListItemAvatar>
+              <Avatar
+                component={(props: any) => <Img {...props} fixed={this.props.data.tsImg.childImageSharp.fixed} />}
+              >
+                TS
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary="TypeScript"
+              secondary="This library works with TypeScript & JavaScript. TypeScript is recommended to allow it to verify your schema"
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar
+                component={(props: any) => <Img {...props} fixed={this.props.data.reactImg.childImageSharp.fixed} />}
+              >
+                R
+              </Avatar>
+            </ListItemAvatar>
             <ListItemText
               primary="React"
               secondary="The dashboard is written in React, and custom editor components are provided as React components"
             />
           </ListItem>
           <ListItem>
+            <ListItemAvatar>
+              <Avatar>EX</Avatar>
+            </ListItemAvatar>
             <ListItemText
               primary="Express"
               secondary="Required to add the Refract Cms router which handles the GraphQL requests & authorization etc"
@@ -90,6 +134,34 @@ export const pageQuery = graphql`
     site {
       siteMetadata {
         title
+      }
+    }
+    tsImg: file(relativePath: { eq: "ts.png" }) {
+      childImageSharp {
+        fixed(width: 40, height: 40) {
+          ...GatsbyImageSharpFixed
+        }
+      }
+    }
+    mongodbImg: file(relativePath: { eq: "mongodb.jpg" }) {
+      childImageSharp {
+        fixed(width: 40, height: 40) {
+          ...GatsbyImageSharpFixed
+        }
+      }
+    }
+    nodejsImg: file(relativePath: { eq: "nodejs.png" }) {
+      childImageSharp {
+        fixed(width: 40, height: 40) {
+          ...GatsbyImageSharpFixed
+        }
+      }
+    }
+    reactImg: file(relativePath: { eq: "react.png" }) {
+      childImageSharp {
+        fixed(width: 40, height: 40) {
+          ...GatsbyImageSharpFixed
+        }
       }
     }
   }
