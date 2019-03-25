@@ -5503,7 +5503,7 @@ longest-streak@^2.0.1:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/longest-streak/-/longest-streak-2.0.2.tgz#2421b6ba939a443bb9ffebf596585a50b4c38e2e"
 
-loose-envify@^1.0.0, loose-envify@^1.4.0:
+loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
   dependencies:
@@ -7198,6 +7198,16 @@ react-dev-utils@^4.2.1:
     strip-ansi "3.0.1"
     text-table "0.2.0"
 
+react-dom@^16.8.5:
+  version "16.8.5"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.8.5.tgz#b3e37d152b49e07faaa8de41fdf562be3463335e"
+  integrity sha512-VIEIvZLpFafsfu4kgmftP5L8j7P1f0YThfVTrANMhZUFMDOsA6e0kfR6wxw/8xxKs4NB59TZYbxNdPCDW34x4w==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    scheduler "^0.13.5"
+
 react-error-overlay@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-3.0.0.tgz#c2bc8f4d91f1375b3dad6d75265d51cd5eeaf655"
@@ -7256,6 +7266,16 @@ react-transition-group@^2.2.1:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
     react-lifecycles-compat "^3.0.4"
+
+react@^16.8.5:
+  version "16.8.5"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.8.5.tgz#49be3b655489d74504ad994016407e8a0445de66"
+  integrity sha512-daCb9TD6FZGvJ3sg8da1tRAtIuw29PbKZW++NN4wqkbEvxL+bZpaaYb4xuftW/SpXmgacf1skXl/ddX6CdOlDw==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    scheduler "^0.13.5"
 
 read-chunk@^1.0.1:
   version "1.0.1"
@@ -7698,6 +7718,14 @@ sanitize-html@^1.18.2:
 sax@>=0.6.0, sax@^1.2.4, sax@~1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
+
+scheduler@^0.13.5:
+  version "0.13.5"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.13.5.tgz#b7226625167041298af3b98088a9dbbf6d7733a8"
+  integrity sha512-K98vjkQX9OIt/riLhp6F+XtDPtMQhqNcf045vsh+pcuvHq+PHy1xCrH3pq1P40m6yR46lpVvVhKdEOtnimuUJw==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
 
 schema-utils@^0.4.0, schema-utils@^0.4.4, schema-utils@^0.4.5:
   version "0.4.7"

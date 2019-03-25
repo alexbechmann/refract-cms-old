@@ -36,6 +36,12 @@ const styles = (theme: Theme) =>
     },
     grow: {
       flexGrow: 1
+    },
+    appBar: {
+      marginBottom: theme.spacing.unit * 3
+    },
+    title: {
+      marginBottom: theme.spacing.unit * 3
     }
   });
 
@@ -55,7 +61,7 @@ const theme = createMuiTheme({
 
 const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
   <MuiThemeProvider theme={theme}>
-    <AppBar position="sticky">
+    <AppBar position="sticky" className={classes.appBar}>
       <Toolbar>
         <Typography color="inherit" variant="h6">
           <Link to="/" style={{ color: 'white' }}>
@@ -81,6 +87,9 @@ const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
     <CssBaseline />
     <Grid container justify="center">
       <Grid item xs={12} sm={10} md={8} lg={7} className={classes.content}>
+        <Typography gutterBottom variant="h4" className={classes.title}>
+          {title}
+        </Typography>
         {children}
       </Grid>
     </Grid>

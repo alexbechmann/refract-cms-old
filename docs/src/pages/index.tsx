@@ -21,11 +21,7 @@ export default class extends React.Component<IndexPageProps, {}> {
   }
   public render() {
     return (
-      <Layout title="Refract Cms">
-        <Typography gutterBottom variant="h4">
-          Welcome to the Refract Cms docs
-        </Typography>
-        <br />
+      <Layout title=" Welcome to the Refract Cms docs">
         <Typography gutterBottom>
           Welcome to the Refract Cms docs, a code first NodeJS/React based content management system.
         </Typography>
