@@ -54,7 +54,7 @@ const theme = createMuiTheme({
       main: indigo[600]
     },
     secondary: {
-      main: yellow[500]
+      main: '#4ec9b0'
     }
   }
 });
