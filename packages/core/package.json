@@ -28,8 +28,8 @@
     "moment": "^2.22.2",
     "pluralize": "^7.0.0",
     "query-string": "^6.2.0",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
     "react-easy-crop": "^1.6.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1"

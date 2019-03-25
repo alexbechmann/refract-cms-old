@@ -1,3 +1,5 @@
+import { createPublicSchema } from './create-public-schema';
+
 export interface ServerConfig {
   mongoConnectionString: string;
   filesPath: string;
@@ -5,10 +7,11 @@ export interface ServerConfig {
     adminCredentials: {
       username: string;
       password: string;
-    },
+    };
     jwt: {
       issuer?: string;
-      secret: string
-    }
-  }
+      secret: string;
+    };
+  };
+  publicGraphql: ReturnType<typeof createPublicSchema>[];
 }

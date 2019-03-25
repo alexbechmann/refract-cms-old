@@ -3,102 +3,101 @@ queue:
   demands: npm
 
 trigger:
-- master
-- release
-- develop
+  - master
+  - release
+  - develop
 
 steps:
-- task: gittools.gitversion.gitversion-task.GitVersion@3
+  - task: gittools.gitversion.gitversion-task.GitVersion@3
 
-# - task: Docker@0
-#   displayName: Build an image
-#   inputs:
-#     containerregistrytype: 'Container Registry'
-#     dockerRegistryConnection: 'Docker Hub'
-#     imageName: 'refractcms/server:$(GitVersion.SemVer)'
-#     additionalImageTags: |
-#      $(GitVersion.MajorMinorPatch)-$(GitVersion.PreReleaseLabel)
-#      $(GitVersion.SemVer)
-#      $(GitVersion.PreReleaseLabel)
-#     workingDirectory: 'packages/server'
+  # - task: Docker@0
+  #   displayName: Build an image
+  #   inputs:
+  #     containerregistrytype: 'Container Registry'
+  #     dockerRegistryConnection: 'Docker Hub'
+  #     imageName: 'refractcms/server:$(GitVersion.SemVer)'
+  #     additionalImageTags: |
+  #      $(GitVersion.MajorMinorPatch)-$(GitVersion.PreReleaseLabel)
+  #      $(GitVersion.SemVer)
+  #      $(GitVersion.PreReleaseLabel)
+  #     workingDirectory: 'packages/server'
 
-- task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
-  displayName: Yarn install
-  inputs:
-    Arguments: 'install'
+  - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
+    displayName: Yarn install
+    inputs:
+      Arguments: "install"
 
-# - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
-#   displayName: Yarn test
-#   inputs:
-#     Arguments: 'test'
+  - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
+    displayName: Yarn test
+    inputs:
+      Arguments: "test"
 
-- task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
-  displayName: Yarn run build
-  inputs:
-    Arguments: 'run build'
+  - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
+    displayName: Yarn run build
+    inputs:
+      Arguments: "run build"
 
-- powershell: . 'packages/core/update-package-version.ps1' $(GitVersion.SemVer) 
-  displayName: Update package version
+  - powershell: . 'packages/core/update-package-version.ps1' $(GitVersion.SemVer)
+    displayName: Update package version
 
-- powershell: . 'packages/dashboard/update-package-version.ps1' $(GitVersion.SemVer) 
-  displayName: Update package version
+  - powershell: . 'packages/dashboard/update-package-version.ps1' $(GitVersion.SemVer)
+    displayName: Update package version
 
-- powershell: . 'packages/server/update-package-version.ps1' $(GitVersion.SemVer) 
-  displayName: Update package version
+  - powershell: . 'packages/server/update-package-version.ps1' $(GitVersion.SemVer)
+    displayName: Update package version
 
-# - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
-#   displayName: Yarn run build
-#   inputs:
-#     ProjectDirectory: docs-app
-#     Arguments: 'run build'
+  # - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
+  #   displayName: Yarn run build
+  #   inputs:
+  #     ProjectDirectory: docs-app
+  #     Arguments: 'run build'
 
-# - task: Docker@0
-#   displayName: Push an image
-#   inputs:
-#     containerregistrytype: 'Container Registry'
-#     dockerRegistryConnection: 'Docker Hub'
-#     action: 'Push an image'
-#     imageName: 'refractcms/server:$(GitVersion.SemVer)'
-#     additionalImageTags: |
-#      $(GitVersion.MajorMinorPatch)-$(GitVersion.PreReleaseLabel)
-#      $(GitVersion.SemVer)
-#      $(GitVersion.PreReleaseLabel)
-#     workingDirectory: 'packages/server'
-#   condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+  # - task: Docker@0
+  #   displayName: Push an image
+  #   inputs:
+  #     containerregistrytype: 'Container Registry'
+  #     dockerRegistryConnection: 'Docker Hub'
+  #     action: 'Push an image'
+  #     imageName: 'refractcms/server:$(GitVersion.SemVer)'
+  #     additionalImageTags: |
+  #      $(GitVersion.MajorMinorPatch)-$(GitVersion.PreReleaseLabel)
+  #      $(GitVersion.SemVer)
+  #      $(GitVersion.PreReleaseLabel)
+  #     workingDirectory: 'packages/server'
+  #   condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
 
-- task: Npm@1
-  displayName: npm custom
-  condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
-  inputs:
-    command: custom
-    workingDir: packages/core
-    verbose: false
-    customCommand: 'publish --access public --tag $(GitVersion.PreReleaseLabel)'
-    customEndpoint: npm
-    publishEndpoint: npm
+  - task: Npm@1
+    displayName: npm custom
+    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+    inputs:
+      command: custom
+      workingDir: packages/core
+      verbose: false
+      customCommand: "publish --access public --tag $(GitVersion.PreReleaseLabel)"
+      customEndpoint: npm
+      publishEndpoint: npm
 
-- task: Npm@1
-  displayName: npm custom
-  condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
-  inputs:
-    command: custom
-    workingDir: packages/dashboard
-    verbose: false
-    customCommand: 'publish --access public --tag $(GitVersion.PreReleaseLabel)'
-    customEndpoint: npm
-    publishEndpoint: npm
-    
-- task: Npm@1
-  displayName: npm custom
-  condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
-  inputs:
-    command: custom
-    workingDir: packages/server
-    verbose: false
-    customCommand: 'publish --access public --tag $(GitVersion.PreReleaseLabel)'
-    customEndpoint: npm
-    publishEndpoint: npm
+  - task: Npm@1
+    displayName: npm custom
+    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+    inputs:
+      command: custom
+      workingDir: packages/dashboard
+      verbose: false
+      customCommand: "publish --access public --tag $(GitVersion.PreReleaseLabel)"
+      customEndpoint: npm
+      publishEndpoint: npm
 
+  - task: Npm@1
+    displayName: npm custom
+    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+    inputs:
+      command: custom
+      workingDir: packages/server
+      verbose: false
+      customCommand: "publish --access public --tag $(GitVersion.PreReleaseLabel)"
+      customEndpoint: npm
+      publishEndpoint: npm
 # - task: sergeyzwezdin.magic-chunks.magic.chunks.MagicChunks@2
 #   condition: eq(variables['DEPLOY'], 'true')
 #   displayName: Config transform - .firebaserc
