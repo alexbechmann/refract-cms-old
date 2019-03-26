@@ -43,12 +43,15 @@ export function resolveImageProperty<TEntity extends Entity, TCrops extends stri
       )
     ),
     resolve: entity => {
-      return cropKeys.reduce(
-        (acc, cropKey) => {
-          const property = getProperty(entity);
-          if (property) {
+      const property = getProperty(entity);
+      if (!property) {
+        return null;
+      }
+      return {
+        imageId: property.imageId,
+        crops: cropKeys.reduce(
+          (acc, cropKey) => {
             const crop = property.crops[cropKey];
-            console.log({ pixelCrop: crop._doc });
             const pixelCrop = {
               height: crop.pixelCrop.height,
               width: crop.pixelCrop.width,
@@ -57,12 +60,11 @@ export function resolveImageProperty<TEntity extends Entity, TCrops extends stri
             };
             const cropQuery = crop ? `?${queryString.stringify(pixelCrop)}` : '';
             acc[cropKey] = `find_server-url/files/${property.imageId}${cropQuery}`;
-          }
-
-          return acc;
-        },
-        {} as any
-      );
+            return acc;
+          },
+          {} as any
+        )
+      } as ImageModel<TCrops>;
     }
   };
 }

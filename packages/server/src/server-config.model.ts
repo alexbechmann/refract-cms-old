@@ -13,5 +13,5 @@ export interface ServerConfig {
       secret: string;
     };
   };
-  publicGraphql: ReturnType<typeof createPublicSchema>[];
+  publicGraphql: (config: ServerConfig) => ReturnType<typeof createPublicSchema>[];
 }

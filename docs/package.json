@@ -33,6 +33,7 @@
   "license": "MIT",
   "main": "n/a",
   "scripts": {
+    "start": "gatsby develop",
     "build": "gatsby build",
     "develop": "gatsby develop",
     "format": "prettier --parser typescript --trailing-comma es5 --no-semi --single-quote --write \"src/**/*.ts*\"",
