@@ -27,21 +27,22 @@ export interface ImageModel<TCrops extends string> {
 }
 
 export function resolveImageProperty<TEntity extends Entity, TCrops extends string>(
+  baseUrl: string,
   propertyOptions: PropertyOptions<ImageRef<TCrops>>,
   getProperty: (entity: TEntity) => ImageRef<TCrops>
 ): Property<TEntity, ImageModel<TCrops>> {
   const crops = propertyOptions.type.meta.crops.meta;
   const cropKeys = Object.keys(crops);
   return {
-    type: RefractTypes.shape(
-      cropKeys.reduce(
-        (acc, key) => {
+    type: RefractTypes.shape({
+      imageId: RefractTypes.string,
+      crops: RefractTypes.shape(
+        cropKeys.reduce((acc, key) => {
           acc[key] = RefractTypes.string;
           return acc;
-        },
-        {} as any
+        }, {})
       )
-    ),
+    }) as any,
     resolve: entity => {
       const property = getProperty(entity);
       if (!property) {
@@ -52,14 +53,16 @@ export function resolveImageProperty<TEntity extends Entity, TCrops extends stri
         crops: cropKeys.reduce(
           (acc, cropKey) => {
             const crop = property.crops[cropKey];
-            const pixelCrop = {
-              height: crop.pixelCrop.height,
-              width: crop.pixelCrop.width,
-              x: crop.pixelCrop.x,
-              y: crop.pixelCrop.y
-            };
-            const cropQuery = crop ? `?${queryString.stringify(pixelCrop)}` : '';
-            acc[cropKey] = `find_server-url/files/${property.imageId}${cropQuery}`;
+            const pixelCrop = crop.pixelCrop
+              ? {
+                  height: crop.pixelCrop.height,
+                  width: crop.pixelCrop.width,
+                  x: crop.pixelCrop.x,
+                  y: crop.pixelCrop.y
+                }
+              : undefined;
+            const cropQuery = crop && pixelCrop ? `?${queryString.stringify(pixelCrop)}` : '';
+            acc[cropKey] = `${baseUrl}/files/${property.imageId}${cropQuery}`;
             return acc;
           },
           {} as any

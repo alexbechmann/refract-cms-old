@@ -2,9 +2,11 @@ import * as React from 'react';
 import { DatePicker, MuiPickersUtilsProvider } from 'material-ui-pickers';
 import { PropertyEditorProps } from '../properties/property-editor-props';
 import MomentUtils from '@date-io/moment';
-import * as Icons from '@material-ui/icons';
 import moment from 'moment';
 import { Theme, withStyles, WithStyles } from '@material-ui/core';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import Event from '@material-ui/icons/Event';
 
 export interface DatePickerOptions {}
 
@@ -38,9 +40,9 @@ class DatePickerEditor extends React.Component<Props> {
             this.props.setValue(momentDate.toDate());
           }}
           animateYearScrolling={false}
-          rightArrowIcon={<Icons.ChevronRight />}
-          leftArrowIcon={<Icons.ChevronLeft />}
-          keyboardIcon={<Icons.Event />}
+          rightArrowIcon={<ChevronRight />}
+          leftArrowIcon={<ChevronLeft />}
+          keyboardIcon={<Event />}
           showTodayButton
         />
       </MuiPickersUtilsProvider>

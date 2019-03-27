@@ -30,8 +30,9 @@ import { WithApolloClient, withApollo } from 'react-apollo';
 import ApolloClient from 'apollo-client';
 import gql from 'graphql-tag';
 import Page from '../pages/Page';
-import * as Icons from '@material-ui/icons';
 import { addNotification } from '../notifications/state/notification.actions';
+import Delete from '@material-ui/icons/Delete';
+import ArrowBack from '@material-ui/icons/ArrowBack';
 
 interface State {
   updateValues: any;
@@ -113,12 +114,12 @@ class EntityForm extends Component<Props, State> {
           actionComponents={[
             () => (
               <IconButton onClick={this.back}>
-                <Icons.ArrowBack />
+                <ArrowBack />
               </IconButton>
             ),
             () => (
               <IconButton onClick={this.delete}>
-                <Icons.Delete />
+                <Delete />
               </IconButton>
             ),
             () => (

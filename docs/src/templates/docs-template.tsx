@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import Layout from '../layouts/layout';
-import { Typography, Divider } from '@material-ui/core';
+import { graphql } from 'gatsby';
 
 class DocsTemplate extends Component<any> {
   render() {

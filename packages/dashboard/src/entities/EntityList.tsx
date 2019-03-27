@@ -30,8 +30,8 @@ import { connect } from 'react-redux';
 import { AppState } from '../state/app.state';
 import { combineContainers } from 'combine-containers';
 import Page from '../pages/Page';
-import { merge, pickBy, isUndefined, negate } from 'lodash';
-import { FilterList, AddCircle, Sort, Refresh } from '@material-ui/icons';
+import Sort from '@material-ui/icons/Sort';
+import Refresh from '@material-ui/icons/Refresh';
 import { setOrderByField, setOrderByDirection } from './state/entity.actions';
 
 export interface EntitiesListProps extends RouteComponentProps<{ alias: string }> {}

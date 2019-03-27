@@ -6,7 +6,7 @@ import { AppState } from '../state/app.state';
 import { addNotification, removeNotification } from './state/notification.actions';
 import { connect } from 'react-redux';
 import { combineContainers } from 'combine-containers';
-import { Close } from '@material-ui/icons';
+import Close from '@material-ui/icons/Close';
 
 interface Props extends MapDispatchToProps, ReturnType<typeof mapStateToProps> {}
 

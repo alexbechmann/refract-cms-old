@@ -28,7 +28,7 @@ import { Entity } from '../entities/entity.model';
 import EntityListItem from '../entities/EntityListItem';
 import { entityService } from '../entities/services/entity.service';
 import pluralize from 'pluralize';
-import { AddCircle } from '@material-ui/icons';
+import AddCircle from '@material-ui/icons/AddCircle';
 import { withCoreContext } from '../context/with-core-context';
 import { WithCoreContextProps } from '../context/with-core-context-props.model';
 

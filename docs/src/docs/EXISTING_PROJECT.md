@@ -178,11 +178,12 @@ app.use(
           secret: process.env.JWT_SECRET
         }
       },
-      publicGraphql: [
+      publicGraphql: config => [
         createPublicSchema<NewsArticleEntity, NewsArticleModel>(
           NewsArticleSchema,
           {
             image: resolveImageProperty(
+              config.rootPath,
               NewsArticleSchema.properties.image,
               ({ image }) => image
             ),

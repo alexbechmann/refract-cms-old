@@ -10,9 +10,9 @@ const app = express();
 
 app.use(
   ...refractCmsHandler({
-    rootPath: '/cms',
     config,
     serverConfig: {
+      rootPath: '/cms',
       mongoConnectionString: 'mongodb://localhost:27018/refract-consumer-example',
       filesPath: 'consumer/files/',
       auth: {
@@ -25,7 +25,7 @@ app.use(
           secret: 'secret'
         }
       },
-      publicGraphql: [
+      publicGraphql: config => [
         createPublicSchema<Product, { someVar: string }>(ProductSchema, {
           ...ProductSchema.properties,
           someVar: {
@@ -34,7 +34,7 @@ app.use(
           }
         }),
         createPublicSchema<NewsArticle, { image: ImageModel<'profile' | 'large'>; title: string }>(NewsArticleSchema, {
-          image: resolveImageProperty(NewsArticleSchema.properties.image, article => article.image),
+          image: resolveImageProperty(config.rootPath, NewsArticleSchema.properties.image, article => article.image),
           title: {
             type: RefractTypes.string,
             resolve: article => article.title

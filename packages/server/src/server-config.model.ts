@@ -1,6 +1,7 @@
 import { createPublicSchema } from './create-public-schema';
 
 export interface ServerConfig {
+  rootPath: string;
   mongoConnectionString: string;
   filesPath: string;
   auth: {

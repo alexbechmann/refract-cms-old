@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Link, { navigate } from 'gatsby-link';
 import Helmet from 'react-helmet';
 import {
@@ -18,7 +18,8 @@ import {
 } from '@material-ui/core';
 import 'typeface-roboto';
 import GitHub from '../icons/GitHub';
-import { yellow, indigo } from '@material-ui/core/colors';
+import { indigo } from '@material-ui/core/colors';
+const favicon = require('../assets/favicon.ico');
 
 interface LayoutProps {
   title: string;
@@ -69,12 +70,13 @@ const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
           </Link>
         </Typography>
         <div className={classes.grow} />
+        <Button component="a" onClick={() => navigate('/starter-project')}>
+          Starter project
+        </Button>
         <Button component="a" onClick={() => navigate('/existing-project')}>
           Add to an existing project
         </Button>
-        <Button disabled component="a" onClick={() => navigate('/cli-start')}>
-          Install using CLI (Coming soon...)
-        </Button>
+
         <IconButton href="https://github.com/alexbechmann/refract-cms">
           <GitHub />
         </IconButton>
@@ -83,6 +85,7 @@ const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
     <Helmet
       title={title}
       meta={[{ name: 'description', content: 'Sample' }, { name: 'keywords', content: 'sample, something' }]}
+      link={[{ rel: 'icon', href: `${favicon}` }]}
     />
     <CssBaseline />
     <Grid container justify="center">

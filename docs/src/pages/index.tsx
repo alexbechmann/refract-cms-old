@@ -118,12 +118,15 @@ export default class extends React.Component<IndexPageProps, {}> {
         </List>
         <br />
         <br />
-        <Button component="a" color="secondary" onClick={() => navigate('/existing-project')}>
+        <Button component="a" color="secondary" onClick={() => navigate('/starter-project')}>
+          Starter project (Recommended)
+        </Button>
+        <Button component="a" onClick={() => navigate('/existing-project')}>
           Add to an existing project
         </Button>
-        <Button disabled component="a" color="secondary" onClick={() => navigate('/cli-start')}>
-          Install using CLI (Coming soon...)
-        </Button>
+        <br />
+        <br />
+        <Img fluid={this.props.data.adminDashboardImg.childImageSharp.fluid} />
       </Layout>
     );
   }
@@ -161,6 +164,13 @@ export const pageQuery = graphql`
       childImageSharp {
         fixed(width: 40, height: 40) {
           ...GatsbyImageSharpFixed
+        }
+      }
+    }
+    adminDashboardImg: file(relativePath: { eq: "admin-dashboard.png" }) {
+      childImageSharp {
+        fluid(maxWidth: 980) {
+          ...GatsbyImageSharpFluid
         }
       }
     }

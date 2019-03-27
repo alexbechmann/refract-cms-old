@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { PropertyEditorProps } from '../properties/property-editor-props';
 import {
   IconButton,
@@ -10,7 +10,8 @@ import {
   ExpansionPanelActions,
   ExpansionPanelDetails
 } from '@material-ui/core';
-import * as Icons from '@material-ui/icons';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import Add from '@material-ui/icons/Add';
 
 export interface ListEditorOptions<T> {
   itemComponent: React.ComponentType<PropertyEditorProps<T>>;
@@ -44,7 +45,7 @@ class ListEditor<T> extends React.Component<Props<T>, State<T>> {
             onChange={(e, expanded) => this.setState({ expandedIndex: expanded ? index : -1 })}
             key={index}
           >
-            <ExpansionPanelSummary expandIcon={<Icons.ExpandMore />}>
+            <ExpansionPanelSummary expandIcon={<ExpandMore />}>
               <Typography>{this.props.displayNameFormat && this.props.displayNameFormat(v, index)}</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
@@ -116,7 +117,7 @@ class ListEditor<T> extends React.Component<Props<T>, State<T>> {
               })
             }
           >
-            <Icons.Add />
+            <Add />
           </IconButton>
         )}
       </div>
