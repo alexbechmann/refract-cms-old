@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'path';
-import { refractCmsHandler, createPublicSchema, resolveImageProperty, ImageModel } from '@refract-cms/server';
+import { refractCmsHandler, createPublicSchema, ImageModel } from '@refract-cms/server';
 import config from '../refract-cms/refract.config';
 import { NewsArticleEntity } from '../refract-cms/news/news-article.entity';
 import { NewsArticleModel } from '../refract-cms/news/news-article.model';
@@ -27,21 +27,25 @@ app.use(
           secret: 'secret'
         }
       },
-      publicGraphQL: ({ serverConfig }) => [
-        createPublicSchema<Product, { someVar: string }>(ProductSchema, {
+      publicGraphQL: [
+        createPublicSchema<Product, { someVar: string }>(ProductSchema, ({ resolveImageProperty }) => ({
           ...ProductSchema.properties,
           someVar: {
             type: RefractTypes.string,
             resolve: product => `${product._id}_hello!`
           }
-        }),
-        createPublicSchema<NewsArticleEntity, NewsArticleModel>(NewsArticleSchema, {
-          image: resolveImageProperty(serverConfig.rootPath, NewsArticleSchema.properties.image, ({ image }) => image),
+        })),
+        createPublicSchema<NewsArticleEntity, NewsArticleModel>(NewsArticleSchema, ({ resolveImageProperty }) => ({
+          image: resolveImageProperty(NewsArticleSchema.properties.image, ({ image }) => image),
           title: {
             type: RefractTypes.string,
-            resolve: ({ title }) => title
+            resolve: ({ title }) => (title ? title.toUpperCase() : '')
+          },
+          articleDate: {
+            type: NewsArticleSchema.properties.articleDate.type,
+            resolve: ({ articleDate }) => articleDate
           }
-        })
+        }))
       ]
     }
   })

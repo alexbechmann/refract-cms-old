@@ -13,7 +13,7 @@ import { ShapeArgs, PropertyDescription } from '@refract-cms/core';
 import { merge } from 'lodash';
 import mongoose from 'mongoose';
 import { ServerConfig } from '../server-config.model';
-import { Properties } from '../create-public-schema';
+import { Properties, buildHelpers } from '../create-public-schema';
 
 class PublicSchemaBuilder {
   buildSchema(schema: EntitySchema[], serverConfig: ServerConfig) {
@@ -21,12 +21,14 @@ class PublicSchemaBuilder {
 
     schema.forEach(entitySchema => {
       const repository = mongoose.models[entitySchema.options.alias];
-      const extension = serverConfig
-        .publicGraphQL({ serverConfig })
-        .find(extension => extension.schema.options.alias === entitySchema.options.alias);
+      const extension = serverConfig.publicGraphQL.find(
+        extension => extension.schema.options.alias === entitySchema.options.alias
+      );
 
-      const properties = extension ? extension.properties : entitySchema.properties;
-      const type = this.buildEntity(entitySchema.options.alias, properties, extension ? extension.properties : null);
+      const extensionProperties = extension.buildProperties(buildHelpers({ serverConfig, schema: entitySchema }));
+
+      const properties = extension ? extensionProperties : entitySchema.properties;
+      const type = this.buildEntity(entitySchema.options.alias, properties, extension ? extensionProperties : null);
 
       queryFields = {
         ...queryFields,
