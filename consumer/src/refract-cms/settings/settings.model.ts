@@ -6,7 +6,6 @@ import {
   createMultipleEntityPickerEditor
 } from '@refract-cms/core';
 import SettingsIcon from '@material-ui/icons/Settings';
-import { ProductSchema } from '../products/product.model';
 import { NewsArticleSchema } from '../news/news-article.schema';
 
 export interface Settings extends Entity {

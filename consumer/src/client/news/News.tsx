@@ -7,20 +7,13 @@ import { CircularProgress, Typography } from '@material-ui/core';
 const NEWS_QUERY = gql`
   {
     news: newsArticleGetAll {
+      _id
       title
       articleText
       image {
-        imageId
-        imageUrl
         crops {
-          profile {
-            pixelCrop {
-              height
-              width
-              y
-              x
-            }
-          }
+          profile
+          large
         }
       }
     }
@@ -42,7 +35,7 @@ const News = () => (
                   return (
                     <li key={article._id}>
                       {article.title}
-                      {/* <img src={fileService.buildImageUrl(article.image, article.image.crops.profile)} /> */}
+                      <img src={article.image.crops.profile} />
                     </li>
                   );
                 })}

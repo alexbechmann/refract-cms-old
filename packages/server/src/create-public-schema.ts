@@ -5,12 +5,12 @@ import { ServerConfig } from './server-config.model';
 
 export interface Property<TEntity extends Entity, P> {
   type: PropertyType<P>;
-  resolve: (entity: TEntity) => P | Promise<P>;
+  resolve?: (entity: TEntity) => P | Promise<P>;
 }
 
 export type Properties<TModel, TEntity extends Entity> = { [P in keyof TModel]: Property<TEntity, TModel[P]> };
 
-export function createPublicSchema<TEntity extends Entity, TModel = Entity>(
+export function createPublicSchema<TEntity extends Entity, TModel extends Entity = Entity>(
   schema: EntitySchema<TEntity>,
   buildProperties: (helpers: Helpers<TEntity>) => Properties<Omit<TModel, '_id' | 'createDate' | 'updateDate'>, TEntity>
 ) {

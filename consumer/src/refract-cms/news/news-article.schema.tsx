@@ -16,9 +16,9 @@ import { NewsArticleModel } from './news-article.model';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { Button, Checkbox } from '@material-ui/core';
 import moment from 'moment';
-import { Product, ProductSchema } from '../products/product.model';
 import { SettingsSchema } from '../settings/settings.model';
 import { NewsArticleEntity } from './news-article.entity';
+import { ProductSchema } from '../products/product.schema';
 
 export const NewsArticleSchema = defineEntity<NewsArticleEntity>({
   options: {

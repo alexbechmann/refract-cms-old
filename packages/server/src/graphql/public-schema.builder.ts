@@ -25,7 +25,9 @@ class PublicSchemaBuilder {
         extension => extension.schema.options.alias === entitySchema.options.alias
       );
 
-      const extensionProperties = extension.buildProperties(buildHelpers({ serverConfig, schema: entitySchema }));
+      const extensionProperties = extension
+        ? extension.buildProperties(buildHelpers({ serverConfig, schema: entitySchema }))
+        : null;
 
       const properties = extension ? extensionProperties : entitySchema.properties;
       const type = this.buildEntity(entitySchema.options.alias, properties, extension ? extensionProperties : null);

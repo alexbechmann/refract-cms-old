@@ -1,8 +1,8 @@
 import React from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Product } from '../../refract-cms/products/product.model';
 import { CircularProgress, Typography } from '@material-ui/core';
+import { ProductModel } from 'consumer/src/refract-cms/products/product.model';
 
 const PRODUCTS_QUERY = gql`
   {
@@ -16,7 +16,7 @@ const PRODUCTS_QUERY = gql`
 
 const Products = () => (
   <div>
-    <Query<{ products: Product[] }> query={PRODUCTS_QUERY}>
+    <Query<{ products: ProductModel[] }> query={PRODUCTS_QUERY}>
       {({ loading, error, data }) => (
         <div>
           {loading ? (

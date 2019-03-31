@@ -5,8 +5,10 @@ import config from '../refract-cms/refract.config';
 import { NewsArticleEntity } from '../refract-cms/news/news-article.entity';
 import { NewsArticleModel } from '../refract-cms/news/news-article.model';
 import { RefractTypes } from '@refract-cms/core';
-import { ProductSchema, Product } from '../refract-cms/products/product.model';
 import { NewsArticleSchema } from '../refract-cms/news/news-article.schema';
+import { ProductModel } from '../refract-cms/products/product.model';
+import { ProductEntity } from '../refract-cms/products/product.entity';
+import { ProductSchema } from '../refract-cms/products/product.schema';
 
 const app = express();
 
@@ -28,23 +30,28 @@ app.use(
         }
       },
       publicGraphQL: [
-        createPublicSchema<Product, { someVar: string }>(ProductSchema, ({ resolveImageProperty }) => ({
-          someVar: {
-            type: RefractTypes.string,
-            resolve: product => `${product._id}_hello!`
-          }
-        })),
-        createPublicSchema<NewsArticleEntity, NewsArticleModel>(NewsArticleSchema, ({ resolveImageProperty }) => ({
-          image: resolveImageProperty(NewsArticleSchema.properties.image, ({ image }) => image),
-          title: {
-            type: RefractTypes.string,
-            resolve: ({ title }) => (title ? title.toUpperCase() : '')
-          },
-          articleDate: {
-            type: NewsArticleSchema.properties.articleDate.type,
-            resolve: ({ articleDate }) => articleDate
-          }
-        }))
+        createPublicSchema<ProductEntity, ProductModel>(ProductSchema, () => {
+          return {
+            ...ProductSchema.properties,
+            someVar: {
+              type: RefractTypes.string,
+              resolve: product => `${product._id}_hello!`
+            }
+          };
+        }),
+        createPublicSchema<NewsArticleEntity, NewsArticleModel>(NewsArticleSchema, ({ resolveImageProperty }) => {
+          return {
+            image: resolveImageProperty(NewsArticleSchema.properties.image, ({ image }) => image),
+            title: {
+              type: RefractTypes.string,
+              resolve: ({ title }) => (title ? title.toUpperCase() : '')
+            },
+            articleDate: {
+              type: NewsArticleSchema.properties.articleDate.type,
+              resolve: ({ articleDate }) => articleDate
+            }
+          };
+        })
       ]
     }
   })
