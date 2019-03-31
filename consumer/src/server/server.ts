@@ -29,7 +29,6 @@ app.use(
       },
       publicGraphQL: [
         createPublicSchema<Product, { someVar: string }>(ProductSchema, ({ resolveImageProperty }) => ({
-          ...ProductSchema.properties,
           someVar: {
             type: RefractTypes.string,
             resolve: product => `${product._id}_hello!`

@@ -10,9 +10,9 @@ export interface Property<TEntity extends Entity, P> {
 
 export type Properties<TModel, TEntity extends Entity> = { [P in keyof TModel]: Property<TEntity, TModel[P]> };
 
-export function createPublicSchema<TEntity extends Entity, TModel = any>(
+export function createPublicSchema<TEntity extends Entity, TModel = Entity>(
   schema: EntitySchema<TEntity>,
-  buildProperties: (helpers: Helpers<TEntity>) => Omit<Properties<TModel, TEntity>, '_id' | 'createDate' | 'updateDate'>
+  buildProperties: (helpers: Helpers<TEntity>) => Properties<Omit<TModel, '_id' | 'createDate' | 'updateDate'>, TEntity>
 ) {
   return {
     schema,
