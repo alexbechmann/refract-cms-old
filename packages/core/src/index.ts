@@ -12,7 +12,6 @@ export { Crop } from './files/crop.model';
 export { FileModel } from './files/file.model';
 export { AuthToken } from './auth/auth-token';
 export { FileService } from './files/file.service';
-export { EntityRef } from './entities/entity-ref.model';
 export { FileSchema } from './files/file.schema';
 export { default as EntityListItem } from './entities/EntityListItem';
 export { CoreContext } from './context/core.context';

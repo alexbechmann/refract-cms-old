@@ -19,7 +19,8 @@ import { schemaComposer } from 'graphql-compose';
 import { publicSchemaBuilder } from './graphql/public-schema.builder';
 import { requireAuth } from './auth/require-auth.middleware';
 
-const refractCmsHandler = ({ config, serverConfig }: { config: Config; serverConfig: ServerConfig }) => {
+const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => {
+  const { config } = serverConfig;
   const router = express.Router();
   const storage = multer.diskStorage({
     destination: serverConfig.filesPath,

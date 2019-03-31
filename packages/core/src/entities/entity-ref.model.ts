@@ -1,6 +1,6 @@
-import { Entity } from './entity.model';
+// import { Entity } from './entity.model';
 
-export interface EntityRef<TEntity extends Entity> {
-  entityId: string;
-  value: TEntity;
-}
+// export interface EntityRef<TEntity extends Entity> {
+//   entityId: string;
+//   value: TEntity;
+// }

@@ -1,17 +1,17 @@
 import { EntitySchema, Entity, PropertyType, ImageRef, RefractTypes, PropertyOptions } from '@refract-cms/core';
 import queryString from 'query-string';
+import { Omit } from '@material-ui/core';
 
 export interface Property<TEntity extends Entity, P> {
   type: PropertyType<P>;
   resolve: (entity: TEntity) => P | Promise<P>;
 }
 
-export type Properties<TModel, TEntity extends Entity> = { [P in keyof TModel]: Property<TEntity, TModel[P]> };
+export type Properties<TModel, TEntity extends Entity> = { [P in keyof TModel]?: Property<TEntity, TModel[P]> };
 
 export function createPublicSchema<TEntity extends Entity, TModel = any>(
   schema: EntitySchema<TEntity>,
-  properties: Properties<TModel, TEntity>
-  // resolve: (entity: TEntity) => TModel | Promise<TModel>
+  properties: Omit<Properties<TModel, TEntity>, '_id' | 'createDate' | 'updateDate'>
 ) {
   return {
     schema,

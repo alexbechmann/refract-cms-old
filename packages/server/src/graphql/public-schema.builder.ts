@@ -22,7 +22,7 @@ class PublicSchemaBuilder {
     schema.forEach(entitySchema => {
       const repository = mongoose.models[entitySchema.options.alias];
       const extension = serverConfig
-        .publicGraphql(serverConfig)
+        .publicGraphQL({ serverConfig })
         .find(extension => extension.schema.options.alias === entitySchema.options.alias);
 
       const properties = extension ? extension.properties : entitySchema.properties;
@@ -95,15 +95,15 @@ class PublicSchemaBuilder {
         const type = this.buildType(propertyName, propertyType.meta);
         return new GraphQLList(type);
       }
-      case 'Ref': {
-        const shapeArgs = Object.keys(propertyType.meta.properties).reduce((acc, propertKey) => {
-          acc[propertKey] = propertyType.meta.properties[propertKey].type;
-          return acc;
-        }, {}) as any;
+      // case 'Ref': {
+      //   const shapeArgs = Object.keys(propertyType.meta.properties).reduce((acc, propertKey) => {
+      //     acc[propertKey] = propertyType.meta.properties[propertKey].type;
+      //     return acc;
+      //   }, {}) as any;
 
-        const shape = RefractTypes.shape(shapeArgs);
-        return this.buildShape(propertyName, shape);
-      }
+      //   const shape = RefractTypes.shape(shapeArgs);
+      //   return this.buildShape(propertyName, shape);
+      // }
       default: {
         return GraphQLString;
       }

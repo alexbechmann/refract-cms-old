@@ -2,7 +2,6 @@
 import { Crop } from '../files/crop.model';
 import { ImageRef, Crops } from '../files/image-ref.model';
 import { EntitySchema } from '../entities/entity-schema';
-import { EntityRef } from '../entities/entity-ref.model';
 import { Entity } from '../entities/entity.model';
 
 export interface PropertyDescription<T, TAlias extends Alias, TMeta = any> {
@@ -20,8 +19,8 @@ export const bool: PropertyType<boolean> = { alias: 'Boolean' } as PropertyDescr
 export const number: PropertyType<number> = { alias: 'Number' } as PropertyDescription<number, 'Number'>;
 export const date: PropertyType<Date> = { alias: 'Date' } as PropertyDescription<Date, 'Date'>;
 export const string: PropertyType<string> = ({ alias: 'String' } as any) as PropertyDescription<string, 'String'>;
-export const ref = <TRef extends EntityRef<TEntity>, TEntity extends Entity>(entitySchema: EntitySchema<TEntity>) =>
-  (({ alias: 'Ref', meta: entitySchema } as any) as PropertyDescription<TRef, 'Ref', EntitySchema<TEntity>>);
+//export const ref = <TRef extends EntityRef<TEntity>, TEntity extends Entity>(entitySchema: EntitySchema<TEntity>) =>
+//(({ alias: 'Ref', meta: entitySchema } as any) as PropertyDescription<TRef, 'Ref', EntitySchema<TEntity>>);
 
 export type ShapeArgs<T> = { [P in keyof T]: PropertyType<T[P]> };
 
@@ -62,8 +61,7 @@ export const RefractTypes = {
   date,
   shape,
   imageShape,
-  cropShape,
-  ref
+  cropShape
 };
 
 export type AliasType<T> = T extends string
@@ -96,9 +94,5 @@ export type PropertyType<T> = T extends string
   : T extends Date
   ? PropertyDescription<Date, 'Date'>
   : T extends (infer U)[]
-  ? PropertyDescription<T, 'Array', PropertyTypeSimple<U>>
-  : T extends EntityRefType<infer U>
-  ? PropertyDescription<T, 'Ref', EntitySchema<U>>
+  ? PropertyDescription<T, 'Array', PropertyTypeSimple<U>> // : T extends EntityRefType<infer U> // ? PropertyDescription<T, 'Ref', EntitySchema<U>>
   : PropertyDescription<T, 'Shape', ShapeArgs<T>>;
-
-type EntityRefType<U> = U extends Entity ? EntityRef<U> : never;

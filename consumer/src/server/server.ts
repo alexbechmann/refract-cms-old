@@ -2,16 +2,18 @@ import express from 'express';
 import path from 'path';
 import { refractCmsHandler, createPublicSchema, resolveImageProperty, ImageModel } from '@refract-cms/server';
 import config from '../refract-cms/refract.config';
-import { NewsArticleSchema, NewsArticle } from '../refract-cms/news/news-article.model';
+import { NewsArticleEntity } from '../refract-cms/news/news-article.entity';
+import { NewsArticleModel } from '../refract-cms/news/news-article.model';
 import { RefractTypes } from '@refract-cms/core';
 import { ProductSchema, Product } from '../refract-cms/products/product.model';
+import { NewsArticleSchema } from '../refract-cms/news/news-article.schema';
 
 const app = express();
 
 app.use(
   ...refractCmsHandler({
-    config,
     serverConfig: {
+      config,
       rootPath: '/cms',
       mongoConnectionString: 'mongodb://localhost:27018/refract-consumer-example',
       filesPath: 'consumer/files/',
@@ -25,7 +27,7 @@ app.use(
           secret: 'secret'
         }
       },
-      publicGraphql: config => [
+      publicGraphQL: ({ serverConfig }) => [
         createPublicSchema<Product, { someVar: string }>(ProductSchema, {
           ...ProductSchema.properties,
           someVar: {
@@ -33,11 +35,11 @@ app.use(
             resolve: product => `${product._id}_hello!`
           }
         }),
-        createPublicSchema<NewsArticle, { image: ImageModel<'profile' | 'large'>; title: string }>(NewsArticleSchema, {
-          image: resolveImageProperty(config.rootPath, NewsArticleSchema.properties.image, article => article.image),
+        createPublicSchema<NewsArticleEntity, NewsArticleModel>(NewsArticleSchema, {
+          image: resolveImageProperty(serverConfig.rootPath, NewsArticleSchema.properties.image, ({ image }) => image),
           title: {
             type: RefractTypes.string,
-            resolve: article => article.title
+            resolve: ({ title }) => title
           }
         })
       ]

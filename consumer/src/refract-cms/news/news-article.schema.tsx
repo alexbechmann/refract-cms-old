@@ -9,49 +9,25 @@ import {
   createImagePickerEditor,
   ImageRef,
   PropertyEditorProps,
-  EntityRef,
   createSingleEntityPickerEditor,
   createMultipleEntityPickerEditor
 } from '@refract-cms/core';
-import { NewsArticle } from './news-article.model';
+import { NewsArticleModel } from './news-article.model';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { Button, Checkbox } from '@material-ui/core';
 import moment from 'moment';
 import { Product, ProductSchema } from '../products/product.model';
 import { SettingsSchema } from '../settings/settings.model';
+import { NewsArticleEntity } from './news-article.entity';
 
-export interface NewsArticle extends Entity {
-  title: string;
-  articleText: string;
-  extraText: string;
-  articleDate: Date;
-  listOfStrings: string[];
-  image: ImageRef<'profile' | 'large'>;
-  item: {
-    id: string;
-    meta: {
-      location: string;
-      count: number;
-      deep: {
-        level: number;
-      };
-    };
-  };
-  primary: boolean;
-  // relatedProducts: Product[];
-  // highlightedProduct: EntityRef<Product>;
-  highlightedProductId: string;
-  otherRelatedProductIds: string[];
-}
-
-export const NewsArticleSchema = defineEntity<NewsArticle>({
+export const NewsArticleSchema = defineEntity<NewsArticleEntity>({
   options: {
     alias: 'newsArticle',
     displayName: 'News Article',
     instanceDisplayProps: newsArticle => ({
       primaryText: newsArticle.title,
       secondaryText: moment(newsArticle.articleDate).format('ll')
-      // imageUrl: newsArticle.image ? newsArticle.image.imageUrl : undefined
+      // imageUrl: newsArticle.image ? newsArticle.image.crops.profile : undefined
     }),
     icon: DescriptionIcon,
     defaultSort: {
