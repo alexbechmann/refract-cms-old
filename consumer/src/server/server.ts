@@ -39,19 +39,19 @@ app.use(
             }
           };
         }),
-        createPublicSchema<NewsArticleEntity, NewsArticleModel>(NewsArticleSchema, ({ resolveImageProperty }) => {
-          return {
-            image: resolveImageProperty(NewsArticleSchema.properties.image, ({ image }) => image),
-            title: {
-              type: RefractTypes.string,
-              resolve: ({ title }) => (title ? title.toUpperCase() : '')
-            },
-            articleDate: {
-              type: NewsArticleSchema.properties.articleDate.type,
-              resolve: ({ articleDate }) => articleDate
-            }
-          };
-        })
+        createPublicSchema<NewsArticleEntity, NewsArticleModel>(
+          NewsArticleSchema,
+          ({ resolveImageProperty, schema }) => {
+            return {
+              ...schema.properties,
+              imageModel: resolveImageProperty(NewsArticleSchema.properties.image, ({ image }) => image),
+              title: {
+                type: RefractTypes.string,
+                resolve: ({ title }) => (title ? title.toUpperCase() : '')
+              }
+            };
+          }
+        )
       ]
     }
   })

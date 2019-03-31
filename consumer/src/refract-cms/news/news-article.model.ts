@@ -1,8 +1,7 @@
 import { ImageModel } from '@refract-cms/server';
 import { Entity } from '@refract-cms/core';
+import { NewsArticleEntity } from './news-article.entity';
 
-export interface NewsArticleModel extends Entity {
-  image: ImageModel<'profile' | 'large'>;
-  title: string;
-  articleDate: Date;
+export interface NewsArticleModel extends NewsArticleEntity {
+  imageModel: ImageModel<'profile' | 'large'>;
 }

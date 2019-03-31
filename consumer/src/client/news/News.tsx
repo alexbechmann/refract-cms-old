@@ -10,7 +10,7 @@ const NEWS_QUERY = gql`
       _id
       title
       articleText
-      image {
+      imageModel {
         crops {
           profile
           large
@@ -35,7 +35,7 @@ const News = () => (
                   return (
                     <li key={article._id}>
                       {article.title}
-                      <img src={article.image.crops.profile} />
+                      {article.imageModel && <img style={{ width: 100 }} src={article.imageModel.crops.profile} />}
                     </li>
                   );
                 })}

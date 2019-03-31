@@ -28,6 +28,7 @@ export interface ImageModel<TCrops extends string> {
 }
 
 interface Helpers<TEntity extends Entity> {
+  schema: EntitySchema<TEntity>;
   serverConfig: ServerConfig;
   resolveImageProperty: <TCrops extends string>(
     propertyOptions: PropertyOptions<ImageRef<TCrops>>,
@@ -84,6 +85,7 @@ export const buildHelpers = <TEntity extends Entity>({
         }
       };
     },
-    serverConfig
+    serverConfig,
+    schema
   } as Helpers<TEntity>;
 };

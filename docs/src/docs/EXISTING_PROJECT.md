@@ -140,9 +140,7 @@ This interface describes the data model that will be publically queryable in the
 import { Entity } from "@refract-cms/core";
 import { ImageModel } from "@refract-cms/server";
 
-export interface NewsArticleModel extends Entity {
-  title: string;
-  articleText: string;
+export interface NewsArticleModel extends NewsArticleEntity {
   image: ImageModel<"profile" | "large">;
 }
 ```
@@ -178,23 +176,21 @@ app.use(
           secret: process.env.JWT_SECRET
         }
       },
-      publicGraphql: config => [
+      publicGraphQL: [
         createPublicSchema<NewsArticleEntity, NewsArticleModel>(
           NewsArticleSchema,
-          {
-            image: resolveImageProperty(
-              config.rootPath,
-              NewsArticleSchema.properties.image,
-              ({ image }) => image
-            ),
-            title: {
-              type: RefractTypes.string,
-              resolve: ({ title, extraText }) => `${title} - ${extraText}`
-            },
-            articleText: {
-              type: RefractTypes.string,
-              resolve: ({ articleText }) => articleText
-            }
+          ({ resolveImageProperty }) => {
+            return {
+              ...NewsArticleSchema.properties,
+              image: resolveImageProperty(
+                NewsArticleSchema.properties.image,
+                ({ image }) => image
+              ),
+              title: {
+                type: RefractTypes.string,
+                resolve: ({ title }) => (title ? title.toUpperCase() : "")
+              }
+            };
           }
         )
       ]
