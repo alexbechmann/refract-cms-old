@@ -76,7 +76,7 @@ type product {
 
   mocha.it('should not crash', () => {
     const schema = publicSchemaBuilder.buildSchema(refractConfig.schema, {
-      publicGraphql: config => []
+      publicGraphQL: []
     } as ServerConfig);
   });
 });

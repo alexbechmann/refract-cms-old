@@ -8,8 +8,7 @@ import {
   RefractTypes,
   createImagePickerEditor,
   ImageRef,
-  PropertyEditorProps,
-  EntityRef
+  PropertyEditorProps
 } from '@refract-cms/core';
 import { NewsArticle } from './news-article.model';
 import DescriptionIcon from '@material-ui/icons/Description';
@@ -35,8 +34,6 @@ export interface NewsArticle extends Entity {
     };
   };
   primary: boolean;
-  // relatedProducts: Product[];
-  highlightedProduct: EntityRef<Product>;
 }
 
 export const NewsArticleSchema = defineEntity<NewsArticle>({
@@ -45,8 +42,8 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
     displayName: 'News Article',
     instanceDisplayProps: newsArticle => ({
       primaryText: newsArticle.title,
-      secondaryText: moment(newsArticle.articleDate).format('ll'),
-      imageUrl: newsArticle.image ? newsArticle.image.imageUrl : undefined
+      secondaryText: moment(newsArticle.articleDate).format('ll')
+      // imageUrl: newsArticle.image ? newsArticle.image.imageUrl : undefined
     }),
     icon: DescriptionIcon
   },
@@ -140,10 +137,6 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
         <Checkbox checked={props.value} onChange={(e, checked) => props.setValue(checked)} />
       ),
       type: RefractTypes.bool
-    },
-    highlightedProduct: {
-      displayName: 'Highlighted Product',
-      type: RefractTypes.ref(ProductSchema)
     }
   }
 });
