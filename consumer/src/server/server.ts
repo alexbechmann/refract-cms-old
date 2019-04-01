@@ -44,7 +44,7 @@ app.use(
           ({ resolveImageProperty, schema }) => {
             return {
               ...schema.properties,
-              imageModel: resolveImageProperty(NewsArticleSchema.properties.image, ({ image }) => image),
+              imageModel: resolveImageProperty('image'),
               title: {
                 type: RefractTypes.string,
                 resolve: ({ title }) => (title ? title.toUpperCase() : '')
