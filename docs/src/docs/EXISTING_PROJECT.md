@@ -13,22 +13,6 @@ npm install --save express @refract-cms/core @refract-cms/server @refract-cms/da
 
 # Setup models (Shared between client & server)
 
-### news-article.entity.ts
-
-This interface describes the data entity that will be editable in the CMS & stored in this format in the database.
-
-```typescript
-import { Entity, ImageRef } from "@refract-cms/core";
-
-export interface NewsArticleEntity extends Entity {
-  title: string;
-  articleText: string;
-  articleDate: Date;
-  extraText: string;
-  image: ImageRef<"profile" | "large">;
-}
-```
-
 ### news-article.schema.tsx
 
 ```tsx
@@ -48,7 +32,26 @@ import { NewsArticleEntity } from "./news-article.entity";
 import DescriptionIcon from "@material-ui/icons/Description";
 import moment from "moment";
 
-export const NewsArticleSchema = defineEntity<NewsArticleEntity>({
+// This interface describes the data entity that will be editable in the
+// CMS & stored in this format in the database.
+export interface NewsArticleEntity extends Entity {
+  title: string;
+  articleText: string;
+  articleDate: Date;
+  extraText: string;
+  image: ImageRef<"profile" | "large">;
+}
+
+// This interface describes the data model that will be publically queryable in the Graphql endpoint.
+// You will resolve this interface on the server from the original enitity.
+export interface NewsArticleModel extends NewsArticleEntity {
+  imageModel: ImageModel<"profile" | "large">;
+}
+
+export const NewsArticleSchema = defineEntity<
+  NewsArticleEntity,
+  NewsArticleModel
+>({
   options: {
     alias: "newsArticle",
     displayName: "News Article",
@@ -132,19 +135,6 @@ export default configure({
 
 # Server
 
-### news-article.model.tsx
-
-This interface describes the data model that will be publically queryable in the GraphQL endpoint. You will resolve this interface on the server from the original enitity.
-
-```ts
-import { Entity } from "@refract-cms/core";
-import { ImageModel } from "@refract-cms/server";
-
-export interface NewsArticleModel extends NewsArticleEntity {
-  image: ImageModel<"profile" | "large">;
-}
-```
-
 ### server.ts
 
 ```typescript
@@ -177,22 +167,16 @@ app.use(
         }
       },
       publicGraphQL: [
-        createPublicSchema<NewsArticleEntity, NewsArticleModel>(
-          NewsArticleSchema,
-          ({ resolveImageProperty }) => {
-            return {
-              ...NewsArticleSchema.properties,
-              image: resolveImageProperty(
-                NewsArticleSchema.properties.image,
-                ({ image }) => image
-              ),
-              title: {
-                type: RefractTypes.string,
-                resolve: ({ title }) => (title ? title.toUpperCase() : "")
-              }
-            };
-          }
-        )
+        createPublicSchema(NewsArticleSchema, ({ resolveImageProperty }) => {
+          return {
+            ...NewsArticleSchema.properties,
+            imageModel: resolveImageProperty("image"),
+            title: {
+              type: RefractTypes.string,
+              resolve: ({ title }) => (title ? title.toUpperCase() : "")
+            }
+          };
+        })
       ]
     }
   })
@@ -206,7 +190,7 @@ app.use(
 ```tsx
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App"; // Rest of your app
+import App from "./App"; // Rest of your app, if you decide to host it on the same server.
 import { Switch, Route, BrowserRouter } from "react-router-dom";
 import { createDashboard } from "@refract-cms/dashboard";
 import config from "./refract.config";
