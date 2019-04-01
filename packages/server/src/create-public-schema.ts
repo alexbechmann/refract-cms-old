@@ -2,6 +2,7 @@ import { EntitySchema, Entity, PropertyType, ImageRef, RefractTypes, PropertyOpt
 import queryString from 'query-string';
 import { Omit } from '@material-ui/core';
 import { ServerConfig } from './server-config.model';
+import { repositoryForSchema } from './repository-for-schema';
 
 export interface Property<TEntity extends Entity, P> {
   type: PropertyType<P>;
@@ -27,6 +28,8 @@ export interface ImageModel<TCrops extends string> {
   crops: CropsUrls<TCrops>;
 }
 
+type Key<TEntity, K extends keyof TEntity, TReturnValue> = TEntity[K] extends TReturnValue ? K : never;
+
 type ImageRefKey<TEntity, K extends keyof TEntity, TCrops extends string> = TEntity[K] extends ImageRef<TCrops>
   ? K
   : never;
@@ -37,6 +40,14 @@ interface Helpers<TEntity extends Entity> {
   resolveImageProperty: <TCrops extends string, K extends keyof TEntity>(
     propertyKey: ImageRefKey<TEntity, K, TCrops>
   ) => Property<TEntity, ImageModel<TCrops>>;
+  resolveReference: <RefEntity extends Entity, RefModel extends Entity, K extends keyof TEntity>(
+    refSchema: EntitySchema<RefEntity, RefModel>,
+    propertyKey: Key<TEntity, K, string>
+  ) => Property<TEntity, RefModel>;
+  resolveReferences: <RefEntity extends Entity, RefModel extends Entity, K extends keyof TEntity>(
+    refSchema: EntitySchema<RefEntity, RefModel>,
+    propertyKey: Key<TEntity, K, string[]>
+  ) => Property<TEntity, RefModel>;
 }
 
 export const buildHelpers = <TEntity extends Entity>({
@@ -47,6 +58,28 @@ export const buildHelpers = <TEntity extends Entity>({
   schema: EntitySchema<TEntity>;
 }) => {
   return {
+    resolveReference: (refSchema, propertyKey) => {
+      return {
+        type: RefractTypes.typeName(refSchema.options.alias),
+        resolve: source => {
+          const id = source[propertyKey];
+          return repositoryForSchema(refSchema).findOne({ _id: id });
+        }
+      } as any;
+    },
+    resolveReferences: (refSchema, propertyKey) => {
+      return {
+        type: RefractTypes.arrayOf(RefractTypes.typeName(refSchema.options.alias) as any),
+        resolve: source => {
+          const ids = source[propertyKey];
+          return repositoryForSchema(refSchema).find({
+            _id: {
+              $in: ids
+            }
+          });
+        }
+      } as any;
+    },
     resolveImageProperty: propertyKey => {
       const crops = (schema.properties as any)[propertyKey].type.meta.crops.meta;
       const cropKeys = Object.keys(crops);

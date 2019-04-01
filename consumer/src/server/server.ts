@@ -35,16 +35,21 @@ app.use(
             }
           };
         }),
-        createPublicSchema(NewsArticleSchema, ({ resolveImageProperty, schema }) => {
-          return {
-            ...schema.properties,
-            imageModel: resolveImageProperty('image'),
-            title: {
-              type: RefractTypes.string,
-              resolve: ({ title }) => (title ? title.toUpperCase() : '')
-            }
-          };
-        })
+        createPublicSchema(
+          NewsArticleSchema,
+          ({ resolveImageProperty, schema, resolveReference, resolveReferences }) => {
+            return {
+              ...schema.properties,
+              imageModel: resolveImageProperty('image'),
+              title: {
+                type: RefractTypes.string,
+                resolve: ({ title }) => (title ? title.toUpperCase() : '')
+              },
+              highlightedProduct: resolveReference(ProductSchema, 'highlightedProductId'),
+              highlightedProducts: resolveReferences(ProductSchema, 'otherRelatedProductIds')
+            };
+          }
+        )
       ]
     }
   })
@@ -54,14 +59,6 @@ app.get('/*', express.static(path.resolve(__dirname, '..', '..', 'dist')));
 
 app.get('*', (req, res) => {
   const application = ''; // renderToString(<App />);
-  const config = {
-    umbracoUrl: 'https://localhost:44300',
-    umbracoMasterUrl: 'https://localhost:44300',
-    apiUrl: '',
-    newsUrl: 'http://localhost:3000',
-    searchApiUrl: '',
-    newsBasePath: '/news'
-  };
   const html = `<!doctype html>
     <html class="no-js" lang="">
         <head>

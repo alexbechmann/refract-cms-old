@@ -1,15 +1,13 @@
 /* tslint:disable */
 import { Crop } from '../files/crop.model';
 import { ImageRef, Crops } from '../files/image-ref.model';
-import { EntitySchema } from '../entities/entity-schema';
-import { Entity } from '../entities/entity.model';
 
 export interface PropertyDescription<T, TAlias extends Alias, TMeta = any> {
   alias: TAlias;
   meta?: TMeta;
 }
 
-export type Alias = 'String' | 'Number' | 'Array' | 'Boolean' | 'Date' | 'Shape' | 'Ref';
+export type Alias = 'String' | 'Number' | 'Array' | 'Boolean' | 'Date' | 'Shape' | 'TypeName';
 
 // type GetElementType<T extends any[]> = T extends (infer U)[] ? U : never;
 
@@ -29,6 +27,13 @@ export function shape<T>(type: ShapeArgs<T>) {
     alias: 'Shape',
     meta: type
   } as PropertyDescription<T, 'Shape', ShapeArgs<T>>;
+}
+
+export function typeName<T>(typeName: string) {
+  return {
+    alias: 'TypeName',
+    meta: typeName
+  } as PropertyDescription<T, 'TypeName', string>;
 }
 
 const cropShape = shape<Crop>({
@@ -61,7 +66,8 @@ export const RefractTypes = {
   date,
   shape,
   imageShape,
-  cropShape
+  cropShape,
+  typeName
 };
 
 export type AliasType<T> = T extends string

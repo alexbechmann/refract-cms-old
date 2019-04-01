@@ -7,20 +7,24 @@ import {
   GraphQLList,
   GraphQLType,
   GraphQLSchema,
-  GraphQLInt
+  GraphQLInt,
+  getNamedType
 } from 'graphql';
 import { ShapeArgs, PropertyDescription } from '@refract-cms/core';
 import { merge } from 'lodash';
 import mongoose from 'mongoose';
 import { ServerConfig } from '../server-config.model';
 import { Properties, buildHelpers } from '../create-public-schema';
+import { repositoryForSchema } from '../repository-for-schema';
+
+const namedTypes: { [key: string]: GraphQLType } = {};
 
 class PublicSchemaBuilder {
   buildSchema(schema: EntitySchema[], serverConfig: ServerConfig) {
     let queryFields = {};
 
     schema.forEach(entitySchema => {
-      const repository = mongoose.models[entitySchema.options.alias];
+      const repository = repositoryForSchema(entitySchema);
       const extension = serverConfig.publicGraphQL.find(
         extension => extension.schema.options.alias === entitySchema.options.alias
       );
@@ -99,6 +103,12 @@ class PublicSchemaBuilder {
         const type = this.buildType(propertyName, propertyType.meta);
         return new GraphQLList(type);
       }
+      // @ts-ignore
+      case 'TypeName': {
+        // @ts-ignore
+        console.log(namedTypes, namedTypes[propertyType.meta]);
+        return namedTypes[propertyType.meta];
+      }
       // case 'Ref': {
       //   const shapeArgs = Object.keys(propertyType.meta.properties).reduce((acc, propertKey) => {
       //     acc[propertKey] = propertyType.meta.properties[propertKey].type;
@@ -128,7 +138,7 @@ class PublicSchemaBuilder {
 
     const shape = RefractTypes.shape(shapeArgs);
 
-    return new GraphQLObjectType({
+    const type = new GraphQLObjectType({
       name: alias,
       fields: Object.keys(shape.meta!).reduce(
         (acc, propertyKey) => {
@@ -137,7 +147,6 @@ class PublicSchemaBuilder {
           acc[propertyKey] = {
             type
           };
-          console.log({ extensionProperties });
           if (extensionProperties && extensionProperties[propertyKey]) {
             acc[propertyKey].resolve = extensionProperties[propertyKey].resolve;
           }
@@ -162,6 +171,8 @@ class PublicSchemaBuilder {
         }
       )
     });
+    namedTypes[alias] = type;
+    return type;
   }
 
   buildShape<T>(propertyName: string, propertyType: PropertyDescription<T, 'Shape', ShapeArgs<T>>) {
