@@ -4,13 +4,27 @@ import {
   createTextEditor,
   createLocationEditor,
   createSingleDropdownEditor,
-  createMultipleDropdownEditor
+  createMultipleDropdownEditor,
+  Entity,
+  Location
 } from '@refract-cms/core';
-import { ProductEntity } from './product.entity';
 import CustomDropdownEditor from '../shared/CustomDropdownEditor';
 import ScatterPlotIcon from '@material-ui/icons/ScatterPlot';
 
-export const ProductSchema = defineEntity<ProductEntity>({
+export interface ProductEntity extends Entity {
+  productType: string;
+  customNumber: number;
+  location: Location;
+  title: string;
+  category: string;
+  types: string[];
+}
+
+export interface ProductModel extends ProductEntity {
+  someVar: string;
+}
+
+export const ProductSchema = defineEntity<ProductEntity, ProductModel>({
   options: {
     alias: 'product',
     displayName: 'Product',

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import { NewsArticleModel } from '../../refract-cms/news/news-article.model';
+import { NewsArticleModel } from '../../refract-cms/news/news-article.schema';
 import { CircularProgress, Typography } from '@material-ui/core';
 
 const NEWS_QUERY = gql`

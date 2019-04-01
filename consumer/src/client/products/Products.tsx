@@ -2,7 +2,7 @@ import React from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import { CircularProgress, Typography } from '@material-ui/core';
-import { ProductModel } from 'consumer/src/refract-cms/products/product.model';
+import { ProductModel } from 'consumer/src/refract-cms/products/product.schema';
 
 const PRODUCTS_QUERY = gql`
   {

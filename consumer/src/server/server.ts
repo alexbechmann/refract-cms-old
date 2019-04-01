@@ -2,12 +2,8 @@ import express from 'express';
 import path from 'path';
 import { refractCmsHandler, createPublicSchema, ImageModel } from '@refract-cms/server';
 import config from '../refract-cms/refract.config';
-import { NewsArticleEntity } from '../refract-cms/news/news-article.entity';
-import { NewsArticleModel } from '../refract-cms/news/news-article.model';
 import { RefractTypes } from '@refract-cms/core';
 import { NewsArticleSchema } from '../refract-cms/news/news-article.schema';
-import { ProductModel } from '../refract-cms/products/product.model';
-import { ProductEntity } from '../refract-cms/products/product.entity';
 import { ProductSchema } from '../refract-cms/products/product.schema';
 
 const app = express();
@@ -30,7 +26,7 @@ app.use(
         }
       },
       publicGraphQL: [
-        createPublicSchema<ProductEntity, ProductModel>(ProductSchema, () => {
+        createPublicSchema(ProductSchema, () => {
           return {
             ...ProductSchema.properties,
             someVar: {
@@ -39,19 +35,16 @@ app.use(
             }
           };
         }),
-        createPublicSchema<NewsArticleEntity, NewsArticleModel>(
-          NewsArticleSchema,
-          ({ resolveImageProperty, schema }) => {
-            return {
-              ...schema.properties,
-              imageModel: resolveImageProperty('image'),
-              title: {
-                type: RefractTypes.string,
-                resolve: ({ title }) => (title ? title.toUpperCase() : '')
-              }
-            };
-          }
-        )
+        createPublicSchema(NewsArticleSchema, ({ resolveImageProperty, schema }) => {
+          return {
+            ...schema.properties,
+            imageModel: resolveImageProperty('image'),
+            title: {
+              type: RefractTypes.string,
+              resolve: ({ title }) => (title ? title.toUpperCase() : '')
+            }
+          };
+        })
       ]
     }
   })

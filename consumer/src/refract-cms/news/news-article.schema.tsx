@@ -12,15 +12,40 @@ import {
   createSingleEntityPickerEditor,
   createMultipleEntityPickerEditor
 } from '@refract-cms/core';
-import { NewsArticleModel } from './news-article.model';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { Button, Checkbox } from '@material-ui/core';
 import moment from 'moment';
 import { SettingsSchema } from '../settings/settings.model';
-import { NewsArticleEntity } from './news-article.entity';
 import { ProductSchema } from '../products/product.schema';
+import { ImageModel } from '@refract-cms/server';
 
-export const NewsArticleSchema = defineEntity<NewsArticleEntity>({
+export interface NewsArticleEntity extends Entity {
+  title: string;
+  articleText: string;
+  extraText: string;
+  articleDate: Date;
+  listOfStrings: string[];
+  image: ImageRef<'profile' | 'large'>;
+  item: {
+    id: string;
+    meta: {
+      location: string;
+      count: number;
+      deep: {
+        level: number;
+      };
+    };
+  };
+  primary: boolean;
+  highlightedProductId: string;
+  otherRelatedProductIds: string[];
+}
+
+export interface NewsArticleModel extends NewsArticleEntity {
+  imageModel: ImageModel<'profile' | 'large'>;
+}
+
+export const NewsArticleSchema = defineEntity<NewsArticleEntity, NewsArticleModel>({
   options: {
     alias: 'newsArticle',
     displayName: 'News Article',
@@ -126,10 +151,6 @@ export const NewsArticleSchema = defineEntity<NewsArticleEntity>({
       ),
       type: RefractTypes.bool
     },
-    // highlightedProduct: {
-    //   displayName: 'Highlighted Product',
-    //   type: RefractTypes.ref(ProductSchema)
-    // }
     highlightedProductId: {
       displayName: 'Highlighted product',
       type: RefractTypes.string,
