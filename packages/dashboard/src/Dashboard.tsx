@@ -1,5 +1,5 @@
 import React from 'react';
-import HomePage from './Home/HomePage';
+import OverviewPage from './overview/OverviewPage';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -16,6 +16,7 @@ import ImageIcon from '@material-ui/icons/Image';
 import CloudIcon from '@material-ui/icons/Cloud';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import {
   ListItem,
@@ -24,7 +25,8 @@ import {
   WithStyles,
   createStyles,
   Theme,
-  CircularProgress
+  CircularProgress,
+  Tooltip
 } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import HelpIcon from '@material-ui/icons/Help';
@@ -136,6 +138,7 @@ export interface DashboardProps {
   config: Config;
   serverUrl: string;
   rootPath: string;
+  homePageUrl?: string;
 }
 
 class Dashboard extends React.Component<Props> {
@@ -159,7 +162,7 @@ class Dashboard extends React.Component<Props> {
   }
 
   render() {
-    const { classes, config, serverUrl, routes, isLoggedIn, logout } = this.props;
+    const { classes, config, serverUrl, routes, isLoggedIn, logout, homePageUrl } = this.props;
     return !routes ? (
       <CircularProgress />
     ) : (
@@ -191,6 +194,13 @@ class Dashboard extends React.Component<Props> {
                   <NotificationsIcon />
                 </Badge>
               </IconButton> */}
+                {homePageUrl && (
+                  <Tooltip title="Go to home page" color="secondary">
+                    <IconButton href={homePageUrl} color="inherit">
+                      <HomeIcon />
+                    </IconButton>
+                  </Tooltip>
+                )}
               </Toolbar>
             </AppBar>
             <Drawer
@@ -209,9 +219,9 @@ class Dashboard extends React.Component<Props> {
               <List>
                 <ListItem button component={(props: any) => <Link {...props} to={routes.root.createUrl()} />}>
                   <ListItemIcon>
-                    <HomeIcon />
+                    <DashboardIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Home" />
+                  <ListItemText primary="Overview" />
                 </ListItem>
                 {/* <ListItem button component={(props: any) => <Link {...props} to={routes.files.createUrl()} />}>
                 <ListItemIcon>
@@ -223,7 +233,7 @@ class Dashboard extends React.Component<Props> {
                   <ListItemIcon>
                     <CloudIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Graphql" />
+                  <ListItemText primary="GraphiQL" />
                 </ListItem>
               </List>
               <Divider />
@@ -263,7 +273,7 @@ class Dashboard extends React.Component<Props> {
                 </Router>
               ) : (
                 <Router>
-                  <HomePage path={routes.root.path} />
+                  <OverviewPage path={routes.root.path} />
                   <Graphql path={routes.graphql.path} serverUrl={serverUrl} />
                   <EntityList path={routes.entity.list.path} />
                   <EditEntity path={routes.entity.edit.path} />
