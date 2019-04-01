@@ -15,6 +15,7 @@ import { merge } from 'lodash';
 import mongoose from 'mongoose';
 import { ServerConfig } from '../server-config.model';
 import { Properties, buildHelpers } from '../create-public-schema';
+import { repositoryForSchema } from '../repository-for-schema';
 
 const namedTypes: { [key: string]: GraphQLType } = {};
 
@@ -23,7 +24,7 @@ class PublicSchemaBuilder {
     let queryFields = {};
 
     schema.forEach(entitySchema => {
-      const repository = mongoose.models[entitySchema.options.alias];
+      const repository = repositoryForSchema(entitySchema);
       const extension = serverConfig.publicGraphQL.find(
         extension => extension.schema.options.alias === entitySchema.options.alias
       );

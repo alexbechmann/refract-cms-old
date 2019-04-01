@@ -2,6 +2,7 @@ import { EntitySchema, Entity, PropertyType, ImageRef, RefractTypes, PropertyOpt
 import queryString from 'query-string';
 import { Omit } from '@material-ui/core';
 import { ServerConfig } from './server-config.model';
+import { repositoryForSchema } from './repository-for-schema';
 
 export interface Property<TEntity extends Entity, P> {
   type: PropertyType<P>;
@@ -43,6 +44,10 @@ interface Helpers<TEntity extends Entity> {
     refSchema: EntitySchema<RefEntity, RefModel>,
     propertyKey: Key<TEntity, K, string>
   ) => Property<TEntity, RefModel>;
+  resolveReferences: <RefEntity extends Entity, RefModel extends Entity, K extends keyof TEntity>(
+    refSchema: EntitySchema<RefEntity, RefModel>,
+    propertyKey: Key<TEntity, K, string[]>
+  ) => Property<TEntity, RefModel>;
 }
 
 export const buildHelpers = <TEntity extends Entity>({
@@ -54,10 +59,25 @@ export const buildHelpers = <TEntity extends Entity>({
 }) => {
   return {
     resolveReference: (refSchema, propertyKey) => {
-      console.log(refSchema.options.alias);
       return {
         type: RefractTypes.typeName(refSchema.options.alias),
-        resolve: () => null
+        resolve: source => {
+          var id = source[propertyKey];
+          return repositoryForSchema(refSchema).findOne({ _id: id });
+        }
+      } as any;
+    },
+    resolveReferences: (refSchema, propertyKey) => {
+      return {
+        type: RefractTypes.arrayOf(RefractTypes.typeName(refSchema.options.alias) as any),
+        resolve: source => {
+          var ids = source[propertyKey];
+          return repositoryForSchema(refSchema).find({
+            _id: {
+              $in: ids
+            }
+          });
+        }
       } as any;
     },
     resolveImageProperty: propertyKey => {

@@ -35,17 +35,21 @@ app.use(
             }
           };
         }),
-        createPublicSchema(NewsArticleSchema, ({ resolveImageProperty, schema, resolveReference }) => {
-          return {
-            ...schema.properties,
-            imageModel: resolveImageProperty('image'),
-            title: {
-              type: RefractTypes.string,
-              resolve: ({ title }) => (title ? title.toUpperCase() : '')
-            },
-            highlightedProduct: resolveReference(ProductSchema, 'highlightedProductId')
-          };
-        })
+        createPublicSchema(
+          NewsArticleSchema,
+          ({ resolveImageProperty, schema, resolveReference, resolveReferences }) => {
+            return {
+              ...schema.properties,
+              imageModel: resolveImageProperty('image'),
+              title: {
+                type: RefractTypes.string,
+                resolve: ({ title }) => (title ? title.toUpperCase() : '')
+              },
+              highlightedProduct: resolveReference(ProductSchema, 'highlightedProductId'),
+              highlightedProducts: resolveReferences(ProductSchema, 'otherRelatedProductIds')
+            };
+          }
+        )
       ]
     }
   })
