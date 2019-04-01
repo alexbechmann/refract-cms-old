@@ -2,7 +2,7 @@ import * as React from 'react';
 import { PropertyEditorProps } from '../properties/property-editor-props';
 import { Location } from '../location/location.model';
 
-export default (props: PropertyEditorProps<Location>) => {
+export default () => (props: PropertyEditorProps<Location>) => {
   const value: Location = props.value || {
     latitude: 0,
     longitude: 0

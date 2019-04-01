@@ -1,6 +1,8 @@
-import { createPublicSchema } from './create-public-schema';
+import { createPublicSchema, buildHelpers } from './create-public-schema';
+import { Config } from '@refract-cms/core';
 
 export interface ServerConfig {
+  config: Config;
   rootPath: string;
   mongoConnectionString: string;
   filesPath: string;
@@ -14,5 +16,5 @@ export interface ServerConfig {
       secret: string;
     };
   };
-  publicGraphql: (config: ServerConfig) => ReturnType<typeof createPublicSchema>[];
+  publicGraphQL: ReturnType<typeof createPublicSchema>[];
 }

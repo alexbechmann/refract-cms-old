@@ -1,18 +1,17 @@
 import {
+  defineEntity,
+  RefractTypes,
   createTextEditor,
   createLocationEditor,
   createSingleDropdownEditor,
   createMultipleDropdownEditor,
-  createListEditor,
   Entity,
-  defineEntity,
-  Location,
-  RefractTypes
+  Location
 } from '@refract-cms/core';
-import ScatterPlotIcon from '@material-ui/icons/ScatterPlot';
 import CustomDropdownEditor from '../shared/CustomDropdownEditor';
+import ScatterPlotIcon from '@material-ui/icons/ScatterPlot';
 
-export interface Product extends Entity {
+export interface ProductEntity extends Entity {
   productType: string;
   customNumber: number;
   location: Location;
@@ -21,7 +20,11 @@ export interface Product extends Entity {
   types: string[];
 }
 
-export const ProductSchema = defineEntity<Product>({
+export interface ProductModel extends ProductEntity {
+  someVar: string;
+}
+
+export const ProductSchema = defineEntity<ProductEntity, ProductModel>({
   options: {
     alias: 'product',
     displayName: 'Product',
@@ -46,7 +49,7 @@ export const ProductSchema = defineEntity<Product>({
     },
     location: {
       displayName: 'Location',
-      editorComponent: createLocationEditor,
+      editorComponent: createLocationEditor(),
       defaultValue: {
         longitude: 15,
         latitude: 23

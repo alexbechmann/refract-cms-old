@@ -9,18 +9,17 @@ import {
   createImagePickerEditor,
   ImageRef,
   PropertyEditorProps,
-  EntityRef,
   createSingleEntityPickerEditor,
   createMultipleEntityPickerEditor
 } from '@refract-cms/core';
-import { NewsArticle } from './news-article.model';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { Button, Checkbox } from '@material-ui/core';
 import moment from 'moment';
-import { Product, ProductSchema } from '../products/product.model';
 import { SettingsSchema } from '../settings/settings.model';
+import { ProductSchema } from '../products/product.schema';
+import { ImageModel } from '@refract-cms/server';
 
-export interface NewsArticle extends Entity {
+export interface NewsArticleEntity extends Entity {
   title: string;
   articleText: string;
   extraText: string;
@@ -38,20 +37,22 @@ export interface NewsArticle extends Entity {
     };
   };
   primary: boolean;
-  // relatedProducts: Product[];
-  // highlightedProduct: EntityRef<Product>;
   highlightedProductId: string;
   otherRelatedProductIds: string[];
 }
 
-export const NewsArticleSchema = defineEntity<NewsArticle>({
+export interface NewsArticleModel extends NewsArticleEntity {
+  imageModel: ImageModel<'profile' | 'large'>;
+}
+
+export const NewsArticleSchema = defineEntity<NewsArticleEntity, NewsArticleModel>({
   options: {
     alias: 'newsArticle',
     displayName: 'News Article',
     instanceDisplayProps: newsArticle => ({
       primaryText: newsArticle.title,
       secondaryText: moment(newsArticle.articleDate).format('ll')
-      // imageUrl: newsArticle.image ? newsArticle.image.imageUrl : undefined
+      // imageUrl: newsArticle.image ? newsArticle.image.crops.profile : undefined
     }),
     icon: DescriptionIcon,
     defaultSort: {
@@ -150,10 +151,6 @@ export const NewsArticleSchema = defineEntity<NewsArticle>({
       ),
       type: RefractTypes.bool
     },
-    // highlightedProduct: {
-    //   displayName: 'Highlighted Product',
-    //   type: RefractTypes.ref(ProductSchema)
-    // }
     highlightedProductId: {
       displayName: 'Highlighted product',
       type: RefractTypes.string,

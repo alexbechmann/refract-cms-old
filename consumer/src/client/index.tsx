@@ -6,11 +6,12 @@ import { Dashboard, createDashboard } from '@refract-cms/dashboard';
 import config from '../refract-cms/refract.config';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
+import 'typeface-roboto';
 
 const Root = () => (
   <BrowserRouter>
     <Switch>
-      <Route path="/admin" component={createDashboard({ config, serverUrl: '/cms' })} />
+      <Route path="/admin" component={createDashboard({ config, serverUrl: '/cms', homePageUrl: '/' })} />
       <Route path="/" component={App} />
     </Switch>
   </BrowserRouter>

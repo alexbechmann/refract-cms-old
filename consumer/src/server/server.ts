@@ -1,17 +1,17 @@
 import express from 'express';
 import path from 'path';
-import { refractCmsHandler, createPublicSchema, resolveImageProperty, ImageModel } from '@refract-cms/server';
+import { refractCmsHandler, createPublicSchema, ImageModel } from '@refract-cms/server';
 import config from '../refract-cms/refract.config';
-import { NewsArticleSchema, NewsArticle } from '../refract-cms/news/news-article.model';
 import { RefractTypes } from '@refract-cms/core';
-import { ProductSchema, Product } from '../refract-cms/products/product.model';
+import { NewsArticleSchema } from '../refract-cms/news/news-article.schema';
+import { ProductSchema } from '../refract-cms/products/product.schema';
 
 const app = express();
 
 app.use(
   ...refractCmsHandler({
-    config,
     serverConfig: {
+      config,
       rootPath: '/cms',
       mongoConnectionString: 'mongodb://localhost:27018/refract-consumer-example',
       filesPath: 'consumer/files/',
@@ -25,20 +25,25 @@ app.use(
           secret: 'secret'
         }
       },
-      publicGraphql: config => [
-        createPublicSchema<Product, { someVar: string }>(ProductSchema, {
-          ...ProductSchema.properties,
-          someVar: {
-            type: RefractTypes.string,
-            resolve: product => `${product._id}_hello!`
-          }
+      publicGraphQL: [
+        createPublicSchema(ProductSchema, () => {
+          return {
+            ...ProductSchema.properties,
+            someVar: {
+              type: RefractTypes.string,
+              resolve: product => `${product._id}_hello!`
+            }
+          };
         }),
-        createPublicSchema<NewsArticle, { image: ImageModel<'profile' | 'large'>; title: string }>(NewsArticleSchema, {
-          image: resolveImageProperty(config.rootPath, NewsArticleSchema.properties.image, article => article.image),
-          title: {
-            type: RefractTypes.string,
-            resolve: article => article.title
-          }
+        createPublicSchema(NewsArticleSchema, ({ resolveImageProperty, schema }) => {
+          return {
+            ...schema.properties,
+            imageModel: resolveImageProperty('image'),
+            title: {
+              type: RefractTypes.string,
+              resolve: ({ title }) => (title ? title.toUpperCase() : '')
+            }
+          };
         })
       ]
     }
