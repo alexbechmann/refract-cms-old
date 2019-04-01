@@ -45,10 +45,14 @@ const EditEntity = ({ alias, id, client, schema, filters }: Props) => {
             newEntity={newEntity}
             id={id}
             saveEntity={record => {
+              const recordWithNullInsteadOfUndefined = Object.keys(record).reduce((acc, recordKey) => {
+                acc[recordKey] = record[recordKey] || null;
+                return acc;
+              }, {});
               return new Promise((resolve, reject) => {
                 save({
                   variables: {
-                    record
+                    record: recordWithNullInsteadOfUndefined
                   },
                   update: (proxy, updateResult) => {
                     resolve();

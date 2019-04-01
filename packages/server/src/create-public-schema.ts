@@ -62,7 +62,7 @@ export const buildHelpers = <TEntity extends Entity>({
       return {
         type: RefractTypes.typeName(refSchema.options.alias),
         resolve: source => {
-          var id = source[propertyKey];
+          const id = source[propertyKey];
           return repositoryForSchema(refSchema).findOne({ _id: id });
         }
       } as any;
@@ -71,7 +71,7 @@ export const buildHelpers = <TEntity extends Entity>({
       return {
         type: RefractTypes.arrayOf(RefractTypes.typeName(refSchema.options.alias) as any),
         resolve: source => {
-          var ids = source[propertyKey];
+          const ids = source[propertyKey];
           return repositoryForSchema(refSchema).find({
             _id: {
               $in: ids
