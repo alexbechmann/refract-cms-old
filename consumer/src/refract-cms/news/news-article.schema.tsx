@@ -16,7 +16,7 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import { Button, Checkbox } from '@material-ui/core';
 import moment from 'moment';
 import { SettingsSchema } from '../settings/settings.model';
-import { ProductSchema } from '../products/product.schema';
+import { ProductSchema, ProductModel } from '../products/product.schema';
 import { ImageModel } from '@refract-cms/server';
 
 export interface NewsArticleEntity extends Entity {
@@ -43,6 +43,7 @@ export interface NewsArticleEntity extends Entity {
 
 export interface NewsArticleModel extends NewsArticleEntity {
   imageModel: ImageModel<'profile' | 'large'>;
+  highlightedProduct: ProductModel;
 }
 
 export const NewsArticleSchema = defineEntity<NewsArticleEntity, NewsArticleModel>({

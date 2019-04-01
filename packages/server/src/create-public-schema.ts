@@ -27,6 +27,8 @@ export interface ImageModel<TCrops extends string> {
   crops: CropsUrls<TCrops>;
 }
 
+type Key<TEntity, K extends keyof TEntity, TReturnValue> = TEntity[K] extends TReturnValue ? K : never;
+
 type ImageRefKey<TEntity, K extends keyof TEntity, TCrops extends string> = TEntity[K] extends ImageRef<TCrops>
   ? K
   : never;
@@ -37,6 +39,10 @@ interface Helpers<TEntity extends Entity> {
   resolveImageProperty: <TCrops extends string, K extends keyof TEntity>(
     propertyKey: ImageRefKey<TEntity, K, TCrops>
   ) => Property<TEntity, ImageModel<TCrops>>;
+  resolveReference: <RefEntity extends Entity, RefModel extends Entity, K extends keyof TEntity>(
+    refSchema: EntitySchema<RefEntity, RefModel>,
+    propertyKey: Key<TEntity, K, string>
+  ) => Property<TEntity, RefModel>;
 }
 
 export const buildHelpers = <TEntity extends Entity>({
@@ -47,6 +53,13 @@ export const buildHelpers = <TEntity extends Entity>({
   schema: EntitySchema<TEntity>;
 }) => {
   return {
+    resolveReference: (refSchema, propertyKey) => {
+      console.log(refSchema.options.alias);
+      return {
+        type: RefractTypes.typeName(refSchema.options.alias),
+        resolve: () => null
+      } as any;
+    },
     resolveImageProperty: propertyKey => {
       const crops = (schema.properties as any)[propertyKey].type.meta.crops.meta;
       const cropKeys = Object.keys(crops);
