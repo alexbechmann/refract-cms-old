@@ -1,6 +1,6 @@
 import mocha from 'mocha';
 import chai from 'chai';
-import { publicSchemaBuilder } from '../../../../packages/server/src/graphql/public-schema.builder';
+import { PublicSchemaBuilder } from '../../../../packages/server/src/graphql/public-schema.builder';
 import { RefractTypes, PropertyType } from '../../../../packages/core/src';
 import { ProductSchema, Product } from '../../config/products/product.model';
 import { printType, GraphQLString, GraphQLBoolean, GraphQLFloat } from 'graphql';
@@ -8,6 +8,10 @@ import refractConfig from '../../config/refract.config';
 import { ServerConfig } from 'packages/server/src/server-config.model';
 
 const expect = chai.expect;
+
+const publicSchemaBuilder = new PublicSchemaBuilder({
+  publicGraphQL: []
+} as ServerConfig);
 
 mocha.describe('build shape', () => {
   mocha.it('should create valid shape (Location)', () => {
@@ -75,9 +79,7 @@ type product {
   });
 
   mocha.it('should not crash', () => {
-    const schema = publicSchemaBuilder.buildSchema(refractConfig.schema, {
-      publicGraphQL: []
-    } as ServerConfig);
+    const schema = publicSchemaBuilder.buildSchema(refractConfig.schema);
   });
 });
 
