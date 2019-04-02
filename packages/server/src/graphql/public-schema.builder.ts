@@ -115,7 +115,7 @@ export class PublicSchemaBuilder {
         return new GraphQLList(type);
       }
       // @ts-ignore
-      case 'TypeName': {
+      case 'SchemaType': {
         // @ts-ignore
         return this.buildEntityFromSchema(propertyType.meta, propertyName);
       }
