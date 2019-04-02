@@ -75,7 +75,7 @@ class ImageUploader extends React.Component<Props, State> {
       });
       this.props.context.fileService.upload(file).then(multerFile => {
         this.setState({ uploading: false });
-        this.props.client.resetStore();
+        // this.props.client.resetStore();
         // this.props.addNotification('Successfully uploaded file.');
         if (this.props.onUploaded) {
           this.props.onUploaded({
@@ -100,7 +100,6 @@ const mapDispatchToProps = {
 type MapDispatchToProps = typeof mapDispatchToProps;
 
 export default combineContainers(
-  withApollo,
   connect(
     null,
     mapDispatchToProps
