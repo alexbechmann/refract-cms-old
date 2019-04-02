@@ -166,13 +166,13 @@ class Dashboard extends React.Component<Props> {
     return !routes ? (
       <CircularProgress />
     ) : (
-      <ApolloProvider client={createApolloClient({ serverUrl })}>
-        <CoreContext.Provider
-          value={{
-            serverUrl,
-            fileService: new FileService(serverUrl)
-          }}
-        >
+      <CoreContext.Provider
+        value={{
+          serverUrl,
+          fileService: new FileService(serverUrl)
+        }}
+      >
+        <ApolloProvider client={createApolloClient({ serverUrl })}>
           <div className={classes.root}>
             <Notifications />
             <CssBaseline />
@@ -281,8 +281,8 @@ class Dashboard extends React.Component<Props> {
               )}
             </main>
           </div>
-        </CoreContext.Provider>
-      </ApolloProvider>
+        </ApolloProvider>
+      </CoreContext.Provider>
     );
   }
 }
