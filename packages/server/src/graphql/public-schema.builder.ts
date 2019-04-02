@@ -66,30 +66,40 @@ export class PublicSchemaBuilder {
     repository: mongoose.Model<TEntity>,
     type: GraphQLObjectType
   ) {
-    return {
-      [`${entitySchema.options.alias}GetById`]: {
-        type,
-        args: {
-          id: { type: GraphQLString }
-        },
-        resolve: (_, { id }) => {
-          return repository.findById({ _id: id });
+    return entitySchema.options.maxOne
+      ? {
+          [`${entitySchema.options.alias}`]: {
+            type,
+            args: {},
+            resolve: async (obj: any, {  }: any, context: any) => {
+              return repository.findOne();
+            }
+          }
         }
-      },
-      [`${entitySchema.options.alias}GetAll`]: {
-        type: new GraphQLList(type),
-        args: {
-          skip: { type: GraphQLInt },
-          limit: { type: GraphQLInt }
-        },
-        resolve: async (obj: any, { filter = {}, skip = 0, limit = 999, orderBy }: any, context: any) => {
-          return repository
-            .find(filter)
-            .skip(skip)
-            .limit(limit);
-        }
-      }
-    };
+      : {
+          [`${entitySchema.options.alias}GetById`]: {
+            type,
+            args: {
+              id: { type: GraphQLString }
+            },
+            resolve: (_, { id }) => {
+              return repository.findById({ _id: id });
+            }
+          },
+          [`${entitySchema.options.alias}GetAll`]: {
+            type: new GraphQLList(type),
+            args: {
+              skip: { type: GraphQLInt },
+              limit: { type: GraphQLInt }
+            },
+            resolve: async (obj: any, { filter = {}, skip = 0, limit = 999, orderBy }: any, context: any) => {
+              return repository
+                .find(filter)
+                .skip(skip)
+                .limit(limit);
+            }
+          }
+        };
   }
 
   buildType<T>(propertyName: string, propertyType: PropertyType<T>): GraphQLType {
