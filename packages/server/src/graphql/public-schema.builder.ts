@@ -19,22 +19,33 @@ import { repositoryForSchema } from '../repository-for-schema';
 
 const namedTypes: { [key: string]: GraphQLType } = {};
 
-class PublicSchemaBuilder {
-  buildSchema(schema: EntitySchema[], serverConfig: ServerConfig) {
+export class PublicSchemaBuilder {
+  constructor(private serverConfig: ServerConfig) {}
+
+  buildEntityFromSchema(entitySchema: EntitySchema, prefixName: string = '') {
+    const repository = repositoryForSchema(entitySchema);
+    const extension = this.serverConfig.publicGraphQL.find(
+      extension => extension.schema.options.alias === entitySchema.options.alias
+    );
+
+    const extensionProperties = extension
+      ? extension.buildProperties(buildHelpers({ serverConfig: this.serverConfig, schema: entitySchema }))
+      : null;
+
+    const properties = extension ? extensionProperties : entitySchema.properties;
+    const type = this.buildEntity(
+      prefixName + entitySchema.options.alias,
+      properties,
+      extension ? extensionProperties : null
+    );
+    return type;
+  }
+
+  buildSchema(schema: EntitySchema[]) {
     let queryFields = {};
-
     schema.forEach(entitySchema => {
+      const type = this.buildEntityFromSchema(entitySchema);
       const repository = repositoryForSchema(entitySchema);
-      const extension = serverConfig.publicGraphQL.find(
-        extension => extension.schema.options.alias === entitySchema.options.alias
-      );
-
-      const extensionProperties = extension
-        ? extension.buildProperties(buildHelpers({ serverConfig, schema: entitySchema }))
-        : null;
-
-      const properties = extension ? extensionProperties : entitySchema.properties;
-      const type = this.buildEntity(entitySchema.options.alias, properties, extension ? extensionProperties : null);
 
       queryFields = {
         ...queryFields,
@@ -106,8 +117,7 @@ class PublicSchemaBuilder {
       // @ts-ignore
       case 'TypeName': {
         // @ts-ignore
-        console.log(namedTypes, namedTypes[propertyType.meta]);
-        return namedTypes[propertyType.meta];
+        return this.buildEntityFromSchema(propertyType.meta, propertyName);
       }
       // case 'Ref': {
       //   const shapeArgs = Object.keys(propertyType.meta.properties).reduce((acc, propertKey) => {
@@ -188,5 +198,3 @@ class PublicSchemaBuilder {
     });
   }
 }
-
-export const publicSchemaBuilder = new PublicSchemaBuilder();

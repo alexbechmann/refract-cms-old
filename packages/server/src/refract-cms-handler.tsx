@@ -16,7 +16,7 @@ import fs from 'fs';
 import { SchemaBuilder } from './graphql/schema-builder';
 import mongoose from 'mongoose';
 import { schemaComposer } from 'graphql-compose';
-import { publicSchemaBuilder } from './graphql/public-schema.builder';
+import { PublicSchemaBuilder } from './graphql/public-schema.builder';
 import { requireAuth } from './auth/require-auth.middleware';
 
 const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => {
@@ -50,7 +50,8 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
     }))
   );
 
-  const publicSchema = publicSchemaBuilder.buildSchema(config.schema, serverConfig);
+  const publicSchemaBuilder = new PublicSchemaBuilder(serverConfig);
+  const publicSchema = publicSchemaBuilder.buildSchema(config.schema);
 
   router.use(
     '/public/graphql',
