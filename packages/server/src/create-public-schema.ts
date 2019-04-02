@@ -47,7 +47,7 @@ interface Helpers<TEntity extends Entity> {
   resolveReferences: <RefEntity extends Entity, RefModel extends Entity, K extends keyof TEntity>(
     refSchema: EntitySchema<RefEntity, RefModel>,
     propertyKey: Key<TEntity, K, string[]>
-  ) => Property<TEntity, RefModel>;
+  ) => Property<TEntity, RefModel[]>;
 }
 
 export const buildHelpers = <TEntity extends Entity>({
