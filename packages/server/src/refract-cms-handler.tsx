@@ -18,6 +18,7 @@ import mongoose from 'mongoose';
 import { schemaComposer } from 'graphql-compose';
 import { PublicSchemaBuilder } from './graphql/public-schema.builder';
 import { requireAuth } from './auth/require-auth.middleware';
+import expressPlayground from 'graphql-playground-middleware-express';
 
 const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => {
   const { config } = serverConfig;
@@ -61,6 +62,8 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
       context: {}
     }))
   );
+
+  router.get('/public/graphql-playground', expressPlayground({ endpoint: `${serverConfig.rootPath}/public/graphql` }));
 
   // const filesRepository = new MongoRepository<FileModel>('files', db!);
 

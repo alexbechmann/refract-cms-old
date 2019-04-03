@@ -7,7 +7,8 @@ const styles = (theme: Theme) =>
     iframe: {
       width: '100%',
       height: 'calc(100vh - 64px)',
-      border: 'none'
+      border: 'none',
+      marginBottom: `-4px`
     }
   });
 
@@ -18,5 +19,5 @@ interface GraphqlProps extends RouteComponentProps {
 interface Props extends GraphqlProps, WithStyles<typeof styles> {}
 
 export default withStyles(styles)(({ serverUrl, classes }: Props) => (
-  <iframe className={classes.iframe} src={`${serverUrl}/public/graphql`} />
+  <iframe className={classes.iframe} src={`${serverUrl}/public/graphql-playground`} />
 ));
