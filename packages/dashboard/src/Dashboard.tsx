@@ -233,7 +233,7 @@ class Dashboard extends React.Component<Props> {
                   <ListItemIcon>
                     <CloudIcon />
                   </ListItemIcon>
-                  <ListItemText primary="GraphiQL" />
+                  <ListItemText primary="GraphQL playground" />
                 </ListItem>
               </List>
               <Divider />
