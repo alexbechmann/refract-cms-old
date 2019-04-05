@@ -1,13 +1,8 @@
 {
   "compilerOptions": {
     "noImplicitAny": false,
-    "target": "es6",
-    "lib": [
-      "dom",
-      "es6",
-      "dom.iterable",
-      "scripthost"
-    ],
+    "target": "es5",
+    "lib": ["dom", "es6", "dom.iterable", "scripthost"],
     "module": "commonjs",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
@@ -27,12 +22,6 @@
     },
     "isolatedModules": false
   },
-  "exclude": [
-    "node_modules",
-    "**/*.test.*"
-  ],
-  "include": [
-    "./consumer",
-    "./packages"
-  ]
+  "exclude": ["node_modules", "**/*.test.*"],
+  "include": ["./consumer", "./packages"]
 }
