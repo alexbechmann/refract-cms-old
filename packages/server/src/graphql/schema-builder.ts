@@ -14,26 +14,6 @@ export class SchemaBuilder {
     schema.forEach(entitySchema => {
       this.configureEntitySchema(entitySchema);
     });
-
-    schemaComposer.Mutation.addFields({
-      generateAccessToken: new Resolver({
-        name: 'GenerateAccessToken',
-        type: GraphQLString,
-        args: {
-          username: GraphQLString,
-          password: GraphQLString
-        },
-        resolve: async ({ args, context }) => {
-          const { username, password } = args as any;
-          const userId = await authService.findUserIdWithCredentials(username, password, serverConfig);
-          if (userId) {
-            return authService.createAccessToken(userId, serverConfig);
-          } else {
-            return null;
-          }
-        }
-      })
-    });
   }
 
   configureEntitySchema(entitySchema: EntitySchema) {
@@ -47,7 +27,7 @@ export class SchemaBuilder {
       return acc;
     }, {}) as any;
 
-    const EntitySchema = new mongoose.Schema(definition);
+    const EntitySchema = new mongoose.Schema(definition, { collection: entitySchema.options.mongoCollectionName });
     const Entity = mongoose.model(entitySchema.options.alias, EntitySchema);
     const customizationOptions = {};
     const EntityTypeComposer = composeWithMongoose(Entity, customizationOptions);

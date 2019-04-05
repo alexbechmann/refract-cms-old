@@ -6,8 +6,7 @@ export const requireAuth = (serverConfig: ServerConfig) => (req: Request, res: R
   try {
     const validateToken = (req: Request) => {
       if (req.headers.authorization) {
-        const token = req.headers.authorization!.split('Bearer ')[1];
-        const tokenData = tokenService.verify(token, serverConfig);
+        const tokenData = tokenService.verify(req.headers.authorization, serverConfig);
         if (tokenData) {
           req['user'] = tokenData;
           return tokenData;
@@ -21,7 +20,7 @@ export const requireAuth = (serverConfig: ServerConfig) => (req: Request, res: R
       console.log('Request unauthorized');
       res.status(401).send('Unauthorized');
     } else {
-      console.log(`Serving verified user: ${validMember.nameid}`);
+      // console.log(`Serving verified user: ${validMember.nameid}`);
       next();
     }
   } catch (error) {

@@ -4,6 +4,8 @@ import { ApolloClient } from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
 import { onError, ErrorResponse } from 'apollo-link-error';
 import { setContext } from 'apollo-link-context';
+import { store } from '../state/root.store';
+import { logout } from '../auth/state/auth.actions';
 
 export const createApolloClient = ({ serverUrl }: { serverUrl: string }) => {
   const httpLink = new HttpLink({ uri: `${serverUrl}/graphql` });
@@ -19,7 +21,7 @@ export const createApolloClient = ({ serverUrl }: { serverUrl: string }) => {
     if (networkError) {
       switch ((networkError as any).statusCode) {
         case 401: {
-          console.log('login here');
+          store.dispatch(logout());
           break;
         }
         default: {
@@ -37,15 +39,5 @@ export const createApolloClient = ({ serverUrl }: { serverUrl: string }) => {
   return new ApolloClient({
     link,
     cache
-    // defaultOptions: {
-    //   watchQuery: {
-    //     fetchPolicy: 'network-only',
-    //     errorPolicy: 'ignore'
-    //   },
-    //   query: {
-    //     fetchPolicy: 'network-only',
-    //     errorPolicy: 'all'
-    //   }
-    // }
   });
 };
