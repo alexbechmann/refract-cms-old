@@ -4,6 +4,7 @@ import { CoreContextModel } from '../context/core-context.model';
 export interface EntityOptions<T = {}> {
   alias: string;
   displayName?: string;
+  mongoCollectionName?: string;
   maxOne?: boolean;
   instanceDisplayProps?: ((
     item: T,

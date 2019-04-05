@@ -1,69 +1,60 @@
 const webpack = require("webpack");
 const path = require("path");
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const nodeExternals = require("webpack-node-externals");
-const DeclarationBundler = require("declaration-bundler-webpack-plugin")
+const DeclarationBundler = require("declaration-bundler-webpack-plugin");
 
 const baseConfig = {
   // devtool: "inline-source-map",
-  mode: 'production',
+  mode: "production",
   target: "node",
   externals: [nodeExternals()],
   module: {
     rules: [
       {
         test: /\.(js|jsx|ts|tsx)$/,
-        loader: "babel-loader",
+        loader: "ts-loader",
         exclude: /node_modules/,
         options: {
-          babelrc: false,
-          presets: [
-            [
-              '@babel/preset-env',
-              { modules: false, targets: { browsers: 'last 2 versions' } }, // or whatever your project requires
-            ],
-            '@babel/preset-typescript',
-            '@babel/preset-react',
-          ],
-          plugins: [
-            // plugin-proposal-decorators is only needed if you're using experimental decorators in TypeScript
-            ['@babel/plugin-proposal-decorators', { legacy: true }],
-            ['@babel/plugin-proposal-class-properties', { loose: true }]
-          ],
+          transpileOnly: true
         }
       },
       {
         test: /\.(js|jsx|ts|tsx)?$/,
-        loader: 'prettier-loader',
+        loader: "prettier-loader",
         exclude: /node_modules/
       },
       {
         test: /\.(graphql|gql)$/,
         exclude: /node_modules/,
-        loader: 'graphql-tag/loader'
+        loader: "graphql-tag/loader"
       },
       {
         test: /\.(woff|woff2|eot|ttf|svg)$/,
-        loader: 'file-loader?name=fonts/[name].[ext]'
+        loader: "file-loader?name=fonts/[name].[ext]"
       },
       {
         test: /\.(sa|sc|c)ss$/,
         use: [
-          'style-loader', // MiniCssExtractPlugin.loader,
-          'css-loader',
-          'sass-loader',
-        ],
+          "style-loader", // MiniCssExtractPlugin.loader,
+          "css-loader",
+          "sass-loader"
+        ]
       }
-    ],
+    ]
   },
-  plugins: [
-  ],
+  plugins: [],
   resolve: {
-    extensions: ['.ts', '.tsx', '.mjs', '.js', '.graphql'],
+    extensions: [".ts", ".tsx", ".mjs", ".js", ".graphql"],
     alias: {
       "@refract-cms/core": path.join(__dirname, "packages", "core", "src/"),
-      "@refract-cms/dashboard": path.join(__dirname, "packages", "dashboard", "src/"),
-      "@refract-cms/server": path.join(__dirname, "packages", "server", "src/"),
+      "@refract-cms/dashboard": path.join(
+        __dirname,
+        "packages",
+        "dashboard",
+        "src/"
+      ),
+      "@refract-cms/server": path.join(__dirname, "packages", "server", "src/")
     }
   }
 };
@@ -73,33 +64,29 @@ function createConfig(name) {
     ...baseConfig,
     entry: `./packages/${name}/src/index.ts`,
     mode: "production",
-    target: 'node',
+    target: "node",
     output: {
-      path: path.resolve(__dirname, 'packages', name, 'dist'),
-      filename: 'index.js',
+      path: path.resolve(__dirname, "packages", name, "dist"),
+      filename: "index.js",
       library: `@refract-cms/${name}`,
       libraryTarget: "umd"
     },
     plugins: [
       ...baseConfig.plugins,
       new ForkTsCheckerWebpackPlugin({
-        tsconfig: path.resolve(__dirname, 'tsconfig.json'),
+        tsconfig: path.resolve(__dirname, "tsconfig.json"),
         memoryLimit: 2048,
-        tslint: path.resolve(__dirname, 'tslint.json'),
-        reportFiles: [
-          `./packages/${name}/src/**`,
-        ],
-        ignoreLints: [
-          "**/*.test.*"
-        ],
+        tslint: path.resolve(__dirname, "tslint.json"),
+        reportFiles: [`./packages/${name}/src/**`],
+        ignoreLints: ["**/*.test.*"],
         async: true
-      }),
+      })
     ]
-  }
+  };
 }
 
 module.exports = [
-  createConfig('core'),
-  createConfig('dashboard'),
-  createConfig('server')
-]
+  createConfig("core"),
+  createConfig("dashboard"),
+  createConfig("server")
+];

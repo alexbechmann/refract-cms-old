@@ -39,7 +39,7 @@ class OverviewPage extends React.Component<OverviewPageProps> {
                 {schemas.map(schema => {
                   const count = data[`${schema.options.alias}Count`];
                   return (
-                    <Grid key={schema.options.alias} item xs={12} sm={6} md={4}>
+                    <Grid key={schema.options.alias} item xs={12} sm={6} md={4} lg={3} xl={2}>
                       <Card>
                         <CardHeader
                           title={schema.options.displayName || schema.options.alias}

@@ -22,7 +22,7 @@ app.use(
         },
         jwt: {
           issuer: 'consumer',
-          secret: 'secret'
+          secret: 'secret1'
         }
       },
       publicGraphQL: [

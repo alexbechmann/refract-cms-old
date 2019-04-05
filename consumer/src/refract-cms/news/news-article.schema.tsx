@@ -50,6 +50,7 @@ export const NewsArticleSchema = defineEntity<NewsArticleEntity, NewsArticleMode
   options: {
     alias: 'newsArticle',
     displayName: 'News Article',
+    mongoCollectionName: 'news-articles',
     instanceDisplayProps: newsArticle => ({
       primaryText: newsArticle.title,
       secondaryText: moment(newsArticle.articleDate).format('ll')

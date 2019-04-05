@@ -1,6 +1,6 @@
 const webpack = require("webpack");
 const path = require("path");
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 // const SimpleProgressWebpackPlugin = require( 'simple-progress-webpack-plugin' );
 
 module.exports = {
@@ -9,15 +9,15 @@ module.exports = {
     "react-hot-loader/patch",
     "webpack-dev-server/client?http://localhost:3001",
     "webpack/hot/only-dev-server",
-    "./consumer/src/client/index.tsx",
+    "./consumer/src/client/index.tsx"
   ],
-  mode: 'development',
+  mode: "development",
   target: "web",
   module: {
     rules: [
       {
         test: /\.(js|jsx|ts|tsx)$/,
-        loader: "babel-loader",
+        loader: "ts-loader",
         exclude: /node_modules/,
         // include: [
         //   path.resolve(__dirname, 'workplace-app'),
@@ -27,46 +27,32 @@ module.exports = {
         //   path.resolve(__dirname, 'news')
         // ],
         options: {
-          babelrc: false,
-          presets: [
-            [
-              '@babel/preset-env',
-              { modules: false, targets: { browsers: 'last 2 versions' } }, // or whatever your project requires
-            ],
-            '@babel/preset-typescript',
-            '@babel/preset-react',
-          ],
-          plugins: [
-            // plugin-proposal-decorators is only needed if you're using experimental decorators in TypeScript
-            ['@babel/plugin-proposal-decorators', { legacy: true }],
-            ['@babel/plugin-proposal-class-properties', { loose: true }],
-            'react-hot-loader/babel',
-          ],
+          transpileOnly: true
         }
       },
       {
         test: /\.(js|jsx|ts|tsx)?$/,
-        loader: 'prettier-loader',
+        loader: "prettier-loader",
         exclude: /node_modules/
       },
       {
         test: /\.(graphql|gql)$/,
         exclude: /node_modules/,
-        loader: 'graphql-tag/loader'
+        loader: "graphql-tag/loader"
       },
       {
         test: /\.(woff|woff2|eot|ttf|svg)$/,
-        loader: 'file-loader?name=fonts/[name].[ext]'
+        loader: "file-loader?name=fonts/[name].[ext]"
       },
 
       {
         test: /\.(sa|sc|c)ss$/,
         use: [
-          'style-loader', // MiniCssExtractPlugin.loader,
-          'css-loader'
-        ],
+          "style-loader", // MiniCssExtractPlugin.loader,
+          "css-loader"
+        ]
       }
-    ],
+    ]
   },
   plugins: [
     // new webpack.NamedModulesPlugin(),
@@ -76,28 +62,28 @@ module.exports = {
     //   "process.env": { BUILD_TARGET: JSON.stringify("client") },
     // }),
     new ForkTsCheckerWebpackPlugin({
-      tsconfig: path.resolve(__dirname, 'tsconfig.json'),
+      tsconfig: path.resolve(__dirname, "tsconfig.json"),
       memoryLimit: 2048,
-      tslint: path.resolve(__dirname, 'tslint.json'),
-      reportFiles: [
-        "./consumer/src/**",
-        "./packages/**/src/**",
-      ],
-      ignoreLints: [
-        "**/*.test.*"
-      ],
+      tslint: path.resolve(__dirname, "tslint.json"),
+      reportFiles: ["./consumer/src/**", "./packages/**/src/**"],
+      ignoreLints: ["**/*.test.*"],
       async: true
-    }),
+    })
     // new SimpleProgressWebpackPlugin( { // Default options
     //   format: 'compact'
     // })
   ],
   resolve: {
-    extensions: ['.ts', '.tsx', '.mjs', '.js', '.graphql'],
+    extensions: [".ts", ".tsx", ".mjs", ".js", ".graphql"],
     alias: {
       "@refract-cms/core": path.join(__dirname, "packages", "core", "src/"),
-      "@refract-cms/dashboard": path.join(__dirname, "packages", "dashboard", "src/"),
-      "@refract-cms/server": path.join(__dirname, "packages", "server", "src/"),
+      "@refract-cms/dashboard": path.join(
+        __dirname,
+        "packages",
+        "dashboard",
+        "src/"
+      ),
+      "@refract-cms/server": path.join(__dirname, "packages", "server", "src/")
     }
   },
   devServer: {
@@ -111,6 +97,6 @@ module.exports = {
   output: {
     path: path.join(__dirname, ".build"),
     publicPath: "http://localhost:3001/",
-    filename: "client.js",
-  },
+    filename: "client.js"
+  }
 };

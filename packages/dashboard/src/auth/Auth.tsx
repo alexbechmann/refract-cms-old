@@ -20,11 +20,12 @@ import { AppState } from '../state/app.state';
 
 interface AuthProps extends RouteComponentProps {}
 
-interface DispatchProps {
-  setAccessToken: (token: string) => void;
-}
-
-interface Props extends AuthProps, WithStyles<typeof styles>, DispatchProps, WithApolloClient<any> {}
+interface Props
+  extends AuthProps,
+    WithStyles<typeof styles>,
+    ReturnType<typeof mapStateToProps>,
+    DispatchProps,
+    WithApolloClient<any> {}
 
 const generateAccessTokenMutation = gql(`
   mutation generateAccessToken($username: String!, $password: String!) {
@@ -34,9 +35,9 @@ const generateAccessTokenMutation = gql(`
 
 const styles = (theme: Theme) =>
   createStyles({
-    layout: {
+    main: {
       width: 'auto',
-      display: 'block', // Fix IE11 issue.
+      display: 'block', // Fix IE 11 issue.
       marginLeft: theme.spacing.unit * 3,
       marginRight: theme.spacing.unit * 3,
       [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
@@ -57,26 +58,26 @@ const styles = (theme: Theme) =>
       backgroundColor: theme.palette.secondary.main
     },
     form: {
-      width: '100%', // Fix IE11 issue.
+      width: '100%', // Fix IE 11 issue.
       marginTop: theme.spacing.unit
     },
     submit: {
       marginTop: theme.spacing.unit * 3
-    },
-    button: {
-      marginTop: theme.spacing.unit
     }
   });
 
 interface State {
   username: string;
   password: string;
+  loggingIn: boolean;
+  error?: string;
 }
 
 class Auth extends Component<Props, any> {
   state: State = {
     username: '',
-    password: ''
+    password: '',
+    loggingIn: false
   };
 
   onChange = (name: string) => (e: ChangeEvent<HTMLInputElement>) => this.setState({ [name]: e.target.value });
@@ -84,80 +85,98 @@ class Auth extends Component<Props, any> {
   render() {
     const { classes } = this.props;
     return (
-      <Mutation mutation={generateAccessTokenMutation}>
-        {(generateAccessToken, { data, error }) => {
-          return (
-            <React.Fragment>
-              <CssBaseline />
-              <main className={classes.layout}>
-                <Paper className={classes.paper}>
-                  <Avatar className={classes.avatar}>
-                    <LockIcon />
-                  </Avatar>
-                  <Typography variant="headline">Sign in</Typography>
-                  <form
-                    className={classes.form}
-                    onSubmit={e => {
-                      e.preventDefault();
-                      const { username, password } = this.state;
-                      generateAccessToken({
-                        variables: {
-                          username,
-                          password
-                        }
-                      }).then((response: any) => {
-                        const token = response.data.generateAccessToken;
-                        this.props.setAccessToken(token);
-                        this.props.client.resetStore();
-                      });
-                    }}
-                  >
-                    {error && <p>{error.message}</p>}
-                    <FormControl margin="normal" required fullWidth>
-                      <InputLabel htmlFor="username">Username</InputLabel>
-                      <Input
-                        value={this.state.username}
-                        onChange={this.onChange('username')}
-                        id="username"
-                        name="username"
-                        autoFocus
-                      />
-                    </FormControl>
-                    <FormControl margin="normal" required fullWidth>
-                      <InputLabel htmlFor="password">Password</InputLabel>
-                      <Input
-                        value={this.state.password}
-                        onChange={this.onChange('password')}
-                        name="password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                      />
-                    </FormControl>
+      <React.Fragment>
+        <CssBaseline />
+        <main className={classes.main}>
+          <Paper className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockIcon />
+            </Avatar>
+            <Typography variant="headline">Sign in</Typography>
+            <form
+              className={classes.form}
+              onSubmit={e => {
+                e.preventDefault();
+                const { username, password } = this.state;
+                this.setState({
+                  loggingIn: true,
+                  error: undefined
+                });
+                fetch(`${this.props.config.serverUrl}/login`, {
+                  method: 'POST',
+                  body: JSON.stringify({
+                    username,
+                    password
+                  }),
+                  headers: {
+                    'Content-Type': 'application/json'
+                  }
+                })
+                  .then(res => {
+                    console.log({ res });
+                    return res.json();
+                  })
+                  .then(({ token }: any) => {
+                    console.log({ token });
+                    this.props.setActiveUserToken(token);
+                    this.setState({
+                      isLoading: false
+                    });
+                    this.props.client.resetStore();
+                  })
+                  .catch(() => {
+                    this.setState({
+                      isLoading: false,
+                      error: 'Login failed'
+                    });
+                  });
+              }}
+            >
+              {this.state.error && <Typography>{this.state.error}</Typography>}
+              <FormControl margin="normal" required fullWidth>
+                <InputLabel htmlFor="username">Username</InputLabel>
+                <Input
+                  value={this.state.username}
+                  onChange={this.onChange('username')}
+                  id="username"
+                  name="username"
+                  autoFocus
+                />
+              </FormControl>
+              <FormControl margin="normal" required fullWidth>
+                <InputLabel htmlFor="password">Password</InputLabel>
+                <Input
+                  value={this.state.password}
+                  onChange={this.onChange('password')}
+                  name="password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                />
+              </FormControl>
 
-                    <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-                      Sign in
-                    </Button>
-                  </form>
-                </Paper>
-              </main>
-            </React.Fragment>
-          );
-        }}
-      </Mutation>
+              <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+                Sign in
+              </Button>
+            </form>
+          </Paper>
+        </main>
+      </React.Fragment>
     );
   }
 }
 
 function mapStateToProps(state: AppState) {
-  return {};
-}
-
-function mapDispatchToProps(dispatch): DispatchProps {
   return {
-    setAccessToken: token => dispatch(setActiveUserToken(token))
+    config: state.config
   };
 }
+
+const mapDispatchToProps = {
+  setActiveUserToken
+};
+
+type DispatchProps = typeof mapDispatchToProps;
 
 export default combineContainers(
   connect(

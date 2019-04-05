@@ -17,8 +17,9 @@ import { SchemaBuilder } from './graphql/schema-builder';
 import mongoose from 'mongoose';
 import { schemaComposer } from 'graphql-compose';
 import { PublicSchemaBuilder } from './graphql/public-schema.builder';
-import { requireAuth } from './auth/require-auth.middleware';
 import expressPlayground from 'graphql-playground-middleware-express';
+import bodyParser from 'body-parser';
+import { requireAuth } from './auth/require-auth.middleware';
 
 const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => {
   const { config } = serverConfig;
@@ -32,6 +33,19 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
   });
   const upload = multer({ storage });
 
+  router.use(bodyParser.json());
+
+  router.post('/login', async (req, res) => {
+    const { username, password } = req.body as any;
+    const userId = await authService.findUserIdWithCredentials(username, password, serverConfig);
+    if (userId) {
+      const token = authService.createAccessToken(userId, serverConfig);
+      res.send({ token });
+    } else {
+      res.sendStatus(403);
+    }
+  });
+
   mongoose.connect(serverConfig.mongoConnectionString);
   const schemaBuilder = new SchemaBuilder();
   schemaBuilder.buildSchema(config.schema, serverConfig);
@@ -39,7 +53,7 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
 
   router.use(
     '/graphql',
-    // requireAuth,
+    requireAuth(serverConfig),
     graphqlHTTP((req, res) => ({
       schema,
       graphiql: true,
@@ -59,7 +73,18 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
     graphqlHTTP((req, res) => ({
       schema: publicSchema,
       graphiql: true,
-      context: {}
+      context: {},
+      plugins: [
+        {
+          requestDidStart: () => ({
+            didEncounterErrors(errors, { response: { http } }) {
+              if (http && errors.some(err => err.name === 'AuthenticationError')) {
+                http.status = 401;
+              }
+            }
+          })
+        }
+      ]
     }))
   );
 
