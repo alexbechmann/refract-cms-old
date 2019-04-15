@@ -5,6 +5,15 @@
       "src": "docs/package.json",
       "use": "@now/static-build",
       "config": { "distDir": "public" }
+    },
+    {
+      "src": "docs-next/package.json",
+      "use": "@now/next"
     }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)", "dest": "/docs-next/$1" },
+    { "src": "/gatsby/(.*)", "dest": "/docs/$1" }
   ]
 }
