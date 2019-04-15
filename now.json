@@ -3,7 +3,7 @@
   "alias": ["refract-cms-docs", "docs-alpha.refract-cms.com"],
   "builds": [
     {
-      "src": "package.json",
+      "src": "docs/package.json",
       "use": "@now/static-build",
       "config": { "distDir": "public" }
     }
