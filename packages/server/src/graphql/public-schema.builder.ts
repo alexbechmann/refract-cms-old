@@ -16,14 +16,21 @@ import mongoose from 'mongoose';
 import { ServerConfig } from '../server-config.model';
 import { Properties, buildHelpers } from '../create-public-schema';
 import { repositoryForSchema } from '../repository-for-schema';
-
-const namedTypes: { [key: string]: GraphQLType } = {};
+import {
+  getGraphQLQueryArgs,
+  getMongoDbQueryResolver,
+  getGraphQLUpdateArgs,
+  getMongoDbUpdateResolver,
+  getGraphQLInsertType,
+  getGraphQLFilterType,
+  getMongoDbFilter
+} from 'graphql-to-mongodb';
+import { Db } from 'mongodb';
 
 export class PublicSchemaBuilder {
   constructor(private serverConfig: ServerConfig) {}
 
   buildEntityFromSchema(entitySchema: EntitySchema, prefixName: string = '') {
-    const repository = repositoryForSchema(entitySchema);
     const extension = this.serverConfig.publicGraphQL.find(
       extension => extension.schema.options.alias === entitySchema.options.alias
     );
@@ -66,40 +73,50 @@ export class PublicSchemaBuilder {
     repository: mongoose.Model<TEntity>,
     type: GraphQLObjectType
   ) {
-    return entitySchema.options.maxOne
-      ? {
-          [`${entitySchema.options.alias}`]: {
-            type,
-            args: {},
-            resolve: async (obj: any, {  }: any, context: any) => {
-              return repository.findOne();
-            }
+    if (entitySchema.options.maxOne) {
+      return {
+        [`${entitySchema.options.alias}`]: {
+          type,
+          args: {},
+          resolve: async (obj: any, {  }: any, context: any) => {
+            return repository.findOne();
           }
         }
-      : {
-          [`${entitySchema.options.alias}GetById`]: {
-            type,
-            args: {
-              id: { type: GraphQLString }
-            },
-            resolve: (_, { id }) => {
-              return repository.findById({ _id: id });
-            }
+      };
+    } else {
+      return {
+        [`${entitySchema.options.alias}GetById`]: {
+          type,
+          args: {
+            id: { type: GraphQLString }
           },
-          [`${entitySchema.options.alias}GetAll`]: {
-            type: new GraphQLList(type),
-            args: {
-              skip: { type: GraphQLInt },
-              limit: { type: GraphQLInt }
-            },
-            resolve: async (obj: any, { filter = {}, skip = 0, limit = 999, orderBy }: any, context: any) => {
-              return repository
-                .find(filter)
-                .skip(skip)
-                .limit(limit);
-            }
+          resolve: (_, { id }) => {
+            return repository.findById({ _id: id });
           }
-        };
+        },
+        [`${entitySchema.options.alias}GetAll`]: {
+          type: new GraphQLList(type),
+          args: {
+            skip: { type: GraphQLInt },
+            limit: { type: GraphQLInt }
+          },
+          resolve: async (obj: any, { filter = {}, skip = 0, limit = 999, orderBy }: any, context: any) => {
+            return repository
+              .find(filter)
+              .skip(skip)
+              .limit(limit);
+          }
+        },
+        [`${entitySchema.options.alias}GetAll2`]: {
+          type: new GraphQLList(type),
+          args: getGraphQLQueryArgs(type),
+          resolve: getMongoDbQueryResolver(type, async (filter, projection, options, obj, args, { db }: { db: Db }) => {
+            console.log({ filter, projection, options });
+            return repository.find(filter).sort(options.sort);
+          })
+        }
+      };
+    }
   }
 
   buildType<T>(propertyName: string, propertyType: PropertyType<T>): GraphQLType {
@@ -191,7 +208,6 @@ export class PublicSchemaBuilder {
         }
       )
     });
-    namedTypes[alias] = type;
     return type;
   }
 

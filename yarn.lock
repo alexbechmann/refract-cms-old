@@ -3308,6 +3308,10 @@ graphql-tag@^2.4.2:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.0.tgz#87da024be863e357551b2b8700e496ee2d4353ae"
 
+graphql-to-mongodb@^1.6.3:
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/graphql-to-mongodb/-/graphql-to-mongodb-1.6.3.tgz#d56cb21e5388a95284d02e1cbe2c55006b5bfd32"
+
 graphql-tools@^4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-4.0.3.tgz#23b5cb52c519212b1b2e4630a361464396ad264b"

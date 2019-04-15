@@ -23,6 +23,7 @@
     "graphql-compose": "^5.3.4",
     "graphql-compose-mongoose": "^5.2.1",
     "graphql-playground-middleware-express": "^1.7.12",
+    "graphql-to-mongodb": "^1.6.3",
     "graphql-tools": "^4.0.3",
     "jimp": "^0.6.0",
     "jsonwebtoken": "^8.4.0",
