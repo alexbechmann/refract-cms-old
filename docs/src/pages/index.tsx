@@ -1,6 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 import GatsbyLink, { navigate } from 'gatsby-link';
 import Layout from '../layouts/layout';
+import { graphql } from 'gatsby';
 import {
   Link,
   Button,

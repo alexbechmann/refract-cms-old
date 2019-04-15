@@ -20,6 +20,8 @@ import 'typeface-roboto';
 import GitHub from '../icons/GitHub';
 import { indigo } from '@material-ui/core/colors';
 const favicon = require('../assets/favicon.ico');
+import withRoot from '../with-root';
+import { compose } from 'recompose';
 
 interface LayoutProps {
   title: string;
@@ -99,4 +101,7 @@ const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
   </MuiThemeProvider>
 );
 
-export default withStyles(styles)(Layout) as React.ComponentType<LayoutProps>;
+export default compose(
+  withRoot,
+  withStyles(styles)
+)(Layout) as React.ComponentType<LayoutProps>;
