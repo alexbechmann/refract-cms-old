@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "alias": ["refract-cms-docs", "docs-alpha.refract-cms.com"],
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@now/static-build",
+      "config": { "distDir": "public" }
+    }
+  ]
+}
