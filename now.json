@@ -13,7 +13,7 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.*)", "dest": "/docs-next/$1" },
-    { "src": "/gatsby/(.*)", "dest": "/docs/$1" }
+    { "src": "/next/(.*)", "dest": "/docs-next/$1" },
+    { "src": "/(.*)", "dest": "/docs/$1" }
   ]
 }
