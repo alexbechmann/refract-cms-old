@@ -189,23 +189,13 @@ app.use(
 
 ```tsx
 import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App"; // Rest of your app, if you decide to host it on the same server.
-import { Switch, Route, BrowserRouter } from "react-router-dom";
 import { createDashboard } from "@refract-cms/dashboard";
 import config from "./refract.config";
 import { render } from "react-dom";
 
 const serverUrl = "/cms"; // Must match "rootPath" from server for refractCmsHandler config
 
-const Root = () => (
-  <BrowserRouter>
-    <Switch>
-      <Route path="/admin" component={createDashboard({ config, serverUrl })} />
-      <Route path="/" component={App} />
-    </Switch>
-  </BrowserRouter>
-);
+const Dashboard = createDashboard({ config, serverUrl }
 
-render(<Root />, document.getElementById("app"));
+render(<Dashboard />, document.getElementById("app"));
 ```
