@@ -34,8 +34,7 @@ const styles = (theme: Theme) =>
       fontFamily: 'Roboto'
     },
     content: {
-      padding: theme.spacing.unit,
-      maxWidth: 1000
+      padding: theme.spacing.unit
     },
     grow: {
       flexGrow: 1
@@ -72,11 +71,8 @@ const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
           </Link>
         </Typography>
         <div className={classes.grow} />
-        <Button component="a" onClick={() => navigate('/starter-project')}>
-          Starter project
-        </Button>
-        <Button component="a" onClick={() => navigate('/existing-project')}>
-          Add to an existing project
+        <Button component="a" onClick={() => navigate('/docs')}>
+          Docs
         </Button>
 
         <IconButton href="https://github.com/alexbechmann/refract-cms">
@@ -91,7 +87,7 @@ const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
     />
     <CssBaseline />
     <Grid container justify="center">
-      <Grid item xs={12} sm={10} md={8} lg={7} className={classes.content}>
+      <Grid item xs={12} sm={10} md={9} lg={7} xl={6} className={classes.content}>
         <Typography gutterBottom variant="h4" className={classes.title}>
           {title}
         </Typography>
