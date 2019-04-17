@@ -26,11 +26,17 @@ import {
   getMongoDbFilter
 } from 'graphql-to-mongodb';
 import { Db } from 'mongodb';
-
 export class PublicSchemaBuilder {
+  types: GraphQLObjectType[] = [];
+
   constructor(private serverConfig: ServerConfig) {}
 
-  buildEntityFromSchema(entitySchema: EntitySchema, prefixName: string = '', addResolvers: boolean) {
+  buildEntityFromSchema(
+    entitySchema: EntitySchema,
+    prefixName: string = '',
+    addResolvers: boolean,
+    suffixName: string = ''
+  ) {
     const extension = this.serverConfig.publicGraphQL.find(
       extension => extension.schema.options.alias === entitySchema.options.alias
     );
@@ -41,7 +47,7 @@ export class PublicSchemaBuilder {
 
     const properties = extension ? extensionProperties : entitySchema.properties;
     const type = this.buildEntity(
-      prefixName + entitySchema.options.alias,
+      prefixName + entitySchema.options.alias + suffixName,
       properties,
       extension ? extensionProperties : null,
       addResolvers
@@ -74,7 +80,7 @@ export class PublicSchemaBuilder {
     repository: mongoose.Model<TEntity>,
     type: GraphQLObjectType
   ) {
-    const typeWithoutResolvers = this.buildEntityFromSchema(entitySchema, '', false);
+    const typeWithoutResolvers = this.buildEntityFromSchema(entitySchema, '', false, 'Args');
 
     if (entitySchema.options.maxOne) {
       return {
@@ -133,7 +139,7 @@ export class PublicSchemaBuilder {
       // @ts-ignore
       case 'SchemaType': {
         // @ts-ignore
-        return this.buildEntityFromSchema(propertyType.meta, propertyName);
+        return this.buildEntityFromSchema(propertyType.meta, '');
       }
       // case 'Ref': {
       //   const shapeArgs = Object.keys(propertyType.meta.properties).reduce((acc, propertKey) => {
@@ -165,41 +171,54 @@ export class PublicSchemaBuilder {
 
     const shape = RefractTypes.shape(shapeArgs);
 
+    const existingType = this.types.find(t => t.name === alias);
+
+    if (existingType) {
+      return existingType;
+    }
+
     const type = new GraphQLObjectType({
       name: alias,
-      fields: Object.keys(shape.meta!).reduce(
-        (acc, propertyKey) => {
-          const propertyType: PropertyDescription<any, any, any> = shape.meta![propertyKey];
-          const type = this.buildType(`${alias}${propertyKey}`, propertyType);
-          acc[propertyKey] = {
-            type
-          };
-          if (addResolvers && extensionProperties && extensionProperties[propertyKey]) {
-            acc[propertyKey].resolve = extensionProperties[propertyKey].resolve;
-            acc[propertyKey].dependencies = [];
+      fields: () =>
+        Object.keys(shape.meta!).reduce(
+          (acc, propertyKey) => {
+            const propertyType: PropertyDescription<any, any, any> = shape.meta![propertyKey];
+            const type = this.buildType(`${alias}${propertyKey}`, propertyType);
+            acc[propertyKey] = {
+              // @ts-ignore
+              type
+            };
+            if (addResolvers && extensionProperties && extensionProperties[propertyKey]) {
+              acc[propertyKey].resolve = extensionProperties[propertyKey].resolve;
+              // @ts-ignore
+              acc[propertyKey].dependencies = [];
+            }
+            // if (propertyType.alias === 'Ref') {
+            //   const refEntitySchema: EntitySchema = propertyType.meta;
+            //   acc[propertyKey].resolve = entity => {
+            //     const ref = entity[propertyKey];
+            //     if (ref) {
+            //       return mongoose.models[refEntitySchema.options.alias].findById({ id: entity[propertyKey].entityId });
+            //     } else {
+            //       return null;
+            //     }
+            //   };
+            // }
+            return acc;
+          },
+          {
+            _id: {
+              type: GraphQLString,
+              resolve: addResolvers ? entity => `${entity._id}` : undefined,
+              // @ts-ignore
+              dependencies: []
+            }
           }
-          // if (propertyType.alias === 'Ref') {
-          //   const refEntitySchema: EntitySchema = propertyType.meta;
-          //   acc[propertyKey].resolve = entity => {
-          //     const ref = entity[propertyKey];
-          //     if (ref) {
-          //       return mongoose.models[refEntitySchema.options.alias].findById({ id: entity[propertyKey].entityId });
-          //     } else {
-          //       return null;
-          //     }
-          //   };
-          // }
-          return acc;
-        },
-        {
-          _id: {
-            type: GraphQLString,
-            resolve: addResolvers ? entity => `${entity._id}` : undefined,
-            dependencies: []
-          }
-        }
-      )
+        )
     });
+
+    this.types.push(type);
+
     return type;
   }
 
