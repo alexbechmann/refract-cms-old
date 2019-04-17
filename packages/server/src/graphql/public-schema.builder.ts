@@ -30,7 +30,7 @@ import { Db } from 'mongodb';
 export class PublicSchemaBuilder {
   constructor(private serverConfig: ServerConfig) {}
 
-  buildEntityFromSchema(entitySchema: EntitySchema, prefixName: string = '') {
+  buildEntityFromSchema(entitySchema: EntitySchema, prefixName: string = '', addResolvers: boolean) {
     const extension = this.serverConfig.publicGraphQL.find(
       extension => extension.schema.options.alias === entitySchema.options.alias
     );
@@ -43,7 +43,8 @@ export class PublicSchemaBuilder {
     const type = this.buildEntity(
       prefixName + entitySchema.options.alias,
       properties,
-      extension ? extensionProperties : null
+      extension ? extensionProperties : null,
+      addResolvers
     );
     return type;
   }
@@ -51,7 +52,7 @@ export class PublicSchemaBuilder {
   buildSchema(schema: EntitySchema[]) {
     let queryFields = {};
     schema.forEach(entitySchema => {
-      const type = this.buildEntityFromSchema(entitySchema);
+      const type = this.buildEntityFromSchema(entitySchema, '', true);
       const repository = repositoryForSchema(entitySchema);
 
       queryFields = {
@@ -73,6 +74,8 @@ export class PublicSchemaBuilder {
     repository: mongoose.Model<TEntity>,
     type: GraphQLObjectType
   ) {
+    const typeWithoutResolvers = this.buildEntityFromSchema(entitySchema, '', false);
+
     if (entitySchema.options.maxOne) {
       return {
         [`${entitySchema.options.alias}`]: {
@@ -96,20 +99,7 @@ export class PublicSchemaBuilder {
         },
         [`${entitySchema.options.alias}GetAll`]: {
           type: new GraphQLList(type),
-          args: {
-            skip: { type: GraphQLInt },
-            limit: { type: GraphQLInt }
-          },
-          resolve: async (obj: any, { filter = {}, skip = 0, limit = 999, orderBy }: any, context: any) => {
-            return repository
-              .find(filter)
-              .skip(skip)
-              .limit(limit);
-          }
-        },
-        [`${entitySchema.options.alias}GetAll2`]: {
-          type: new GraphQLList(type),
-          args: getGraphQLQueryArgs(type),
+          args: getGraphQLQueryArgs(typeWithoutResolvers),
           resolve: getMongoDbQueryResolver(type, async (filter, projection, options, obj, args, { db }: { db: Db }) => {
             console.log({ filter, projection, options });
             return repository.find(filter).sort(options.sort);
@@ -166,7 +156,8 @@ export class PublicSchemaBuilder {
     properties: {
       [key: string]: PropertyOptions;
     },
-    extensionProperties?: Properties<any, T>
+    extensionProperties?: Properties<any, T>,
+    addResolvers?: boolean
   ) {
     const shapeArgs = Object.keys(properties).reduce((acc, propertKey) => {
       acc[propertKey] = properties[propertKey].type;
@@ -184,26 +175,28 @@ export class PublicSchemaBuilder {
           acc[propertyKey] = {
             type
           };
-          if (extensionProperties && extensionProperties[propertyKey]) {
+          if (addResolvers && extensionProperties && extensionProperties[propertyKey]) {
             acc[propertyKey].resolve = extensionProperties[propertyKey].resolve;
+            acc[propertyKey].dependencies = [];
           }
-          if (propertyType.alias === 'Ref') {
-            const refEntitySchema: EntitySchema = propertyType.meta;
-            acc[propertyKey].resolve = entity => {
-              const ref = entity[propertyKey];
-              if (ref) {
-                return mongoose.models[refEntitySchema.options.alias].findById({ id: entity[propertyKey].entityId });
-              } else {
-                return null;
-              }
-            };
-          }
+          // if (propertyType.alias === 'Ref') {
+          //   const refEntitySchema: EntitySchema = propertyType.meta;
+          //   acc[propertyKey].resolve = entity => {
+          //     const ref = entity[propertyKey];
+          //     if (ref) {
+          //       return mongoose.models[refEntitySchema.options.alias].findById({ id: entity[propertyKey].entityId });
+          //     } else {
+          //       return null;
+          //     }
+          //   };
+          // }
           return acc;
         },
         {
           _id: {
             type: GraphQLString,
-            resolve: entity => `${entity._id}`
+            resolve: addResolvers ? entity => `${entity._id}` : undefined,
+            dependencies: []
           }
         }
       )
