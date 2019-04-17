@@ -101,7 +101,6 @@ export class PublicSchemaBuilder {
           type: new GraphQLList(type),
           args: getGraphQLQueryArgs(typeWithoutResolvers),
           resolve: getMongoDbQueryResolver(type, async (filter, projection, options, obj, args, { db }: { db: Db }) => {
-            console.log({ filter, projection, options });
             return repository.find(filter).sort(options.sort);
           })
         }
