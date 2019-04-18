@@ -6,9 +6,7 @@ import {
   GraphQLObjectType,
   GraphQLList,
   GraphQLType,
-  GraphQLSchema,
-  GraphQLInt,
-  getNamedType
+  GraphQLSchema
 } from 'graphql';
 import { ShapeArgs, PropertyDescription } from '@refract-cms/core';
 import { merge } from 'lodash';
@@ -16,16 +14,10 @@ import mongoose from 'mongoose';
 import { ServerConfig } from '../server-config.model';
 import { Properties, buildHelpers } from '../create-public-schema';
 import { repositoryForSchema } from '../repository-for-schema';
-import {
-  getGraphQLQueryArgs,
-  getMongoDbQueryResolver,
-  getGraphQLUpdateArgs,
-  getMongoDbUpdateResolver,
-  getGraphQLInsertType,
-  getGraphQLFilterType,
-  getMongoDbFilter
-} from 'graphql-to-mongodb';
+import { getGraphQLQueryArgs, getMongoDbQueryResolver } from 'graphql-to-mongodb';
 import { Db } from 'mongodb';
+import { GraphQLDateTime } from 'graphql-iso-date';
+
 export class PublicSchemaBuilder {
   types: GraphQLObjectType[] = [];
 
@@ -116,15 +108,14 @@ export class PublicSchemaBuilder {
 
   buildType<T>(propertyName: string, propertyType: PropertyType<T>): GraphQLType {
     switch (propertyType.alias) {
-      case 'String':
-      case 'Date': {
+      case 'String': {
         return GraphQLString;
+      }
+      case 'Date': {
+        return GraphQLDateTime;
       }
       case 'Number': {
         return GraphQLFloat;
-      }
-      case 'Boolean': {
-        return GraphQLBoolean;
       }
       case 'Boolean': {
         return GraphQLBoolean;
