@@ -16,14 +16,27 @@ import mongoose from 'mongoose';
 import { ServerConfig } from '../server-config.model';
 import { Properties, buildHelpers } from '../create-public-schema';
 import { repositoryForSchema } from '../repository-for-schema';
-
-const namedTypes: { [key: string]: GraphQLType } = {};
-
+import {
+  getGraphQLQueryArgs,
+  getMongoDbQueryResolver,
+  getGraphQLUpdateArgs,
+  getMongoDbUpdateResolver,
+  getGraphQLInsertType,
+  getGraphQLFilterType,
+  getMongoDbFilter
+} from 'graphql-to-mongodb';
+import { Db } from 'mongodb';
 export class PublicSchemaBuilder {
+  types: GraphQLObjectType[] = [];
+
   constructor(private serverConfig: ServerConfig) {}
 
-  buildEntityFromSchema(entitySchema: EntitySchema, prefixName: string = '') {
-    const repository = repositoryForSchema(entitySchema);
+  buildEntityFromSchema(
+    entitySchema: EntitySchema,
+    prefixName: string = '',
+    addResolvers: boolean,
+    suffixName: string = ''
+  ) {
     const extension = this.serverConfig.publicGraphQL.find(
       extension => extension.schema.options.alias === entitySchema.options.alias
     );
@@ -34,9 +47,10 @@ export class PublicSchemaBuilder {
 
     const properties = extension ? extensionProperties : entitySchema.properties;
     const type = this.buildEntity(
-      prefixName + entitySchema.options.alias,
+      prefixName + entitySchema.options.alias + suffixName,
       properties,
-      extension ? extensionProperties : null
+      extension ? extensionProperties : null,
+      addResolvers
     );
     return type;
   }
@@ -44,7 +58,7 @@ export class PublicSchemaBuilder {
   buildSchema(schema: EntitySchema[]) {
     let queryFields = {};
     schema.forEach(entitySchema => {
-      const type = this.buildEntityFromSchema(entitySchema);
+      const type = this.buildEntityFromSchema(entitySchema, '', true);
       const repository = repositoryForSchema(entitySchema);
 
       queryFields = {
@@ -66,40 +80,38 @@ export class PublicSchemaBuilder {
     repository: mongoose.Model<TEntity>,
     type: GraphQLObjectType
   ) {
-    return entitySchema.options.maxOne
-      ? {
-          [`${entitySchema.options.alias}`]: {
-            type,
-            args: {},
-            resolve: async (obj: any, {  }: any, context: any) => {
-              return repository.findOne();
-            }
+    const typeWithoutResolvers = this.buildEntityFromSchema(entitySchema, '', false, 'Args');
+
+    if (entitySchema.options.maxOne) {
+      return {
+        [`${entitySchema.options.alias}`]: {
+          type,
+          args: {},
+          resolve: async (obj: any, {  }: any, context: any) => {
+            return repository.findOne();
           }
         }
-      : {
-          [`${entitySchema.options.alias}GetById`]: {
-            type,
-            args: {
-              id: { type: GraphQLString }
-            },
-            resolve: (_, { id }) => {
-              return repository.findById({ _id: id });
-            }
+      };
+    } else {
+      return {
+        [`${entitySchema.options.alias}GetById`]: {
+          type,
+          args: {
+            id: { type: GraphQLString }
           },
-          [`${entitySchema.options.alias}GetAll`]: {
-            type: new GraphQLList(type),
-            args: {
-              skip: { type: GraphQLInt },
-              limit: { type: GraphQLInt }
-            },
-            resolve: async (obj: any, { filter = {}, skip = 0, limit = 999, orderBy }: any, context: any) => {
-              return repository
-                .find(filter)
-                .skip(skip)
-                .limit(limit);
-            }
+          resolve: (_, { id }) => {
+            return repository.findById({ _id: id });
           }
-        };
+        },
+        [`${entitySchema.options.alias}GetAll`]: {
+          type: new GraphQLList(type),
+          args: getGraphQLQueryArgs(typeWithoutResolvers),
+          resolve: getMongoDbQueryResolver(type, async (filter, projection, options, obj, args, { db }: { db: Db }) => {
+            return repository.find(filter).sort(options.sort);
+          })
+        }
+      };
+    }
   }
 
   buildType<T>(propertyName: string, propertyType: PropertyType<T>): GraphQLType {
@@ -127,7 +139,7 @@ export class PublicSchemaBuilder {
       // @ts-ignore
       case 'SchemaType': {
         // @ts-ignore
-        return this.buildEntityFromSchema(propertyType.meta, propertyName);
+        return this.buildEntityFromSchema(propertyType.meta, '');
       }
       // case 'Ref': {
       //   const shapeArgs = Object.keys(propertyType.meta.properties).reduce((acc, propertKey) => {
@@ -149,7 +161,8 @@ export class PublicSchemaBuilder {
     properties: {
       [key: string]: PropertyOptions;
     },
-    extensionProperties?: Properties<any, T>
+    extensionProperties?: Properties<any, T>,
+    addResolvers?: boolean
   ) {
     const shapeArgs = Object.keys(properties).reduce((acc, propertKey) => {
       acc[propertKey] = properties[propertKey].type;
@@ -158,40 +171,54 @@ export class PublicSchemaBuilder {
 
     const shape = RefractTypes.shape(shapeArgs);
 
+    const existingType = this.types.find(t => t.name === alias);
+
+    if (existingType) {
+      return existingType;
+    }
+
     const type = new GraphQLObjectType({
       name: alias,
-      fields: Object.keys(shape.meta!).reduce(
-        (acc, propertyKey) => {
-          const propertyType: PropertyDescription<any, any, any> = shape.meta![propertyKey];
-          const type = this.buildType(`${alias}${propertyKey}`, propertyType);
-          acc[propertyKey] = {
-            type
-          };
-          if (extensionProperties && extensionProperties[propertyKey]) {
-            acc[propertyKey].resolve = extensionProperties[propertyKey].resolve;
-          }
-          if (propertyType.alias === 'Ref') {
-            const refEntitySchema: EntitySchema = propertyType.meta;
-            acc[propertyKey].resolve = entity => {
-              const ref = entity[propertyKey];
-              if (ref) {
-                return mongoose.models[refEntitySchema.options.alias].findById({ id: entity[propertyKey].entityId });
-              } else {
-                return null;
-              }
+      fields: () =>
+        Object.keys(shape.meta!).reduce(
+          (acc, propertyKey) => {
+            const propertyType: PropertyDescription<any, any, any> = shape.meta![propertyKey];
+            const type = this.buildType(`${alias}${propertyKey}`, propertyType);
+            acc[propertyKey] = {
+              // @ts-ignore
+              type
             };
+            if (addResolvers && extensionProperties && extensionProperties[propertyKey]) {
+              acc[propertyKey].resolve = extensionProperties[propertyKey].resolve;
+              // @ts-ignore
+              acc[propertyKey].dependencies = [];
+            }
+            // if (propertyType.alias === 'Ref') {
+            //   const refEntitySchema: EntitySchema = propertyType.meta;
+            //   acc[propertyKey].resolve = entity => {
+            //     const ref = entity[propertyKey];
+            //     if (ref) {
+            //       return mongoose.models[refEntitySchema.options.alias].findById({ id: entity[propertyKey].entityId });
+            //     } else {
+            //       return null;
+            //     }
+            //   };
+            // }
+            return acc;
+          },
+          {
+            _id: {
+              type: GraphQLString,
+              resolve: addResolvers ? entity => `${entity._id}` : undefined,
+              // @ts-ignore
+              dependencies: []
+            }
           }
-          return acc;
-        },
-        {
-          _id: {
-            type: GraphQLString,
-            resolve: entity => `${entity._id}`
-          }
-        }
-      )
+        )
     });
-    namedTypes[alias] = type;
+
+    this.types.push(type);
+
     return type;
   }
 
