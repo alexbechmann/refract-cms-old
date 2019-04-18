@@ -16,7 +16,7 @@ import { Properties, buildHelpers } from '../create-public-schema';
 import { repositoryForSchema } from '../repository-for-schema';
 import { getGraphQLQueryArgs, getMongoDbQueryResolver } from 'graphql-to-mongodb';
 import { Db } from 'mongodb';
-import { GraphQLDateTime } from 'graphql-iso-date';
+import { GraphQLDate } from 'graphql-iso-date';
 
 export class PublicSchemaBuilder {
   types: GraphQLObjectType[] = [];
@@ -112,7 +112,7 @@ export class PublicSchemaBuilder {
         return GraphQLString;
       }
       case 'Date': {
-        return GraphQLDateTime;
+        return GraphQLDate;
       }
       case 'Number': {
         return GraphQLFloat;
