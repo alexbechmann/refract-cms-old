@@ -99,7 +99,11 @@ export class PublicSchemaBuilder {
           type: new GraphQLList(type),
           args: getGraphQLQueryArgs(typeWithoutResolvers),
           resolve: getMongoDbQueryResolver(type, async (filter, projection, options, obj, args, { db }: { db: Db }) => {
-            return repository.find(filter).sort(options.sort);
+            return repository
+              .find(filter)
+              .sort(options.sort)
+              .limit(options.limit)
+              .skip(options.skip);
           })
         }
       };

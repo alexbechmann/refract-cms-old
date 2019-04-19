@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DatePicker, MuiPickersUtilsProvider } from 'material-ui-pickers';
 import { PropertyEditorProps } from '../properties/property-editor-props';
 import MomentUtils from '@date-io/moment';
@@ -21,7 +21,12 @@ interface Props extends PropertyEditorProps<Date>, WithStyles<typeof styles> {}
 class DatePickerEditor extends React.Component<Props> {
   componentDidMount() {
     if (!this.props.value) {
-      this.props.setValue(new Date());
+      const newDate = new Date();
+      newDate.setHours(0);
+      newDate.setMinutes(0);
+      newDate.setSeconds(0);
+      newDate.setMilliseconds(0);
+      this.props.setValue(newDate);
     }
   }
 
@@ -32,12 +37,17 @@ class DatePickerEditor extends React.Component<Props> {
         <DatePicker
           className={classes.editor}
           keyboard
-          label="Masked input"
+          label={this.props.propertyOptions.displayName}
           format="DD/MM/YYYY"
           mask={v => (v ? [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/] : [])}
           value={value}
           onChange={(momentDate: moment.Moment) => {
-            this.props.setValue(momentDate.toDate());
+            const newDate = momentDate.toDate();
+            newDate.setHours(0);
+            newDate.setMinutes(0);
+            newDate.setSeconds(0);
+            newDate.setMilliseconds(0);
+            this.props.setValue(newDate);
           }}
           animateYearScrolling={false}
           rightArrowIcon={<ChevronRight />}
