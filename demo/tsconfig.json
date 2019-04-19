@@ -1,34 +1,25 @@
 {
   "compilerOptions": {
-    "noImplicitAny": false,
     "target": "es5",
-    "lib": ["dom", "es6", "dom.iterable", "scripthost"],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "sourceMap": true,
-    "declaration": true,
-    "jsx": "react",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "allowJs": false,
-    "checkJs": false,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
     "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
-    "baseUrl": "./",
-    "paths": {
-      "@refract-cms/*": ["../packages/*/src"]
-    },
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "preserve"
   },
-  "exclude": [
-    "node_modules",
-    "build",
-    "scripts",
-    "acceptance-tests",
-    "webpack",
-    "jest",
-    "razzle.config.js"
-  ],
-  "types": ["typePatches", "node", "webpack-env"]
+  "include": [
+    "src"
+  ]
 }

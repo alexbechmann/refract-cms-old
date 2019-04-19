@@ -5,13 +5,12 @@
   "private": true,
   "main": "index.js",
   "workspaces": [
-    "packages/*",
-    "consumer"
+    "packages/*"
   ],
   "scripts": {
-    "start:demo": "cd demo && yarn start",
+    "start:dev": "cd dev && yarn start",
     "docker-compose": "docker-compose up --build -d",
-    "start": "yarn run start:demo",
+    "start": "yarn run start:dev",
     "test": "ts-mocha --paths -p ./__tests__/tsconfig.json __tests__/**/*.test*.ts",
     "t": "tsc -p __tests__ && ",
     "build": "npm-run-all build:js build:types:core build:types:dashboard build:types:server",
