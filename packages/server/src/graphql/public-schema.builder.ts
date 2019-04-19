@@ -17,6 +17,7 @@ import { repositoryForSchema } from '../repository-for-schema';
 import { getGraphQLQueryArgs, getMongoDbQueryResolver } from 'graphql-to-mongodb';
 import { Db } from 'mongodb';
 import { GraphQLDate } from 'graphql-iso-date';
+import chalk from 'chalk';
 
 export class PublicSchemaBuilder {
   types: GraphQLObjectType[] = [];
@@ -57,6 +58,8 @@ export class PublicSchemaBuilder {
         ...queryFields,
         ...this.buildFieldQueries(entitySchema, repository, type)
       };
+
+      console.log(chalk.green(`Added schema: ${entitySchema.options.displayName || entitySchema.options.alias}`));
     });
 
     const query = new GraphQLObjectType({
