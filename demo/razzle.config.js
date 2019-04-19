@@ -65,14 +65,6 @@ module.exports = {
     if (dev && target === "web") {
       appConfig.plugins = [...appConfig.plugins];
     }
-    appConfig.module.rules = [
-      ...appConfig.module.rules,
-      {
-        test: /\.(js|jsx|ts|tsx|css|scss)$/,
-        loader: "prettier-loader",
-        exclude: /node_modules/
-      }
-    ];
     appConfig.module.rules.push({
       test: /\.(ts|tsx)$/,
       loader: "ts-loader",
@@ -81,6 +73,14 @@ module.exports = {
         transpileOnly: true
       }
     });
+    appConfig.module.rules = [
+      ...appConfig.module.rules,
+      {
+        test: /\.(js|jsx|ts|tsx|css|scss)$/,
+        loader: "prettier-loader",
+        exclude: /node_modules/
+      }
+    ];
     appConfig.resolve = {
       ...appConfig.resolve,
       extensions: appConfig.resolve.extensions.concat([
