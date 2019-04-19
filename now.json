@@ -7,10 +7,7 @@
       "config": { "distDir": "public" }
     }
   ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.*)", "dest": "/docs/$1" }
-  ],
+  "routes": [{ "src": "/(.*)", "dest": "/docs/$1" }],
   "github": {
     "autoAlias": true
   }

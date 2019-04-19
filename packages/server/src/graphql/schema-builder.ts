@@ -53,7 +53,7 @@ export class SchemaBuilder {
       [`${entitySchema.options.alias}RemoveMany`]: EntityTypeComposer.getResolver('removeMany')
     });
 
-    console.log(EntitySchema.indexes());
+    // console.log(EntitySchema.indexes());
   }
 
   buildType<T>(propertyName: string, propertyType: PropertyType<T>): SchemaTypeOpts<any> | Schema | SchemaType {

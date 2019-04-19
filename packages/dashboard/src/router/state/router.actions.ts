@@ -38,7 +38,7 @@ export const setBaseRoute = (baseRoute: string) => {
       },
       edit: {
         path: buildPath(`/content/:alias/edit/:id`),
-        createUrl: args => buildPath(`/content/${args.schema.options.alias}/edit/${args.id ? '/' + args.id : ''}`)
+        createUrl: args => buildPath(`/content/${args.schema.options.alias}/edit/${args.id || ''}`)
       }
     }
   };
