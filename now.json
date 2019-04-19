@@ -5,10 +5,16 @@
       "src": "docs/package.json",
       "use": "@now/static-build",
       "config": { "distDir": "public" }
+    },
+    {
+      "src": "demo/package.json",
+      "use": "@now/static-build",
+      "config": { "distDir": "build" }
     }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/demo/api/(.*)", "dest": "/api/$1" },
+    { "src": "/demo/(.*)", "dest": "/demo/$1" },
     { "src": "/(.*)", "dest": "/docs/$1" }
   ],
   "github": {

@@ -3,6 +3,7 @@ import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import { NewsArticleModel } from '../../refract-cms/news/news-article.schema';
 import { CircularProgress, Typography } from '@material-ui/core';
+import moment = require('moment');
 
 const NEWS_QUERY = gql`
   {
@@ -10,6 +11,7 @@ const NEWS_QUERY = gql`
       _id
       title
       articleText
+      articleDate
       imageModel {
         crops {
           profile
