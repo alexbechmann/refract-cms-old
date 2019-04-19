@@ -5,23 +5,9 @@
       "src": "docs/package.json",
       "use": "@now/static-build",
       "config": { "distDir": "public" }
-    },
-    {
-      "src": "demo-cra/package.json",
-      "use": "@now/static-build",
-      "config": { "distDir": "build" }
-    },
-    {
-      "src": "demo/build/index.js",
-      "use": "@now/node-server"
     }
   ],
-  "routes": [
-    { "src": "/demo-cra/api/(.*)", "dest": "/demo-cra/api/$1" },
-    { "src": "/demo-cra/(.*)", "dest": "/demo-cra/$1" },
-    { "src": "/demo/(.*)", "dest": "/demo/$1" },
-    { "src": "/(.*)", "dest": "/docs/$1" }
-  ],
+  "routes": [{ "src": "/(.*)", "dest": "/docs/$1" }],
   "github": {
     "autoAlias": true
   }
