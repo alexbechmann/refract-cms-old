@@ -9,10 +9,9 @@
     "consumer"
   ],
   "scripts": {
-    "start:server": "webpack --config  webpack.config.server.js --watch",
-    "start:client": "webpack-dev-server --config webpack.config.client.js",
+    "start:demo": "cd demo && yarn start",
     "docker-compose": "docker-compose up --build -d",
-    "start": "yarn run docker-compose && npm-run-all --parallel start:server start:client",
+    "start": "yarn run start:demo",
     "test": "ts-mocha --paths -p ./__tests__/tsconfig.json __tests__/**/*.test*.ts",
     "t": "tsc -p __tests__ && ",
     "build": "npm-run-all build:js build:types:core build:types:dashboard build:types:server",
@@ -37,8 +36,6 @@
     "npm-run-all": "4.1.5",
     "prettier": "^1.15.2",
     "prettier-loader": "^2.1.1",
-    "react-hot-loader": "^4.6.3",
-    "start-server-webpack-plugin": "^2.2.5",
     "style-loader": "^0.23.1",
     "ts-loader": "^5.3.2",
     "ts-mocha": "^2.0.0",
@@ -46,10 +43,8 @@
     "tslint-config-prettier": "^1.16.0",
     "tslint-react": "^3.6.0",
     "typescript": "^3.2.2",
-    "uglifyjs-webpack-plugin": "^2.0.1",
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.10",
     "webpack-node-externals": "^1.7.2"
   }
 }
