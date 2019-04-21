@@ -16,7 +16,7 @@ const styles = (theme: Theme) =>
     appBar: {
       bottom: 'auto',
       top: 64,
-      background: '#fafafa'
+      background: theme.palette.background.default
     },
     toolbar: {
       marginLeft: 240,

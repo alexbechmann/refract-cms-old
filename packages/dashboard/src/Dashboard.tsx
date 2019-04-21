@@ -116,7 +116,7 @@ const styles = (theme: Theme) =>
       flexGrow: 1,
       height: '100vh',
       overflow: 'auto',
-      background: '#fafafa;'
+      background: theme.palette.background.default
     },
     chartContainer: {
       marginLeft: -22
