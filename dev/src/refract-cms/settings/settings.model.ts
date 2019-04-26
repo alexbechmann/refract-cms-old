@@ -6,7 +6,7 @@ import {
   createMultipleEntityPickerEditor
 } from '@refract-cms/core';
 import SettingsIcon from '@material-ui/icons/Settings';
-import { NewsArticleSchema } from '../news/news-article.schema';
+import { NewsArticleSchema, NewsArticleModel } from '../news/news-article.schema';
 
 export interface Settings extends Entity {
   setting1: string;
@@ -14,10 +14,14 @@ export interface Settings extends Entity {
   //   type: string;
   //   name: string;
   // }[];
-  highlightedArticles: string[];
+  highlightedArticleIds: string[];
 }
 
-export const SettingsSchema = defineEntity<Settings>({
+export interface SettingsModel extends Settings {
+  highlightedArticles: NewsArticleModel[];
+}
+
+export const SettingsSchema = defineEntity<Settings, SettingsModel>({
   options: {
     alias: 'settings',
     displayName: 'Settings',
@@ -41,7 +45,7 @@ export const SettingsSchema = defineEntity<Settings>({
     //     })
     //   )
     // },
-    highlightedArticles: {
+    highlightedArticleIds: {
       displayName: 'Highlighted articles',
       type: RefractTypes.arrayOf(RefractTypes.string),
       editorComponent: createMultipleEntityPickerEditor({

@@ -6,6 +6,7 @@ import { ProductSchema, Product } from '../../config/products/product.model';
 import { printType, GraphQLString, GraphQLBoolean, GraphQLFloat } from 'graphql';
 import refractConfig from '../../config/refract.config';
 import { ServerConfig } from 'packages/server/src/server-config.model';
+import { GraphQLDateTime, GraphQLDate } from 'graphql-iso-date';
 
 const expect = chai.expect;
 
@@ -52,7 +53,7 @@ mocha.describe('build types', () => {
 
   mocha.it('should create valid date', () => {
     const type = publicSchemaBuilder.buildType<Date>('something', RefractTypes.date);
-    expect(type).to.equal(GraphQLString);
+    expect(type).to.equal(GraphQLDate);
   });
 
   mocha.it('should create valid boolean', () => {
