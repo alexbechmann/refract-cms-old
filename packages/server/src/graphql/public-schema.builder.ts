@@ -75,7 +75,7 @@ export class PublicSchemaBuilder {
     repository: mongoose.Model<TEntity>,
     type: GraphQLObjectType
   ) {
-    const typeWithoutResolvers = this.buildEntityFromSchema(entitySchema, '', false, 'Args');
+    // const typeWithoutResolvers = this.buildEntityFromSchema(entitySchema, '', false, 'Args');
 
     if (entitySchema.options.maxOne) {
       return {
@@ -100,7 +100,7 @@ export class PublicSchemaBuilder {
         },
         [`${entitySchema.options.alias}GetAll`]: {
           type: new GraphQLList(type),
-          args: getGraphQLQueryArgs(typeWithoutResolvers),
+          args: getGraphQLQueryArgs(type),
           resolve: getMongoDbQueryResolver(type, async (filter, projection, options, obj, args, { db }: { db: Db }) => {
             return repository
               .find(filter)
