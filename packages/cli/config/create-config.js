@@ -4,7 +4,7 @@ const webpack = require("webpack");
 const StartServerPlugin = require("start-server-webpack-plugin");
 
 function createClientConfig() {
-  console.log("client config", path.join(process.cwd(), "src"));
+  console.log("Using client config", path.join(process.cwd(), "src"));
   return {
     devtool: "inline-source-map",
     entry: [
@@ -86,7 +86,7 @@ function createServerConfig() {
     entry: [
       // "@babel/polyfill",
       "webpack/hot/poll?1000",
-      path.resolve(__dirname, "../src/index.tsx")
+      path.resolve(__dirname, "../src/index.ts")
     ],
     target: "node",
     mode: "development",
@@ -146,7 +146,7 @@ function createServerConfig() {
         "@consumer/config": path.join(process.cwd(), "src")
       }
     },
-    output: { path: path.join(__dirname, ".build"), filename: "server.js" }
+    output: { path: path.join(process.cwd(), ".cache"), filename: "server.js" }
   };
 }
 

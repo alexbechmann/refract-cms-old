@@ -6,6 +6,8 @@ const {
   createClientConfig
 } = require("../config/create-config");
 const devServer = require("webpack-dev-server");
+const MemoryFS = require("memory-fs");
+var memoryFS = new MemoryFS();
 
 process.noDeprecation = true; // turns off that loadQuery clutter.
 
@@ -44,6 +46,7 @@ function main() {
   // Compile our assets with webpack
   const clientCompiler = compile(clientConfig);
   const serverCompiler = compile(serverConfig);
+  // serverCompiler.outputFileSystem = memoryFS;
 
   // Instatiate a variable to track server watching
   let watching;
@@ -70,7 +73,7 @@ function main() {
   const clientDevServer = new devServer(clientCompiler, clientConfig.devServer);
 
   // Start Webpack-dev-server
-  clientDevServer.listen(4001, err => {
+  clientDevServer.listen(3001, err => {
     if (err) {
       console.error(err);
     }
