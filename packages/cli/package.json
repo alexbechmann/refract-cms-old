@@ -4,11 +4,25 @@
   "description": "",
   "main": "index.js",
   "bin": {
-    "refract-cms": "./index.js"
+    "refract-cms": "./bin/refract-cms.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@babel/polyfill": "^7.4.4",
+    "react-hot-loader": "^4.8.4",
+    "start-server-webpack-plugin": "^2.2.5",
+    "ts-loader": "^5.4.4",
+    "typeface-roboto": "^0.0.54",
+    "typescript": "^3.4.5",
+    "webpack": "^4.30.0",
+    "webpack-dev-server": "^3.3.1",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "peerDependencies": {
+    "typscript": "^3.0.0"
+  }
 }
