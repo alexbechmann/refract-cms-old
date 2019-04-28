@@ -3,14 +3,10 @@ import { refractCmsHandler, createPublicSchema } from '@refract-cms/server';
 import config from '@consumer/config/refract.config';
 import serverConfigBuilder from '@consumer/config/server.config';
 import '@babel/polyfill';
-// const serverConfigBuilder = require('@consumer/config/server.config');
 
 const server = express();
 
-server.get('/hi', (req, res) => res.send('hi4'));
-
 serverConfigBuilder().then(serverConfig => {
-  console.log(serverConfig, refractCmsHandler);
   server
     .use(
       ...refractCmsHandler({

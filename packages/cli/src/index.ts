@@ -1,4 +1,5 @@
 import express from 'express';
+import chalk from 'chalk';
 
 // this require is necessary for server HMR to recover from error
 // tslint:disable-next-line:no-var-requires
@@ -26,4 +27,7 @@ export default express()
       return;
     }
     console.log(`> Started on port ${port}`);
+    console.log(`Dashboard: ${chalk.green('http://localhost:3000')}`);
+    console.log(`GraphiQL: ${chalk.green('http://localhost:3000/cms/public/graphql')}`);
+    console.log(`GraphQL Playground: ${chalk.green('http://localhost:3000/cms/public/graphql-playground')}`);
   });

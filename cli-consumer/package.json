@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm-run-all -p start:cms docker-compose",
+    "start": "npm run docker-compose && npm run start:cms",
     "start:cms": "node ../packages/cli/bin/refract-cms.js start",
-    "docker-compose": "docker-compose up"
+    "docker-compose": "docker-compose up -d"
   },
   "author": "",
   "license": "ISC",
