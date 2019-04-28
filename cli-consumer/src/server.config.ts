@@ -1,16 +1,12 @@
 import { ServerConfig } from '@refract-cms/server';
 import config from './refract.config';
-// import MongoMemoryServer from 'mongodb-memory-server';
 
 export default () =>
   new Promise<ServerConfig>(async resolve => {
-    // const mongod = new MongoMemoryServer();
-    // const mongoConnectionString = await mongod.getConnectionString();
-
     resolve({
       config,
       rootPath: '/cms',
-      mongoConnectionString: '',
+      mongoConnectionString: 'mongodb://localhost:27018/cli-consumer',
       filesPath: 'files/',
       auth: {
         adminCredentials: {

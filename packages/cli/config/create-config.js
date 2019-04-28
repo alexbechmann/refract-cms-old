@@ -123,6 +123,11 @@ function createServerConfig() {
             transpileOnly: true,
             configFile: path.resolve(__dirname, "tsconfig.server.json")
           }
+        },
+        {
+          test: /\.mjs$/,
+          //include: /node_modules/,
+          type: "javascript/auto"
         }
         // {
         //   test: /\.(js|jsx|ts|tsx)?$/,
@@ -147,7 +152,20 @@ function createServerConfig() {
       new WebpackBar({
         name: "server",
         color: "#3949ab"
-      })
+      }),
+      function() {
+        this.plugin("done", function(stats) {
+          if (
+            stats.compilation.errors &&
+            stats.compilation.errors.length &&
+            process.argv.indexOf("--watch") == -1
+          ) {
+            console.log(stats.compilation.errors);
+            throw new Error("webpack build failed.");
+          }
+          // ...
+        });
+      }
       // new ForkTsCheckerWebpackPlugin({
       //   tsconfig: path.resolve(__dirname, "tsconfig.json"),
       //   memoryLimit: 2048,

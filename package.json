@@ -10,7 +10,6 @@
   ],
   "scripts": {
     "start:dev": "cd dev && yarn start",
-    "docker-compose": "docker-compose up --build -d",
     "start": "yarn run start:dev",
     "test": "ts-mocha --paths -p ./__tests__/tsconfig.json __tests__/**/*.test*.ts",
     "t": "tsc -p __tests__ && ",

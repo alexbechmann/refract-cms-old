@@ -28,7 +28,7 @@ function main() {
   const clientCompiler = compile(clientConfig);
   const serverCompiler = compile(serverConfig);
 
-  watching = serverCompiler.watch(
+  serverCompiler.watch(
     {
       stats: "errors-only"
     },
