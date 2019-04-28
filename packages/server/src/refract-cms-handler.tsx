@@ -13,9 +13,8 @@ import jimp from 'jimp';
 import { authService } from './auth/auth.service';
 import uniqueString from 'unique-string';
 import fs from 'fs';
-import { SchemaBuilder } from './graphql/schema-builder';
+// import { SchemaBuilder } from './graphql/schema-builder';
 import mongoose from 'mongoose';
-import { schemaComposer } from 'graphql-compose';
 import { PublicSchemaBuilder } from './graphql/public-schema.builder';
 import expressPlayground from 'graphql-playground-middleware-express';
 import bodyParser from 'body-parser';
@@ -47,33 +46,20 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
   });
 
   mongoose.connect(serverConfig.mongoConnectionString);
-  const schemaBuilder = new SchemaBuilder();
-  schemaBuilder.buildSchema(config.schema, serverConfig);
-  const schema = schemaComposer.buildSchema();
-
-  router.use(
-    '/graphql',
-    requireAuth(serverConfig),
-    graphqlHTTP((req, res) => ({
-      schema,
-      graphiql: true,
-      context: {
-        userId: req.headers.authorization
-          ? authService.verifyAccessToken(req.headers.authorization!, serverConfig).nameid
-          : null
-      }
-    }))
-  );
 
   const publicSchemaBuilder = new PublicSchemaBuilder(serverConfig);
   const publicSchema = publicSchemaBuilder.buildSchema(config.schema);
 
   router.use(
-    '/public/graphql',
+    '/graphql',
     graphqlHTTP((req, res) => ({
       schema: publicSchema,
       graphiql: true,
-      context: {},
+      context: {
+        userId: req.headers.authorization
+          ? authService.verifyAccessToken(req.headers.authorization!, serverConfig).nameid
+          : null
+      },
       plugins: [
         {
           requestDidStart: () => ({

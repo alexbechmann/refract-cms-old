@@ -4,7 +4,6 @@ const webpack = require("webpack");
 const StartServerPlugin = require("start-server-webpack-plugin");
 const WebpackBar = require("webpackbar");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-const babelEnvDeps = require("webpack-babel-env-deps");
 
 function createClientConfig() {
   return {
@@ -20,7 +19,6 @@ function createClientConfig() {
         {
           test: /\.(js|jsx|ts|tsx)$/,
           loader: "ts-loader",
-          exclude: [babelEnvDeps.exclude()],
           include: [path.resolve(__dirname, "../src")],
           options: {
             transpileOnly: true,
@@ -115,7 +113,6 @@ function createServerConfig() {
         {
           test: /\.(js|jsx|ts|tsx)$/,
           loader: "ts-loader",
-          exclude: [babelEnvDeps.exclude()],
           include: [path.resolve(__dirname, "../src")],
           options: {
             transpileOnly: true,
