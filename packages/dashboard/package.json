@@ -1,6 +1,6 @@
 {
   "name": "@refract-cms/dashboard",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "",
   "main": "dist/index.js",
   "typings": "./dist/dashboard/src/index.d.ts",
