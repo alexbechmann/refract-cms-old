@@ -5,13 +5,9 @@ const StartServerPlugin = require("start-server-webpack-plugin");
 const WebpackBar = require("webpackbar");
 
 function createClientConfig() {
-  console.log("Using client config", path.join(process.cwd(), "src"));
   return {
     devtool: "inline-source-map",
     entry: [
-      // "react-hot-loader/patch",
-      // "webpack-dev-server/client?http://localhost:3001",
-      // "webpack/hot/only-dev-server",
       require.resolve("razzle-dev-utils/webpackHotDevClient"),
       path.resolve(__dirname, "../src/client/index.tsx")
     ],
@@ -27,13 +23,6 @@ function createClientConfig() {
             path.resolve(__dirname, "../src"),
             path.resolve(process.cwd(), "src")
           ],
-          // include: [
-          //   path.resolve(__dirname, 'workplace-app'),
-          //   path.resolve(__dirname, 'api'),
-          //   path.resolve(__dirname, 'workplace-core'),
-          //   path.resolve(__dirname, 'workplace-headless'),
-          //   path.resolve(__dirname, 'news')
-          // ],
           options: {
             transpileOnly: true,
             configFile: path.resolve(__dirname, "tsconfig.json")
@@ -43,6 +32,10 @@ function createClientConfig() {
           test: /\.(woff|woff2|eot|ttf|svg)$/,
           loader: "file-loader?name=fonts/[name].[ext]"
         }
+        // {
+        //   test: /\.css$/,
+        //   use: ["style-loader", "css-loader"]
+        // }
       ]
     },
     plugins: [

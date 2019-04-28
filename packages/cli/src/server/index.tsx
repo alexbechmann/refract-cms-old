@@ -22,7 +22,7 @@ serverConfigBuilder().then(serverConfig => {
         <meta charSet='utf-8' />
         <title>Razzle TypeScript</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
     </head>
     <body>
         <div id="root"></div>
