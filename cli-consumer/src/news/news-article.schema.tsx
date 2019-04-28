@@ -15,7 +15,6 @@ import {
 import DescriptionIcon from '@material-ui/icons/Description';
 import { Button, Checkbox } from '@material-ui/core';
 import moment from 'moment';
-import { SettingsSchema } from '../settings/settings.model';
 import { ProductSchema, ProductModel } from '../products/product.schema';
 import { ImageModel } from '@refract-cms/server';
 

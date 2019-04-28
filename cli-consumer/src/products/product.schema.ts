@@ -17,7 +17,6 @@ export interface ProductEntity extends Entity {
   location: Location;
   title: string;
   category: string;
-
   types: string[];
 }
 

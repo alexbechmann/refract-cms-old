@@ -5,27 +5,12 @@
     "lib": ["dom", "es6", "dom.iterable", "scripthost"],
     "module": "commonjs",
     "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "sourceMap": true,
     "declaration": true,
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "allowJs": false,
-    "checkJs": false,
-    "skipLibCheck": true,
-    "skipDefaultLibCheck": true
+    "strict": true
   },
-  "exclude": [
-    "node_modules",
-    "build",
-    "scripts",
-    "acceptance-tests",
-    "webpack",
-    "jest",
-    "razzle.config.js"
-  ],
-  "files": ["../src"],
-  "types": ["typePatches", "node", "webpack-env"]
+  "include": ["./src"]
 }
