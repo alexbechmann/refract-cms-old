@@ -3,6 +3,8 @@ const nodeExternals = require("webpack-node-externals");
 const webpack = require("webpack");
 const StartServerPlugin = require("start-server-webpack-plugin");
 const WebpackBar = require("webpackbar");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const babelEnvDeps = require("webpack-babel-env-deps");
 
 function createClientConfig() {
   return {
@@ -18,14 +20,20 @@ function createClientConfig() {
         {
           test: /\.(js|jsx|ts|tsx)$/,
           loader: "ts-loader",
-          //exclude: /node_modules/,
-          include: [
-            path.resolve(__dirname, "../src"),
-            path.resolve(process.cwd(), "src")
-          ],
+          exclude: [babelEnvDeps.exclude()],
+          include: [path.resolve(__dirname, "../src")],
           options: {
             transpileOnly: true,
             configFile: path.resolve(__dirname, "tsconfig.json")
+          }
+        },
+        {
+          test: /\.(js|jsx|ts|tsx)$/,
+          loader: "ts-loader",
+          include: [path.resolve(process.cwd(), "src")],
+          options: {
+            transpileOnly: true,
+            configFile: path.resolve(process.cwd(), "tsconfig.json")
           }
         },
         {
@@ -45,18 +53,18 @@ function createClientConfig() {
       new WebpackBar({
         name: "client",
         color: "#3949ab"
-      })
+      }),
       // new webpack.DefinePlugin({
       //   "process.env": { BUILD_TARGET: JSON.stringify("client") },
       // }),
-      // new ForkTsCheckerWebpackPlugin({
-      //   tsconfig: path.resolve(__dirname, "tsconfig.json"),
-      //   memoryLimit: 2048,
-      //   tslint: path.resolve(__dirname, "tslint.json"),
-      //   reportFiles: ["./consumer/src/**", "./packages/**/src/**"],
-      //   ignoreLints: ["**/*.test.*"],
-      //   async: true
-      // })
+      new ForkTsCheckerWebpackPlugin({
+        tsconfig: path.resolve(process.cwd(), "tsconfig.json"),
+        memoryLimit: 2048,
+        // tslint: path.resolve(__dirname, "tslint.json"),
+        //reportFiles: [`${path.resolve(process.cwd())}/**/**.{ts,tsx}`],
+        ignoreLints: ["**/*.test.*"],
+        async: true
+      })
       // new SimpleProgressWebpackPlugin( { // Default options
       //   format: 'compact'
       // })
@@ -107,14 +115,20 @@ function createServerConfig() {
         {
           test: /\.(js|jsx|ts|tsx)$/,
           loader: "ts-loader",
-          //exclude: /node_modules/,
-          include: [
-            path.resolve(__dirname, "../src"),
-            path.resolve(process.cwd(), "src")
-          ],
+          exclude: [babelEnvDeps.exclude()],
+          include: [path.resolve(__dirname, "../src")],
           options: {
             transpileOnly: true,
             configFile: path.resolve(__dirname, "tsconfig.server.json")
+          }
+        },
+        {
+          test: /\.(js|jsx|ts|tsx)$/,
+          loader: "ts-loader",
+          include: [path.resolve(process.cwd(), "src")],
+          options: {
+            transpileOnly: true,
+            configFile: path.resolve(process.cwd(), "tsconfig.json")
           }
         },
         {
@@ -145,20 +159,20 @@ function createServerConfig() {
       new WebpackBar({
         name: "server",
         color: "#3949ab"
-      }),
-      function() {
-        this.plugin("done", function(stats) {
-          if (
-            stats.compilation.errors &&
-            stats.compilation.errors.length &&
-            process.argv.indexOf("--watch") == -1
-          ) {
-            console.log(stats.compilation.errors);
-            throw new Error("webpack build failed.");
-          }
-          // ...
-        });
-      }
+      })
+      // function() {
+      //   this.plugin("done", function(stats) {
+      //     if (
+      //       stats.compilation.errors &&
+      //       stats.compilation.errors.length &&
+      //       process.argv.indexOf("--watch") == -1
+      //     ) {
+      //       console.log(stats.compilation.errors);
+      //       throw new Error("webpack build failed.");
+      //     }
+      //     // ...
+      //   });
+      // }
       // new ForkTsCheckerWebpackPlugin({
       //   tsconfig: path.resolve(__dirname, "tsconfig.json"),
       //   memoryLimit: 2048,

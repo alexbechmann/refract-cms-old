@@ -8,7 +8,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "declaration": true,
+    "declaration": false,
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -26,6 +26,6 @@
     "jest",
     "razzle.config.js"
   ],
-  "files": ["../src"],
+  "include": ["../src"],
   "types": ["typePatches", "node", "webpack-env"]
 }
