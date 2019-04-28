@@ -2,15 +2,17 @@ const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 const webpack = require("webpack");
 const StartServerPlugin = require("start-server-webpack-plugin");
+const WebpackBar = require("webpackbar");
 
 function createClientConfig() {
   console.log("Using client config", path.join(process.cwd(), "src"));
   return {
     devtool: "inline-source-map",
     entry: [
-      "react-hot-loader/patch",
-      "webpack-dev-server/client?http://localhost:3001",
-      "webpack/hot/only-dev-server",
+      // "react-hot-loader/patch",
+      // "webpack-dev-server/client?http://localhost:3001",
+      // "webpack/hot/only-dev-server",
+      require.resolve("razzle-dev-utils/webpackHotDevClient"),
       path.resolve(__dirname, "../src/client/index.tsx")
     ],
     mode: "development",
@@ -21,7 +23,10 @@ function createClientConfig() {
           test: /\.(js|jsx|ts|tsx)$/,
           loader: "ts-loader",
           //exclude: /node_modules/,
-          include: [path.resolve(__dirname, "../src")],
+          include: [
+            path.resolve(__dirname, "../src"),
+            path.resolve(process.cwd(), "src")
+          ],
           // include: [
           //   path.resolve(__dirname, 'workplace-app'),
           //   path.resolve(__dirname, 'api'),
@@ -43,7 +48,11 @@ function createClientConfig() {
     plugins: [
       // new webpack.NamedModulesPlugin(),
       new webpack.HotModuleReplacementPlugin(),
-      new webpack.NoEmitOnErrorsPlugin()
+      new webpack.NoEmitOnErrorsPlugin(),
+      new WebpackBar({
+        name: "client",
+        color: "#3949ab"
+      })
       // new webpack.DefinePlugin({
       //   "process.env": { BUILD_TARGET: JSON.stringify("client") },
       // }),
@@ -71,7 +80,8 @@ function createClientConfig() {
       historyApiFallback: true,
       hot: true,
       headers: { "Access-Control-Allow-Origin": "*" },
-      disableHostCheck: true
+      disableHostCheck: true,
+      stats: "errors-only"
     },
     output: {
       path: path.join(__dirname, ".build"),
@@ -105,7 +115,10 @@ function createServerConfig() {
           test: /\.(js|jsx|ts|tsx)$/,
           loader: "ts-loader",
           //exclude: /node_modules/,
-          include: [path.resolve(__dirname, "../src")],
+          include: [
+            path.resolve(__dirname, "../src"),
+            path.resolve(process.cwd(), "src")
+          ],
           options: {
             transpileOnly: true,
             configFile: path.resolve(__dirname, "tsconfig.server.json")
@@ -130,6 +143,10 @@ function createServerConfig() {
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.DefinePlugin({
         "process.env": { BUILD_TARGET: JSON.stringify("server") }
+      }),
+      new WebpackBar({
+        name: "server",
+        color: "#3949ab"
       })
       // new ForkTsCheckerWebpackPlugin({
       //   tsconfig: path.resolve(__dirname, "tsconfig.json"),

@@ -1,0 +1,14 @@
+{
+  "name": "cli-consumer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ../packages/cli/bin/refract-cms.js start"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb-memory-server": "^5.1.0"
+  }
+}

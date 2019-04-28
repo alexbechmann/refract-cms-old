@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Dashboard } from '@refract-cms/dashboard';
-import config from '@consumer/config';
+import config from '@consumer/config/refract.config';
 // import 'typeface-roboto';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core';
 import { teal, blue } from '@material-ui/core/colors';
