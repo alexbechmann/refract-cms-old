@@ -147,7 +147,7 @@ export class PublicSchemaBuilder {
           if (!userId) {
             return null;
           }
-          console.log(record, context);
+          return new repository(record).save;
         }
       }
     };

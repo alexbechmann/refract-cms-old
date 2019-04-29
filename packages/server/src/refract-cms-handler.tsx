@@ -13,7 +13,7 @@ import jimp from 'jimp';
 import { authService } from './auth/auth.service';
 import uniqueString from 'unique-string';
 import fs from 'fs';
-// import { SchemaBuilder } from './graphql/schema-builder';
+import { SchemaBuilder } from './graphql/schema-builder';
 import mongoose from 'mongoose';
 import { PublicSchemaBuilder } from './graphql/public-schema.builder';
 import expressPlayground from 'graphql-playground-middleware-express';
@@ -45,15 +45,20 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
     }
   });
 
-  mongoose.connect(serverConfig.mongoConnectionString);
+  mongoose.connect(
+    serverConfig.mongoConnectionString,
+    { useNewUrlParser: true }
+  );
+  const schemaBuilder = new SchemaBuilder();
+  schemaBuilder.buildSchema(config.schema, serverConfig);
 
   const publicSchemaBuilder = new PublicSchemaBuilder(serverConfig);
-  const publicSchema = publicSchemaBuilder.buildSchema(config.schema);
+  const schema = publicSchemaBuilder.buildSchema(config.schema);
 
   router.use(
     '/graphql',
     graphqlHTTP((req, res) => ({
-      schema: publicSchema,
+      schema,
       graphiql: true,
       context: {
         userId: req.headers.authorization
