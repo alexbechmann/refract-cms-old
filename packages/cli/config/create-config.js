@@ -4,10 +4,12 @@ const webpack = require("webpack");
 const StartServerPlugin = require("start-server-webpack-plugin");
 const WebpackBar = require("webpackbar");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-const babelEnvDeps = require("webpack-babel-env-deps");
+const fs = require("fs");
+
+const appDirectory = fs.realpathSync(process.cwd());
 
 function createClientConfig() {
-  return {
+  let webpackConfig = {
     devtool: "inline-source-map",
     entry: [
       require.resolve("razzle-dev-utils/webpackHotDevClient"),
@@ -20,7 +22,6 @@ function createClientConfig() {
         {
           test: /\.(js|jsx|ts|tsx)$/,
           loader: "ts-loader",
-          exclude: [babelEnvDeps.exclude()],
           include: [path.resolve(__dirname, "../src")],
           options: {
             transpileOnly: true,
@@ -82,7 +83,8 @@ function createClientConfig() {
       hot: true,
       headers: { "Access-Control-Allow-Origin": "*" },
       disableHostCheck: true,
-      stats: "errors-only"
+      stats: "errors-only",
+      clientLogLevel: "error"
     },
     output: {
       path: path.join(__dirname, ".build"),
@@ -90,10 +92,17 @@ function createClientConfig() {
       filename: "client.js"
     }
   };
+
+  if (fs.existsSync(path.resolve(appDirectory, "build-config.js"))) {
+    const buildConfig = require(path.resolve(appDirectory, "build-config.js"));
+
+    webpackConfig = buildConfig({ webpackConfig, target: "client" });
+  }
+  return webpackConfig;
 }
 
 function createServerConfig() {
-  return {
+  let webpackConfig = {
     entry: [
       // "@babel/polyfill",
       "webpack/hot/poll?1000",
@@ -115,7 +124,6 @@ function createServerConfig() {
         {
           test: /\.(js|jsx|ts|tsx)$/,
           loader: "ts-loader",
-          exclude: [babelEnvDeps.exclude()],
           include: [path.resolve(__dirname, "../src")],
           options: {
             transpileOnly: true,
@@ -190,6 +198,13 @@ function createServerConfig() {
     },
     output: { path: path.join(process.cwd(), ".cache"), filename: "server.js" }
   };
+
+  if (fs.existsSync(path.resolve(appDirectory, "build-config.js"))) {
+    const buildConfig = require(path.resolve(appDirectory, "build-config.js"));
+
+    webpackConfig = buildConfig({ webpackConfig, target: "server" });
+  }
+  return webpackConfig;
 }
 
 module.exports = {

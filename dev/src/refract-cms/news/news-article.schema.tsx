@@ -53,8 +53,9 @@ export const NewsArticleSchema = defineEntity<NewsArticleEntity, NewsArticleMode
     mongoCollectionName: 'news-articles',
     instanceDisplayProps: newsArticle => ({
       primaryText: newsArticle.title,
-      secondaryText: moment(newsArticle.articleDate).format('ll')
-      // imageUrl: newsArticle.image ? newsArticle.image.crops.profile : undefined
+      secondaryText: moment(newsArticle.articleDate).format('ll'),
+      imageUrl:
+        newsArticle.imageModel && newsArticle.imageModel.crops ? newsArticle.imageModel.crops.profile : undefined
     }),
     icon: DescriptionIcon,
     defaultSort: {
@@ -64,7 +65,7 @@ export const NewsArticleSchema = defineEntity<NewsArticleEntity, NewsArticleMode
   },
   properties: {
     title: {
-      displayName: 'Headline',
+      displayName: 'Title',
       editorComponent: createTextEditor({
         maxLength: 100
       }),

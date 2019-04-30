@@ -10,5 +10,9 @@ $dir = Split-Path $scriptpath
 $packageJsonLocation = ($dir + '\package.json')
 
 $packageJson = Get-Content $packageJsonLocation -raw | ConvertFrom-Json
-$packageJson.version="$version"
-$packageJson | ConvertTo-Json  | set-content $packageJsonLocation
+$packageJson.version = "$version"
+$packageJson.dependencies | Add-Member -NotePropertyName '@refract-cms/core' -NotePropertyValue "$version"
+$packageJson.dependencies | Add-Member -NotePropertyName '@refract-cms/dashboard' -NotePropertyValue "$version"
+$packageJson.dependencies | Add-Member -NotePropertyName '@refract-cms/server' -NotePropertyValue "$version"
+
+$packageJson | ConvertTo-Json | set-content $packageJsonLocation

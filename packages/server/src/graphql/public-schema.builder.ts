@@ -6,7 +6,11 @@ import {
   GraphQLObjectType,
   GraphQLList,
   GraphQLType,
-  GraphQLSchema
+  GraphQLSchema,
+  GraphQLInputObjectType,
+  GraphQLInputType,
+  GraphQLInt,
+  GraphQLScalarType
 } from 'graphql';
 import { ShapeArgs, PropertyDescription } from '@refract-cms/core';
 import { merge } from 'lodash';
@@ -14,13 +18,15 @@ import mongoose from 'mongoose';
 import { ServerConfig } from '../server-config.model';
 import { Properties, buildHelpers } from '../create-public-schema';
 import { repositoryForSchema } from '../repository-for-schema';
-import { getGraphQLQueryArgs, getMongoDbQueryResolver } from 'graphql-to-mongodb';
-import { Db } from 'mongodb';
-import { GraphQLDate } from 'graphql-iso-date';
+import { getGraphQLQueryArgs, getMongoDbQueryResolver, getMongoDbFilter } from 'graphql-to-mongodb';
+import { Db, ObjectId } from 'mongodb';
+import { GraphQLDate, GraphQLDateTime } from 'graphql-iso-date';
 import chalk from 'chalk';
+import { MongoIdType } from './mongo-id.type';
 
 export class PublicSchemaBuilder {
   types: GraphQLObjectType[] = [];
+  inputTypes: GraphQLInputObjectType[] = [];
 
   constructor(private serverConfig: ServerConfig) {}
 
@@ -28,11 +34,12 @@ export class PublicSchemaBuilder {
     entitySchema: EntitySchema,
     prefixName: string = '',
     addResolvers: boolean,
-    suffixName: string = ''
+    suffixName: string = '',
+    useExtensions: boolean = true
   ) {
-    const extension = this.serverConfig.publicGraphQL.find(
-      extension => extension.schema.options.alias === entitySchema.options.alias
-    );
+    const extension = useExtensions
+      ? this.serverConfig.publicGraphQL.find(extension => extension.schema.options.alias === entitySchema.options.alias)
+      : null;
 
     const extensionProperties = extension
       ? extension.buildProperties(buildHelpers({ serverConfig: this.serverConfig, schema: entitySchema }))
@@ -67,7 +74,23 @@ export class PublicSchemaBuilder {
       fields: queryFields
     });
 
-    return new GraphQLSchema({ query });
+    let mutationFields = {};
+    schema.forEach(entitySchema => {
+      const type = this.buildEntityFromSchema(entitySchema, '', true);
+      const repository = repositoryForSchema(entitySchema);
+
+      mutationFields = {
+        ...mutationFields,
+        ...this.buildFieldMutations(entitySchema, repository, type)
+      };
+    });
+
+    const mutation = new GraphQLObjectType({
+      name: 'Mutation',
+      fields: mutationFields
+    });
+
+    return new GraphQLSchema({ query, mutation });
   }
 
   buildFieldQueries<TEntity extends Entity & mongoose.Document>(
@@ -75,10 +98,59 @@ export class PublicSchemaBuilder {
     repository: mongoose.Model<TEntity>,
     type: GraphQLObjectType
   ) {
-    // const typeWithoutResolvers = this.buildEntityFromSchema(entitySchema, '', false, 'Args');
+    // const argsType = this.buildEntityFromSchema(entitySchema, '', false, 'Args', false);
+    const entityType = this.buildEntityFromSchema(entitySchema, '', false, 'Entity', false);
+    const args = getGraphQLQueryArgs(entityType);
+    const resolvers = {
+      [`${entitySchema.options.alias}Count`]: {
+        type: GraphQLInt,
+        args: {
+          filter: args.filter
+        },
+        resolve: (_, { filter }) => repository.count(getMongoDbFilter(entityType, filter))
+      },
+      [`${entitySchema.options.alias}EntityFindById`]: {
+        type: entityType,
+        args: {
+          id: { type: GraphQLString }
+        },
+        resolve: (_, { id }) => {
+          return repository.findById(id);
+        }
+      },
+      [`${entitySchema.options.alias}List`]: {
+        type: new GraphQLList(type),
+        args,
+        resolve: getMongoDbQueryResolver(
+          entityType,
+          async (filter, projection, options, obj, args, { db }: { db: Db }) => {
+            return repository
+              .find(filter)
+              .sort(options.sort)
+              .limit(options.limit)
+              .skip(options.skip);
+          }
+        )
+      },
+      [`${entitySchema.options.alias}EntityList`]: {
+        type: new GraphQLList(entityType),
+        args,
+        resolve: getMongoDbQueryResolver(
+          entityType,
+          async (filter, projection, options, obj, args, { db }: { db: Db }) => {
+            return repository
+              .find(filter)
+              .sort(options.sort)
+              .limit(options.limit)
+              .skip(options.skip);
+          }
+        )
+      }
+    };
 
     if (entitySchema.options.maxOne) {
       return {
+        ...resolvers,
         [`${entitySchema.options.alias}`]: {
           type,
           args: {},
@@ -89,28 +161,65 @@ export class PublicSchemaBuilder {
       };
     } else {
       return {
-        [`${entitySchema.options.alias}GetById`]: {
+        ...resolvers,
+        [`${entitySchema.options.alias}FindById`]: {
           type,
           args: {
             id: { type: GraphQLString }
           },
           resolve: (_, { id }) => {
-            return repository.findById({ _id: id });
+            return repository.findById(id);
           }
-        },
-        [`${entitySchema.options.alias}GetAll`]: {
-          type: new GraphQLList(type),
-          args: getGraphQLQueryArgs(type),
-          resolve: getMongoDbQueryResolver(type, async (filter, projection, options, obj, args, { db }: { db: Db }) => {
-            return repository
-              .find(filter)
-              .sort(options.sort)
-              .limit(options.limit)
-              .skip(options.skip);
-          })
         }
       };
     }
+  }
+
+  buildFieldMutations<TEntity extends Entity & mongoose.Document>(
+    entitySchema: EntitySchema<TEntity>,
+    repository: mongoose.Model<TEntity>,
+    type: GraphQLObjectType
+  ) {
+    const inputType = this.buildInput(`${entitySchema.options.alias}Input`, entitySchema.properties);
+    return {
+      [`${entitySchema.options.alias}Create`]: {
+        type,
+        args: {
+          record: { type: inputType }
+        },
+        resolve: (_, { record }, { userId }) => {
+          if (!userId) {
+            return null;
+          }
+          return repository.create(record);
+        }
+      },
+      [`${entitySchema.options.alias}Update`]: {
+        type,
+        args: {
+          record: { type: inputType }
+        },
+        resolve: (_, { record }, { userId }) => {
+          if (!userId || !record._id) {
+            return null;
+          }
+          return repository.findByIdAndUpdate(record._id, record);
+        }
+      },
+      [`${entitySchema.options.alias}RemoveById`]: {
+        type: GraphQLBoolean,
+        args: {
+          id: { type: GraphQLString }
+        },
+        resolve: async (_, { id }, { userId }) => {
+          if (!userId) {
+            return null;
+          }
+          await repository.findByIdAndDelete(id);
+          return true;
+        }
+      }
+    };
   }
 
   buildType<T>(propertyName: string, propertyType: PropertyType<T>): GraphQLType {
@@ -119,7 +228,7 @@ export class PublicSchemaBuilder {
         return GraphQLString;
       }
       case 'Date': {
-        return GraphQLDate;
+        return GraphQLDateTime;
       }
       case 'Number': {
         return GraphQLFloat;
@@ -152,6 +261,90 @@ export class PublicSchemaBuilder {
         return GraphQLString;
       }
     }
+  }
+
+  buildInputType<T>(propertyName: string, propertyType: PropertyType<T>): GraphQLInputType {
+    switch (propertyType.alias) {
+      case 'String': {
+        return GraphQLString;
+      }
+      case 'Date': {
+        return GraphQLDateTime;
+      }
+      case 'Number': {
+        return GraphQLFloat;
+      }
+      case 'Boolean': {
+        return GraphQLBoolean;
+      }
+      case 'Shape': {
+        return this.buildShapeInput(propertyName, propertyType as PropertyDescription<T, 'Shape', ShapeArgs<T>>);
+      }
+      case 'Array': {
+        const type = this.buildInputType(propertyName, propertyType.meta);
+        return new GraphQLList(type);
+      }
+      // @ts-ignore
+      case 'SchemaType': {
+        // @ts-ignore
+        return this.buildEntityFromSchema(propertyType.meta, '');
+      }
+      // case 'Ref': {
+      //   const shapeArgs = Object.keys(propertyType.meta.properties).reduce((acc, propertKey) => {
+      //     acc[propertKey] = propertyType.meta.properties[propertKey].type;
+      //     return acc;
+      //   }, {}) as any;
+
+      //   const shape = RefractTypes.shape(shapeArgs);
+      //   return this.buildShape(propertyName, shape);
+      // }
+      default: {
+        return GraphQLString;
+      }
+    }
+  }
+
+  buildInput<T extends Entity>(
+    alias: string,
+    properties: {
+      [key: string]: PropertyOptions;
+    }
+  ) {
+    const shapeArgs = Object.keys(properties).reduce((acc, propertKey) => {
+      acc[propertKey] = properties[propertKey].type;
+      return acc;
+    }, {}) as any;
+
+    const shape = RefractTypes.shape(shapeArgs);
+
+    const existingType = this.types.find(t => t.name === alias);
+
+    if (existingType) {
+      return existingType;
+    }
+
+    const inputTypes = new GraphQLInputObjectType({
+      name: alias,
+      fields: () =>
+        Object.keys(shape.meta!).reduce(
+          (acc, propertyKey) => {
+            const propertyType: PropertyDescription<any, any, any> = shape.meta![propertyKey];
+            const type = this.buildInputType(`${alias}${propertyKey}`, propertyType);
+            acc[propertyKey] = {
+              type
+            };
+            return acc;
+          },
+          {
+            _id: {
+              type: MongoIdType
+            }
+          }
+        )
+    });
+
+    this.inputTypes.push(inputTypes);
+    return inputTypes;
   }
 
   buildEntity<T extends Entity>(
@@ -206,10 +399,7 @@ export class PublicSchemaBuilder {
           },
           {
             _id: {
-              type: GraphQLString,
-              resolve: addResolvers ? entity => `${entity._id}` : undefined,
-              // @ts-ignore
-              dependencies: []
+              type: MongoIdType
             }
           }
         )
@@ -225,6 +415,19 @@ export class PublicSchemaBuilder {
       name: propertyName,
       fields: Object.keys(propertyType.meta!).reduce((acc, propertyKey) => {
         const type = this.buildType(`${propertyName}${propertyKey}`, propertyType.meta![propertyKey]);
+        acc[propertyKey] = {
+          type
+        };
+        return acc;
+      }, {})
+    });
+  }
+
+  buildShapeInput<T>(propertyName: string, propertyType: PropertyDescription<T, 'Shape', ShapeArgs<T>>) {
+    return new GraphQLInputObjectType({
+      name: propertyName,
+      fields: Object.keys(propertyType.meta!).reduce((acc, propertyKey) => {
+        const type = this.buildInputType(`${propertyName}${propertyKey}`, propertyType.meta![propertyKey]);
         acc[propertyKey] = {
           type
         };

@@ -1,5 +1,5 @@
-import { createPublicSchema, buildHelpers } from './create-public-schema';
-import { Config } from '@refract-cms/core';
+import { createPublicSchema, buildHelpers, Helpers, Properties } from './create-public-schema';
+import { Config, EntitySchema } from '@refract-cms/core';
 
 export interface ServerConfig {
   config: Config;
@@ -16,5 +16,5 @@ export interface ServerConfig {
       secret: string;
     };
   };
-  publicGraphQL: ReturnType<typeof createPublicSchema>[];
+  publicGraphQL: { schema: EntitySchema<any, any>; buildProperties: (helpers: Helpers<any>) => Properties<any, any> }[];
 }

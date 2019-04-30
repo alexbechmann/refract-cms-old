@@ -19,5 +19,5 @@ interface GraphqlProps extends RouteComponentProps {
 interface Props extends GraphqlProps, WithStyles<typeof styles> {}
 
 export default withStyles(styles)(({ serverUrl, classes }: Props) => (
-  <iframe className={classes.iframe} src={`${serverUrl}/public/graphql-playground`} />
+  <iframe className={classes.iframe} src={`${serverUrl}/graphql-playground`} />
 ));

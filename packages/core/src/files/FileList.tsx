@@ -18,7 +18,7 @@ class FileList extends Component<Props> {
     const { onSelectFile } = this.props;
     const query = gql`
       {
-        files: fileMany {
+        files: fileList {
           _id
           fileRef {
             fileName

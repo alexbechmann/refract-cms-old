@@ -1,11 +1,7 @@
 import { PropertyType, EntitySchema, RefractTypes, PropertyOptions, Entity } from '@refract-cms/core';
 import { ShapeArgs, PropertyDescription } from '@refract-cms/core/src/properties/property-types';
 import mongoose, { SchemaTypeOpts, Schema, SchemaType, mongo } from 'mongoose';
-import { composeWithMongoose } from 'graphql-compose-mongoose/node8';
-import { schemaComposer, Resolver } from 'graphql-compose';
-import { authService } from '../auth/auth.service';
 import { ServerConfig } from '../server-config.model';
-import { GraphQLString } from 'graphql';
 
 export class SchemaBuilder {
   constructor() {}
@@ -21,39 +17,13 @@ export class SchemaBuilder {
     const definition = Object.keys(entitySchema.properties).reduce((acc, propertyKey) => {
       const typeDef = entitySchema.properties[propertyKey].type;
       acc[propertyKey] = {
-        type: this.buildType(propertyKey, typeDef),
-        index: true
+        type: this.buildType(propertyKey, typeDef)
       };
       return acc;
     }, {}) as any;
 
     const EntitySchema = new mongoose.Schema(definition, { collection: entitySchema.options.mongoCollectionName });
-    const Entity = mongoose.model(entitySchema.options.alias, EntitySchema);
-    const customizationOptions = {};
-    const EntityTypeComposer = composeWithMongoose(Entity, customizationOptions);
-
-    schemaComposer.Query.addFields({
-      [`${entitySchema.options.alias}ById`]: EntityTypeComposer.getResolver('findById'),
-      [`${entitySchema.options.alias}ByIds`]: EntityTypeComposer.getResolver('findByIds'),
-      [`${entitySchema.options.alias}One`]: EntityTypeComposer.getResolver('findOne'),
-      [`${entitySchema.options.alias}Many`]: EntityTypeComposer.getResolver('findMany'),
-      [`${entitySchema.options.alias}Count`]: EntityTypeComposer.getResolver('count'),
-      [`${entitySchema.options.alias}Pagination`]: EntityTypeComposer.getResolver('pagination'),
-      [`${entitySchema.options.alias}Connection`]: EntityTypeComposer.getResolver('connection')
-    });
-
-    schemaComposer.Mutation.addFields({
-      [`${entitySchema.options.alias}CreateOne`]: EntityTypeComposer.getResolver('createOne'),
-      [`${entitySchema.options.alias}CreateMany`]: EntityTypeComposer.getResolver('createMany'),
-      [`${entitySchema.options.alias}UpdateById`]: EntityTypeComposer.getResolver('updateById'),
-      [`${entitySchema.options.alias}UpdateOne`]: EntityTypeComposer.getResolver('updateOne'),
-      [`${entitySchema.options.alias}UpdateMany`]: EntityTypeComposer.getResolver('updateMany'),
-      [`${entitySchema.options.alias}RemoveById`]: EntityTypeComposer.getResolver('removeById'),
-      [`${entitySchema.options.alias}RemoveOne`]: EntityTypeComposer.getResolver('removeOne'),
-      [`${entitySchema.options.alias}RemoveMany`]: EntityTypeComposer.getResolver('removeMany')
-    });
-
-    // console.log(EntitySchema.indexes());
+    mongoose.model(entitySchema.options.alias, EntitySchema);
   }
 
   buildType<T>(propertyName: string, propertyType: PropertyType<T>): SchemaTypeOpts<any> | Schema | SchemaType {

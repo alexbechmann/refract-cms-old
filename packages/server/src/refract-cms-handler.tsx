@@ -15,7 +15,6 @@ import uniqueString from 'unique-string';
 import fs from 'fs';
 import { SchemaBuilder } from './graphql/schema-builder';
 import mongoose from 'mongoose';
-import { schemaComposer } from 'graphql-compose';
 import { PublicSchemaBuilder } from './graphql/public-schema.builder';
 import expressPlayground from 'graphql-playground-middleware-express';
 import bodyParser from 'body-parser';
@@ -46,14 +45,18 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
     }
   });
 
-  mongoose.connect(serverConfig.mongoConnectionString);
+  mongoose.connect(
+    serverConfig.mongoConnectionString,
+    { useNewUrlParser: true }
+  );
   const schemaBuilder = new SchemaBuilder();
   schemaBuilder.buildSchema(config.schema, serverConfig);
-  const schema = schemaComposer.buildSchema();
+
+  const publicSchemaBuilder = new PublicSchemaBuilder(serverConfig);
+  const schema = publicSchemaBuilder.buildSchema(config.schema);
 
   router.use(
     '/graphql',
-    requireAuth(serverConfig),
     graphqlHTTP((req, res) => ({
       schema,
       graphiql: true,
@@ -61,19 +64,7 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
         userId: req.headers.authorization
           ? authService.verifyAccessToken(req.headers.authorization!, serverConfig).nameid
           : null
-      }
-    }))
-  );
-
-  const publicSchemaBuilder = new PublicSchemaBuilder(serverConfig);
-  const publicSchema = publicSchemaBuilder.buildSchema(config.schema);
-
-  router.use(
-    '/public/graphql',
-    graphqlHTTP((req, res) => ({
-      schema: publicSchema,
-      graphiql: true,
-      context: {},
+      },
       plugins: [
         {
           requestDidStart: () => ({
@@ -88,7 +79,7 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
     }))
   );
 
-  router.get('/public/graphql-playground', expressPlayground({ endpoint: `${serverConfig.rootPath}/public/graphql` }));
+  router.get('/graphql-playground', expressPlayground({ endpoint: `${serverConfig.rootPath}/graphql` }));
 
   // const filesRepository = new MongoRepository<FileModel>('files', db!);
 

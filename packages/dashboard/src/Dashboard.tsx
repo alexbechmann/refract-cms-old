@@ -45,7 +45,7 @@ import { store } from './state/root.store';
 import { provide } from './state/provide';
 import EditEntity from './entities/EditEntity';
 import Auth from './auth/Auth';
-import { checkLocalStorageForAccessToken, logout } from './auth/state/auth.actions';
+import { logout } from './auth/state/auth.actions';
 import Notifications from './notifications/Notifications';
 import { FileService } from '@refract-cms/core';
 
@@ -156,8 +156,7 @@ class Dashboard extends React.Component<Props> {
   };
 
   componentDidMount() {
-    const { config, serverUrl, rootPath, configure, setBaseRoute, checkLocalStorageForAccessToken } = this.props;
-    checkLocalStorageForAccessToken();
+    const { config, serverUrl, rootPath, configure, setBaseRoute } = this.props;
     setBaseRoute(rootPath);
     configure(config, serverUrl);
   }
@@ -298,7 +297,6 @@ function mapStateToProps(state: AppState) {
 const mapDispatchToProps = {
   setBaseRoute,
   configure,
-  checkLocalStorageForAccessToken,
   logout
 };
 

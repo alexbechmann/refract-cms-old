@@ -34,7 +34,7 @@ type ImageRefKey<TEntity, K extends keyof TEntity, TCrops extends string> = TEnt
   ? K
   : never;
 
-interface Helpers<TEntity extends Entity> {
+export interface Helpers<TEntity extends Entity> {
   schema: EntitySchema<TEntity>;
   serverConfig: ServerConfig;
   resolveImageProperty: <TCrops extends string, K extends keyof TEntity>(

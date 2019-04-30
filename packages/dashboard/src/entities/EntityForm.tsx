@@ -105,6 +105,7 @@ class EntityForm extends Component<Props, State> {
 
   render() {
     const { schema, classes, context } = this.props;
+    console.log(this.state);
     return this.state.loading ? (
       <LinearProgress />
     ) : (
@@ -172,34 +173,43 @@ class EntityForm extends Component<Props, State> {
 
   save() {
     const { schema } = this.props;
-    this.props.saveEntity(this.state.updateValues).then(() => {
-      // this.props.client.resetStore();
-      this.back();
-      this.props.addNotification(`Successfully saved ${schema.options.displayName || schema.options.alias}.`);
+    this.setState({ loading: true }, () => {
+      this.props
+        .saveEntity(this.state.updateValues)
+        .then(() => {
+          this.back();
+          this.props.addNotification(`Successfully saved ${schema.options.displayName || schema.options.alias}.`);
+        })
+        .catch(() => {
+          this.setState({ loading: false });
+        });
     });
   }
 
   delete() {
     if (window.confirm('Are you sure you want to delete?')) {
       const { client, schema, filters } = this.props;
-      client
-        .mutate({
-          refetchQueries: [
-            {
-              query: graphqlQueryHelper.getAllQueryWithAllFields(schema, filters)
-            }
-          ],
-          mutation: gql(`
+      this.setState({ loading: true }, () => {
+        client
+          .mutate({
+            refetchQueries: [
+              {
+                query: graphqlQueryHelper.getAllQueryWithAllFields(schema, filters)
+              }
+            ],
+            mutation: gql(`
       mutation {
-        ${this.props.alias}RemoveById(_id: "${this.props.id!}") {
-          recordId
-        }
+        ${this.props.alias}RemoveById(id: "${this.props.id!}")
       }`)
-        })
-        .then(() => {
-          this.back();
-          this.props.addNotification(`Successfully deleted ${schema.options.displayName || schema.options.alias}.`);
-        });
+          })
+          .then(() => {
+            this.back();
+            this.props.addNotification(`Successfully deleted ${schema.options.displayName || schema.options.alias}.`);
+          })
+          .catch(() => {
+            this.setState({ loading: false });
+          });
+      });
     }
   }
 

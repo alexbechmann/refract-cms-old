@@ -6,7 +6,7 @@ import { AuthToken } from '@refract-cms/core';
 class AuthService {
   createAccessToken(userId: string, { auth }: ServerConfig) {
     const token: AuthToken = {
-      nameid: '',
+      nameid: 'admin',
       exp: Math.floor(Date.now() / 1000) + 60 * 60 * 120,
       iss: auth.jwt.issuer || 'refract-cms',
       aud: 'refract-cms'
