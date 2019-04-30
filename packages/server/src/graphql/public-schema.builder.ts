@@ -212,7 +212,6 @@ export class PublicSchemaBuilder {
           id: { type: GraphQLString }
         },
         resolve: async (_, { id }, { userId }) => {
-          console.log({ id, userId });
           if (!userId) {
             return null;
           }
