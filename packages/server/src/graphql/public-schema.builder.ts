@@ -8,7 +8,9 @@ import {
   GraphQLType,
   GraphQLSchema,
   GraphQLInputObjectType,
-  GraphQLInputType
+  GraphQLInputType,
+  GraphQLInt,
+  GraphQLScalarType
 } from 'graphql';
 import { ShapeArgs, PropertyDescription } from '@refract-cms/core';
 import { merge } from 'lodash';
@@ -16,10 +18,11 @@ import mongoose from 'mongoose';
 import { ServerConfig } from '../server-config.model';
 import { Properties, buildHelpers } from '../create-public-schema';
 import { repositoryForSchema } from '../repository-for-schema';
-import { getGraphQLQueryArgs, getMongoDbQueryResolver } from 'graphql-to-mongodb';
-import { Db } from 'mongodb';
-import { GraphQLDate } from 'graphql-iso-date';
+import { getGraphQLQueryArgs, getMongoDbQueryResolver, getMongoDbFilter } from 'graphql-to-mongodb';
+import { Db, ObjectId } from 'mongodb';
+import { GraphQLDate, GraphQLDateTime } from 'graphql-iso-date';
 import chalk from 'chalk';
+import { MongoIdType } from './mongo-id.type';
 
 export class PublicSchemaBuilder {
   types: GraphQLObjectType[] = [];
@@ -31,11 +34,12 @@ export class PublicSchemaBuilder {
     entitySchema: EntitySchema,
     prefixName: string = '',
     addResolvers: boolean,
-    suffixName: string = ''
+    suffixName: string = '',
+    useExtensions: boolean = true
   ) {
-    const extension = this.serverConfig.publicGraphQL.find(
-      extension => extension.schema.options.alias === entitySchema.options.alias
-    );
+    const extension = useExtensions
+      ? this.serverConfig.publicGraphQL.find(extension => extension.schema.options.alias === entitySchema.options.alias)
+      : null;
 
     const extensionProperties = extension
       ? extension.buildProperties(buildHelpers({ serverConfig: this.serverConfig, schema: entitySchema }))
@@ -94,10 +98,59 @@ export class PublicSchemaBuilder {
     repository: mongoose.Model<TEntity>,
     type: GraphQLObjectType
   ) {
-    // const typeWithoutResolvers = this.buildEntityFromSchema(entitySchema, '', false, 'Args');
+    // const argsType = this.buildEntityFromSchema(entitySchema, '', false, 'Args', false);
+    const entityType = this.buildEntityFromSchema(entitySchema, '', false, 'Entity', false);
+    const args = getGraphQLQueryArgs(entityType);
+    const resolvers = {
+      [`${entitySchema.options.alias}Count`]: {
+        type: GraphQLInt,
+        args: {
+          filter: args.filter
+        },
+        resolve: (_, { filter }) => repository.count(getMongoDbFilter(entityType, filter))
+      },
+      [`${entitySchema.options.alias}EntityFindById`]: {
+        type: entityType,
+        args: {
+          id: { type: GraphQLString }
+        },
+        resolve: (_, { id }) => {
+          return repository.findById(id);
+        }
+      },
+      [`${entitySchema.options.alias}List`]: {
+        type: new GraphQLList(type),
+        args,
+        resolve: getMongoDbQueryResolver(
+          entityType,
+          async (filter, projection, options, obj, args, { db }: { db: Db }) => {
+            return repository
+              .find(filter)
+              .sort(options.sort)
+              .limit(options.limit)
+              .skip(options.skip);
+          }
+        )
+      },
+      [`${entitySchema.options.alias}EntityList`]: {
+        type: new GraphQLList(entityType),
+        args,
+        resolve: getMongoDbQueryResolver(
+          entityType,
+          async (filter, projection, options, obj, args, { db }: { db: Db }) => {
+            return repository
+              .find(filter)
+              .sort(options.sort)
+              .limit(options.limit)
+              .skip(options.skip);
+          }
+        )
+      }
+    };
 
     if (entitySchema.options.maxOne) {
       return {
+        ...resolvers,
         [`${entitySchema.options.alias}`]: {
           type,
           args: {},
@@ -108,25 +161,15 @@ export class PublicSchemaBuilder {
       };
     } else {
       return {
-        [`${entitySchema.options.alias}GetById`]: {
+        ...resolvers,
+        [`${entitySchema.options.alias}FindById`]: {
           type,
           args: {
             id: { type: GraphQLString }
           },
           resolve: (_, { id }) => {
-            return repository.findById({ _id: id });
+            return repository.findById(id);
           }
-        },
-        [`${entitySchema.options.alias}GetAll`]: {
-          type: new GraphQLList(type),
-          args: getGraphQLQueryArgs(type),
-          resolve: getMongoDbQueryResolver(type, async (filter, projection, options, obj, args, { db }: { db: Db }) => {
-            return repository
-              .find(filter)
-              .sort(options.sort)
-              .limit(options.limit)
-              .skip(options.skip);
-          })
         }
       };
     }
@@ -137,17 +180,30 @@ export class PublicSchemaBuilder {
     repository: mongoose.Model<TEntity>,
     type: GraphQLObjectType
   ) {
+    const inputType = this.buildInput(`${entitySchema.options.alias}Input`, entitySchema.properties);
     return {
       [`${entitySchema.options.alias}Create`]: {
         type,
         args: {
-          record: { type: this.buildInput(`${entitySchema.options.alias}Input`, entitySchema.properties) }
+          record: { type: inputType }
         },
         resolve: (_, { record }, { userId }) => {
           if (!userId) {
             return null;
           }
-          return new repository(record).save;
+          return repository.create(record);
+        }
+      },
+      [`${entitySchema.options.alias}Update`]: {
+        type,
+        args: {
+          record: { type: inputType }
+        },
+        resolve: (_, { record }, { userId }) => {
+          if (!userId || !record._id) {
+            return null;
+          }
+          return repository.findByIdAndUpdate(record._id, record);
         }
       }
     };
@@ -159,7 +215,7 @@ export class PublicSchemaBuilder {
         return GraphQLString;
       }
       case 'Date': {
-        return GraphQLDate;
+        return GraphQLDateTime;
       }
       case 'Number': {
         return GraphQLFloat;
@@ -200,7 +256,7 @@ export class PublicSchemaBuilder {
         return GraphQLString;
       }
       case 'Date': {
-        return GraphQLDate;
+        return GraphQLDateTime;
       }
       case 'Number': {
         return GraphQLFloat;
@@ -268,7 +324,7 @@ export class PublicSchemaBuilder {
           },
           {
             _id: {
-              type: GraphQLString
+              type: MongoIdType
             }
           }
         )
@@ -330,10 +386,7 @@ export class PublicSchemaBuilder {
           },
           {
             _id: {
-              type: GraphQLString,
-              resolve: addResolvers ? entity => `${entity._id}` : undefined,
-              // @ts-ignore
-              dependencies: []
+              type: MongoIdType
             }
           }
         )

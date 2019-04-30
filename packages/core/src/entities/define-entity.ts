@@ -6,11 +6,11 @@ import { Entity } from './entity.model';
 
 export type PropertiesRecord<T> = Omit<{ [P in keyof T]: PropertyOptions<T[P]> }, '_id' | 'createDate' | 'updateDate'>;
 
-const defineEntity = <T extends Entity, TModel extends Entity = Entity>({
+const defineEntity = <T extends Entity, TModel extends Entity = T>({
   options,
   properties
 }: {
-  options: EntityOptions<T>;
+  options: EntityOptions<T, TModel>;
   properties: PropertiesRecord<T>;
 }) => {
   const entityMetadata: EntitySchema<T, TModel> = {

@@ -16,4 +16,4 @@ export const logout = () => {
   return setActiveUserToken(null);
 };
 
-export const checkLocalStorageForAccessToken = () => setActiveUserToken(authService.getAccessToken());
+// export const checkLocalStorageForAccessToken = () => setActiveUserToken(authService.getAccessToken());

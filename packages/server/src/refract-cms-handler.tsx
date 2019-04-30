@@ -79,7 +79,7 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
     }))
   );
 
-  router.get('/public/graphql-playground', expressPlayground({ endpoint: `${serverConfig.rootPath}/public/graphql` }));
+  router.get('/graphql-playground', expressPlayground({ endpoint: `${serverConfig.rootPath}/graphql` }));
 
   // const filesRepository = new MongoRepository<FileModel>('files', db!);
 

@@ -10,7 +10,11 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "strict": false
+    "strict": false,
+    "baseUrl": "./",
+    "paths": {
+      "@refract-cms/*": ["../packages/*/src"]
+    }
   },
   "include": ["./src"]
 }

@@ -25,11 +25,11 @@ class GraphqlQueryHelper {
 
     const queryArgs =
       filters && filters.orderByField && filters.orderByDirection
-        ? `(sort: ${filters.orderByField.toUpperCase()}_${filters.orderByDirection})`
+        ? `(sort: {${filters.orderByField}: ${filters.orderByDirection}})`
         : ``;
     return gql(`
       {
-        items: ${schema.options.alias}Many${queryArgs} {
+        items: ${schema.options.alias}EntityList${queryArgs} {
           _id
           ${this.buildProperties(propertyTypes)}
         }
@@ -60,7 +60,7 @@ class GraphqlQueryHelper {
     }, {});
     return gql(`
       {
-        item: ${schema.options.alias}ById(_id: "${id}") {
+        item: ${schema.options.alias}EntityFindById(id: "${id}") {
           _id
           ${this.buildProperties(propertyTypes)}
         }

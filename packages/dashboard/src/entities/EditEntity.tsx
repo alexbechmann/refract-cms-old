@@ -15,18 +15,18 @@ export interface Props extends EditEntityProps, WithApolloClient<any>, ReturnTyp
 const EditEntity = ({ alias, id, client, schema, filters }: Props) => {
   const createMutation = gql(
     `
-  mutation save($record: CreateOne${schema.options.alias}Input!){
-    ${alias}CreateOne(record: $record) {
-      recordId
+  mutation save($record: ${schema.options.alias}Input!){
+    ${alias}Create(record: $record) {
+      _id
     }
   }
   `
   );
   const updateMutation = gql(
     `
-  mutation save($record: UpdateById${schema.options.alias}Input!){
-    ${alias}UpdateById(record: $record) {
-      recordId
+  mutation save($record: ${schema.options.alias}Input!){
+    ${alias}Update(record: $record) {
+      _id
     }
   }
   `
@@ -52,6 +52,7 @@ const EditEntity = ({ alias, id, client, schema, filters }: Props) => {
                 acc[recordKey] = record[recordKey] || null;
                 return acc;
               }, {});
+              // delete recordWithNullInsteadOfUndefined['__typename'];
               return new Promise((resolve, reject) => {
                 save({
                   variables: {

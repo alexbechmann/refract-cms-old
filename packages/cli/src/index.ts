@@ -28,6 +28,6 @@ export default express()
     }
     console.log(`> Started on port ${port}`);
     console.log(`Dashboard: ${chalk.green('http://localhost:3000')}`);
-    console.log(`GraphiQL: ${chalk.green('http://localhost:3000/cms/public/graphql')}`);
-    console.log(`GraphQL Playground: ${chalk.green('http://localhost:3000/cms/public/graphql-playground')}`);
+    console.log(`GraphiQL: ${chalk.green('http://localhost:3000/cms/graphql')}`);
+    console.log(`GraphQL Playground: ${chalk.green('http://localhost:3000/cms/graphql-playground')}`);
   });
