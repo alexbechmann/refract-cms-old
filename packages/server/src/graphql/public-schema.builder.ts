@@ -205,6 +205,20 @@ export class PublicSchemaBuilder {
           }
           return repository.findByIdAndUpdate(record._id, record);
         }
+      },
+      [`${entitySchema.options.alias}RemoveById`]: {
+        type: GraphQLBoolean,
+        args: {
+          id: { type: GraphQLString }
+        },
+        resolve: async (_, { id }, { userId }) => {
+          console.log({ id, userId });
+          if (!userId) {
+            return null;
+          }
+          await repository.findByIdAndDelete(id);
+          return true;
+        }
       }
     };
   }

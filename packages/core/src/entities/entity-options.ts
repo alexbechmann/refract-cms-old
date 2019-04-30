@@ -7,7 +7,7 @@ export interface EntityOptions<TEntity = {}, TModel = any> {
   mongoCollectionName?: string;
   maxOne?: boolean;
   instanceDisplayProps?: ((
-    item: TModel,
+    item: TEntity,
     { context }: { context: CoreContextModel }
   ) => {
     primaryText: string;
