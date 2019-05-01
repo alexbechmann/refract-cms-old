@@ -66,7 +66,7 @@ export class PublicSchemaBuilder {
         ...this.buildFieldQueries(entitySchema, repository, type)
       };
 
-      console.log(chalk.green(`Added schema: ${entitySchema.options.displayName || entitySchema.options.alias}`));
+      console.log(chalk.blue(`Added schema: ${entitySchema.options.displayName || entitySchema.options.alias}`));
     });
 
     const query = new GraphQLObjectType({
@@ -189,7 +189,7 @@ export class PublicSchemaBuilder {
         },
         resolve: (_, { record }, { userId }) => {
           if (!userId) {
-            return null;
+            throw new Error('AuthenticationError');
           }
           return repository.create(record);
         }
@@ -200,8 +200,11 @@ export class PublicSchemaBuilder {
           record: { type: inputType }
         },
         resolve: (_, { record }, { userId }) => {
-          if (!userId || !record._id) {
-            return null;
+          if (!userId) {
+            throw new Error('AuthenticationError');
+          }
+          if (!record._id) {
+            throw new Error('Missing _id');
           }
           return repository.findByIdAndUpdate(record._id, record);
         }
@@ -213,7 +216,7 @@ export class PublicSchemaBuilder {
         },
         resolve: async (_, { id }, { userId }) => {
           if (!userId) {
-            return null;
+            throw new Error('AuthenticationError');
           }
           await repository.findByIdAndDelete(id);
           return true;
