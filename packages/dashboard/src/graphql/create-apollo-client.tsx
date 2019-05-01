@@ -17,7 +17,10 @@ export const createApolloClient = ({ serverUrl }: { serverUrl: string }) => {
       }
     })
   );
-  const handleAuthErrorLink = onError(({ networkError, operation, forward }: ErrorResponse) => {
+  const handleAuthErrorLink = onError(({ graphQLErrors, networkError, operation, forward }: ErrorResponse) => {
+    if (graphQLErrors && graphQLErrors.some(err => err.message === 'AuthenticationError')) {
+      store.dispatch(logout());
+    }
     if (networkError) {
       switch ((networkError as any).statusCode) {
         case 401: {
