@@ -58,7 +58,7 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
   router.use(
     '/graphql',
     graphqlHTTP((req, res) => ({
-      schema: schema as any,
+      schema,
       graphiql: true,
       context: {
         userId: req.headers.authorization
