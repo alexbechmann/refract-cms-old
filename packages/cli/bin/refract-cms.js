@@ -6,20 +6,20 @@ const fs = require("fs-extra");
 const path = require("path");
 const chalk = require("chalk").default;
 
-if (process.platform === "win32") {
-  var rl = require("readline").createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
+// if (process.platform === "win32") {
+//   var rl = require("readline").createInterface({
+//     input: process.stdin,
+//     output: process.stdout
+//   });
 
-  rl.on("SIGINT", function() {
-    process.emit("SIGINT");
-  });
-}
+//   rl.on("SIGINT", function() {
+//     process.emit("SIGINT");
+//   });
+// }
 
-process.on("SIGINT", function() {
-  process.exit();
-});
+// process.on("SIGINT", function() {
+//   process.exit();
+// });
 // const spawn = require("cross-spawn");
 // var stream = require("stream");
 // const child_process = require("child_process");
