@@ -64,18 +64,7 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
         userId: req.headers.authorization
           ? authService.verifyAccessToken(req.headers.authorization!, serverConfig).nameid
           : null
-      },
-      plugins: [
-        {
-          requestDidStart: () => ({
-            didEncounterErrors(errors, { response: { http } }) {
-              if (http && errors.some(err => err.name === 'AuthenticationError')) {
-                http.status = 401;
-              }
-            }
-          })
-        }
-      ]
+      }
     }))
   );
 

@@ -55,9 +55,6 @@ function createClientConfig() {
         name: "client",
         color: "#3949ab"
       }),
-      // new webpack.DefinePlugin({
-      //   "process.env": { BUILD_TARGET: JSON.stringify("client") },
-      // }),
       new ForkTsCheckerWebpackPlugin({
         tsconfig: path.resolve(process.cwd(), "tsconfig.json"),
         memoryLimit: 2048,
@@ -66,9 +63,6 @@ function createClientConfig() {
         ignoreLints: ["**/*.test.*"],
         async: true
       })
-      // new SimpleProgressWebpackPlugin( { // Default options
-      //   format: 'compact'
-      // })
     ],
     resolve: {
       extensions: [".ts", ".tsx", ".mjs", ".js", ".graphql"],
@@ -157,7 +151,10 @@ function createServerConfig() {
       ]
     },
     plugins: [
-      new StartServerPlugin("server.js"),
+      new StartServerPlugin({
+        name: "server.js",
+        keyboard: true
+      }),
       new webpack.NamedModulesPlugin(),
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
@@ -167,6 +164,14 @@ function createServerConfig() {
       new WebpackBar({
         name: "server",
         color: "#3949ab"
+      }),
+      new ForkTsCheckerWebpackPlugin({
+        tsconfig: path.resolve(process.cwd(), "tsconfig.json"),
+        memoryLimit: 2048,
+        // tslint: path.resolve(__dirname, "tslint.json"),
+        //reportFiles: [`${path.resolve(process.cwd())}/**/**.{ts,tsx}`],
+        ignoreLints: ["**/*.test.*"],
+        async: true
       })
       // function() {
       //   this.plugin("done", function(stats) {
