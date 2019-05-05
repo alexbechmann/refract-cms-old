@@ -6,7 +6,7 @@ import { ProductSchema, Product } from '../../config/products/product.model';
 import { printType, GraphQLString, GraphQLBoolean, GraphQLFloat } from 'graphql';
 import refractConfig from '../../config/refract.config';
 import { ServerConfig } from 'packages/server/src/server-config.model';
-import { GraphQLDateTimeTime, GraphQLDateTime } from 'graphql-iso-date';
+import { GraphQLDateTime } from 'graphql-iso-date';
 
 const expect = chai.expect;
 
