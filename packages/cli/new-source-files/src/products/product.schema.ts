@@ -35,14 +35,6 @@ export const ProductSchema = defineEntity<ProductEntity, ProductModel>({
     icon: ScatterPlotIcon
   },
   properties: {
-    title: {
-      displayName: 'Title',
-      editorComponent: createTextEditor({
-        maxLength: 30
-      }),
-      defaultValue: '',
-      type: RefractTypes.string
-    },
     productType: {
       displayName: 'Product type',
       editorComponent: createTextEditor({ maxLength: 10 }),
@@ -67,7 +59,14 @@ export const ProductSchema = defineEntity<ProductEntity, ProductModel>({
         longitude: RefractTypes.number
       })
     },
-
+    title: {
+      displayName: 'Title',
+      editorComponent: createTextEditor({
+        maxLength: 30
+      }),
+      defaultValue: '',
+      type: RefractTypes.string
+    },
     category: {
       displayName: 'Category',
       editorComponent: createSingleDropdownEditor({

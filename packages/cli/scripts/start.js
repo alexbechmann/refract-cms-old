@@ -7,6 +7,7 @@ const {
 } = require("../config/create-config");
 const devServer = require("webpack-dev-server");
 const MemoryFS = require("memory-fs");
+const chalk = require("chalk");
 var memoryFS = new MemoryFS();
 
 process.noDeprecation = true; // turns off that loadQuery clutter.
@@ -28,8 +29,40 @@ function main() {
   const clientCompiler = compile(clientConfig);
   const serverCompiler = compile(serverConfig);
 
+  let clientCompiled = false;
+  let hasLoggedHelperUrls = false;
+  let serverCompiled = false;
+
+  function logHelperUrlsIfNecessary() {
+    if (clientCompiled && serverCompiled && !hasLoggedHelperUrls) {
+      console.log(`Dashboard: ${chalk.magenta("http://localhost:3000")}`);
+      console.log(
+        `GraphiQL: ${chalk.magenta("http://localhost:3000/cms/graphql")}`
+      );
+      console.log(
+        `GraphQL Playground: ${chalk.magenta(
+          "http://localhost:3000/cms/graphql-playground"
+        )}`
+      );
+      hasLoggedHelperUrls = true;
+    }
+  }
+
+  clientCompiler.plugin("done", () => {
+    // If we've already started the server watcher, bail early.
+    clientCompiled = true;
+    logHelperUrlsIfNecessary();
+  });
+
+  serverCompiler.plugin("done", () => {
+    // If we've already started the server watcher, bail early.
+    serverCompiled = true;
+    logHelperUrlsIfNecessary();
+  });
+
   serverCompiler.watch(
     {
+      quiet: true,
       stats: "errors-only"
     },
     /* eslint-disable no-unused-vars */
