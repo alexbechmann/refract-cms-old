@@ -105,7 +105,6 @@ class EntityForm extends Component<Props, State> {
 
   render() {
     const { schema, classes, context } = this.props;
-    console.log(this.state);
     return this.state.loading ? (
       <LinearProgress />
     ) : (

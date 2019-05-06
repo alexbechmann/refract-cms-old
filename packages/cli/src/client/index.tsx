@@ -5,11 +5,15 @@ import config from '@consumer/config/refract.config';
 import theme from '@consumer/config/theme';
 // import 'typeface-roboto';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core';
-import { teal, blue } from '@material-ui/core/colors';
+import { install, ThemeProvider } from '@material-ui/styles';
+
+install();
 
 render(
   <MuiThemeProvider theme={theme}>
-    <Dashboard config={config} rootPath="/" serverUrl="/cms" />
+    <ThemeProvider theme={theme}>
+      <Dashboard config={config} rootPath="/" serverUrl="/cms" />
+    </ThemeProvider>
   </MuiThemeProvider>,
   document.getElementById('root')
 );
