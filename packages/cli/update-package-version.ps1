@@ -7,6 +7,8 @@ Param(
 $executingDir = Get-Location
 $scriptPath = $script:MyInvocation.MyCommand.Path
 $dir = Split-Path $scriptpath
+
+# Update package.json dependencies
 $packageJsonLocation = ($dir + '\package.json')
 
 $packageJson = Get-Content $packageJsonLocation -raw | ConvertFrom-Json
@@ -14,5 +16,14 @@ $packageJson.version = "$version"
 $packageJson.dependencies | Add-Member -NotePropertyName '@refract-cms/core' -NotePropertyValue "$version"
 $packageJson.dependencies | Add-Member -NotePropertyName '@refract-cms/dashboard' -NotePropertyValue "$version"
 $packageJson.dependencies | Add-Member -NotePropertyName '@refract-cms/server' -NotePropertyValue "$version"
+
+$packageJson | ConvertTo-Json | set-content $packageJsonLocation
+
+
+# Update cli version in new-source-files
+$packageJsonLocation = ($dir + '\new-source-files\package.json')
+
+$packageJson = Get-Content $packageJsonLocation -raw | ConvertFrom-Json
+$packageJson.devDependencies.'@refract-cms/cli' = "$version"
 
 $packageJson | ConvertTo-Json | set-content $packageJsonLocation
