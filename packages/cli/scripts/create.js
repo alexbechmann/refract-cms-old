@@ -29,7 +29,7 @@ module.exports = function(name) {
 
   const spinner = ora({
     text: "Installing dependencies",
-    spinner: "dots10"
+    spinner: "dots"
   }).start();
   npmInstall().then(() => {
     spinner.stop();
