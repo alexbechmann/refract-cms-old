@@ -1,0 +1,36 @@
+{
+  "schema": {
+    "prefix": "schema",
+    "body": [
+      "import React from 'react';",
+      "import { Entity, defineEntity, createTextEditor, RefractTypes } from '@refract-cms/core';",
+      "import DetailsIcon from '@material-ui/icons/Details';",
+      "",
+      "export interface ${1}Entity extends Entity {",
+      "  myProperty: string;",
+      "}",
+      "",
+      "export interface ${1}Model extends ${1} {}",
+      "",
+      "export const ${1}Schema = defineEntity<${1}, ${1}Model>({",
+      "  options: {",
+      "    alias: 'example',",
+      "    displayName: '${1:Example}',",
+      "    icon: DetailsIcon",
+      "  },",
+      "  properties: {",
+      "    myProperty: {",
+      "      displayName: 'MyProperty',",
+      "      editorComponent: createTextEditor({",
+      "        maxLength: 50",
+      "      }),",
+      "      defaultValue: 'Something',",
+      "      type: RefractTypes.string",
+      "    }",
+      "  }",
+      "});",
+      ""
+    ],
+    "description": ""
+  }
+}
