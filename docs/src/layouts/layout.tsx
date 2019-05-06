@@ -87,7 +87,7 @@ const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
     />
     <CssBaseline />
     <Grid container justify="center">
-      <Grid item xs={12} sm={10} md={9} lg={7} xl={6} className={classes.content}>
+      <Grid item xs={12} sm={1} md={10} lg={10} xl={7} className={classes.content}>
         <Typography gutterBottom variant="h4" className={classes.title}>
           {title}
         </Typography>

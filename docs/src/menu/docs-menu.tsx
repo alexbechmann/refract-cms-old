@@ -6,7 +6,7 @@ import { MenuItem, MenuList, Paper } from '@material-ui/core';
 
 const QUERY = graphql`
   {
-    allMarkdownRemark {
+    allMarkdownRemark(sort: { fields: [frontmatter___order], order: ASC }) {
       nodes {
         frontmatter {
           title

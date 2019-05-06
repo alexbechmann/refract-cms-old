@@ -33,7 +33,6 @@ export default class extends React.Component<IndexPageProps, {}> {
     super(props, context);
   }
   public render() {
-    console.log(this.props.data);
     return (
       <Layout title=" Welcome to the Refract Cms docs">
         <Typography>
