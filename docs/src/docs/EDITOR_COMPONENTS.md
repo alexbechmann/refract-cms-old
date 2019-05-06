@@ -1,7 +1,7 @@
 ---
 path: "/built-in-editor-components"
 title: Built in editor components
-order: 2
+order: 3
 ---
 
 @refract-cms/core comes with built-in editor components (react based) for the basic input types:

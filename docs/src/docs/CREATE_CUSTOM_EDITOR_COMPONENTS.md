@@ -1,7 +1,7 @@
 ---
 path: "/create-custom-editor-components"
 title: Create custom editor component
-order: 2
+order: 4
 ---
 
 You can create a custom editor component using react.
