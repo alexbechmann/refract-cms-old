@@ -7,7 +7,7 @@ order: 1
 ## Create new project with CLI
 
 ```
-npx @refract-cms/cli@alpha new my-app
+npx @refract-cms/cli@alpha create my-app
 cd my-app
 ```
 
