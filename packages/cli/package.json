@@ -30,8 +30,5 @@
     "webpack-merge": "^4.2.1",
     "webpack-node-externals": "^1.7.2",
     "webpackbar": "^3.2.0"
-  },
-  "peerDependencies": {
-    "typscript": "^3.2.2"
   }
 }
