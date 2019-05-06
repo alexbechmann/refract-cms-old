@@ -118,11 +118,8 @@ export default class extends React.Component<IndexPageProps, {}> {
         </List>
         <br />
         <br />
-        <Button component="a" color="secondary" onClick={() => navigate('/starter-project')}>
-          Starter project (Recommended)
-        </Button>
-        <Button component="a" onClick={() => navigate('/existing-project')}>
-          Add to an existing project
+        <Button variant="raised" component="a" color="secondary" onClick={() => navigate('/cli')}>
+          Get started with CLI
         </Button>
         <br />
         <br />
