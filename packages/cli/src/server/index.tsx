@@ -2,9 +2,14 @@ import express from 'express';
 import { refractCmsHandler, createPublicSchema } from '@refract-cms/server';
 import config from '@consumer/config/refract.config';
 import serverConfigBuilder from '@consumer/config/server.config';
+import path from 'path';
 import '@babel/polyfill';
 
 const server = express();
+
+const scriptSrc = process.env.NODE_ENV === 'development' ? 'http://localhost:3001/client.js' : '/public/client.js';
+
+console.log('path is ' + __dirname + +'- ', path.join(__dirname, 'public'));
 
 serverConfigBuilder().then(serverConfig => {
   server
@@ -13,6 +18,7 @@ serverConfigBuilder().then(serverConfig => {
         serverConfig
       })
     )
+    .use('/public', express.static(path.join(__dirname, 'public')))
     .get('/*', (req: express.Request, res: express.Response) => {
       res.send(
         `<!doctype html>
@@ -26,7 +32,7 @@ serverConfigBuilder().then(serverConfig => {
     </head>
     <body>
         <div id="root"></div>
-        <script src="http://localhost:3001/client.js" defer crossorigin></script>
+        <script src="${scriptSrc}" defer crossorigin></script>
     </body>
 </html>`
       );

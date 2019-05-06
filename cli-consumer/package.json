@@ -6,6 +6,7 @@
   "scripts": {
     "start": "npm run docker-compose && npm run start:cms",
     "start:cms": "node ../packages/cli/bin/refract-cms.js start",
+    "build": "node ../packages/cli/bin/refract-cms.js build",
     "docker-compose": "docker-compose up -d"
   },
   "author": "",
