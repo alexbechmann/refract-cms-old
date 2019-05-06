@@ -37,7 +37,7 @@ export default class extends React.Component<DocsPageProps, {}> {
   public render() {
     return (
       <Layout title="Docs">
-        <Typography>Welcome to the Refract Cms docs</Typography>
+        <Typography paragraph>Welcome to the Refract Cms docs</Typography>
         <Paper>
           <DocsMenu />
         </Paper>

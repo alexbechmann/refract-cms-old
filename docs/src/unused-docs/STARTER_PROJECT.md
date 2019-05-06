@@ -1,6 +1,7 @@
 ---
 path: "/starter-project"
 title: Starter project
+order: 4
 ---
 
 ```

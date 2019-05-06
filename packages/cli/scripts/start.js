@@ -4,11 +4,9 @@ const webpack = require("webpack");
 const {
   createServerConfig,
   createClientConfig
-} = require("../config/create-config");
+} = require("../config/create-dev-config");
 const devServer = require("webpack-dev-server");
-const MemoryFS = require("memory-fs");
 const chalk = require("chalk");
-var memoryFS = new MemoryFS();
 
 process.noDeprecation = true; // turns off that loadQuery clutter.
 
