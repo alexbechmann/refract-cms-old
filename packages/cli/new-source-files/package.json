@@ -5,7 +5,9 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "refract-cms start"
+    "start": "refract-cms start",
+    "build": "refract-cms build",
+    "start:prod": "node ./dist/server.js"
   },
   "author": "",
   "license": "ISC",
