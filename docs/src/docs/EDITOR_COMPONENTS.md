@@ -48,7 +48,40 @@ properties: {
 
 ## Multiple Entity Picker Editor
 
+```typescript
+import { RefractTypes, createMultipleEntityPickerEditor } from '@refract-cms/core';
+import { ProductSchema } from './path/to/product.schema.tsx';
+
+properties: {
+  ...
+  productIds: {
+    displayName: 'List of products',
+    type: RefractTypes.arrayOf(RefractTypes.string),
+    editorComponent: createMultipleEntityPickerEditor({
+      schema: ProductSchema,
+      max: 2
+    })
+  }
+}
+```
+
 ## Single Entity Picker Editor
+
+```typescript
+import { RefractTypes, createSingleEntityPickerEditor } from '@refract-cms/core';
+import { ProductSchema } from './path/to/product.schema.tsx';
+
+properties: {
+  ...
+  productId: {
+    displayName: 'Linked Product',
+    type: RefractTypes.string,
+    editorComponent: createSingleEntityPickerEditor({
+      schema: ProductSchema
+    })
+  }
+}
+```
 
 ## List Editor
 
