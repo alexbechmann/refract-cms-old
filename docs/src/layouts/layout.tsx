@@ -54,10 +54,10 @@ const theme = createMuiTheme({
     type: 'dark',
     primary: {
       main: indigo[600]
-    },
-    secondary: {
-      main: '#4ec9b0'
     }
+    // secondary: {
+    //   main: '#4ec9b0'
+    // }
   }
 });
 
