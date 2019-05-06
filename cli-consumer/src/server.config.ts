@@ -1,13 +1,11 @@
-import { ServerConfig, createPublicSchema } from '@refract-cms/server';
-import config from './refract.config';
-import { ProductSchema } from './products/product.schema';
+import { createPublicSchema } from '@refract-cms/server';
+import { CliServerConfig } from '@refract-cms/cli';
 import { RefractTypes } from '@refract-cms/core';
+import { ProductSchema } from './products/product.schema';
 import { NewsArticleSchema } from './news/news-article.schema';
 import { SettingsSchema } from './settings/settings.model';
 
-const serverConfig: ServerConfig = {
-  config,
-  rootPath: '/cms',
+const serverConfig: CliServerConfig = {
   mongoConnectionString: 'mongodb://localhost:27018/cli-consumer',
   filesPath: 'files/',
   auth: {
