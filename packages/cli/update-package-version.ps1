@@ -18,12 +18,3 @@ $packageJson.dependencies | Add-Member -NotePropertyName '@refract-cms/dashboard
 $packageJson.dependencies | Add-Member -NotePropertyName '@refract-cms/server' -NotePropertyValue "$version"
 
 $packageJson | ConvertTo-Json | set-content $packageJsonLocation
-
-
-# Update cli version in new-source-files
-$packageJsonLocation = ($dir + '\new-source-files\package.json')
-
-$packageJson = Get-Content $packageJsonLocation -raw | ConvertFrom-Json
-$packageJson.devDependencies.'@refract-cms/cli' = "$version"
-
-$packageJson | ConvertTo-Json | set-content $packageJsonLocation

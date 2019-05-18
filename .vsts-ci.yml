@@ -49,6 +49,9 @@ steps:
   - powershell: . 'packages/cli/update-package-version.ps1' $(GitVersion.SemVer)
     displayName: Update package version
 
+  - powershell: . 'packages/create-app/update-package-version.ps1' $(GitVersion.SemVer)
+    displayName: Update package version
+
   # - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
   #   displayName: Yarn run build
   #   inputs:
@@ -108,6 +111,17 @@ steps:
     inputs:
       command: custom
       workingDir: packages/cli
+      verbose: false
+      customCommand: "publish --access public --tag $(GitVersion.PreReleaseLabel)"
+      customEndpoint: npm
+      publishEndpoint: npm
+
+  - task: Npm@1
+    displayName: npm custom
+    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+    inputs:
+      command: custom
+      workingDir: packages/create-app
       verbose: false
       customCommand: "publish --access public --tag $(GitVersion.PreReleaseLabel)"
       customEndpoint: npm

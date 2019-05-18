@@ -13,7 +13,7 @@ import jimp from 'jimp';
 import { authService } from './auth/auth.service';
 import uniqueString from 'unique-string';
 import fs from 'fs';
-import { SchemaBuilder } from './graphql/schema-builder';
+import { MongooseSchemaBuilder } from './persistance/mongoose-schema-builder';
 import mongoose from 'mongoose';
 import { PublicSchemaBuilder } from './graphql/public-schema.builder';
 import expressPlayground from 'graphql-playground-middleware-express';
@@ -49,7 +49,7 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
     serverConfig.mongoConnectionString,
     { useNewUrlParser: true }
   );
-  const schemaBuilder = new SchemaBuilder();
+  const schemaBuilder = new MongooseSchemaBuilder();
   schemaBuilder.buildSchema(config.schema, serverConfig);
 
   const publicSchemaBuilder = new PublicSchemaBuilder(serverConfig);

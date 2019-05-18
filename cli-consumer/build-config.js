@@ -12,6 +12,11 @@ module.exports = ({ webpackConfig, target }) => {
           options: {
             transpileOnly: true
           }
+        },
+        {
+          test: /\.(js|jsx|ts|tsx|css|scss)$/,
+          loader: 'prettier-loader',
+          exclude: /node_modules/
         }
       ]
     },
