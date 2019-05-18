@@ -3,7 +3,7 @@ import { ShapeArgs, PropertyDescription } from '@refract-cms/core/src/properties
 import mongoose, { SchemaTypeOpts, Schema, SchemaType, mongo } from 'mongoose';
 import { ServerConfig } from '../server-config.model';
 
-export class SchemaBuilder {
+export class MongooseSchemaBuilder {
   constructor() {}
 
   buildSchema(schema: EntitySchema[], serverConfig: ServerConfig) {
