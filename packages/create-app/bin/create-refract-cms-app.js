@@ -1,14 +1,13 @@
 #! /usr/bin/env node
 "use strict";
 
-const program = require("commander");
+const create = require("../scripts/create");
+var args = process.argv.slice(2);
 
-program
-  .command("create [name]")
-  .description("create new app")
-  .action(function(name, options) {
-    const create = require("../scripts/create");
-    create(name);
-  });
+const name = args[0];
 
-program.parse(process.argv);
+if (!name) {
+  console.log("Must provide name argument.");
+} else {
+  create(name);
+}
