@@ -1,51 +1,32 @@
-import { extendSchema } from "graphql";
+type BasicPropertyType = StringConstructor | DateConstructor | NumberConstructor;
 
-interface Entity {
-  id: string;
+type ShapePropertyType = { [key: string]: PropertyType };
+
+type PropertyType = BasicPropertyType | ShapePropertyType;
+
+type Properties<T> = { [K in keyof T]: PropertyType };
+
+type ActualType<TPropertyType extends PropertyType> = TPropertyType extends BasicPropertyType
+  ? TPropertyType['prototype']
+  : TPropertyType extends ShapePropertyType
+  ? { [K in keyof TPropertyType]: ActualType<TPropertyType[K]> }
+  : never;
+
+function createSchema<TProperties extends Properties<T>, T>(properties: TProperties) {
+  type Return = { [K in keyof TProperties]: ActualType<TProperties[K]> };
+  return {} as Return;
 }
 
-interface NewsArticleEntity extends Entity {
-  imageId: string;
-}
-
-interface NewsArticleModel {
-  image: {
-    thumb: string;
-    max: string;
-  };
-}
-
-const createSchema = <TEntity>() => ({
-  alias: 'ALIAS'
-});
-
-type SetupServerOptions = {
-  [key: string]: {
-    resolve: (entity: NewsArticleEntity) => NewsArticleModel | Promise<NewsArticleModel>;
-  };
-};
-
-const createResolve: any = () => {};
-
-const setupServer = (options: SetupServerOptions) => {};
-
-const NewsArticleSchema = createSchema<NewsArticleEntity>();
-
-// server
-setupServer({
-  [NewsArticleSchema.alias]: extendSchema(NewsArticleSchema, {
-    resolve: createResolve({
-      image: RefractTypes.image
-    })(newsArticleEntity => {
-      return Promise.resolve({
-        image: {
-          thumb: `/images/${newsArticleEntity.imageId}?w=400&h=400`,
-          max: `/images/${newsArticleEntity.imageId}?w=1200&h=760`
-        }
-      });
-    }),
-    events: {
-      onSave: () => {}
-    }
+const Schema = createSchema({
+  name: String,
+  createDate: Date,
+  age: Number,
+  location: {
+    lat: Number,
+    lng: Number
   }
 });
+
+Schema.createDate.toDateString();
+Schema.name.toLowerCase();
+Schema.location.lat.toFixed();
