@@ -12,12 +12,26 @@ type ActualType<TPropertyType extends PropertyType> = TPropertyType extends Basi
   ? { [K in keyof TPropertyType]: ActualType<TPropertyType[K]> }
   : never;
 
-function createSchema<TProperties extends Properties<T>, T>(properties: TProperties) {
-  type Return = { [K in keyof TProperties]: ActualType<TProperties[K]> };
-  return {} as Return;
+function getPrototype<TPropertyType extends PropertyType>(property: TPropertyType) {
+  if (typeof property === 'object') {
+    const p: ShapePropertyType = property as any;
+    return Object.keys(p).reduce((acc, propertyKey) => {
+      acc[propertyKey] = getPrototype(p[propertyKey]);
+      return acc;
+    }, {});
+  } else {
+    return property.prototype;
+  }
 }
 
-const Schema = createSchema({
+function createSchema<TProperties extends Properties<T>, T>(properties: TProperties) {
+  type Return = { [K in keyof TProperties]: ActualType<TProperties[K]> };
+  return {
+    prototypes: getPrototype(properties) as Return
+  };
+}
+
+const ArticleSchema = createSchema({
   name: String,
   createDate: Date,
   age: Number,
@@ -27,6 +41,12 @@ const Schema = createSchema({
   }
 });
 
-Schema.createDate.toDateString();
-Schema.name.toLowerCase();
-Schema.location.lat.toFixed();
+const CommentSchema = createSchema({
+  text: String
+});
+
+ArticleSchema.prototypes.createDate.toDateString();
+ArticleSchema.prototypes.name.toLowerCase();
+ArticleSchema.prototypes.location.lat.toFixed();
+
+CommentSchema.prototypes.text.toUpperCase();
