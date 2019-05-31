@@ -28,4 +28,23 @@ function getPrototype<TPropertyType extends PropertyType>(
     return property.prototype;
   }
 }
+
+//
+
+const ArticleSchema = createSchema({
+  properties: {
+    title: String
+  },
+  config: {
+    alias: "article",
+    options: {},
+    editors: {
+      title: {
+        editorComponent: createFakeEditor<string>(),
+        defaultValue: "hello",
+        displayName: "Text"
+      }
+    }
+  }
+});
 ```
