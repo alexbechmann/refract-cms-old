@@ -30,23 +30,24 @@ function createFakeEditor<T>() {
   return (props: PropertyEditorProps<T>) => null;
 }
 
-function composeEditableField<TPropertyType extends PropertyType>(type: TPropertyType) {
-  return (propertyOptions: PropertyOptions<TPropertyType>) => propertyOptions;
-}
+// function composeEditableField<TPropertyType extends PropertyType>(type: TPropertyType) {
+//   return (propertyOptions: PropertyOptions<TPropertyType>) => propertyOptions;
+// }
 
-function composeResolvedField() {}
+// function composeResolvedField() {}
 
-composeEditableField(String)({
-  editorComponent: createFakeEditor<string>(),
-  defaultValue: 'hello',
-  displayName: 'Text'
-});
+// composeEditableField(String)({
+//   editorComponent: createFakeEditor<string>(),
+//   defaultValue: 'hello',
+//   displayName: 'Text'
+// });
 
 export interface PropertyOptions<TPropertyType extends PropertyType, T = ActualType<TPropertyType>> {
   displayName?: string;
   editorComponent?: React.ComponentType<PropertyEditorProps<T>>;
   defaultValue?: (() => T) | T | Promise<T>;
   type?: TPropertyType;
+  resolve?: (() => T) | T | Promise<T>;
 }
 
 interface EntityOptions {}

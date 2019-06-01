@@ -22,18 +22,20 @@ type ActualType<T extends PropertyType> = T extends BasicPropertyType
   ? { [K in keyof T]: ActualType<T[K]> }
   : never;
 
-function createFakeEditor<T>() {
+function composeFakeEditor<T>() {
   return (props: PropertyEditorProps<T>) => null;
 }
 
 export interface PropertyOptions<T> {
   displayName?: string;
-  editorComponent?: React.ComponentType<PropertyEditorProps<T>>;
+  editorComponent: React.ComponentType<PropertyEditorProps<T>>;
   defaultValue?: (() => T) | T | Promise<T>;
   // type: TPropertyType;
 }
 
 interface EntityOptions {}
+
+type Resolver<TProperties, T> = (source: TProperties) => T | Promise<T>;
 
 type Return<TProperties extends Properties<T>, T> = { [K in keyof TProperties]: ActualType<TProperties[K]> };
 
@@ -44,11 +46,12 @@ type EntitySchema<TProperties extends Properties<T> = any, T = any, TAlias exten
   prototypes: Return<TProperties, T>;
 };
 
-function createSchema<T, TProperties extends Properties<T>, TAlias extends string>(args: {
+function composeSchema<T, TProperties extends Properties<T>, TAlias extends string>(args: {
   alias: TAlias;
   properties: TProperties;
   options: EntityOptions;
-  // editors: { [K in keyof TProperties]: PropertyOptions<ActualType<TProperties[K]>> };
+  editors: { [K in keyof TProperties]: PropertyOptions<ActualType<TProperties[K]>> };
+  resolvers: { [K in keyof Partial<TProperties>]: Resolver<ActualType<TProperties>, ActualType<TProperties[K]>> };
 }): EntitySchema<TProperties, T, TAlias> {
   return {
     ...args,
@@ -56,14 +59,14 @@ function createSchema<T, TProperties extends Properties<T>, TAlias extends strin
   };
 }
 
-function createEditors<TProperties extends Properties<T>, T>(
+function composeEditors<TProperties extends Properties<T>, T>(
   schema: EntitySchema<TProperties, T>,
   editors: { [K in keyof TProperties]: PropertyOptions<ActualType<TProperties[K]>> }
 ) {
   return editors;
 }
 
-const CommentSchema = createSchema({
+const CommentSchema = composeSchema({
   alias: 'comment',
   options: {},
   properties: {
@@ -73,32 +76,56 @@ const CommentSchema = createSchema({
       lat: Number,
       lng: Number
     }
-  }
+  },
+  editors: {
+    text: {
+      editorComponent: composeFakeEditor<string>(),
+      defaultValue: 'hello',
+      displayName: 'Text'
+    },
+    publishDate: {
+      editorComponent: composeFakeEditor<Date>(),
+      displayName: 'Text'
+    },
+    location: {
+      editorComponent: composeFakeEditor<{ lat: number; lng: number }>(),
+      displayName: 'Text'
+    }
+  },
+  resolvers: {}
 });
 
-const ArticleSchema = createSchema({
+const ArticleSchema = composeSchema({
   alias: 'article',
   options: {},
   properties: {
     title: String
+  },
+  editors: {
+    title: {
+      editorComponent: composeFakeEditor<string>()
+    }
+  },
+  resolvers: {
+    title: article => article.title + 'extra'
   }
 });
 
-createEditors(CommentSchema, {
-  text: {
-    editorComponent: createFakeEditor<string>(),
-    defaultValue: 'hello',
-    displayName: 'Text'
-  },
-  publishDate: {
-    editorComponent: createFakeEditor<Date>(),
-    displayName: 'Text'
-  },
-  location: {
-    editorComponent: createFakeEditor<{ lat: number; lng: number }>(),
-    displayName: 'Text'
-  }
-});
+// composeEditors(CommentSchema, {
+//   text: {
+//     editorComponent: composeFakeEditor<string>(),
+//     defaultValue: 'hello',
+//     displayName: 'Text'
+//   },
+//   publishDate: {
+//     editorComponent: composeFakeEditor<Date>(),
+//     displayName: 'Text'
+//   },
+//   location: {
+//     editorComponent: composeFakeEditor<{ lat: number; lng: number }>(),
+//     displayName: 'Text'
+//   }
+// });
 
 interface Config<TEntitySchemas extends EntitySchema[] = []> {
   schemas: TEntitySchemas;
@@ -113,7 +140,7 @@ var s = {
 };
 
 var [a, b] = [CommentSchema, ArticleSchema];
-a.alias = 'd'
+a.alias = 'd';
 
 const config = configure({
   schemas: [CommentSchema, ArticleSchema]

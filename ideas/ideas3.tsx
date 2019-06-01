@@ -92,7 +92,7 @@ const CommentSchema = createSchema({
       type: String
     },
     location: {
-      editorComponent: createFakeEditor<{ lat: number; lng: number }>(),
+      editorComponent: createFakeEditor<{ lat: number; lng: Date }>(),
       defaultValue: {
         lat: 3,
         lng: 4
