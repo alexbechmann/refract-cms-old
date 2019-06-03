@@ -1,5 +1,6 @@
 import express from 'express';
 import chalk from 'chalk';
+import { ServerConfig } from '@refract-cms/server';
 
 // this require is necessary for server HMR to recover from error
 // tslint:disable-next-line:no-var-requires
@@ -28,3 +29,6 @@ export default express()
     }
     console.log(`> Started on port ${port}`);
   });
+
+// workaround for ts local development
+export interface CliServerConfig extends Omit<ServerConfig, 'rootPath' | 'config'> {}

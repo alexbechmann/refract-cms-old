@@ -27,14 +27,6 @@ class GraphqlQueryHelper {
       filters && filters.orderByField && filters.orderByDirection
         ? `(sort: {${filters.orderByField}: ${filters.orderByDirection}})`
         : ``;
-    console.log(`
-        {
-          items: ${schema.options.alias}EntityList${queryArgs} {
-            _id
-            ${this.buildProperties(propertyTypes)}
-          }
-        }
-      `);
     return gql`
       {
         items: ${schema.options.alias}EntityList${queryArgs} {

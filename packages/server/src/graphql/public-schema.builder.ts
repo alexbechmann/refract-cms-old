@@ -354,29 +354,29 @@ export class PublicSchemaBuilder {
       fields: () =>
         Object.keys(properties).reduce(
           (acc, propertyKey) => {
-            const propertyType = properties[propertyKey].type;
+            const propertyOptions = properties[propertyKey];
+            const propertyType = propertyOptions.type;
             const type = this.buildType(`${alias}${propertyKey}`, propertyType);
-            // console.log({ type, propertyType });
             acc[propertyKey] = {
               // @ts-ignore
               type
             };
-            // if (addResolvers && extensionProperties && extensionProperties[propertyKey]) {
-            //   acc[propertyKey].resolve = extensionProperties[propertyKey].resolve;
-            //   // @ts-ignore
-            //   acc[propertyKey].dependencies = [];
-            // }
-            // if (propertyType.alias === 'Ref') {
-            //   const refEntitySchema: EntitySchema = propertyType.meta;
-            //   acc[propertyKey].resolve = entity => {
-            //     const ref = entity[propertyKey];
-            //     if (ref) {
-            //       return mongoose.models[refEntitySchema.options.alias].findById({ id: entity[propertyKey].entityId });
-            //     } else {
-            //       return null;
-            //     }
-            //   };
-            // }
+            if (addResolvers && propertyOptions.mode === 'resolve' && propertyOptions.resolve) {
+              acc[propertyKey].resolve = propertyOptions.resolve;
+              // @ts-ignore
+              acc[propertyKey].dependencies = [];
+            }
+            if (propertyType.alias === 'Ref') {
+              const refEntitySchema: EntitySchema = propertyType.meta;
+              acc[propertyKey].resolve = entity => {
+                const ref = entity[propertyKey];
+                if (ref) {
+                  return mongoose.models[refEntitySchema.options.alias].findById({ id: entity[propertyKey].entityId });
+                } else {
+                  return null;
+                }
+              };
+            }
             return acc;
           },
           {
@@ -397,7 +397,6 @@ export class PublicSchemaBuilder {
       name: propertyName,
       fields: Object.keys(propertyType).reduce((acc, propertyKey) => {
         const type = this.buildType(`${propertyName}${propertyKey}`, propertyType[propertyKey]);
-        console.log(propertyKey, propertyType, type, 1);
         acc[propertyKey] = {
           type
         };
@@ -411,7 +410,6 @@ export class PublicSchemaBuilder {
       name: propertyName,
       fields: Object.keys(propertyType).reduce((acc, propertyKey) => {
         const type = this.buildInputType(`${propertyName}${propertyKey}`, propertyType[propertyKey]);
-        console.log(propertyKey, propertyType, type, 2);
         acc[propertyKey] = {
           type
         };

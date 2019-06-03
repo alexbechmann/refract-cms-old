@@ -1,10 +1,5 @@
 {
   "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "@refract-cms/cli/*": ["../packages/cli/*"]
-    }
-  },
+  "compilerOptions": {},
   "include": ["./src"]
 }

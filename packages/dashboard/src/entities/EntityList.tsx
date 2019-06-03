@@ -24,7 +24,7 @@ import {
   DialogTitle,
   WithStyles
 } from '@material-ui/core';
-import { EntitySchema, Entity, graphqlQueryHelper, EntityListItem } from '@refract-cms/core';
+import { EntitySchema, Entity, graphqlQueryHelper, EntityListItem, EditablePropertyOptions } from '@refract-cms/core';
 import { RouteComponentProps, Link, Redirect } from '@reach/router';
 import { connect } from 'react-redux';
 import { AppState } from '../state/app.state';
@@ -134,8 +134,12 @@ class EntitiesList extends Component<Props> {
                             className={classes.textLink}
                             onClick={() => this.setState({ filterDialogOpen: true })}
                           >
-                            Sorted by {entitySchema.properties[filters.orderByField].displayName},{' '}
-                            {filters.orderByDirection}
+                            Sorted by{' '}
+                            {
+                              (entitySchema.properties[filters.orderByField] as EditablePropertyOptions<any, any>)
+                                .displayName
+                            }
+                            , {filters.orderByDirection}
                           </ListSubheader>
                         ) : (
                           undefined
@@ -207,7 +211,7 @@ class EntitiesList extends Component<Props> {
                       entitySchema.properties[propertyKey].type.alias === 'Number'
                   )
                   .map((propertyKey: string, index: number) => {
-                    const propertyOptions = entitySchema.properties[propertyKey];
+                    const propertyOptions = entitySchema.properties[propertyKey] as EditablePropertyOptions<any, any>;
                     return (
                       <MenuItem key={index} value={propertyKey}>
                         {propertyOptions.displayName || propertyKey}
