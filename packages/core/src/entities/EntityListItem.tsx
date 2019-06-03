@@ -8,7 +8,7 @@ import { WithCoreContextProps } from '../context/with-core-context-props.model';
 import { withCoreContext } from '../context/with-core-context';
 
 interface EntityListItemProps extends ListItemProps {
-  schema: EntitySchema<any>;
+  schema: EntitySchema;
   entity: Entity;
   SecondaryAction?: JSX.Element;
 }

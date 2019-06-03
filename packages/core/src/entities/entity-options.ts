@@ -1,13 +1,14 @@
 import { SvgIconProps } from '@material-ui/core/SvgIcon';
 import { CoreContextModel } from '../context/core-context.model';
+import { ActualType } from '../properties/property-types';
 
-export interface EntityOptions<TEntity = {}, TModel = any> {
+export interface EntityOptions<TEntity = any> {
   alias: string;
   displayName?: string;
   mongoCollectionName?: string;
   maxOne?: boolean;
   instanceDisplayProps?: ((
-    item: TEntity,
+    item: ActualType<TEntity>,
     { context }: { context: CoreContextModel }
   ) => {
     primaryText: string;

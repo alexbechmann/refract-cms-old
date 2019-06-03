@@ -4,4 +4,3 @@ export interface FileRef {
   mimetype: string;
   size: number;
 }
-
