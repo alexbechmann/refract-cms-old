@@ -22,6 +22,11 @@ const ArticleSchema = composeSchema({
         lng: Number
       },
       displayName: 'Location'
+    },
+    upperCaseTitle: {
+      mode: 'resolve',
+      type: String,
+      resolve: article => article.title.toUpperCase()
     }
   }
 });

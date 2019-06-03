@@ -27,27 +27,35 @@ class GraphqlQueryHelper {
       filters && filters.orderByField && filters.orderByDirection
         ? `(sort: {${filters.orderByField}: ${filters.orderByDirection}})`
         : ``;
-    return gql(`
+    console.log(`
+        {
+          items: ${schema.options.alias}EntityList${queryArgs} {
+            _id
+            ${this.buildProperties(propertyTypes)}
+          }
+        }
+      `);
+    return gql`
       {
         items: ${schema.options.alias}EntityList${queryArgs} {
           _id
           ${this.buildProperties(propertyTypes)}
         }
       }
-    `);
+    `;
   }
 
-  buildProperties(properties: { [key: string]: PropertyType<any> }): string {
+  buildProperties(properties: { [key: string]: PropertyType }): string {
     return Object.keys(properties).map(propertyKey => {
       const propertyType = properties[propertyKey];
-      if (propertyType.alias === 'Shape') {
+      if ([String, Number, Date, Boolean].find(t => propertyType === t)) {
+        return propertyKey;
+      } else {
         return `
         ${propertyKey} {
-          ${this.buildProperties(propertyType.meta!)}
+          ${this.buildProperties(propertyType as any)}
         }
         `;
-      } else {
-        return propertyKey;
       }
     }).join(`
   `);
