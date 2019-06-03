@@ -1,4 +1,4 @@
-type BasicPropertyType = StringConstructor | DateConstructor | NumberConstructor;
+type BasicPropertyType = StringConstructor | DateConstructor | NumberConstructor | BooleanConstructor;
 
 type ShapePropertyType = { [key: string]: PropertyType };
 
@@ -14,23 +14,47 @@ interface PropertyEditorProps<T> {
 
 // type Properties<T extends {[K in keyof T]: PropertyType}> = { [K in keyof T]: PropertyOptions<T[K]> };
 
+type ActualTypeFromPrototype<T> = T extends String
+  ? string
+  : T extends Date
+  ? Date
+  : T extends Number
+  ? number
+  : T extends Boolean
+  ? boolean
+  : never;
+
 type ActualType<T extends PropertyType | any> = T extends BasicPropertyType
-  ? T['prototype']
+  ? ActualTypeFromPrototype<T['prototype']>
   : T extends ShapePropertyType
   ? { [K in keyof T]: ActualType<T[K]> }
+  : T extends (infer U)[]
+  ? U extends BasicPropertyType
+    ? ActualTypeFromPrototype<U['prototype']>[]
+    : never
   : never;
 
 function composeFakeEditor<T>() {
   return (props: PropertyEditorProps<T>) => null;
 }
 
-export interface PropertyOptions<T, TPropertyType extends PropertyType | any> {
+export interface EditablePropertyOptions<T, TPropertyType extends PropertyType | any> {
+  mode: 'edit';
   displayName?: string;
   editorComponent?: React.ComponentType<PropertyEditorProps<ActualType<TPropertyType>>>;
   defaultValue?: (() => ActualType<TPropertyType>) | ActualType<TPropertyType> | Promise<ActualType<TPropertyType>>;
   type: TPropertyType;
+}
+
+export interface ResolvedPropertyOptions<T, TPropertyType extends PropertyType | any> {
+  mode: 'resolve';
+  type: TPropertyType;
   resolve?: Resolver<T, ActualType<TPropertyType>>;
 }
+
+export type PropertyOptions<T, TPropertyType extends PropertyType | any> =
+  | EditablePropertyOptions<T, TPropertyType>
+  | ResolvedPropertyOptions<T, TPropertyType>;
 
 interface EntityOptions {
   alias: string;
@@ -75,12 +99,14 @@ const CommentSchema = composeSchema({
   options: { alias: 'comment' },
   properties: {
     text: {
+      mode: 'edit',
       type: String,
       editorComponent: composeFakeEditor<string>(),
       defaultValue: 'hello',
       displayName: 'Text'
     },
     location: {
+      mode: 'edit',
       editorComponent: composeFakeEditor<{ lat: number; lng: number }>(),
       displayName: 'Text',
       type: {
@@ -89,8 +115,13 @@ const CommentSchema = composeSchema({
       }
     },
     upperCaseText: {
+      mode: 'resolve',
       type: String,
       resolve: comment => comment.text.toUpperCase()
+    },
+    tags: {
+      mode: 'edit',
+      type: [String]
     }
   }
 });
@@ -99,6 +130,7 @@ const ArticleSchema = composeSchema({
   options: { alias: 'article' },
   properties: {
     title: {
+      mode: 'edit',
       type: String,
       editorComponent: composeFakeEditor<string>(),
       defaultValue: 'hello',
@@ -120,3 +152,5 @@ const config = configure({
 
 CommentSchema.prototypes.text.toUpperCase();
 CommentSchema.prototypes.location.lat.toFixed();
+CommentSchema.prototypes.upperCaseText.toLowerCase();
+CommentSchema.prototypes.tags[0].toUpperCase();
