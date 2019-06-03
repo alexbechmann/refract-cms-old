@@ -32,7 +32,7 @@ export const FileSystemImageSchema = composeSchema({
     fileUrl: {
       mode: 'resolve',
       type: String,
-      resolve: image => image.fileRef + 'test url'
+      resolve: image => image.fileRef.path.toUpperCase() + 'test url'
     }
   }
 });

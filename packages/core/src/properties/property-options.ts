@@ -1,12 +1,13 @@
 import React from 'react';
 import { PropertyEditorProps } from './property-editor-props';
 import { PropertyType, ActualType } from './property-types';
+import { Return } from '../entities/entity-schema';
 
 type ServerResolverContext = {
   cmsBaseUrl: string;
 };
 
-type Resolver<T, V> = (source: { [K in keyof T]: ActualType<T[K]> }, context: ServerResolverContext) => V | Promise<V>;
+type Resolver<T, V> = (source: Return<T>, context: ServerResolverContext) => V | Promise<V>;
 
 export interface EditablePropertyOptions<T, TPropertyType extends PropertyType | any> {
   mode: 'edit';
