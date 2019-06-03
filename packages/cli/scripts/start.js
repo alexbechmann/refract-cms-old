@@ -6,7 +6,7 @@ const {
   createClientConfig
 } = require("../config/create-dev-config");
 const devServer = require("webpack-dev-server");
-const chalk = require("chalk");
+const chalk = require("chalk").default;
 
 process.noDeprecation = true; // turns off that loadQuery clutter.
 

@@ -2,7 +2,7 @@ import * as express from 'express';
 import graphqlHTTP from 'express-graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import { Dashboard } from '@refract-cms/dashboard';
-import { Config, graphqlQueryHelper, FileModel, Crop, defineEntity } from '@refract-cms/core';
+import { Config, graphqlQueryHelper, FileModel, Crop } from '@refract-cms/core';
 import { merge } from 'lodash';
 import { printType } from 'graphql';
 import { MongoClient, Db, ObjectId } from 'mongodb';

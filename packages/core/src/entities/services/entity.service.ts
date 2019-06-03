@@ -4,7 +4,7 @@ import { Entity } from '../entity.model';
 import { CoreContextModel } from '../../context/core-context.model';
 
 class EntityService {
-  instanceDisplayPropsOrDefault = (entitySchema: EntitySchema, context: CoreContextModel) => (entity: Entity) => {
+  instanceDisplayPropsOrDefault = (entitySchema: EntitySchema, context: CoreContextModel) => (entity: any) => {
     const defaultInstanceDisplayProps: {
       primaryText: string;
       secondaryText: string | undefined;

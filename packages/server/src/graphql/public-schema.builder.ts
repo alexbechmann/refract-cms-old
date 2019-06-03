@@ -36,9 +36,9 @@ export class PublicSchemaBuilder {
     suffixName: string = '',
     useExtensions: boolean = true
   ) {
-    const extension = useExtensions
-      ? this.serverConfig.publicGraphQL.find(extension => extension.schema.options.alias === entitySchema.options.alias)
-      : null;
+    // const extension = useExtensions
+    //   ? this.serverConfig.publicGraphQL.find(extension => extension.schema.options.alias === entitySchema.options.alias)
+    //   : null;
 
     const type = this.buildEntity(
       prefixName + entitySchema.options.alias + suffixName,
@@ -83,7 +83,7 @@ export class PublicSchemaBuilder {
       fields: mutationFields
     });
 
-    return new GraphQLSchema({ query, mutation });
+    return new GraphQLSchema({ query });
   }
 
   buildFieldQueries<TEntity extends Entity & mongoose.Document>(
@@ -219,17 +219,18 @@ export class PublicSchemaBuilder {
   // }
 
   buildType<T>(propertyName: string, propertyType: PropertyType): GraphQLType {
+    console.log(propertyType instanceof String);
     switch (true) {
-      case propertyType instanceof String: {
+      case propertyType === String: {
         return GraphQLString;
       }
-      case propertyType instanceof Date: {
+      case propertyType === Date: {
         return GraphQLDateTime;
       }
-      case propertyType instanceof Number: {
+      case propertyType === Number: {
         return GraphQLFloat;
       }
-      case propertyType instanceof Boolean: {
+      case propertyType === Boolean: {
         return GraphQLBoolean;
       }
       case propertyType instanceof Object: {
@@ -355,6 +356,8 @@ export class PublicSchemaBuilder {
       return acc;
     }, {}) as any;
 
+    // console.log(shapeArgs, properties);
+
     const existingType = this.types.find(t => t.name === alias);
 
     if (existingType) {
@@ -368,6 +371,7 @@ export class PublicSchemaBuilder {
           (acc, propertyKey) => {
             const propertyType = properties[propertyKey].type;
             const type = this.buildType(`${alias}${propertyKey}`, propertyType);
+            // console.log({ type, propertyType });
             acc[propertyKey] = {
               // @ts-ignore
               type

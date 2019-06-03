@@ -1,21 +1,9 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "noImplicitAny": false,
-    "target": "es5",
-    "lib": ["dom", "es6"],
-    "sourceMap": true,
-    "declaration": false,
-    "jsx": "react",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "strict": false,
     "baseUrl": "./",
     "paths": {
-      "@refract-cms/cli/*": ["../packages/cli/*"],
-      "@refract-cms/core/*": ["../packages/core/src/*"],
-      "@refract-cms/dashboard/*": ["../packages/dashboard/src/*"],
-      "@refract-cms/server/*": ["../packages/server/src/*"]
+      "@refract-cms/cli/*": ["../packages/cli/*"]
     }
   },
   "include": ["./src"]
