@@ -206,9 +206,10 @@ class EntitiesList extends Component<Props> {
                 {Object.keys(entitySchema.properties)
                   .filter(
                     propertyKey =>
-                      entitySchema.properties[propertyKey].type.alias === 'String' ||
-                      entitySchema.properties[propertyKey].type.alias === 'Date' ||
-                      entitySchema.properties[propertyKey].type.alias === 'Number'
+                      entitySchema.properties[propertyKey].mode === 'edit' &&
+                      (entitySchema.properties[propertyKey].type === String ||
+                        entitySchema.properties[propertyKey].type === Date ||
+                        entitySchema.properties[propertyKey].type === Number)
                   )
                   .map((propertyKey: string, index: number) => {
                     const propertyOptions = entitySchema.properties[propertyKey] as EditablePropertyOptions<any, any>;

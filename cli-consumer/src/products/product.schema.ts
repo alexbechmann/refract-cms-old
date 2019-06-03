@@ -10,19 +10,6 @@ import {
 import CustomDropdownEditor from '../shared/CustomDropdownEditor';
 import ScatterPlotIcon from '@material-ui/icons/ScatterPlot';
 
-// export interface ProductEntity extends Entity {
-//   productType: string;
-//   customNumber: number;
-//   location: Location;
-//   title: string;
-//   category: string;
-//   types: string[];
-// }
-
-// export interface ProductModel extends ProductEntity {
-//   someVar: string;
-// }
-
 export const ProductSchema = composeSchema({
   options: {
     alias: 'product',
