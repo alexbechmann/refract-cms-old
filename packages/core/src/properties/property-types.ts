@@ -2,7 +2,7 @@ type BasicPropertyType = StringConstructor | DateConstructor | NumberConstructor
 
 type ShapePropertyType = { [key: string]: PropertyType };
 
-type ActualTypeFromPrototype<T> = T extends String
+export type ActualTypeFromPrototype<T> = T extends String
   ? string
   : T extends Date
   ? Date
@@ -10,6 +10,8 @@ type ActualTypeFromPrototype<T> = T extends String
   ? number
   : T extends Boolean
   ? boolean
+  : T extends { [K in keyof T]: PropertyType }
+  ? { [K in keyof T]: ActualTypeFromPrototype<T[K]['prototype']> }
   : never;
 
 export type PropertyType = BasicPropertyType | ShapePropertyType;

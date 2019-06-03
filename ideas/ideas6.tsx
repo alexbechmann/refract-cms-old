@@ -71,20 +71,26 @@ type Resolver<T, V> = (source: { [K in keyof T]: ActualType<T[K]> }) => V | Prom
 //   prototypes: ActualType<T>;
 // };
 
-type EntitySchema<T = any> = ReturnType<typeof composeSchema>;
+type EntitySchema<T = any> = {
+  properties: { [K in keyof T]: PropertyOptions<T, T[K]> };
+  options: EntityOptions;
+  prototypes: Return<T>;
+};
+
+type ObjectWithConstructorTypes<T> = { [K in keyof T]: PropertyOptions<T, T[K]> };
+type Return<T> = { [K in keyof ObjectWithConstructorTypes<T>]: ActualType<ObjectWithConstructorTypes<T>[K]['type']> };
 
 function composeSchema<T>(args: {
   properties: { [K in keyof T]: PropertyOptions<T, T[K]> };
   options: EntityOptions;
   // editors: { [K in keyof TProperties]: PropertyOptions<ActualType<TProperties[K]>> };
   // resolvers: { [K in keyof Partial<TProperties>]: Resolver<ActualType<TProperties>, ActualType<TProperties[K]>> };
-}) {
+}): EntitySchema<T> {
   // EntitySchema<T, TAlias>
-  type ObjectWithConstructorTypes = { [K in keyof T]: PropertyOptions<T, T[K]> };
-  type Return = { [K in keyof ObjectWithConstructorTypes]: ActualType<ObjectWithConstructorTypes[K]['type']> };
+
   return {
     ...args,
-    prototypes: {} as Return
+    prototypes: {} as Return<T>
   };
 }
 
