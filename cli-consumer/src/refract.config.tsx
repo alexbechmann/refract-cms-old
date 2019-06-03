@@ -1,4 +1,5 @@
-import { configure, FileSchema, composeSchema, createTextEditor } from '@refract-cms/core';
+import React from 'react';
+import { configure, composeSchema, createTextEditor } from '@refract-cms/core';
 // import { NewsArticleSchema } from './news/news-article.schema';
 // import { SettingsSchema } from './settings/settings.model';
 // import { ProductSchema } from './products/product.schema';
@@ -12,6 +13,15 @@ const ArticleSchema = composeSchema({
       editorComponent: createTextEditor(),
       defaultValue: 'hello',
       displayName: 'Text'
+    },
+    location: {
+      mode: 'edit',
+      editorComponent: () => <p />,
+      type: {
+        lat: Number,
+        lng: Number
+      },
+      displayName: 'Location'
     }
   }
 });

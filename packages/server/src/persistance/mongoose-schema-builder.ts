@@ -15,9 +15,7 @@ export class MongooseSchemaBuilder {
     delete mongoose.connection.models[entitySchema.options.alias];
     const definition = Object.keys(entitySchema.properties).reduce((acc, propertyKey) => {
       const typeDef = entitySchema.properties[propertyKey].type;
-      acc[propertyKey] = {
-        type: typeDef
-      };
+      acc[propertyKey] = typeDef;
       return acc;
     }, {}) as any;
 
