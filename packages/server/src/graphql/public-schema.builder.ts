@@ -232,13 +232,14 @@ export class PublicSchemaBuilder {
       case propertyType === Boolean: {
         return GraphQLBoolean;
       }
-      case propertyType instanceof Object: {
-        return this.buildShape(propertyName, propertyType as any);
-      }
       case propertyType instanceof Array: {
         const type = this.buildType(propertyName, propertyType[0]);
         return new GraphQLList(type);
       }
+      case propertyType instanceof Object: {
+        return this.buildShape(propertyName, propertyType as any);
+      }
+
       // @ts-ignore
       // case 'SchemaType': {
       //   // @ts-ignore
@@ -273,13 +274,14 @@ export class PublicSchemaBuilder {
       case propertyType === Boolean: {
         return GraphQLBoolean;
       }
-      case propertyType instanceof Object: {
-        return this.buildShapeInput(propertyName, propertyType as any);
-      }
       case propertyType instanceof Array: {
         const type = this.buildInputType(propertyName, propertyType[0]);
         return new GraphQLList(type);
       }
+      case propertyType instanceof Object: {
+        return this.buildShapeInput(propertyName, propertyType as any);
+      }
+
       // // @ts-ignore
       // case 'SchemaType': {
       //   // @ts-ignore

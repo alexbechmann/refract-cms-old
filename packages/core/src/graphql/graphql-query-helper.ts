@@ -27,6 +27,14 @@ class GraphqlQueryHelper {
       filters && filters.orderByField && filters.orderByDirection
         ? `(sort: {${filters.orderByField}: ${filters.orderByDirection}})`
         : ``;
+    console.log(`
+        {
+          items: ${schema.options.alias}EntityList${queryArgs} {
+            _id
+            ${this.buildProperties(propertyTypes)}
+          }
+        }
+      `);
     return gql`
       {
         items: ${schema.options.alias}EntityList${queryArgs} {
@@ -40,7 +48,7 @@ class GraphqlQueryHelper {
   buildProperties(properties: { [key: string]: PropertyType }): string {
     return Object.keys(properties).map(propertyKey => {
       const propertyType = properties[propertyKey];
-      if ([String, Number, Date, Boolean].find(t => propertyType === t)) {
+      if ([String, Number, Date, Boolean].find(t => propertyType === t) || propertyType instanceof Array) {
         return propertyKey;
       } else {
         return `
