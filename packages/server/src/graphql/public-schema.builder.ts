@@ -368,17 +368,7 @@ export class PublicSchemaBuilder {
               // @ts-ignore
               acc[propertyKey].dependencies = [];
             }
-            if (propertyType.alias === 'Ref') {
-              const refEntitySchema: EntitySchema = propertyType.meta;
-              acc[propertyKey].resolve = entity => {
-                const ref = entity[propertyKey];
-                if (ref) {
-                  return mongoose.models[refEntitySchema.options.alias].findById({ id: entity[propertyKey].entityId });
-                } else {
-                  return null;
-                }
-              };
-            }
+
             return acc;
           },
           {

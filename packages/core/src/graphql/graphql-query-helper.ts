@@ -27,14 +27,6 @@ class GraphqlQueryHelper {
       filters && filters.orderByField && filters.orderByDirection
         ? `(sort: {${filters.orderByField}: ${filters.orderByDirection}})`
         : ``;
-    console.log(`
-        {
-          items: ${schema.options.alias}EntityList${queryArgs} {
-            _id
-            ${this.buildProperties(propertyTypes)}
-          }
-        }
-      `);
     return gql`
       {
         items: ${schema.options.alias}EntityList${queryArgs} {
@@ -66,14 +58,14 @@ class GraphqlQueryHelper {
       acc[p] = schema.properties[p].type;
       return acc;
     }, {});
-    return gql(`
+    return gql`
       {
         item: ${schema.options.alias}EntityFindById(id: "${id}") {
           _id
           ${this.buildProperties(propertyTypes)}
         }
       }
-    `);
+    `;
   }
 
   firstLetterToUpper(s: string) {

@@ -136,9 +136,6 @@ class EntityForm extends Component<Props, State> {
               <div className={classes.card}>
                 {Object.keys(schema.properties).map((propertyKey: string, index: number) => {
                   const propertyOptions = schema.properties[propertyKey];
-                  if (propertyOptions.mode !== 'edit') {
-                    return null;
-                  }
                   return (
                     <div key={index} className={classes.propertyEditor}>
                       <Grid container spacing={16}>

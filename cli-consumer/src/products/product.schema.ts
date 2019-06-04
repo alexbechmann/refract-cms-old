@@ -73,5 +73,10 @@ export const ProductSchema = composeSchema({
       }),
       type: [String]
     }
+    // commaSeperatedTypes: {
+    //   mode: 'resolve',
+    //   type: String,
+    //   resolve: ({ types }) => (types ? types.join(',') : '')
+    // }
   }
 });

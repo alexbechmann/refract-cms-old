@@ -120,11 +120,11 @@ const CommentSchema = composeSchema({
         lng: Number
       }
     },
-    upperCaseText: {
-      mode: 'resolve',
-      type: String,
-      resolve: comment => comment.text.toUpperCase()
-    },
+    // upperCaseText: {
+    //   mode: 'resolve',
+    //   type: String,
+    //   resolve: comment => comment.text.toUpperCase()
+    // },
     tags: {
       mode: 'edit',
       type: [String]
@@ -156,7 +156,50 @@ const config = configure({
   schemas: [CommentSchema, ArticleSchema]
 });
 
+function configureServer(serverConfig: {
+  config: Config<any>;
+  resolvers: {
+    [key: string]: {
+      [key: string]: {
+        type: PropertyType;
+        resolve?: any;
+      };
+    };
+  };
+}) {
+  return serverConfig;
+}
+
+function createResolver<T, N>(
+  schema: EntitySchema<T>,
+  properties: { [K in keyof N]: ResolvedPropertyOptions<T, N[K]> }
+) {
+  return {
+    [schema.options.alias]: properties
+  };
+}
+
+configureServer({
+  config,
+  resolvers: {
+    ...createResolver(CommentSchema, {
+      upperCaseText: {
+        mode: 'resolve',
+        type: String,
+        resolve: source => source.text.toUpperCase()
+      }
+    }),
+    ...createResolver(ArticleSchema, {
+      upperCaseTitle: {
+        mode: 'resolve',
+        type: String,
+        resolve: source => source.title.toUpperCase()
+      }
+    })
+  }
+});
+
 CommentSchema.prototypes.text.toUpperCase();
 CommentSchema.prototypes.location.lat.toFixed();
-CommentSchema.prototypes.upperCaseText.toLowerCase();
+// CommentSchema.prototypes.upperCaseText.toLowerCase();
 CommentSchema.prototypes.tags[0].toUpperCase();
