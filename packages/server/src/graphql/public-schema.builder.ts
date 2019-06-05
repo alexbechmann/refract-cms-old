@@ -114,16 +114,13 @@ export class PublicSchemaBuilder {
       [`${entitySchema.options.alias}List`]: {
         type: new GraphQLList(type),
         args,
-        resolve: getMongoDbQueryResolver(
-          entityType,
-          async (filter, projection, options, obj, args, { db }: { db: Db }) => {
-            return repository
-              .find(filter)
-              .sort(options.sort)
-              .limit(options.limit)
-              .skip(options.skip);
-          }
-        )
+        resolve: getMongoDbQueryResolver(type, async (filter, projection, options, obj, args, { db }: { db: Db }) => {
+          return repository
+            .find(filter)
+            .sort(options.sort)
+            .limit(options.limit)
+            .skip(options.skip);
+        })
       },
       [`${entitySchema.options.alias}EntityList`]: {
         type: new GraphQLList(entityType),
@@ -349,10 +346,9 @@ export class PublicSchemaBuilder {
     if (existingType) {
       return existingType;
     }
-    let extraProperties = this.serverConfig.resolvers
-      ? this.serverConfig.resolvers[alias.replace('Entity', '')] || {}
-      : {};
+    let extraProperties = this.serverConfig.resolvers ? this.serverConfig.resolvers[alias] || {} : {};
     extraProperties = extraProperties || {};
+    console.log({ alias, extraProperties });
 
     const editableAndResolvedProperties = {
       ...properties,
