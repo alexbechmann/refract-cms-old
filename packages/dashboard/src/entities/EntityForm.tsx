@@ -67,9 +67,7 @@ class EntityForm extends Component<Props, State> {
     if (props.newEntity) {
       Object.keys(props.schema.properties).forEach(propertyKey => {
         const propertyOptions = props.schema.properties[propertyKey];
-        if (propertyOptions.mode === 'edit') {
-          updateValues[propertyKey] = propertyOptions.defaultValue;
-        }
+        updateValues[propertyKey] = propertyOptions.defaultValue;
       });
       this.state = {
         updateValues,

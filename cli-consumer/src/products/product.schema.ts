@@ -22,7 +22,6 @@ export const ProductSchema = composeSchema({
   },
   properties: {
     title: {
-      mode: 'edit',
       displayName: 'Title',
       editorComponent: createTextEditor({
         maxLength: 30
@@ -31,21 +30,18 @@ export const ProductSchema = composeSchema({
       type: String
     },
     productType: {
-      mode: 'edit',
       displayName: 'Product type',
       editorComponent: createTextEditor({ maxLength: 10 }),
       defaultValue: 'default',
       type: String
     },
     customNumber: {
-      mode: 'edit',
       displayName: 'Custom number',
       defaultValue: 3,
       editorComponent: CustomDropdownEditor,
       type: Number
     },
     location: {
-      mode: 'edit',
       displayName: 'Location',
       editorComponent: createLocationEditor(),
       defaultValue: {
@@ -58,7 +54,6 @@ export const ProductSchema = composeSchema({
       }
     },
     category: {
-      mode: 'edit',
       displayName: 'Category',
       editorComponent: createSingleDropdownEditor({
         selectOptions: ['Electronics', 'Food']
@@ -66,7 +61,6 @@ export const ProductSchema = composeSchema({
       type: String
     },
     types: {
-      mode: 'edit',
       displayName: 'Types',
       editorComponent: createMultipleDropdownEditor({
         selectOptions: ['Type1', 'Type2']

@@ -38,23 +38,25 @@ function composeFakeEditor<T>() {
   return (props: PropertyEditorProps<T>) => null;
 }
 
-export interface EditablePropertyOptions<T, TPropertyType extends PropertyType | any> {
-  mode: 'edit';
-  displayName?: string;
-  editorComponent?: React.ComponentType<PropertyEditorProps<ActualType<TPropertyType>>>;
-  defaultValue?: (() => ActualType<TPropertyType>) | ActualType<TPropertyType> | Promise<ActualType<TPropertyType>>;
-  type: TPropertyType;
-}
+// export interface EditablePropertyOptions<T, TPropertyType extends PropertyType | any> {
+//
+//   displayName?: string;
+//   editorComponent?: React.ComponentType<PropertyEditorProps<ActualType<TPropertyType>>>;
+//   defaultValue?: (() => ActualType<TPropertyType>) | ActualType<TPropertyType> | Promise<ActualType<TPropertyType>>;
+//   type: TPropertyType;
+// }
 
 export interface ResolvedPropertyOptions<T, TPropertyType extends PropertyType | any> {
-  mode: 'resolve';
   type: TPropertyType;
   resolve?: Resolver<T, ActualType<TPropertyType>>;
 }
 
-export type PropertyOptions<T, TPropertyType extends PropertyType | any> =
-  | EditablePropertyOptions<T, TPropertyType>
-  | ResolvedPropertyOptions<T, TPropertyType>;
+export type PropertyOptions<T, TPropertyType extends PropertyType | any> = {
+  displayName?: string;
+  editorComponent?: React.ComponentType<PropertyEditorProps<ActualType<TPropertyType>>>;
+  defaultValue?: (() => ActualType<TPropertyType>) | ActualType<TPropertyType> | Promise<ActualType<TPropertyType>>;
+  type: TPropertyType;
+};
 
 interface EntityOptions {
   alias: string;
@@ -75,6 +77,9 @@ type EntitySchema<T = any> = {
   properties: { [K in keyof T]: PropertyOptions<T, T[K]> };
   options: EntityOptions;
   prototypes: Return<T>;
+  createResolver: <N>(
+    properties: { [K in keyof N]: ResolvedPropertyOptions<T, N[K]> }
+  ) => { [key: string]: { [K in keyof N]: ResolvedPropertyOptions<T, N[K]> } };
 };
 
 type ObjectWithConstructorTypes<T> = { [K in keyof T]: PropertyOptions<T, T[K]> };
@@ -83,14 +88,17 @@ type Return<T> = { [K in keyof ObjectWithConstructorTypes<T>]: ActualType<Object
 function composeSchema<T>(args: {
   properties: { [K in keyof T]: PropertyOptions<T, T[K]> };
   options: EntityOptions;
-  // editors: { [K in keyof TProperties]: PropertyOptions<ActualType<TProperties[K]>> };
-  // resolvers: { [K in keyof Partial<TProperties>]: Resolver<ActualType<TProperties>, ActualType<TProperties[K]>> };
 }): EntitySchema<T> {
-  // EntitySchema<T, TAlias>
+  function createResolver<N>(properties: { [K in keyof N]: ResolvedPropertyOptions<T, N[K]> }) {
+    return {
+      [args.options.alias]: properties
+    };
+  }
 
   return {
     ...args,
-    prototypes: {} as Return<T>
+    prototypes: {} as Return<T>,
+    createResolver
   };
 }
 
@@ -105,14 +113,12 @@ const CommentSchema = composeSchema({
   options: { alias: 'comment' },
   properties: {
     text: {
-      mode: 'edit',
       type: String,
       editorComponent: composeFakeEditor<string>(),
       defaultValue: 'hello',
       displayName: 'Text'
     },
     location: {
-      mode: 'edit',
       editorComponent: composeFakeEditor<{ lat: number; lng: number }>(),
       displayName: 'Text',
       type: {
@@ -121,12 +127,11 @@ const CommentSchema = composeSchema({
       }
     },
     // upperCaseText: {
-    //   mode: 'resolve',
+    //
     //   type: String,
     //   resolve: comment => comment.text.toUpperCase()
     // },
     tags: {
-      mode: 'edit',
       type: [String]
     }
   }
@@ -136,7 +141,6 @@ const ArticleSchema = composeSchema({
   options: { alias: 'article' },
   properties: {
     title: {
-      mode: 'edit',
       type: String,
       editorComponent: composeFakeEditor<string>(),
       defaultValue: 'hello',
@@ -170,34 +174,30 @@ function configureServer(serverConfig: {
   return serverConfig;
 }
 
-function createResolver<T, N>(
-  schema: EntitySchema<T>,
-  properties: { [K in keyof N]: ResolvedPropertyOptions<T, N[K]> }
-) {
-  return {
-    [schema.options.alias]: properties
-  };
-}
-
 configureServer({
   config,
   resolvers: {
-    ...createResolver(CommentSchema, {
+    ...CommentSchema.createResolver({
       upperCaseText: {
-        mode: 'resolve',
         type: String,
         resolve: source => source.text.toUpperCase()
-      }
+      },
+      image: resolveImage()
     }),
-    ...createResolver(ArticleSchema, {
+    ...ArticleSchema.createResolver({
       upperCaseTitle: {
-        mode: 'resolve',
         type: String,
         resolve: source => source.title.toUpperCase()
       }
     })
   }
 });
+
+function resolveImage() {
+  return {
+    type: String
+  };
+}
 
 CommentSchema.prototypes.text.toUpperCase();
 CommentSchema.prototypes.location.lat.toFixed();

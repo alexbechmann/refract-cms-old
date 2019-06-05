@@ -36,7 +36,6 @@ export const NewsArticleSchema = composeSchema({
   },
   properties: {
     title: {
-      mode: 'edit',
       displayName: 'Headline',
       editorComponent: createTextEditor({
         maxLength: 100
@@ -45,7 +44,6 @@ export const NewsArticleSchema = composeSchema({
       type: String
     },
     articleText: {
-      mode: 'edit',
       displayName: 'Article text',
       editorComponent: createTextEditor({
         maxLength: 100,
@@ -55,19 +53,16 @@ export const NewsArticleSchema = composeSchema({
       type: String
     },
     extraText: {
-      mode: 'edit',
       displayName: 'Extra text',
       editorComponent: props => <input value={props.value} onChange={e => props.setValue(e.target.value)} />,
       type: String
     },
     articleDate: {
-      mode: 'edit',
       displayName: 'Article date',
       editorComponent: createDatePickerEditor(),
       type: Date
     },
     listOfStrings: {
-      mode: 'edit',
       editorComponent: createListEditor({
         itemComponent: createTextEditor(),
         max: 4,
@@ -124,13 +119,11 @@ export const NewsArticleSchema = composeSchema({
     //   })
     // },
     primary: {
-      mode: 'edit',
       displayName: 'Primary',
       editorComponent: props => <Checkbox checked={props.value} onChange={(e, checked) => props.setValue(checked)} />,
       type: Boolean
     },
     highlightedProductId: {
-      mode: 'edit',
       displayName: 'Highlighted product',
       type: String,
       editorComponent: createSingleEntityPickerEditor({
@@ -138,7 +131,6 @@ export const NewsArticleSchema = composeSchema({
       })
     },
     otherRelatedProductIds: {
-      mode: 'edit',
       displayName: 'More products',
       type: [String],
       editorComponent: createMultipleEntityPickerEditor({

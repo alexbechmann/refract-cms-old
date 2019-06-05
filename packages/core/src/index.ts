@@ -6,7 +6,7 @@ export { default as composeSchema } from './entities/compose-schema';
 export { PropertyType } from './properties/property-types';
 export { EntitySchema } from './entities/entity-schema';
 export { graphqlQueryHelper } from './graphql/graphql-query-helper';
-export { PropertyOptions, EditablePropertyOptions, ResolvedPropertyOptions } from './properties/property-options';
+export { PropertyOptions, ResolvedPropertyOptions } from './properties/property-options';
 export { ImageRef } from './files/image-ref.model';
 export { Crop } from './files/crop.model';
 export { FileModel } from './files/file.model';

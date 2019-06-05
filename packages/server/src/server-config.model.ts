@@ -1,4 +1,4 @@
-import { Config } from '@refract-cms/core';
+import { Config, PropertyType } from '@refract-cms/core';
 
 export interface ServerConfig {
   config: Config;
@@ -13,6 +13,14 @@ export interface ServerConfig {
     jwt: {
       issuer?: string;
       secret: string;
+    };
+  };
+  resolvers?: {
+    [key: string]: {
+      [key: string]: {
+        type: PropertyType;
+        resolve?: any;
+      };
     };
   };
 }

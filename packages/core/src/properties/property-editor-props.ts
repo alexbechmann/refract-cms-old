@@ -1,10 +1,10 @@
-import { EditablePropertyOptions } from './property-options';
+import { PropertyOptions } from './property-options';
 import { PropertyType } from './property-types';
 
 export interface PropertyEditorProps<T> {
   setValue: (value: T | undefined) => void;
   propertyKey: string;
   value: T | undefined;
-  propertyOptions: EditablePropertyOptions<any, PropertyType>;
+  propertyOptions: PropertyOptions<any, PropertyType>;
   serverUrl: string;
 }

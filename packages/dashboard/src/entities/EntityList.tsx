@@ -24,7 +24,7 @@ import {
   DialogTitle,
   WithStyles
 } from '@material-ui/core';
-import { EntitySchema, Entity, graphqlQueryHelper, EntityListItem, EditablePropertyOptions } from '@refract-cms/core';
+import { EntitySchema, Entity, graphqlQueryHelper, EntityListItem, PropertyOptions } from '@refract-cms/core';
 import { RouteComponentProps, Link, Redirect } from '@reach/router';
 import { connect } from 'react-redux';
 import { AppState } from '../state/app.state';
@@ -135,11 +135,8 @@ class EntitiesList extends Component<Props> {
                             onClick={() => this.setState({ filterDialogOpen: true })}
                           >
                             Sorted by{' '}
-                            {
-                              (entitySchema.properties[filters.orderByField] as EditablePropertyOptions<any, any>)
-                                .displayName
-                            }
-                            , {filters.orderByDirection}
+                            {(entitySchema.properties[filters.orderByField] as PropertyOptions<any, any>).displayName},{' '}
+                            {filters.orderByDirection}
                           </ListSubheader>
                         ) : (
                           undefined
@@ -206,13 +203,12 @@ class EntitiesList extends Component<Props> {
                 {Object.keys(entitySchema.properties)
                   .filter(
                     propertyKey =>
-                      entitySchema.properties[propertyKey].mode === 'edit' &&
-                      (entitySchema.properties[propertyKey].type === String ||
-                        entitySchema.properties[propertyKey].type === Date ||
-                        entitySchema.properties[propertyKey].type === Number)
+                      entitySchema.properties[propertyKey].type === String ||
+                      entitySchema.properties[propertyKey].type === Date ||
+                      entitySchema.properties[propertyKey].type === Number
                   )
                   .map((propertyKey: string, index: number) => {
-                    const propertyOptions = entitySchema.properties[propertyKey] as EditablePropertyOptions<any, any>;
+                    const propertyOptions = entitySchema.properties[propertyKey] as PropertyOptions<any, any>;
                     return (
                       <MenuItem key={index} value={propertyKey}>
                         {propertyOptions.displayName || propertyKey}

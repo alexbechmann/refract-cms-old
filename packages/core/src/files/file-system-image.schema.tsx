@@ -19,7 +19,6 @@ export const FileSystemImageSchema = composeSchema({
   },
   properties: {
     fileRef: {
-      mode: 'edit',
       editorComponent: createFileUploadEditor({}),
       displayName: 'Image',
       type: {
@@ -28,11 +27,6 @@ export const FileSystemImageSchema = composeSchema({
         mimetype: String,
         size: Number
       }
-    },
-    fileUrl: {
-      mode: 'resolve',
-      type: String,
-      resolve: image => image.fileRef.path.toUpperCase + 'test url'
     }
   }
 });

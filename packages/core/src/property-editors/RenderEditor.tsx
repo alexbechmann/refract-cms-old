@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { PropertyOptions, EditablePropertyOptions } from '../properties/property-options';
+import { PropertyOptions } from '../properties/property-options';
 import { PropertyEditorProps } from '../properties/property-editor-props';
 
 export interface RenderEditorProps extends PropertyEditorProps<any> {
-  propertyOptions: EditablePropertyOptions<any, any>;
+  propertyOptions: PropertyOptions<any, any>;
 }
 
 interface Props extends RenderEditorProps {}

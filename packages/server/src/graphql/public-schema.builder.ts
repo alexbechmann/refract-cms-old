@@ -363,11 +363,11 @@ export class PublicSchemaBuilder {
               // @ts-ignore
               type
             };
-            if (addResolvers && propertyOptions.mode === 'resolve' && propertyOptions.resolve) {
-              acc[propertyKey].resolve = propertyOptions.resolve;
-              // @ts-ignore
-              acc[propertyKey].dependencies = [];
-            }
+            // if (addResolvers && propertyOptions.mode === 'resolve' && propertyOptions.resolve) {
+            //   acc[propertyKey].resolve = propertyOptions.resolve;
+            //   // @ts-ignore
+            //   acc[propertyKey].dependencies = [];
+            // }
 
             return acc;
           },
