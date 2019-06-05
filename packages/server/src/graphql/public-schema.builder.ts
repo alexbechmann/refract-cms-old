@@ -346,29 +346,34 @@ export class PublicSchemaBuilder {
     addResolvers?: boolean
   ) {
     const existingType = this.types.find(t => t.name === alias);
-
     if (existingType) {
       return existingType;
     }
+    let extraProperties = this.serverConfig.resolvers
+      ? this.serverConfig.resolvers[alias.replace('Entity', '')] || {}
+      : {};
+    extraProperties = extraProperties || {};
+
+    const editableAndResolvedProperties = {
+      ...properties,
+      ...extraProperties
+    };
 
     const type = new GraphQLObjectType({
       name: alias,
       fields: () =>
-        Object.keys(properties).reduce(
+        Object.keys(editableAndResolvedProperties).reduce(
           (acc, propertyKey) => {
-            const propertyOptions = properties[propertyKey];
+            const propertyOptions: any = editableAndResolvedProperties[propertyKey];
             const propertyType = propertyOptions.type;
             const type = this.buildType(`${alias}${propertyKey}`, propertyType);
             acc[propertyKey] = {
-              // @ts-ignore
               type
             };
-            // if (addResolvers && propertyOptions.mode === 'resolve' && propertyOptions.resolve) {
-            //   acc[propertyKey].resolve = propertyOptions.resolve;
-            //   // @ts-ignore
-            //   acc[propertyKey].dependencies = [];
-            // }
-
+            if (addResolvers && propertyOptions.resolve) {
+              acc[propertyKey].resolve = propertyOptions.resolve;
+              acc[propertyKey].dependencies = [];
+            }
             return acc;
           },
           {
