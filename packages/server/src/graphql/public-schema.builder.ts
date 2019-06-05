@@ -40,10 +40,6 @@ export class PublicSchemaBuilder {
     addResolvers: boolean;
     suffixName?: string;
   }) {
-    // const extension = useExtensions
-    //   ? this.serverConfig.publicGraphQL.find(extension => extension.schema.options.alias === entitySchema.options.alias)
-    //   : null;
-
     const type = this.buildEntity(
       prefixName + entitySchema.options.alias + suffixName,
       entitySchema.properties,
@@ -103,7 +99,6 @@ export class PublicSchemaBuilder {
     repository: mongoose.Model<TEntity>,
     type: GraphQLObjectType
   ) {
-    //const argsType = this.buildEntityFromSchema(entitySchema, '', false, 'Args', false);
     const entityType = this.buildEntityFromSchema({
       entitySchema,
       prefixName: '',
@@ -301,21 +296,6 @@ export class PublicSchemaBuilder {
       case propertyType instanceof Object: {
         return this.buildShapeInput(propertyName, propertyType as any);
       }
-
-      // // @ts-ignore
-      // case 'SchemaType': {
-      //   // @ts-ignore
-      //   return this.buildEntityFromSchema(propertyType.meta, '');
-      // }
-      // case 'Ref': {
-      //   const shapeArgs = Object.keys(propertyType.meta.properties).reduce((acc, propertKey) => {
-      //     acc[propertKey] = propertyType.meta.properties[propertKey].type;
-      //     return acc;
-      //   }, {}) as any;
-
-      //   const shape = RefractTypes.shape(shapeArgs);
-      //   return this.buildShape(propertyName, shape);
-      // }
       default: {
         return GraphQLString;
       }
