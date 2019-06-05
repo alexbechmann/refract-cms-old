@@ -29,13 +29,17 @@ export class PublicSchemaBuilder {
 
   constructor(private serverConfig: ServerConfig) {}
 
-  buildEntityFromSchema(
-    entitySchema: EntitySchema,
-    prefixName: string = '',
-    addResolvers: boolean,
-    suffixName: string = '',
-    useExtensions: boolean = true
-  ) {
+  buildEntityFromSchema({
+    entitySchema,
+    prefixName = '',
+    addResolvers,
+    suffixName = ''
+  }: {
+    entitySchema: EntitySchema;
+    prefixName: string;
+    addResolvers: boolean;
+    suffixName?: string;
+  }) {
     // const extension = useExtensions
     //   ? this.serverConfig.publicGraphQL.find(extension => extension.schema.options.alias === entitySchema.options.alias)
     //   : null;
@@ -51,7 +55,11 @@ export class PublicSchemaBuilder {
   buildSchema(schema: EntitySchema[]) {
     let queryFields = {};
     schema.forEach(entitySchema => {
-      const type = this.buildEntityFromSchema(entitySchema, '', true);
+      const type = this.buildEntityFromSchema({
+        entitySchema,
+        prefixName: '',
+        addResolvers: true
+      });
       const repository = repositoryForSchema(entitySchema);
 
       queryFields = {
@@ -69,7 +77,11 @@ export class PublicSchemaBuilder {
 
     let mutationFields = {};
     schema.forEach(entitySchema => {
-      const type = this.buildEntityFromSchema(entitySchema, '', true);
+      const type = this.buildEntityFromSchema({
+        entitySchema,
+        prefixName: '',
+        addResolvers: true
+      });
       const repository = repositoryForSchema(entitySchema);
 
       mutationFields = {
@@ -91,8 +103,13 @@ export class PublicSchemaBuilder {
     repository: mongoose.Model<TEntity>,
     type: GraphQLObjectType
   ) {
-    // const argsType = this.buildEntityFromSchema(entitySchema, '', false, 'Args', false);
-    const entityType = this.buildEntityFromSchema(entitySchema, '', false, 'Entity', false);
+    //const argsType = this.buildEntityFromSchema(entitySchema, '', false, 'Args', false);
+    const entityType = this.buildEntityFromSchema({
+      entitySchema,
+      prefixName: '',
+      addResolvers: false,
+      suffixName: 'Entity'
+    });
     const args = getGraphQLQueryArgs(entityType);
     const resolvers = {
       [`${entitySchema.options.alias}Count`]: {
@@ -114,13 +131,19 @@ export class PublicSchemaBuilder {
       [`${entitySchema.options.alias}List`]: {
         type: new GraphQLList(type),
         args,
-        resolve: getMongoDbQueryResolver(type, async (filter, projection, options, obj, args, { db }: { db: Db }) => {
-          return repository
-            .find(filter)
-            .sort(options.sort)
-            .limit(options.limit)
-            .skip(options.skip);
-        })
+        resolve: getMongoDbQueryResolver(
+          entityType,
+          async (filter, projection, options, obj, args, { db }: { db: Db }) => {
+            return repository
+              .find(filter)
+              .sort(options.sort)
+              .limit(options.limit)
+              .skip(options.skip);
+          },
+          {
+            differentOutputType: true
+          }
+        )
       },
       [`${entitySchema.options.alias}EntityList`]: {
         type: new GraphQLList(entityType),
@@ -346,9 +369,7 @@ export class PublicSchemaBuilder {
     if (existingType) {
       return existingType;
     }
-    let extraProperties = this.serverConfig.resolvers ? this.serverConfig.resolvers[alias] || {} : {};
-    extraProperties = extraProperties || {};
-    console.log({ alias, extraProperties });
+    let extraProperties = this.serverConfig.resolvers && addResolvers ? this.serverConfig.resolvers[alias] || {} : {};
 
     const editableAndResolvedProperties = {
       ...properties,
