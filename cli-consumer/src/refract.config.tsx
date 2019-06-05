@@ -14,6 +14,5 @@ import { ProductSchema } from './products/product.schema';
 import CustomDropdownEditor from './shared/CustomDropdownEditor';
 
 export default configure({
-  //schema: [FileSystemImageSchema, ProductSchema, NewsArticleSchema, SettingsSchema],
-  schema: [NewsArticleSchema]
+  schema: [FileSystemImageSchema, ProductSchema, NewsArticleSchema, SettingsSchema]
 });
