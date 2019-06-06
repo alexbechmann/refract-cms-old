@@ -2,6 +2,7 @@
 import { CliServerConfig } from '@refract-cms/cli';
 import { ProductSchema } from './products/product.schema';
 import { NewsArticleSchema } from './news/news-article.schema';
+import { createResolver } from '@refract-cms/server';
 // import { RefractTypes } from '@refract-cms/core';
 // import { ProductSchema } from './products/product.schema';
 // import { NewsArticleSchema } from './news/news-article.schema';
@@ -21,7 +22,7 @@ const serverConfig: CliServerConfig = {
     }
   },
   resolvers: {
-    ...NewsArticleSchema.createResolver({
+    ...createResolver(NewsArticleSchema, {
       upperCaseTitle: {
         type: String,
         resolve: source => (source.title ? source.title.toUpperCase() : 'nothing')

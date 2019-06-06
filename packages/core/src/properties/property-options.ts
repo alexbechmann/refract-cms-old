@@ -3,17 +3,6 @@ import { PropertyEditorProps } from './property-editor-props';
 import { PropertyType, ActualType } from './property-types';
 import { Return } from '../entities/entity-schema';
 
-type ServerResolverContext = {
-  cmsBaseUrl: string;
-};
-
-type Resolver<T, V> = (source: Return<T>, context: ServerResolverContext) => V | Promise<V>;
-
-export interface ResolvedPropertyOptions<T, TPropertyType extends PropertyType | any> {
-  type: TPropertyType;
-  resolve?: Resolver<T, ActualType<TPropertyType>>;
-}
-
 export type PropertyOptions<T, TPropertyType extends PropertyType | any> = {
   displayName?: string;
   editorComponent: React.ComponentType<PropertyEditorProps<ActualType<TPropertyType>>>;

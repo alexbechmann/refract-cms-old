@@ -62,7 +62,11 @@ interface EntityOptions {
   alias: string;
 }
 
-type Resolver<T, V> = (source: { [K in keyof T]: ActualType<T[K]> }) => V | Promise<V>;
+type RefractGraphQLContext = {
+  serverConfig: { something: boolean };
+};
+
+type Resolver<T, V> = (source: { [K in keyof T]: ActualType<T[K]> }, context: RefractGraphQLContext) => V | Promise<V>;
 
 // type Return<TProperties extends Properties<T>, T> = { [K in keyof TProperties]: ActualType<TProperties[K]> };
 
@@ -77,9 +81,6 @@ type EntitySchema<T = any> = {
   properties: { [K in keyof T]: PropertyOptions<T, T[K]> };
   options: EntityOptions;
   prototypes: Return<T>;
-  createResolver: <N>(
-    properties: { [K in keyof N]: ResolvedPropertyOptions<T, N[K]> }
-  ) => { [key: string]: { [K in keyof N]: ResolvedPropertyOptions<T, N[K]> } };
 };
 
 type ObjectWithConstructorTypes<T> = { [K in keyof T]: PropertyOptions<T, T[K]> };
@@ -89,16 +90,18 @@ function composeSchema<T>(args: {
   properties: { [K in keyof T]: PropertyOptions<T, T[K]> };
   options: EntityOptions;
 }): EntitySchema<T> {
-  function createResolver<N>(properties: { [K in keyof N]: ResolvedPropertyOptions<T, N[K]> }) {
-    return {
-      [args.options.alias]: properties
-    };
-  }
-
   return {
     ...args,
-    prototypes: {} as Return<T>,
-    createResolver
+    prototypes: {} as Return<T>
+  };
+}
+
+function createResolver<T, N>(
+  schema: EntitySchema<T>,
+  properties: { [K in keyof N]: ResolvedPropertyOptions<T, N[K]> }
+) {
+  return {
+    [schema.options.alias]: properties
   };
 }
 
@@ -177,17 +180,17 @@ function configureServer(serverConfig: {
 configureServer({
   config,
   resolvers: {
-    ...CommentSchema.createResolver({
+    ...createResolver(CommentSchema, {
       upperCaseText: {
         type: String,
         resolve: source => source.text.toUpperCase()
       },
       image: resolveImage()
     }),
-    ...ArticleSchema.createResolver({
+    ...createResolver(ArticleSchema, {
       upperCaseTitle: {
         type: String,
-        resolve: source => source.title.toUpperCase()
+        resolve: (source, context) => source.title.toUpperCase() + context.serverConfig.something
       }
     })
   }

@@ -19,6 +19,7 @@ import { PublicSchemaBuilder } from './graphql/public-schema.builder';
 import expressPlayground from 'graphql-playground-middleware-express';
 import bodyParser from 'body-parser';
 import { requireAuth } from './auth/require-auth.middleware';
+import { RefractGraphQLContext } from './graphql/refract-graphql-context';
 
 const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => {
   const { config } = serverConfig;
@@ -57,15 +58,20 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
 
   router.use(
     '/graphql',
-    graphqlHTTP((req, res) => ({
-      schema,
-      graphiql: true,
-      context: {
+    graphqlHTTP((req, res) => {
+      const context: RefractGraphQLContext = {
+        req,
+        serverConfig,
         userId: req.headers.authorization
           ? authService.verifyAccessToken(req.headers.authorization!, serverConfig).nameid
           : null
-      }
-    }))
+      };
+      return {
+        schema,
+        graphiql: true,
+        context
+      };
+    })
   );
 
   router.get('/graphql-playground', expressPlayground({ endpoint: `${serverConfig.rootPath}/graphql` }));
