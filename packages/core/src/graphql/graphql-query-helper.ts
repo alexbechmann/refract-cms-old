@@ -37,15 +37,23 @@ class GraphqlQueryHelper {
     `;
   }
 
+  isBasicPropertyType(propertyType: PropertyType) {
+    return [String, Number, Date, Boolean].find(t => propertyType === t);
+  }
+
   buildProperties(properties: { [key: string]: PropertyType }): string {
     return Object.keys(properties).map(propertyKey => {
       const propertyType = properties[propertyKey];
-      if ([String, Number, Date, Boolean].find(t => propertyType === t) || propertyType instanceof Array) {
+      if (
+        this.isBasicPropertyType(propertyType) ||
+        (propertyType instanceof Array && this.isBasicPropertyType(propertyType[0]))
+      ) {
         return propertyKey;
       } else {
+        const t = propertyType instanceof Array ? propertyType[0] : propertyType;
         return `
         ${propertyKey} {
-          ${this.buildProperties(propertyType as any)}
+          ${this.buildProperties(t as any)}
         }
         `;
       }

@@ -12,7 +12,7 @@
     "start:dev": "cd dev && npm start",
     "start:cli": "cd cli-consumer && npm start",
     "start": "npm run start:cli",
-    "test": "ts-mocha --paths -p ./__tests__/tsconfig.json __tests__/**/*.test*.ts",
+    "test": "ts-mocha --paths -p ./__tests__/tsconfig.json __tests__/**/*.test*.ts*",
     "t": "tsc -p __tests__ && ",
     "build": "npm-run-all build:js build:types:core build:types:dashboard build:types:server",
     "test:watch": "yarn run test --watch --watch-extensions ts",

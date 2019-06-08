@@ -18,7 +18,6 @@ import {
 import DescriptionIcon from '@material-ui/icons/Description';
 import { Button, Checkbox } from '@material-ui/core';
 import moment from 'moment';
-import { SettingsSchema } from '../settings/settings.model';
 import { ProductSchema } from '../products/product.schema';
 
 export const NewsArticleSchema = composeSchema({

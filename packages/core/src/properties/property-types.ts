@@ -23,5 +23,5 @@ export type ActualType<T extends PropertyType | any> = T extends BasicPropertyTy
   : T extends (infer U)[]
   ? U extends BasicPropertyType
     ? ActualTypeFromPrototype<U['prototype']>[]
-    : never
+    : ActualTypeFromPrototype<U>[]
   : never;

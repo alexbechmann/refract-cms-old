@@ -1,7 +1,7 @@
 import mocha from 'mocha';
 import chai from 'chai';
 import { PublicSchemaBuilder } from '../../../../packages/server/src/graphql/public-schema.builder';
-import { RefractTypes, PropertyType } from '../../../../packages/core/src';
+import { PropertyType } from '../../../../packages/core/src';
 import { ProductSchema, Product } from '../../config/products/product.model';
 import { printType, GraphQLString, GraphQLBoolean, GraphQLFloat } from 'graphql';
 import refractConfig from '../../config/refract.config';
@@ -10,22 +10,17 @@ import { GraphQLDateTime } from 'graphql-iso-date';
 
 const expect = chai.expect;
 
-const publicSchemaBuilder = new PublicSchemaBuilder({
-  publicGraphQL: []
-} as ServerConfig);
+const publicSchemaBuilder = new PublicSchemaBuilder({} as ServerConfig);
 
 mocha.describe('build shape', () => {
   mocha.it('should create valid shape (Location)', () => {
-    const shape = publicSchemaBuilder.buildShape(
-      'Location',
-      RefractTypes.shape({
-        lat: RefractTypes.number,
-        lng: RefractTypes.number,
-        deep: RefractTypes.shape({
-          level: RefractTypes.number
-        })
-      })
-    );
+    const shape = publicSchemaBuilder.buildShape('Location', {
+      lat: Number,
+      lng: Number,
+      deep: {
+        level: Number
+      }
+    });
 
     const expected = `
 type Location {
@@ -42,22 +37,22 @@ type Location {
 
 mocha.describe('build types', () => {
   mocha.it('should create valid string', () => {
-    const type = publicSchemaBuilder.buildType<string>('something', RefractTypes.string);
+    const type = publicSchemaBuilder.buildType<string>('something', String);
     expect(type).to.equal(GraphQLString);
   });
 
   mocha.it('should create valid boolean', () => {
-    const type = publicSchemaBuilder.buildType<boolean>('something', RefractTypes.bool);
+    const type = publicSchemaBuilder.buildType<boolean>('something', Boolean);
     expect(type).to.equal(GraphQLBoolean);
   });
 
   mocha.it('should create valid date', () => {
-    const type = publicSchemaBuilder.buildType<Date>('something', RefractTypes.date);
+    const type = publicSchemaBuilder.buildType<Date>('something', Date);
     expect(type).to.equal(GraphQLDateTime);
   });
 
   mocha.it('should create valid boolean', () => {
-    const type = publicSchemaBuilder.buildType<number>('something', RefractTypes.number);
+    const type = publicSchemaBuilder.buildType<number>('something', Number);
     expect(type).to.equal(GraphQLFloat);
   });
 });
