@@ -20,12 +20,13 @@ import expressPlayground from 'graphql-playground-middleware-express';
 import bodyParser from 'body-parser';
 import { requireAuth } from './auth/require-auth.middleware';
 import { RefractGraphQLContext } from './graphql/refract-graphql-context';
-import { refPlugin } from './plugins/ref-plugin';
+import { singleRefPlugin } from './plugins/single-ref-plugin';
+import { multipleRefPlugin } from './plugins/multiple-ref-plugin';
 
 const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => {
   const { config } = serverConfig;
 
-  serverConfig.resolverPlugins = [refPlugin, ...serverConfig.resolverPlugins];
+  serverConfig.resolverPlugins = [singleRefPlugin, multipleRefPlugin, ...serverConfig.resolverPlugins];
 
   const router = express.Router();
   const storage = multer.diskStorage({

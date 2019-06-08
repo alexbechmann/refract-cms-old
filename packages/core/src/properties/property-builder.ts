@@ -13,7 +13,7 @@ function singleReference(
       schema
     }),
     resolverPlugin: {
-      alias: 'singleReference',
+      alias: 'singleRef',
       meta: { schema }
     }
   };
@@ -21,16 +21,17 @@ function singleReference(
 
 function multipleReferences(
   schema: EntitySchema,
-  options?: Pick<PropertyOptions<any, String>, 'displayName' | 'defaultValue'>
+  options?: Pick<PropertyOptions<any, String>, 'displayName' | 'defaultValue'> & { max?: number }
 ): PropertyOptions<any, StringConstructor[]> {
   return {
     ...options,
     type: [String],
     editorComponent: createMultipleEntityPickerEditor({
-      schema
+      schema,
+      max: options.max
     }),
     resolverPlugin: {
-      alias: 'multipleReferences',
+      alias: 'multipleRef',
       meta: { schema }
     }
   };

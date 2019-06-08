@@ -1,11 +1,9 @@
-import { ResolverPlugin } from './resolver-plugin.model';
 import { EntitySchema } from '@refract-cms/core';
 import { repositoryForSchema } from '../repository-for-schema';
 import { createResolverPlugin } from './create-resolver-plugin';
-import { PublicSchemaBuilder } from '../graphql/public-schema.builder';
 
-export const refPlugin = createResolverPlugin({
-  alias: 'singleReference',
+export const singleRefPlugin = createResolverPlugin({
+  alias: 'singleRef',
   buildFieldConfig: ({ propertyKey, meta, serverConfig, schemaBuilder }) => {
     const refSchema: EntitySchema = meta.schema;
     return {

@@ -1,5 +1,11 @@
 import React from 'react';
-import { Entity, composeSchema, createTextEditor, createMultipleEntityPickerEditor } from '@refract-cms/core';
+import {
+  Entity,
+  composeSchema,
+  createTextEditor,
+  createMultipleEntityPickerEditor,
+  propertyBuilder
+} from '@refract-cms/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { NewsArticleSchema } from '../news/news-article.schema';
 import { Switch } from '@material-ui/core';
@@ -25,12 +31,8 @@ export const SettingsSchema = composeSchema({
       type: Boolean,
       editorComponent: props => <Switch checked={props.value} onChange={(e, checked) => props.setValue(checked)} />
     },
-    highlightedArticleIds: {
-      displayName: 'Highlighted articles',
-      type: [String],
-      editorComponent: createMultipleEntityPickerEditor({
-        schema: NewsArticleSchema
-      })
-    }
+    highlightedArticles: propertyBuilder.multipleReferences(NewsArticleSchema, {
+      displayName: 'Highlighted articles'
+    })
   }
 });
