@@ -8,7 +8,7 @@ import { store } from '../state/root.store';
 import { logout } from '../auth/state/auth.actions';
 
 export const createApolloClient = ({ serverUrl }: { serverUrl: string }) => {
-  const httpLink = new HttpLink({ uri: `${serverUrl}/graphql` });
+  const httpLink = new HttpLink({ uri: `${serverUrl}/internal/graphql` });
   const withTokenLink = setContext((operation, { headers }) =>
     Promise.resolve({
       headers: {

@@ -54,20 +54,34 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
   schemaBuilder.buildSchema(config.schema, serverConfig);
 
   const publicSchemaBuilder = new PublicSchemaBuilder(serverConfig);
-  const schema = publicSchemaBuilder.buildSchema(config.schema);
+  const { publicGraphQLSchema, internalGraphQLSchema } = publicSchemaBuilder.buildSchema(config.schema);
 
   router.use(
     '/graphql',
     graphqlHTTP((req, res) => {
       const context: RefractGraphQLContext = {
         req,
-        serverConfig,
+        serverConfig
+      };
+      return {
+        schema: publicGraphQLSchema,
+        graphiql: true,
+        context
+      };
+    })
+  );
+
+  router.use(
+    '/internal/graphql',
+    requireAuth(serverConfig),
+    graphqlHTTP((req, res) => {
+      const context = {
         userId: req.headers.authorization
           ? authService.verifyAccessToken(req.headers.authorization!, serverConfig).nameid
           : null
       };
       return {
-        schema,
+        schema: internalGraphQLSchema,
         graphiql: true,
         context
       };

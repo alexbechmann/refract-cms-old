@@ -28,7 +28,8 @@ const serverConfig: CliServerConfig = {
         resolve: source => (source.title ? source.title.toUpperCase() : 'nothing')
       }
     })
-  }
+  },
+  resolverPlugins: []
 };
 
 export default serverConfig;

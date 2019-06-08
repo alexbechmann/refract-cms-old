@@ -10,7 +10,10 @@ import {
   PropertyEditorProps,
   createSingleEntityPickerEditor,
   createMultipleEntityPickerEditor,
-  createMultipleDropdownEditor
+  createMultipleDropdownEditor,
+  EntitySchema,
+  PropertyOptions,
+  propertyBuilder
 } from '@refract-cms/core';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { Button, Checkbox } from '@material-ui/core';
@@ -123,20 +126,11 @@ export const NewsArticleSchema = composeSchema({
       editorComponent: props => <Checkbox checked={props.value} onChange={(e, checked) => props.setValue(checked)} />,
       type: Boolean
     },
-    highlightedProductId: {
-      displayName: 'Highlighted product',
-      type: String,
-      editorComponent: createSingleEntityPickerEditor({
-        schema: ProductSchema
-      })
-    },
-    otherRelatedProductIds: {
-      displayName: 'More products',
-      type: [String],
-      editorComponent: createMultipleEntityPickerEditor({
-        schema: ProductSchema,
-        max: 2
-      })
-    }
+    highlightedProduct: propertyBuilder.singleReference(ProductSchema, {
+      displayName: 'Highlighted product 1'
+    }),
+    otherRelatedProducts: propertyBuilder.multipleReferences(ProductSchema, {
+      displayName: 'Other related products'
+    })
   }
 });

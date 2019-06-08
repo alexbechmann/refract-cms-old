@@ -18,6 +18,7 @@ export { CoreContext } from './context/core.context';
 export { withCoreContext } from './context/with-core-context';
 export { WithCoreContextProps } from './context/with-core-context-props.model';
 export { default as FileUploader } from './files/FileUploader';
+export { propertyBuilder } from './properties/property-builder';
 
 // Property Editors
 export { PropertyEditorProps } from './properties/property-editor-props';

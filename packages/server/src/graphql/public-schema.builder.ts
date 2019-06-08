@@ -49,7 +49,7 @@ export class PublicSchemaBuilder {
   }
 
   buildSchema(schema: EntitySchema[]) {
-    let queryFields = {};
+    let publicQueryFields = {};
     schema.forEach(entitySchema => {
       const type = this.buildEntityFromSchema({
         entitySchema,
@@ -58,17 +58,41 @@ export class PublicSchemaBuilder {
       });
       const repository = repositoryForSchema(entitySchema);
 
-      queryFields = {
-        ...queryFields,
-        ...this.buildFieldQueries(entitySchema, repository, type)
+      publicQueryFields = {
+        ...publicQueryFields,
+        ...this.buildPublicFieldQueries(entitySchema, repository, type)
       };
 
       console.log(chalk.blue(`Added schema: ${entitySchema.options.displayName || entitySchema.options.alias}`));
     });
 
-    const query = new GraphQLObjectType({
+    const publicQuery = new GraphQLObjectType({
       name: 'Query',
-      fields: queryFields
+      fields: publicQueryFields
+    });
+
+    const publicGraphQLSchema = new GraphQLSchema({ query: publicQuery });
+
+    let internalQueryFields = {};
+    schema.forEach(entitySchema => {
+      const type = this.buildEntityFromSchema({
+        entitySchema,
+        prefixName: '',
+        addResolvers: true
+      });
+      const repository = repositoryForSchema(entitySchema);
+
+      internalQueryFields = {
+        ...internalQueryFields,
+        ...this.buildInternalFieldQueries(entitySchema, repository, type)
+      };
+
+      console.log(chalk.blue(`Added schema: ${entitySchema.options.displayName || entitySchema.options.alias}`));
+    });
+
+    const internalQuery = new GraphQLObjectType({
+      name: 'Query',
+      fields: internalQueryFields
     });
 
     let mutationFields = {};
@@ -91,10 +115,62 @@ export class PublicSchemaBuilder {
       fields: mutationFields
     });
 
-    return new GraphQLSchema({ query, mutation });
+    const internalGraphQLSchema = new GraphQLSchema({ query: internalQuery, mutation });
+
+    return {
+      publicGraphQLSchema,
+      internalGraphQLSchema
+    };
   }
 
-  buildFieldQueries<TEntity extends Entity & mongoose.Document>(
+  buildInternalFieldQueries<TEntity extends Entity & mongoose.Document>(
+    entitySchema: EntitySchema<TEntity>,
+    repository: mongoose.Model<TEntity>,
+    type: GraphQLObjectType
+  ) {
+    const entityType = this.buildEntityFromSchema({
+      entitySchema,
+      prefixName: '',
+      addResolvers: false,
+      suffixName: 'Entity'
+    });
+    const args = getGraphQLQueryArgs(entityType);
+    const resolvers = {
+      [`${entitySchema.options.alias}EntityList`]: {
+        type: new GraphQLList(entityType),
+        args,
+        resolve: getMongoDbQueryResolver(
+          entityType,
+          async (filter, projection, options, obj, args, { db }: { db: Db }) => {
+            return repository
+              .find(filter)
+              .sort(options.sort)
+              .limit(options.limit)
+              .skip(options.skip);
+          }
+        )
+      },
+      [`${entitySchema.options.alias}Count`]: {
+        type: GraphQLInt,
+        args: {
+          filter: args.filter
+        },
+        resolve: (_, { filter }) => repository.count(getMongoDbFilter(entityType, filter))
+      },
+      [`${entitySchema.options.alias}EntityFindById`]: {
+        type: entityType,
+        args: {
+          id: { type: GraphQLString }
+        },
+        resolve: (_, { id }) => {
+          return repository.findById(id);
+        }
+      }
+    };
+    return resolvers;
+  }
+
+  buildPublicFieldQueries<TEntity extends Entity & mongoose.Document>(
     entitySchema: EntitySchema<TEntity>,
     repository: mongoose.Model<TEntity>,
     type: GraphQLObjectType
@@ -114,15 +190,7 @@ export class PublicSchemaBuilder {
         },
         resolve: (_, { filter }) => repository.count(getMongoDbFilter(entityType, filter))
       },
-      [`${entitySchema.options.alias}EntityFindById`]: {
-        type: entityType,
-        args: {
-          id: { type: GraphQLString }
-        },
-        resolve: (_, { id }) => {
-          return repository.findById(id);
-        }
-      },
+
       [`${entitySchema.options.alias}List`]: {
         type: new GraphQLList(type),
         args,
@@ -137,20 +205,6 @@ export class PublicSchemaBuilder {
           },
           {
             differentOutputType: true
-          }
-        )
-      },
-      [`${entitySchema.options.alias}EntityList`]: {
-        type: new GraphQLList(entityType),
-        args,
-        resolve: getMongoDbQueryResolver(
-          entityType,
-          async (filter, projection, options, obj, args, { db }: { db: Db }) => {
-            return repository
-              .find(filter)
-              .sort(options.sort)
-              .limit(options.limit)
-              .skip(options.skip);
           }
         )
       }

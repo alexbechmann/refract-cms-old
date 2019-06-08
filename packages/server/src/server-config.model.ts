@@ -1,5 +1,7 @@
 import { Config, PropertyType } from '@refract-cms/core';
 
+type ResolverPlugin = () => any;
+
 export interface ServerConfig {
   config: Config;
   rootPath: string;
@@ -23,4 +25,5 @@ export interface ServerConfig {
       };
     };
   };
+  resolverPlugins?: ResolverPlugin[];
 }
