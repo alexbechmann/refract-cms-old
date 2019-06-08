@@ -12,7 +12,10 @@ function singleReference(
     editorComponent: createSingleEntityPickerEditor({
       schema
     }),
-    resolverPlugin: 'singleReference'
+    resolverPlugin: {
+      alias: 'singleReference',
+      meta: { schema }
+    }
   };
 }
 
@@ -26,7 +29,10 @@ function multipleReferences(
     editorComponent: createMultipleEntityPickerEditor({
       schema
     }),
-    resolverPlugin: 'multipleReferences'
+    resolverPlugin: {
+      alias: 'multipleReferences',
+      meta: { schema }
+    }
   };
 }
 

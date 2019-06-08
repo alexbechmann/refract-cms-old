@@ -2,7 +2,7 @@ import * as express from 'express';
 import graphqlHTTP from 'express-graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import { Dashboard } from '@refract-cms/dashboard';
-import { Config, graphqlQueryHelper, FileModel, Crop } from '@refract-cms/core';
+import { Config, graphqlQueryHelper, FileModel, Crop, EntitySchema } from '@refract-cms/core';
 import { merge } from 'lodash';
 import { printType } from 'graphql';
 import { MongoClient, Db, ObjectId } from 'mongodb';
@@ -20,9 +20,13 @@ import expressPlayground from 'graphql-playground-middleware-express';
 import bodyParser from 'body-parser';
 import { requireAuth } from './auth/require-auth.middleware';
 import { RefractGraphQLContext } from './graphql/refract-graphql-context';
+import { refPlugin } from './plugins/ref-plugin';
 
 const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => {
   const { config } = serverConfig;
+
+  serverConfig.resolverPlugins = [refPlugin, ...serverConfig.resolverPlugins];
+
   const router = express.Router();
   const storage = multer.diskStorage({
     destination: serverConfig.filesPath,

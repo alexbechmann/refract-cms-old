@@ -22,6 +22,7 @@ import { Db, ObjectId } from 'mongodb';
 import { GraphQLDate, GraphQLDateTime } from 'graphql-iso-date';
 import chalk from 'chalk';
 import { MongoIdType } from './mongo-id.type';
+import { ResolvedPropertyOptions } from '../resolved-property-options';
 
 export class PublicSchemaBuilder {
   types: GraphQLObjectType[] = [];
@@ -86,8 +87,6 @@ export class PublicSchemaBuilder {
         ...internalQueryFields,
         ...this.buildInternalFieldQueries(entitySchema, repository, type)
       };
-
-      console.log(chalk.blue(`Added schema: ${entitySchema.options.displayName || entitySchema.options.alias}`));
     });
 
     const internalQuery = new GraphQLObjectType({
@@ -415,7 +414,8 @@ export class PublicSchemaBuilder {
       fields: () =>
         Object.keys(editableAndResolvedProperties).reduce(
           (acc, propertyKey) => {
-            const propertyOptions: any = editableAndResolvedProperties[propertyKey];
+            const propertyOptions: PropertyOptions<any, any> &
+              ResolvedPropertyOptions<any, any> = editableAndResolvedProperties[propertyKey] as any;
             const propertyType = propertyOptions.type;
             const type = this.buildType(`${alias}${propertyKey}`, propertyType);
             acc[propertyKey] = {
@@ -424,6 +424,20 @@ export class PublicSchemaBuilder {
             if (addResolvers && propertyOptions.resolve) {
               acc[propertyKey].resolve = propertyOptions.resolve;
               acc[propertyKey].dependencies = [];
+            } else if (
+              addResolvers &&
+              propertyOptions.resolverPlugin &&
+              this.serverConfig.resolverPlugins.some(plugin => plugin.alias === propertyOptions.resolverPlugin.alias)
+            ) {
+              const plugin = this.serverConfig.resolverPlugins.find(
+                plugin => plugin.alias === propertyOptions.resolverPlugin.alias
+              );
+              acc[propertyKey] = plugin.buildFieldConfig({
+                propertyKey,
+                meta: propertyOptions.resolverPlugin.meta,
+                serverConfig: this.serverConfig,
+                schemaBuilder: this
+              });
             }
             return acc;
           },

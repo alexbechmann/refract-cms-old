@@ -8,5 +8,8 @@ export type PropertyOptions<T, TPropertyType extends PropertyType | any> = {
   editorComponent: React.ComponentType<PropertyEditorProps<ActualType<TPropertyType>>>;
   defaultValue?: (() => ActualType<TPropertyType>) | ActualType<TPropertyType> | Promise<ActualType<TPropertyType>>;
   type: TPropertyType;
-  resolverPlugin?: any;
+  resolverPlugin?: {
+    alias: string;
+    meta: any;
+  };
 };
