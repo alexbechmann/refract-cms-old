@@ -127,7 +127,7 @@ export const NewsArticleSchema = composeSchema({
       type: Boolean
     },
     highlightedProduct: propertyBuilder.singleReference(ProductSchema, {
-      displayName: 'Highlighted product 1'
+      displayName: 'Highlighted product'
     }),
     otherRelatedProducts: propertyBuilder.multipleReferences(ProductSchema, {
       displayName: 'Other related products'

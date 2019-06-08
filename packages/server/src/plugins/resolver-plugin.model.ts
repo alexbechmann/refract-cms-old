@@ -3,7 +3,7 @@ import { PropertyType } from '@refract-cms/core';
 import { ServerConfig } from '../server-config.model';
 import { GraphQLObjectType, GraphQLFieldConfig } from 'graphql';
 import { RefractGraphQLContext } from '../graphql/refract-graphql-context';
-import { PublicSchemaBuilder } from 'src/graphql/public-schema.builder';
+import { PublicSchemaBuilder } from '../graphql/public-schema.builder';
 
 export type ResolverPlugin<T extends PropertyType = any> = {
   alias: string;
