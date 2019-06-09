@@ -670,16 +670,14 @@
 "@date-io/core@^0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@date-io/core/-/core-0.0.2.tgz#35be27d26eb652e752ccfbffe624c95169200dbd"
+  integrity sha512-rkanRee2Agpw3tZLaCGJxkNRzi7FdyqueQDmEZAgZfIQaPo0MoOrO0gcTGwhTNREV8+OBKiZLpbaHK79dsU/Wg==
 
-"@date-io/moment@0.0.2", "@date-io/moment@^0.0.2":
+"@date-io/moment@0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@date-io/moment/-/moment-0.0.2.tgz#2020055c214fe5da7a6fc4741ebcb6a622ead6da"
+  integrity sha512-YrLDOHAZygZChOwXcr3D6W7Dusp7wLi3Y/pt6ZgxDOnX1iNlO+M7qjZ3PdD+vH0v2xlzEg2n2rZ67QschAIiKQ==
   dependencies:
     "@date-io/core" "^0.0.2"
-
-"@date-io/moment@1.3.5":
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/@date-io/moment/-/moment-1.3.5.tgz#e5bf3837cbd3f5f5f5d7f49d8549e4118ea75f8d"
 
 "@emotion/babel-utils@^0.6.4":
   version "0.6.10"
