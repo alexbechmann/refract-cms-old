@@ -1,33 +1,16 @@
 import {
+  composeSchema,
   createTextEditor,
   createLocationEditor,
   createSingleDropdownEditor,
   createMultipleDropdownEditor,
-  createListEditor,
   Entity,
-  defineEntity,
-  Location,
-  RefractTypes
+  Location
 } from '@refract-cms/core';
-import ScatterPlotIcon from '@material-ui/icons/ScatterPlot';
 import CustomDropdownEditor from '../shared/CustomDropdownEditor';
+import ScatterPlotIcon from '@material-ui/icons/ScatterPlot';
 
-export interface Product extends Entity {
-  productType: string;
-  customNumber: number;
-  location: Location;
-  locations: Location[];
-  title: string;
-  category: string;
-  types: string[];
-}
-
-const locationShape = RefractTypes.shape<Location>({
-  latitude: RefractTypes.number,
-  longitude: RefractTypes.number
-});
-
-export const ProductSchema = defineEntity<Product>({
+export const ProductSchema = composeSchema({
   options: {
     alias: 'product',
     displayName: 'Product',
@@ -38,52 +21,56 @@ export const ProductSchema = defineEntity<Product>({
     icon: ScatterPlotIcon
   },
   properties: {
-    productType: {
-      displayName: 'Product type',
-      editorComponent: createTextEditor({ maxLength: 10 }),
-      defaultValue: 'default',
-      type: RefractTypes.string
-    },
-    customNumber: {
-      displayName: 'Custom number',
-      defaultValue: 3,
-      editorComponent: CustomDropdownEditor,
-      type: RefractTypes.number
-    },
-    location: {
-      displayName: 'Location',
-      editorComponent: createLocationEditor,
-      defaultValue: {
-        longitude: 15,
-        latitude: 23
-      },
-      type: locationShape
-    },
     title: {
       displayName: 'Title',
       editorComponent: createTextEditor({
         maxLength: 30
       }),
       defaultValue: '',
-      type: RefractTypes.string
+      type: String
+    },
+    productType: {
+      displayName: 'Product type',
+      editorComponent: createTextEditor({ maxLength: 10 }),
+      defaultValue: 'default',
+      type: String
+    },
+    customNumber: {
+      displayName: 'Custom number',
+      defaultValue: 3,
+      editorComponent: CustomDropdownEditor,
+      type: Number
+    },
+    location: {
+      displayName: 'Location',
+      editorComponent: createLocationEditor(),
+      defaultValue: {
+        lng: 15,
+        lat: 23
+      },
+      type: {
+        lat: Number,
+        lng: Number
+      }
     },
     category: {
       displayName: 'Category',
       editorComponent: createSingleDropdownEditor({
         selectOptions: ['Electronics', 'Food']
       }),
-      type: RefractTypes.string
+      type: String
     },
     types: {
       displayName: 'Types',
       editorComponent: createMultipleDropdownEditor({
         selectOptions: ['Type1', 'Type2']
       }),
-      type: RefractTypes.arrayOf(RefractTypes.string)
-    },
-    locations: {
-      displayName: 'Locations',
-      type: RefractTypes.arrayOf(locationShape)
-    },
+      type: [String]
+    }
+    // commaSeperatedTypes: {
+    //   mode: 'resolve',
+    //   type: String,
+    //   resolve: ({ types }) => (types ? types.join(',') : '')
+    // }
   }
 });

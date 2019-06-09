@@ -2,7 +2,7 @@ import mocha from 'mocha';
 import chai from 'chai';
 import { PublicSchemaBuilder } from '../../../../packages/server/src/graphql/public-schema.builder';
 import { PropertyType } from '../../../../packages/core/src';
-import { ProductSchema, Product } from '../../config/products/product.model';
+import { ProductSchema } from '../../config/products/product.schema';
 import { printType, GraphQLString, GraphQLBoolean, GraphQLFloat } from 'graphql';
 import refractConfig from '../../config/refract.config';
 import { ServerConfig } from 'packages/server/src/server-config.model';
@@ -10,7 +10,7 @@ import { GraphQLDateTime } from 'graphql-iso-date';
 
 const expect = chai.expect;
 
-const publicSchemaBuilder = new PublicSchemaBuilder({} as ServerConfig);
+const publicSchemaBuilder = new PublicSchemaBuilder({ resolverPlugins: [] } as ServerConfig);
 
 mocha.describe('build shape', () => {
   mocha.it('should create valid shape (Location)', () => {
@@ -59,17 +59,16 @@ mocha.describe('build types', () => {
 
 mocha.describe('build entity schema', () => {
   mocha.it('should create valid entity', () => {
-    const type = publicSchemaBuilder.buildEntity<Product>('product', ProductSchema.properties);
+    const type = publicSchemaBuilder.buildEntity('product', ProductSchema.properties);
     const expected = `
 type product {
   _id: MongoId
+  title: String
   productType: String
   customNumber: Float
   location: productlocation
-  title: String
   category: String
   types: [String]
-  locations: [productlocations]
 }`;
     expect(printType(type)).to.equal(expected.trim());
   });

@@ -51,13 +51,10 @@ export default ({ value, setValue }: PropertyEditorProps<number>) => {
 ## Usage
 
 ```typescript
-import { defineEntity, RefractTypes, Entity } from "@refract-cms/core";
+import { composeSchema, Entity } from "@refract-cms/core";
 import CustomDropdownEditor from "./CustomDropdownEditor";
 
-export interface ProductEntity extends Entity {
-  customNumber: number;
-}
-export const ProductSchema = defineEntity<ProductEntity>({
+export const MySchema = composeSchema({
   options: {
     // ... schema options omitted for brevity
   },
@@ -66,7 +63,7 @@ export const ProductSchema = defineEntity<ProductEntity>({
       displayName: "Custom number",
       defaultValue: 3,
       editorComponent: CustomDropdownEditor,
-      type: RefractTypes.number
+      type: Number
     }
   }
 });
