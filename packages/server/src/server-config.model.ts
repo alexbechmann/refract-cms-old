@@ -1,5 +1,5 @@
-import { createPublicSchema, buildHelpers, Helpers, Properties } from './create-public-schema';
-import { Config, EntitySchema } from '@refract-cms/core';
+import { Config, PropertyType } from '@refract-cms/core';
+import { ResolverPlugin } from './plugins/resolver-plugin.model';
 
 export interface ServerConfig {
   config: Config;
@@ -16,5 +16,13 @@ export interface ServerConfig {
       secret: string;
     };
   };
-  publicGraphQL: { schema: EntitySchema<any, any>; buildProperties: (helpers: Helpers<any>) => Properties<any, any> }[];
+  resolvers?: {
+    [key: string]: {
+      [key: string]: {
+        type: PropertyType;
+        resolve?: any;
+      };
+    };
+  };
+  resolverPlugins?: ResolverPlugin[];
 }

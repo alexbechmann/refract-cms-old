@@ -1,6 +1,5 @@
 import {
-  defineEntity,
-  RefractTypes,
+  composeSchema,
   createTextEditor,
   createLocationEditor,
   createSingleDropdownEditor,
@@ -11,20 +10,7 @@ import {
 import CustomDropdownEditor from '../shared/CustomDropdownEditor';
 import ScatterPlotIcon from '@material-ui/icons/ScatterPlot';
 
-export interface ProductEntity extends Entity {
-  productType: string;
-  customNumber: number;
-  location: Location;
-  title: string;
-  category: string;
-  types: string[];
-}
-
-export interface ProductModel extends ProductEntity {
-  someVar: string;
-}
-
-export const ProductSchema = defineEntity<ProductEntity, ProductModel>({
+export const ProductSchema = composeSchema({
   options: {
     alias: 'product',
     displayName: 'Product',
@@ -41,46 +27,50 @@ export const ProductSchema = defineEntity<ProductEntity, ProductModel>({
         maxLength: 30
       }),
       defaultValue: '',
-      type: RefractTypes.string
+      type: String
     },
     productType: {
       displayName: 'Product type',
       editorComponent: createTextEditor({ maxLength: 10 }),
       defaultValue: 'default',
-      type: RefractTypes.string
+      type: String
     },
     customNumber: {
       displayName: 'Custom number',
       defaultValue: 3,
       editorComponent: CustomDropdownEditor,
-      type: RefractTypes.number
+      type: Number
     },
     location: {
       displayName: 'Location',
       editorComponent: createLocationEditor(),
       defaultValue: {
-        longitude: 15,
-        latitude: 23
+        lng: 15,
+        lat: 23
       },
-      type: RefractTypes.shape({
-        latitude: RefractTypes.number,
-        longitude: RefractTypes.number
-      })
+      type: {
+        lat: Number,
+        lng: Number
+      }
     },
-
     category: {
       displayName: 'Category',
       editorComponent: createSingleDropdownEditor({
         selectOptions: ['Electronics', 'Food']
       }),
-      type: RefractTypes.string
+      type: String
     },
     types: {
       displayName: 'Types',
       editorComponent: createMultipleDropdownEditor({
         selectOptions: ['Type1', 'Type2']
       }),
-      type: RefractTypes.arrayOf(RefractTypes.string)
+      type: [String]
     }
+    // commaSeperatedTypes: {
+    //   mode: 'resolve',
+    //   type: String,
+    //   resolve: ({ types }) => (types ? types.join(',') : '')
+    // }
   }
 });

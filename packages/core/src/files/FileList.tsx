@@ -5,7 +5,7 @@ import { CircularProgress, List, ListItem, ListItemText, ListItemAvatar, Avatar 
 import { FileModel } from './file.model';
 
 import EntityListItem from '../entities/EntityListItem';
-import { FileSchema } from './file.schema';
+import { FileSystemImageSchema } from './file-system-image.schema';
 
 interface FileListProps {
   onSelectFile: (file: FileModel) => void;
@@ -41,7 +41,7 @@ class FileList extends Component<Props> {
                   {data.files.map((file: FileModel) => (
                     <EntityListItem
                       entity={file}
-                      schema={FileSchema}
+                      schema={FileSystemImageSchema}
                       key={file._id}
                       button
                       onClick={() => onSelectFile(file)}

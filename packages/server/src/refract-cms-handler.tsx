@@ -2,7 +2,7 @@ import * as express from 'express';
 import graphqlHTTP from 'express-graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import { Dashboard } from '@refract-cms/dashboard';
-import { Config, graphqlQueryHelper, FileModel, Crop, defineEntity } from '@refract-cms/core';
+import { Config, graphqlQueryHelper, FileModel, Crop, EntitySchema } from '@refract-cms/core';
 import { merge } from 'lodash';
 import { printType } from 'graphql';
 import { MongoClient, Db, ObjectId } from 'mongodb';
@@ -19,9 +19,15 @@ import { PublicSchemaBuilder } from './graphql/public-schema.builder';
 import expressPlayground from 'graphql-playground-middleware-express';
 import bodyParser from 'body-parser';
 import { requireAuth } from './auth/require-auth.middleware';
+import { RefractGraphQLContext } from './graphql/refract-graphql-context';
+import { singleRefPlugin } from './plugins/single-ref-plugin';
+import { multipleRefPlugin } from './plugins/multiple-ref-plugin';
 
 const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => {
   const { config } = serverConfig;
+
+  serverConfig.resolverPlugins = [singleRefPlugin, multipleRefPlugin, ...serverConfig.resolverPlugins];
+
   const router = express.Router();
   const storage = multer.diskStorage({
     destination: serverConfig.filesPath,
@@ -53,19 +59,40 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
   schemaBuilder.buildSchema(config.schema, serverConfig);
 
   const publicSchemaBuilder = new PublicSchemaBuilder(serverConfig);
-  const schema = publicSchemaBuilder.buildSchema(config.schema);
+  const { publicGraphQLSchema, internalGraphQLSchema } = publicSchemaBuilder.buildSchema(config.schema);
 
   router.use(
     '/graphql',
-    graphqlHTTP((req, res) => ({
-      schema,
-      graphiql: true,
-      context: {
+    graphqlHTTP((req, res) => {
+      const context: RefractGraphQLContext = {
+        req,
+        serverConfig
+      };
+      return {
+        schema: publicGraphQLSchema,
+        graphiql: true,
+        context
+      };
+    })
+  );
+
+  router.use(
+    '/internal/graphql',
+    requireAuth(serverConfig),
+    graphqlHTTP((req, res) => {
+      const context = {
         userId: req.headers.authorization
           ? authService.verifyAccessToken(req.headers.authorization!, serverConfig).nameid
           : null
-      }
-    }))
+      };
+      return {
+        schema: internalGraphQLSchema,
+        graphiql: true,
+        context: {
+          userId: 'ad'
+        }
+      };
+    })
   );
 
   router.get('/graphql-playground', expressPlayground({ endpoint: `${serverConfig.rootPath}/graphql` }));

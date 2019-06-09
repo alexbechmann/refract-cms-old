@@ -1,39 +1,50 @@
-```ts
-
-const app = express();
-
-app.use(
-  ...refractCmsHandler({
-    serverConfig: {
-      config,
-      rootPath: '/cms',
-      mongoConnectionString: 'mongodb://localhost:27018/refract-consumer-example',
-      filesPath: 'consumer/files/',
-      auth: {
-        adminCredentials: {
-          username: 'admin',
-          password: 'pw'
-        },
-        jwt: {
-          issuer: 'consumer',
-          secret: 'secret'
-        }
-      },
-      publicGraphQL: ({ serverConfig }) => [
-        createPublicSchema<{ someVar: string }>(ProductSchema, {
-          ...ProductSchema.properties,
-          someVar: {
-            type: RefractTypes.string,
-            resolve: product => `${product._id}_hello!`
-          }
-        }),
-        createPublicSchema<NewsArticleModel>(NewsArticleSchema, {
-          image: resolveImageProperty('image'),
-          title: resolveDefault('title')
-          articleDate: resolveDefault('articleDate')
-        })
-      ]
+```tsx
+const BlogItemSchema = defineEntity({
+  options: {
+    alias: "blobItem",
+    displayName: "Blog item"
+  },
+  properties: {
+    title: {
+      displayName: "Title",
+      editorComponent: createTextEditor({
+        maxLength: 50
+      }),
+      editorComponent2: props => <TextEditor maxLength={50} {...props} />,
+      type: RefractTypes.string
     }
-  })
-);
+  }
+});
+
+function getPrototype<TPropertyType extends PropertyType>(
+  property: TPropertyType
+) {
+  if (typeof property === "object") {
+    return Object.keys(property).reduce((acc, propertyKey) => {
+      acc[propertyKey] = getPrototype(property[propertyKey]);
+      return acc;
+    }, {});
+  } else {
+    return property.prototype;
+  }
+}
+
+//
+
+const ArticleSchema = createSchema({
+  properties: {
+    title: String
+  },
+  config: {
+    alias: "article",
+    options: {},
+    editors: {
+      title: {
+        editorComponent: createFakeEditor<string>(),
+        defaultValue: "hello",
+        displayName: "Text"
+      }
+    }
+  }
+});
 ```

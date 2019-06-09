@@ -1,22 +1,13 @@
 {
   "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
   "linterOptions": {
-    "exclude": [
-      "config/**/*.js",
-      "node_modules/**/*.ts"
-    ]
+    "exclude": ["config/**/*.js", "node_modules/**/*.ts"]
   },
   "rules": {
     "object-literal-sort-keys": false,
     "ordered-imports": false,
-    "interface-name": [
-      true,
-      "never-prefix"
-    ],
-    "member-access": [
-      true,
-      "no-public"
-    ],
+    "interface-name": [true, "never-prefix"],
+    "member-access": [true, "no-public"],
     "no-empty-interface": false,
     "no-console": false,
     "object-literal-shorthand": false,
@@ -31,7 +22,9 @@
     "no-empty": false,
     "radix": false,
     "array-type": false,
-    "no-string-throw": false
+    "no-string-throw": false,
+    "ban-types": false,
+    "interface-over-type-literal": false
   },
   "jsRules": {
     "object-literal-sort-keys": false,

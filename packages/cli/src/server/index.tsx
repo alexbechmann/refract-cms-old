@@ -1,5 +1,5 @@
 import express from 'express';
-import { refractCmsHandler, createPublicSchema } from '@refract-cms/server';
+import { refractCmsHandler } from '@refract-cms/server';
 import config from '@consumer/config/refract.config';
 import serverConfig from '@consumer/config/server.config';
 import path from 'path';

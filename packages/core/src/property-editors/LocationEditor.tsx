@@ -4,27 +4,27 @@ import { Location } from '../location/location.model';
 
 export default () => (props: PropertyEditorProps<Location>) => {
   const value: Location = props.value || {
-    latitude: 0,
-    longitude: 0
+    lat: 0,
+    lng: 0
   };
-  const { latitude, longitude } = value;
+  const { lat, lng } = value;
   return (
     <div>
       <input
-        value={value.longitude}
+        value={value.lng}
         onChange={e =>
           props.setValue({
-            latitude,
-            longitude: parseInt(e.target.value, 10) || 0
+            lat,
+            lng: parseInt(e.target.value, 10) || 0
           })
         }
       />
       <input
-        value={value.latitude}
+        value={value.lat}
         onChange={e =>
           props.setValue({
-            longitude,
-            latitude: parseInt(e.target.value, 10) || 0
+            lng,
+            lat: parseInt(e.target.value, 10) || 0
           })
         }
       />

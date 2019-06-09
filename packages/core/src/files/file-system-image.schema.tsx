@@ -1,11 +1,12 @@
-import defineEntity from '../entities/define-entity';
+import composeSchema from '../entities/compose-schema';
 import { FileModel } from './file.model';
-import { RefractTypes } from '../properties/property-types';
 import createTextEditor from '../property-editors/TextEditor';
 import ImageIcon from '@material-ui/icons/Image';
 import createFileUploadEditor from '../property-editors/FileUploaderEditor';
+import { PropertyEditorProps } from '../properties/property-editor-props';
+import { FileRef } from './file-ref.model';
 
-export const FileSchema = defineEntity<FileModel>({
+export const FileSystemImageSchema = composeSchema({
   options: {
     alias: 'file',
     displayName: 'File',
@@ -18,14 +19,14 @@ export const FileSchema = defineEntity<FileModel>({
   },
   properties: {
     fileRef: {
-      displayName: 'File',
       editorComponent: createFileUploadEditor({}),
-      type: RefractTypes.shape({
-        fileName: RefractTypes.string,
-        path: RefractTypes.string,
-        mimetype: RefractTypes.string,
-        size: RefractTypes.number
-      })
+      displayName: 'Image',
+      type: {
+        fileName: String,
+        path: String,
+        mimetype: String,
+        size: Number
+      }
     }
   }
 });

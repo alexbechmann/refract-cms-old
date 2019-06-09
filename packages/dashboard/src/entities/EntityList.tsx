@@ -24,7 +24,7 @@ import {
   DialogTitle,
   WithStyles
 } from '@material-ui/core';
-import { EntitySchema, Entity, graphqlQueryHelper, EntityListItem } from '@refract-cms/core';
+import { EntitySchema, Entity, graphqlQueryHelper, EntityListItem, PropertyOptions } from '@refract-cms/core';
 import { RouteComponentProps, Link, Redirect } from '@reach/router';
 import { connect } from 'react-redux';
 import { AppState } from '../state/app.state';
@@ -134,7 +134,8 @@ class EntitiesList extends Component<Props> {
                             className={classes.textLink}
                             onClick={() => this.setState({ filterDialogOpen: true })}
                           >
-                            Sorted by {entitySchema.properties[filters.orderByField].displayName},{' '}
+                            Sorted by{' '}
+                            {(entitySchema.properties[filters.orderByField] as PropertyOptions<any, any>).displayName},{' '}
                             {filters.orderByDirection}
                           </ListSubheader>
                         ) : (
@@ -202,12 +203,12 @@ class EntitiesList extends Component<Props> {
                 {Object.keys(entitySchema.properties)
                   .filter(
                     propertyKey =>
-                      entitySchema.properties[propertyKey].type.alias === 'String' ||
-                      entitySchema.properties[propertyKey].type.alias === 'Date' ||
-                      entitySchema.properties[propertyKey].type.alias === 'Number'
+                      entitySchema.properties[propertyKey].type === String ||
+                      entitySchema.properties[propertyKey].type === Date ||
+                      entitySchema.properties[propertyKey].type === Number
                   )
                   .map((propertyKey: string, index: number) => {
-                    const propertyOptions = entitySchema.properties[propertyKey];
+                    const propertyOptions = entitySchema.properties[propertyKey] as PropertyOptions<any, any>;
                     return (
                       <MenuItem key={index} value={propertyKey}>
                         {propertyOptions.displayName || propertyKey}

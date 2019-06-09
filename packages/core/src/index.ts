@@ -2,9 +2,9 @@ export { Entity } from './entities/entity.model';
 export { Location } from './location/location.model';
 export { Config } from './config/config';
 export { default as configure } from './config/configure';
-export { default as defineEntity } from './entities/define-entity';
-export { RefractTypes, PropertyType } from './properties/property-types';
-export { EntitySchema } from './entities/entity-schema';
+export { default as composeSchema } from './entities/compose-schema';
+export { PropertyType, ActualType } from './properties/property-types';
+export { EntitySchema, Return } from './entities/entity-schema';
 export { graphqlQueryHelper } from './graphql/graphql-query-helper';
 export { PropertyOptions } from './properties/property-options';
 export { ImageRef } from './files/image-ref.model';
@@ -12,13 +12,13 @@ export { Crop } from './files/crop.model';
 export { FileModel } from './files/file.model';
 export { AuthToken } from './auth/auth-token';
 export { FileService } from './files/file.service';
-export { FileSchema } from './files/file.schema';
+export { FileSystemImageSchema } from './files/file-system-image.schema';
 export { default as EntityListItem } from './entities/EntityListItem';
 export { CoreContext } from './context/core.context';
 export { withCoreContext } from './context/with-core-context';
 export { WithCoreContextProps } from './context/with-core-context-props.model';
 export { default as FileUploader } from './files/FileUploader';
-export { PropertyDescription, ShapeArgs } from './properties/property-types';
+export { propertyBuilder } from './properties/property-builder';
 
 // Property Editors
 export { PropertyEditorProps } from './properties/property-editor-props';

@@ -1,11 +1,15 @@
-import * as React from 'react';
+import React from 'react';
 import { PropertyEditorProps } from './property-editor-props';
-import PropTypes from 'prop-types';
-import { PropertyDescription, PropertyType } from './property-types';
+import { PropertyType, ActualType } from './property-types';
+import { Return } from '../entities/entity-schema';
 
-export interface PropertyOptions<T = any> {
+export type PropertyOptions<T, TPropertyType extends PropertyType | any> = {
   displayName?: string;
-  editorComponent?: React.ComponentType<PropertyEditorProps<T>>;
-  defaultValue?: T;
-  type: PropertyType<T>;
-}
+  editorComponent: React.ComponentType<PropertyEditorProps<ActualType<TPropertyType>>>;
+  defaultValue?: (() => ActualType<TPropertyType>) | ActualType<TPropertyType> | Promise<ActualType<TPropertyType>>;
+  type: TPropertyType;
+  resolverPlugin?: {
+    alias: string;
+    meta: any;
+  };
+};

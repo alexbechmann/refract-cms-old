@@ -3,7 +3,7 @@ import { PropertyOptions } from '../properties/property-options';
 import { PropertyEditorProps } from '../properties/property-editor-props';
 
 export interface RenderEditorProps extends PropertyEditorProps<any> {
-  propertyOptions: PropertyOptions;
+  propertyOptions: PropertyOptions<any, any>;
 }
 
 interface Props extends RenderEditorProps {}
