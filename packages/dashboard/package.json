@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@date-io/moment": "1.3.5",
+    "@date-io/moment": "0.0.2",
     "@reach/router": "^1.2.1",
     "apollo-boost": "^0.1.23",
     "apollo-client": "^2.4.8",
