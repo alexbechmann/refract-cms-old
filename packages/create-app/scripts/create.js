@@ -4,9 +4,14 @@ const chalk = require("chalk").default;
 const shell = require("shelljs");
 const ora = require("ora");
 const spawn = require("child_process").spawn;
+const inquirer = require("inquirer");
 
 module.exports = function(name) {
   const appDir = path.resolve(process.cwd(), name);
+  const spinner = ora({
+    text: "Installing dependencies",
+    spinner: "dots"
+  });
 
   const npmInstall = () => {
     return new Promise((resolve, reject) => {
@@ -21,23 +26,44 @@ module.exports = function(name) {
 
   console.log("Creating a new app in " + appDir);
   fs.ensureDirSync(name);
+
   fs.copySync(
     path.join(__dirname, "../new-source-files"),
     path.join(process.cwd(), name)
   );
   console.log("Created app in " + chalk.blue(appDir));
 
-  const spinner = ora({
-    text: "Installing dependencies",
-    spinner: "dots"
-  }).start();
-  npmInstall().then(() => {
-    spinner.stop();
-    console.log("--------");
-    console.log(chalk.yellow("cd " + name));
-    console.log(chalk.yellow("docker-compose up -d"));
-    console.log(chalk.yellow("npm start"));
-    console.log("--------");
-    process.exit();
-  });
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "sampleSchema",
+        message: "Would you like to use a starter schema?",
+        choices: ["Blog", "No thanks, a clean install please."]
+      }
+    ])
+    .then(answers => {
+      // Use user feedback for... whatever!!
+      console.log(answers);
+      let srcConfig = "default";
+      if (answers.sampleSchema === "Blog") {
+        srcConfig = "blog";
+      }
+
+      fs.copySync(
+        path.join(__dirname, "../starter-schema-configs", srcConfig),
+        path.join(process.cwd(), name, "src")
+      );
+
+      spinner.start();
+      npmInstall().then(() => {
+        spinner.stop();
+        console.log("--------");
+        console.log(chalk.yellow("cd " + name));
+        console.log(chalk.yellow("docker-compose up -d"));
+        console.log(chalk.yellow("npm start"));
+        console.log("--------");
+        process.exit();
+      });
+    });
 };
