@@ -402,7 +402,7 @@ export class PublicSchemaBuilder {
     if (existingType) {
       return existingType;
     }
-    let extraProperties = this.serverConfig.resolvers && addResolvers ? this.serverConfig.resolvers[alias] || {} : {};
+    const extraProperties = this.serverConfig.resolvers && addResolvers ? this.serverConfig.resolvers[alias] || {} : {};
 
     const editableAndResolvedProperties = {
       ...properties,

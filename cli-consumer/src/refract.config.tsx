@@ -13,6 +13,10 @@ import { SettingsSchema } from './settings/settings.model';
 import { ProductSchema } from './products/product.schema';
 import CustomDropdownEditor from './shared/CustomDropdownEditor';
 
-export default configure({
-  schema: [FileSystemImageSchema, ProductSchema, NewsArticleSchema, SettingsSchema]
-});
+import config from '../../packages/create-app/starter-schema-configs/blog/refract.config';
+
+export default config;
+
+// export default configure({
+//   schema: [FileSystemImageSchema, ProductSchema, NewsArticleSchema, SettingsSchema]
+// });

@@ -5,7 +5,7 @@ import { GraphQLObjectType, GraphQLFieldConfig } from 'graphql';
 import { RefractGraphQLContext } from '../graphql/refract-graphql-context';
 import { PublicSchemaBuilder } from '../graphql/public-schema.builder';
 
-export type ResolverPlugin<T extends PropertyType = any> = {
+export interface ResolverPlugin<T extends PropertyType = any> {
   alias: string;
   buildFieldConfig: (
     args: {
@@ -15,4 +15,4 @@ export type ResolverPlugin<T extends PropertyType = any> = {
       schemaBuilder: PublicSchemaBuilder;
     }
   ) => GraphQLFieldConfig<any, RefractGraphQLContext>;
-};
+}
