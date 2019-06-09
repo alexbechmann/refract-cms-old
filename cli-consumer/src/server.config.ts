@@ -6,7 +6,7 @@ import { createResolver } from '@refract-cms/server';
 // import { RefractTypes } from '@refract-cms/core';
 // import { ProductSchema } from './products/product.schema';
 // import { NewsArticleSchema } from './news/news-article.schema';
-// import { SettingsSchema } from './settings/settings.model';
+// import { SettingsSchema } from './settings/settings.schema';
 
 const serverConfig: CliServerConfig = {
   mongoConnectionString: 'mongodb://localhost:27018/cli-consumer',
