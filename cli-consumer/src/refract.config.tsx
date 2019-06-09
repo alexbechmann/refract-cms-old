@@ -9,7 +9,7 @@ import {
   createMultipleDropdownEditor
 } from '@refract-cms/core';
 import { NewsArticleSchema } from './news/news-article.schema';
-import { SettingsSchema } from './settings/settings.model';
+import { SettingsSchema } from './settings/settings.schema';
 import { ProductSchema } from './products/product.schema';
 import CustomDropdownEditor from './shared/CustomDropdownEditor';
 
