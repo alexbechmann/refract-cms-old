@@ -16,7 +16,6 @@ module.exports = function(name) {
   const npmInstall = () => {
     return new Promise((resolve, reject) => {
       var process = spawn("npm install", { shell: true, cwd: appDir });
-
       spinner.start();
       process.on("exit", () => {
         resolve();
@@ -39,19 +38,21 @@ module.exports = function(name) {
         type: "list",
         name: "sampleSchema",
         message: "Would you like to use a starter schema?",
-        choices: ["Blog", "No thanks, a clean install please."]
+        choices: [
+          {
+            name: "Blog",
+            value: "blog"
+          },
+          {
+            name: "No thanks, a clean install please.",
+            value: "default"
+          }
+        ]
       }
     ])
     .then(answers => {
-      // Use user feedback for... whatever!!
-      console.log(answers);
-      let srcConfig = "default";
-      if (answers.sampleSchema === "Blog") {
-        srcConfig = "blog";
-      }
-
       fs.copySync(
-        path.join(__dirname, "../starter-schema-configs", srcConfig),
+        path.join(__dirname, "../starter-schema-configs", answers.sampleSchema),
         path.join(process.cwd(), name, "src")
       );
 
