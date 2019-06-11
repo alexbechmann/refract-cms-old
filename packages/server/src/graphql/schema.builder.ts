@@ -24,7 +24,7 @@ import chalk from 'chalk';
 import { MongoIdType } from './mongo-id.type';
 import { ResolvedPropertyOptions } from '../resolved-property-options';
 
-export class PublicSchemaBuilder {
+export class SchemaBuilder {
   types: GraphQLObjectType[] = [];
   inputTypes: GraphQLInputObjectType[] = [];
 

@@ -15,13 +15,13 @@ import uniqueString from 'unique-string';
 import fs from 'fs';
 import { MongooseSchemaBuilder } from './persistance/mongoose-schema-builder';
 import mongoose from 'mongoose';
-import { PublicSchemaBuilder } from './graphql/public-schema.builder';
+import { SchemaBuilder } from './graphql/schema.builder';
 import expressPlayground from 'graphql-playground-middleware-express';
 import bodyParser from 'body-parser';
 import { requireAuth } from './auth/require-auth.middleware';
 import { RefractGraphQLContext } from './graphql/refract-graphql-context';
-import { singleRefPlugin } from './plugins/single-ref-plugin';
-import { multipleRefPlugin } from './plugins/multiple-ref-plugin';
+import { singleRefPlugin } from './plugins/single-ref/single-ref-plugin';
+import { multipleRefPlugin } from './plugins/multiple-ref/multiple-ref-plugin';
 
 const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => {
   const { config } = serverConfig;
@@ -58,7 +58,7 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
   const schemaBuilder = new MongooseSchemaBuilder();
   schemaBuilder.buildSchema(config.schema, serverConfig);
 
-  const publicSchemaBuilder = new PublicSchemaBuilder(serverConfig);
+  const publicSchemaBuilder = new SchemaBuilder(serverConfig);
   const { publicGraphQLSchema, internalGraphQLSchema } = publicSchemaBuilder.buildSchema(config.schema);
 
   router.use(
@@ -88,9 +88,7 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
       return {
         schema: internalGraphQLSchema,
         graphiql: true,
-        context: {
-          userId: 'ad'
-        }
+        context
       };
     })
   );

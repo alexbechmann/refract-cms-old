@@ -3,7 +3,7 @@ import { PropertyType } from '@refract-cms/core';
 import { ServerConfig } from '../server-config.model';
 import { GraphQLObjectType, GraphQLFieldConfig } from 'graphql';
 import { RefractGraphQLContext } from '../graphql/refract-graphql-context';
-import { PublicSchemaBuilder } from '../graphql/public-schema.builder';
+import { SchemaBuilder } from '../graphql/schema.builder';
 
 export interface ResolverPlugin<T extends PropertyType = any> {
   alias: string;
@@ -12,7 +12,7 @@ export interface ResolverPlugin<T extends PropertyType = any> {
       propertyKey: string;
       meta: any;
       serverConfig: ServerConfig;
-      schemaBuilder: PublicSchemaBuilder;
+      schemaBuilder: SchemaBuilder;
     }
   ) => GraphQLFieldConfig<any, RefractGraphQLContext>;
 }

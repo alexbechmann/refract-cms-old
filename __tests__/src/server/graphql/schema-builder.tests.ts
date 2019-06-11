@@ -1,6 +1,6 @@
 import mocha from 'mocha';
 import chai from 'chai';
-import { PublicSchemaBuilder } from '../../../../packages/server/src/graphql/public-schema.builder';
+import { SchemaBuilder } from '../../../../packages/server/src/graphql/schema.builder';
 import { PropertyType } from '../../../../packages/core/src';
 import { ProductSchema } from '../../config/products/product.schema';
 import { printType, GraphQLString, GraphQLBoolean, GraphQLFloat } from 'graphql';
@@ -10,7 +10,7 @@ import { GraphQLDateTime } from 'graphql-iso-date';
 
 const expect = chai.expect;
 
-const publicSchemaBuilder = new PublicSchemaBuilder({ resolverPlugins: [] } as ServerConfig);
+const publicSchemaBuilder = new SchemaBuilder({ resolverPlugins: [] } as ServerConfig);
 
 mocha.describe('build shape', () => {
   mocha.it('should create valid shape (Location)', () => {

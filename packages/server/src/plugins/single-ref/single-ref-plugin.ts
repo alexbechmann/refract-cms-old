@@ -1,6 +1,6 @@
 import { EntitySchema } from '@refract-cms/core';
-import { repositoryForSchema } from '../repository-for-schema';
-import { createResolverPlugin } from './create-resolver-plugin';
+import { repositoryForSchema } from '../../repository-for-schema';
+import { createResolverPlugin } from '../create-resolver-plugin';
 
 export const singleRefPlugin = createResolverPlugin({
   alias: 'singleRef',

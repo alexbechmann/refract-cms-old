@@ -1,6 +1,6 @@
 import { EntitySchema } from '@refract-cms/core';
-import { repositoryForSchema } from '../repository-for-schema';
-import { createResolverPlugin } from './create-resolver-plugin';
+import { repositoryForSchema } from '../../repository-for-schema';
+import { createResolverPlugin } from '../create-resolver-plugin';
 import { GraphQLList } from 'graphql';
 import { getMongoDbQueryResolver, getGraphQLQueryArgs } from 'graphql-to-mongodb';
 import { merge } from 'lodash';
