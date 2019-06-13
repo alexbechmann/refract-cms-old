@@ -25,3 +25,9 @@ export type ActualType<T extends PropertyType | any> = T extends BasicPropertyTy
     ? ActualTypeFromPrototype<U['prototype']>[]
     : ActualTypeFromPrototype<U>[]
   : never;
+
+export enum numberType {
+  FLOAT,
+  NUMBER,
+  INT
+}
