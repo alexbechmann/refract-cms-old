@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { PropertyEditorProps } from '../properties/property-editor-props';
 import { TextField } from '@material-ui/core';
-import { numberType } from '../properties/property-types';
+
+type numberType = 'FLOAT' | 'NUMBER' | 'INT';
 
 export interface TextEditorOptions {
   maxLength?: number;
@@ -9,7 +10,7 @@ export interface TextEditorOptions {
   numberType: numberType;
 }
 
-const defaultOptions: TextEditorOptions = { numberType: numberType.NUMBER };
+const defaultOptions: TextEditorOptions = { numberType: 'NUMBER' };
 
 export default (options: TextEditorOptions = defaultOptions) => (props: PropertyEditorProps<number>) => {
   return (
@@ -24,13 +25,13 @@ export default (options: TextEditorOptions = defaultOptions) => (props: Property
       onChange={e => {
         let val: number = 0;
         console.log(options.numberType);
-        if (options.numberType === numberType.FLOAT) {
+        if (options.numberType === 'FLOAT') {
           val = parseFloat(e.target.value);
         }
-        if (options.numberType === numberType.NUMBER) {
+        if (options.numberType === 'NUMBER') {
           val = Number(e.target.value);
         }
-        if (options.numberType === numberType.INT) {
+        if (options.numberType === 'INT') {
           val = parseInt(e.target.value);
         }
         return props.setValue(val);
