@@ -33,3 +33,4 @@ export { default as createImagePickerEditor } from './property-editors/ImagePick
 export { default as createSingleEntityPickerEditor } from './property-editors/SingleEntityPickerEditor';
 export { default as createMultipleEntityPickerEditor } from './property-editors/MultipleEntityPickerEditor';
 export { default as createFileUploadEditor } from './property-editors/FileUploaderEditor';
+export { default as createNumberEditor } from './property-editors/NumberEditor';
