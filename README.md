@@ -1,3 +1,5 @@
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier) [![code style: prettier](https://camo.githubusercontent.com/92e9f7b1209bab9e3e9cd8cdf62f072a624da461/68747470733a2f2f666c61742e62616467656e2e6e65742f62616467652f4275696c74253230576974682f547970655363726970742f626c7565)](https://github.com/microsoft/TypeScript) [![Build Status](https://bechmannlimited.visualstudio.com/Refract-CMS/_apis/build/status/Refract-CMS-Build?branchName=develop)](https://bechmannlimited.visualstudio.com/Refract-CMS/_build/latest?definitionId=51&branchName=develop)
+
 ## What is Refract-CMS?
 
 Refract-CMS is an open source, code first, self-hosted headless CMS using React, Express & MongoDB.
