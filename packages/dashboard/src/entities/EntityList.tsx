@@ -32,7 +32,7 @@ import { combineContainers } from 'combine-containers';
 import Page from '../pages/Page';
 import Sort from '@material-ui/icons/Sort';
 import Refresh from '@material-ui/icons/Refresh';
-import { setOrderByField, setOrderByDirection } from './state/entity.actions';
+import EntityListFilterDialog from './EntityListFilterDialog';
 
 export interface EntitiesListProps extends RouteComponentProps<{ alias: string }> {}
 
@@ -48,9 +48,6 @@ interface State {
 
 const styles = (theme: Theme) =>
   createStyles({
-    formControl: {
-      marginBottom: theme.spacing.unit
-    },
     textLink: {
       cursor: 'pointer',
       color: theme.palette.secondary.main,
@@ -66,7 +63,7 @@ class EntitiesList extends Component<Props> {
   };
 
   render() {
-    const { schema, routes, entitySchema, setOrderByField, filters, classes } = this.props;
+    const { schema, routes, entitySchema, classes, filters } = this.props;
     const query = graphqlQueryHelper.getAllQueryWithAllFields(entitySchema, filters);
     return (
       <div>
@@ -82,24 +79,6 @@ class EntitiesList extends Component<Props> {
                 actionComponents={
                   !entitySchema.options.maxOne
                     ? [
-                        // () => (
-                        //   <FormControl>
-                        //     <InputLabel>Age</InputLabel>
-                        //     <Select
-                        //       value={this.props.filters.orderByField}
-                        //       onChange={e =>
-                        //         setOrderByField({
-                        //           alias: entitySchema.options.alias,
-                        //           orderByField: e.target.value
-                        //         })
-                        //       }
-                        //     >
-                        //       <MenuItem value={'createDate'}>Create Date</MenuItem>
-                        //       <MenuItem value={'a'}>Twenty</MenuItem>
-                        //       <MenuItem value={'b'}>Thirty</MenuItem>
-                        //     </Select>
-                        //   </FormControl>
-                        // ),
                         () => (
                           <IconButton disabled={loading} onClick={() => refetch(variables)}>
                             <Refresh />
@@ -185,64 +164,18 @@ class EntitiesList extends Component<Props> {
             );
           }}
         </Query>
-        <Dialog open={this.state.filterDialogOpen} onClose={() => this.setState({ filterDialogOpen: false })}>
-          <DialogTitle>Sort</DialogTitle>
-          <DialogContent style={{ width: 400 }}>
-            <FormControl className={classes.formControl} fullWidth>
-              <InputLabel>Sort by</InputLabel>
-              <Select
-                value={this.props.filters.orderByField || ''}
-                onChange={e =>
-                  this.props.setOrderByField({
-                    alias: entitySchema.options.alias,
-                    orderByField: e.target.value
-                  })
-                }
-              >
-                <MenuItem value="">None</MenuItem>
-                {Object.keys(entitySchema.properties)
-                  .filter(
-                    propertyKey =>
-                      entitySchema.properties[propertyKey].type === String ||
-                      entitySchema.properties[propertyKey].type === Date ||
-                      entitySchema.properties[propertyKey].type === Number
-                  )
-                  .map((propertyKey: string, index: number) => {
-                    const propertyOptions = entitySchema.properties[propertyKey] as PropertyOptions<any, any>;
-                    return (
-                      <MenuItem key={index} value={propertyKey}>
-                        {propertyOptions.displayName || propertyKey}
-                      </MenuItem>
-                    );
-                  })}
-              </Select>
-            </FormControl>
-            <FormControl className={classes.formControl} fullWidth>
-              <InputLabel>Direction</InputLabel>
-              <Select
-                value={this.props.filters.orderByDirection}
-                onChange={e =>
-                  this.props.setOrderByDirection({
-                    alias: entitySchema.options.alias,
-                    direction: e.target.value as 'ASC' | 'DESC'
-                  })
-                }
-              >
-                <MenuItem value="ASC">ASC</MenuItem>
-                <MenuItem value="DESC">DESC</MenuItem>
-              </Select>
-            </FormControl>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => this.setState({ filterDialogOpen: false })}>Done</Button>
-          </DialogActions>
-        </Dialog>
+        <EntityListFilterDialog
+          schema={entitySchema}
+          open={this.state.filterDialogOpen}
+          onClose={() => this.setState({ filterDialogOpen: false })}
+          setOpened={opened => this.setState({ filterDialogOpen: opened })}
+        />
       </div>
     );
   }
 }
 
-const mapDispatchToProps = { setOrderByField, setOrderByDirection };
+const mapDispatchToProps = {};
 
 type DispatchProps = typeof mapDispatchToProps;
 
