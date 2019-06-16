@@ -17,7 +17,8 @@ import {
   MenuItem,
   IconButton,
   ListItemSecondaryAction,
-  Grid
+  Grid,
+  TextField
 } from '@material-ui/core';
 import { compose } from 'recompose';
 import { AppState } from '../../state/app.state';
@@ -25,6 +26,7 @@ import { connect } from 'react-redux';
 import Dialog, { DialogProps } from '@material-ui/core/Dialog';
 import { EntitySchema, PropertyOptions, isBasicPropertyType } from '@refract-cms/core';
 import AddIcon from '@material-ui/icons/Add';
+import * as EntityActions from '../state/entity.actions';
 
 export interface EntityListFilterDialogProps extends Pick<DialogProps, 'open' | 'onClose'> {
   schema: EntitySchema<any>;
@@ -44,36 +46,64 @@ interface Props
     ReturnType<typeof mapStateToProps>,
     Readonly<typeof mapDispatchToProps> {}
 
-const EntityListFilterDialog: ComponentType<Props> = ({ classes, onClose, open, setOpened, schema }) => {
+const EntityListFilterDialog: ComponentType<Props> = ({
+  classes,
+  onClose,
+  open,
+  setOpened,
+  schema,
+  filters,
+  addFilter
+}) => {
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>Filter</DialogTitle>
       <DialogContent>
-        <Grid container spacing={2}>
-          <Grid item xs={4}>
-            <FormControl className={classes.formControl} fullWidth>
-              <InputLabel>Property</InputLabel>
-              <Select
-                //value={filters.orderByDirection}
-                onChange={e => console.log(e)}
-              >
-                {Object.keys(schema.properties).map(propertyKey => (
-                  <MenuItem value={propertyKey}>{schema.properties[propertyKey].displayName || propertyKey}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={4}>
-            b
-          </Grid>
-          <Grid item xs={4}>
-            c
-          </Grid>
-        </Grid>
-        {/* {Object.keys(schema.properties).map(propertyKey => (
-          <RenderProperty propertyOptions={schema.properties[propertyKey]} propertyKey={propertyKey} />
-        ))} */}
-        <Button>Add filter</Button>
+        {filters.map(filter => {
+          return (
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <FormControl className={classes.formControl} fullWidth>
+                  <InputLabel>Property</InputLabel>
+                  <Select value={filter.propertyKey} onChange={e => console.log(e)}>
+                    {Object.keys(schema.properties).map(propertyKey => (
+                      <MenuItem value={propertyKey}>
+                        {schema.properties[propertyKey].displayName || propertyKey}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <FormControl className={classes.formControl} fullWidth>
+                  <InputLabel>Operater</InputLabel>
+                  <Select value={filter.operater} onChange={e => console.log(e)}>
+                    {['eq', 'neq'].map(operater => (
+                      <MenuItem value={operater}>{operater}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <TextField className={classes.formControl} fullWidth label="Value" value={filter.value} />
+              </Grid>
+            </Grid>
+          );
+        })}
+        <Button
+          onClick={() => {
+            addFilter({
+              alias: schema.options.alias,
+              filter: {
+                propertyKey: 'title',
+                operater: 'eq',
+                value: 'hello'
+              }
+            });
+          }}
+        >
+          Add filter
+        </Button>
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setOpened(false)}>Done</Button>
@@ -82,25 +112,13 @@ const EntityListFilterDialog: ComponentType<Props> = ({ classes, onClose, open, 
   );
 };
 
-// const RenderProperty = ({
-//   propertyOptions,
-//   propertyKey
-// }: {
-//   propertyOptions: PropertyOptions<any, any>;
-//   propertyKey: string;
-// }) => {
-//   if (isBasicPropertyType(propertyOptions.type)) {
-//     return <div />;
-//   }
-
-//   return null;
-// };
-
 function mapStateToProps(state: AppState, ownProps: EntityListFilterDialogProps) {
-  return {};
+  return {
+    filters: state.entity[ownProps.schema.options.alias].filters
+  };
 }
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { ...EntityActions };
 
 export default compose(
   withStyles(styles),

@@ -20,7 +20,8 @@
     "paths": {
       "@refract-cms/*": ["./packages/*/src"]
     },
-    "isolatedModules": false
+    "isolatedModules": false,
+    "strict": true
   },
   "exclude": ["node_modules", "**/*.test.*"],
   "include": ["./consumer", "./packages"]
