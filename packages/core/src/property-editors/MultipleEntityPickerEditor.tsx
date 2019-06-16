@@ -162,8 +162,14 @@ class MultipleEntityPickerEditor extends React.Component<Props, State> {
 
 export default (options: MultipleEntityPickerOptions) => {
   const ENTITY_PICKER_QUERY = graphqlQueryHelper.getAllQueryWithAllFields(options.schema);
-  const Editor = combineContainers(withCoreContext, withStyles(styles), graphql(ENTITY_PICKER_QUERY))(
-    MultipleEntityPickerEditor
-  );
+  const Editor = combineContainers(
+    withCoreContext,
+    withStyles(styles),
+    graphql(ENTITY_PICKER_QUERY, {
+      options: {
+        fetchPolicy: 'network-only'
+      }
+    })
+  )(MultipleEntityPickerEditor);
   return (props: PropertyEditorProps<string[]> & MultipleEntityPickerOptions) => <Editor {...props} {...options} />;
 };
