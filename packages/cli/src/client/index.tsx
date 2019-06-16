@@ -5,9 +5,7 @@ import config from '@consumer/config/refract.config';
 import theme from '@consumer/config/theme';
 // import 'typeface-roboto';
 import { createMuiTheme } from '@material-ui/core';
-import { install, ThemeProvider } from '@material-ui/styles';
-
-install();
+import { ThemeProvider } from '@material-ui/styles';
 
 render(
   <ThemeProvider theme={theme}>
