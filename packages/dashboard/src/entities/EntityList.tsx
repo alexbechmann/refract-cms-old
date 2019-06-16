@@ -9,7 +9,11 @@ import {
   Theme,
   createStyles,
   withStyles,
-  WithStyles
+  WithStyles,
+  Table,
+  TableBody,
+  TableRow,
+  TablePagination
 } from '@material-ui/core';
 import { Entity, graphqlQueryHelper, EntityListItem, PropertyOptions } from '@refract-cms/core';
 import { RouteComponentProps, Link } from '@reach/router';
@@ -21,6 +25,7 @@ import Sort from '@material-ui/icons/Sort';
 import Filter from '@material-ui/icons/FilterList';
 import Refresh from '@material-ui/icons/Refresh';
 import EntityListSortDialog from './EntityListSortDialog';
+import EntityListFilterDialog from './entity-list-filters/EntityListFilterDialog';
 
 export interface EntitiesListProps extends RouteComponentProps<{ alias: string }> {}
 
@@ -57,7 +62,12 @@ class EntitiesList extends Component<Props> {
     const query = graphqlQueryHelper.getAllQueryWithAllFields(entitySchema, filters);
     return (
       <div>
-        <Query query={query} displayName={`${entitySchema.options.alias}_list`} notifyOnNetworkStatusChange>
+        <Query
+          query={query}
+          displayName={`${entitySchema.options.alias}_list`}
+          notifyOnNetworkStatusChange
+          fetchPolicy="network-only"
+        >
           {({ loading, data, refetch, variables }) => {
             const items = data.items || [];
             if (loading) {
@@ -134,6 +144,22 @@ class EntitiesList extends Component<Props> {
                         );
                       })}
                     </List>
+                    <Table>
+                      <TableBody>
+                        <TableRow>
+                          <TablePagination
+                            page={0}
+                            count={10}
+                            onChangeRowsPerPage={console.log}
+                            onChangePage={console.log}
+                            rowsPerPage={10}
+                            rowsPerPageOptions={[5, 10, 25, 50]}
+                            // @ts-ignore
+                            // ActionsComponent={TablePaginationActions}
+                          />
+                        </TableRow>
+                      </TableBody>
+                    </Table>
                   </div>
                 ) : (
                   <div>
@@ -164,6 +190,12 @@ class EntitiesList extends Component<Props> {
           open={this.state.sortDialogOpen}
           onClose={() => this.setState({ sortDialogOpen: false })}
           setOpened={opened => this.setState({ sortDialogOpen: opened })}
+        />
+        <EntityListFilterDialog
+          schema={entitySchema}
+          open={this.state.filterDialogOpen}
+          onClose={() => this.setState({ filterDialogOpen: false })}
+          setOpened={opened => this.setState({ filterDialogOpen: opened })}
         />
       </div>
     );

@@ -1,6 +1,7 @@
 import { EntitySchema } from '../entities/entity-schema';
 import gql from 'graphql-tag';
 import { PropertyType } from '../properties/property-types';
+import { isBasicPropertyType } from '..';
 
 class GraphqlQueryHelper {
   schemaName(alias: string) {
@@ -37,16 +38,12 @@ class GraphqlQueryHelper {
     `;
   }
 
-  isBasicPropertyType(propertyType: PropertyType) {
-    return [String, Number, Date, Boolean].find(t => propertyType === t);
-  }
-
   buildProperties(properties: { [key: string]: PropertyType }): string {
     return Object.keys(properties).map(propertyKey => {
       const propertyType = properties[propertyKey];
       if (
-        this.isBasicPropertyType(propertyType) ||
-        (propertyType instanceof Array && this.isBasicPropertyType(propertyType[0]))
+        isBasicPropertyType(propertyType) ||
+        (propertyType instanceof Array && isBasicPropertyType(propertyType[0]))
       ) {
         return propertyKey;
       } else {
