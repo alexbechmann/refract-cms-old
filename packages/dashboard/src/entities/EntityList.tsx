@@ -1,38 +1,26 @@
 import React, { Component } from 'react';
-import gql from 'graphql-tag';
-import { Query, withApollo, WithApolloClient } from 'react-apollo';
+import { Query, withApollo } from 'react-apollo';
 import {
   LinearProgress,
   List,
-  ListItem,
-  ListItemText,
   Button,
   ListSubheader,
-  ListItemAvatar,
-  Avatar,
   IconButton,
-  Dialog,
-  DialogContent,
-  DialogActions,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   Theme,
   createStyles,
   withStyles,
-  DialogTitle,
   WithStyles
 } from '@material-ui/core';
-import { EntitySchema, Entity, graphqlQueryHelper, EntityListItem, PropertyOptions } from '@refract-cms/core';
-import { RouteComponentProps, Link, Redirect } from '@reach/router';
+import { Entity, graphqlQueryHelper, EntityListItem, PropertyOptions } from '@refract-cms/core';
+import { RouteComponentProps, Link } from '@reach/router';
 import { connect } from 'react-redux';
 import { AppState } from '../state/app.state';
 import { combineContainers } from 'combine-containers';
 import Page from '../pages/Page';
 import Sort from '@material-ui/icons/Sort';
+import Filter from '@material-ui/icons/FilterList';
 import Refresh from '@material-ui/icons/Refresh';
-import EntityListFilterDialog from './EntityListFilterDialog';
+import EntityListSortDialog from './EntityListSortDialog';
 
 export interface EntitiesListProps extends RouteComponentProps<{ alias: string }> {}
 
@@ -43,6 +31,7 @@ interface Props
     WithStyles<typeof styles> {}
 
 interface State {
+  sortDialogOpen: boolean;
   filterDialogOpen: boolean;
 }
 
@@ -59,16 +48,17 @@ const styles = (theme: Theme) =>
 
 class EntitiesList extends Component<Props> {
   state: State = {
+    sortDialogOpen: false,
     filterDialogOpen: false
   };
 
   render() {
-    const { schema, routes, entitySchema, classes, filters } = this.props;
+    const { routes, entitySchema, classes, filters } = this.props;
     const query = graphqlQueryHelper.getAllQueryWithAllFields(entitySchema, filters);
     return (
       <div>
         <Query query={query} displayName={`${entitySchema.options.alias}_list`} notifyOnNetworkStatusChange>
-          {({ loading, error, data, refetch, variables }) => {
+          {({ loading, data, refetch, variables }) => {
             const items = data.items || [];
             if (loading) {
               return <LinearProgress />;
@@ -85,8 +75,13 @@ class EntitiesList extends Component<Props> {
                           </IconButton>
                         ),
                         () => (
-                          <IconButton onClick={() => this.setState({ filterDialogOpen: true })}>
+                          <IconButton onClick={() => this.setState({ sortDialogOpen: true })}>
                             <Sort />
+                          </IconButton>
+                        ),
+                        () => (
+                          <IconButton onClick={() => this.setState({ filterDialogOpen: true })}>
+                            <Filter />
                           </IconButton>
                         ),
                         () => (
@@ -111,7 +106,7 @@ class EntitiesList extends Component<Props> {
                         filters && filters.orderByField && filters.orderByDirection ? (
                           <ListSubheader
                             className={classes.textLink}
-                            onClick={() => this.setState({ filterDialogOpen: true })}
+                            onClick={() => this.setState({ sortDialogOpen: true })}
                           >
                             Sorted by{' '}
                             {(entitySchema.properties[filters.orderByField] as PropertyOptions<any, any>).displayName},{' '}
@@ -164,11 +159,11 @@ class EntitiesList extends Component<Props> {
             );
           }}
         </Query>
-        <EntityListFilterDialog
+        <EntityListSortDialog
           schema={entitySchema}
-          open={this.state.filterDialogOpen}
-          onClose={() => this.setState({ filterDialogOpen: false })}
-          setOpened={opened => this.setState({ filterDialogOpen: opened })}
+          open={this.state.sortDialogOpen}
+          onClose={() => this.setState({ sortDialogOpen: false })}
+          setOpened={opened => this.setState({ sortDialogOpen: opened })}
         />
       </div>
     );

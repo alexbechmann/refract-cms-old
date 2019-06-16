@@ -11,7 +11,7 @@ export default (options?: SingleDropdownEditorOptions) => (props: PropertyEditor
   return (
     <FormControl fullWidth>
       <InputLabel>{props.propertyOptions.displayName}</InputLabel>
-      <Select value={props.value || selectOptions[0]} onChange={e => props.setValue(e.target.value)}>
+      <Select value={props.value || selectOptions[0]} onChange={e => props.setValue(e.target.value as string)}>
         {selectOptions.map(selectOption => (
           <MenuItem key={selectOption} value={selectOption}>
             <ListItemText primary={selectOption} />

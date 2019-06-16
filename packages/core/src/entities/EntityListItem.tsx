@@ -7,7 +7,7 @@ import { entityService } from './services/entity.service';
 import { WithCoreContextProps } from '../context/with-core-context-props.model';
 import { withCoreContext } from '../context/with-core-context';
 
-interface EntityListItemProps extends ListItemProps {
+interface EntityListItemProps extends ListItemProps<any> {
   schema: EntitySchema;
   entity: Entity;
   SecondaryAction?: JSX.Element;
@@ -19,7 +19,7 @@ const EntityListItem = (props: Props) => {
   const { schema, entity, SecondaryAction, context } = props;
   const instanceDisplayProps = entityService.instanceDisplayPropsOrDefault(schema, context)(entity);
   return (
-    <ListItem {...props}>
+    <ListItem {...props as any}>
       <ListItemAvatar>
         <Avatar src={instanceDisplayProps.imageUrl}>
           {schema.options.icon ? <schema.options.icon /> : schema.options.alias[0].toUpperCase()}

@@ -35,7 +35,7 @@ class OverviewPage extends React.Component<OverviewPageProps> {
             }
 
             return (
-              <Grid container spacing={16}>
+              <Grid container spacing={2}>
                 {schemas.map(schema => {
                   const count = data[`${schema.options.alias}Count`];
                   return (

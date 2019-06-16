@@ -11,7 +11,7 @@ export interface PageProps {
 const styles = (theme: Theme) =>
   createStyles({
     padded: {
-      padding: theme.spacing.unit * 3
+      padding: theme.spacing(3)
     },
     appBar: {
       bottom: 'auto',
@@ -29,7 +29,7 @@ const styles = (theme: Theme) =>
       marginTop: 64
     },
     actionButton: {
-      marginLeft: theme.spacing.unit
+      marginLeft: theme.spacing()
     }
   });
 

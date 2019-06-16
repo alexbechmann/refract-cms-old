@@ -106,9 +106,9 @@ const styles = (theme: Theme) =>
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen
       }),
-      width: theme.spacing.unit * 7,
+      width: theme.spacing(7),
       [theme.breakpoints.up('sm')]: {
-        width: theme.spacing.unit * 9
+        width: theme.spacing(9)
       }
     },
     appBarSpacer: theme.mixins.toolbar,
@@ -125,7 +125,7 @@ const styles = (theme: Theme) =>
       height: 320
     },
     h5: {
-      marginBottom: theme.spacing.unit * 2
+      marginBottom: theme.spacing(2)
     }
   });
 

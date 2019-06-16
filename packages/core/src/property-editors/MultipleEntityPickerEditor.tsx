@@ -50,7 +50,7 @@ const styles = (theme: Theme) =>
       }
     },
     chip: {
-      margin: theme.spacing.unit
+      margin: theme.spacing()
     }
   });
 

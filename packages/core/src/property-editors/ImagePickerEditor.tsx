@@ -47,7 +47,7 @@ const styles = (theme: Theme) =>
     imagePreview: {
       width: 30,
       height: 30,
-      marginBottom: theme.spacing.unit * 2
+      marginBottom: theme.spacing(2)
     }
   });
 
@@ -106,7 +106,7 @@ const ImagePickerEditor = combineContainers(withStyles(styles), withCoreContext)
       return (
         <div>
           <Avatar src={fileService.buildImageUrl(value!.imageId)} className={classes.imagePreview} />
-          <Grid container spacing={16}>
+          <Grid container spacing={2}>
             {Object.keys(cropDefinitions).map(cropKey => {
               const cropDefinition = cropDefinitions[cropKey];
               return (

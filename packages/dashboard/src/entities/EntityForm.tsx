@@ -42,10 +42,10 @@ interface State {
 const styles = (theme: Theme) =>
   createStyles({
     card: {
-      margin: theme.spacing.unit
+      margin: theme.spacing()
     },
     propertyEditor: {
-      marginBottom: theme.spacing.unit * 4
+      marginBottom: theme.spacing(4)
     },
     root: {
       paddingBottom: 70
@@ -136,9 +136,9 @@ class EntityForm extends Component<Props, State> {
                   const propertyOptions = schema.properties[propertyKey];
                   return (
                     <div key={index} className={classes.propertyEditor}>
-                      <Grid container spacing={16}>
+                      <Grid container spacing={2}>
                         <Grid item xs={12} sm={12} md={3} lg={3} xl={3}>
-                          <Typography variant="subheading" gutterBottom>
+                          <Typography variant="subtitle1" gutterBottom>
                             {propertyOptions.displayName || propertyKey}
                           </Typography>
                         </Grid>
