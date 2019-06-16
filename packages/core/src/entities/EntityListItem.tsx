@@ -28,7 +28,6 @@ const EntityListItem = (props: Props) => {
       <ListItemText
         primaryTypographyProps={{ noWrap: true }}
         secondaryTypographyProps={{ noWrap: true }}
-        inset
         primary={instanceDisplayProps.primaryText}
         secondary={instanceDisplayProps.secondaryText}
       />

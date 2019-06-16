@@ -254,7 +254,7 @@ class Dashboard extends React.Component<Props> {
                             <schema.options.icon />
                           </ListItemIcon>
                         )}
-                        <ListItemText inset primary={schema.options.displayName || schema.options.alias} />
+                        <ListItemText primary={schema.options.displayName || schema.options.alias} />
                       </ListItem>
                     );
                   })}
@@ -265,7 +265,7 @@ class Dashboard extends React.Component<Props> {
                     <ListItemIcon>
                       <ExitToApp />
                     </ListItemIcon>
-                    <ListItemText inset primary="Logout" />
+                    <ListItemText primary="Logout" />
                   </ListItem>
                 </List>
               </Drawer>
