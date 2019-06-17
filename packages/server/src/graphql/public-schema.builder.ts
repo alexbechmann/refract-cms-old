@@ -144,8 +144,8 @@ export class PublicSchemaBuilder {
             return repository
               .find(filter)
               .sort(options.sort)
-              .limit(options.limit)
-              .skip(options.skip);
+              .limit(options.limit || 100)
+              .skip(options.skip || 0);
           }
         )
       },
@@ -154,7 +154,7 @@ export class PublicSchemaBuilder {
         args: {
           filter: args.filter
         },
-        resolve: (_, { filter }) => repository.count(getMongoDbFilter(entityType, filter))
+        resolve: (_, { filter }) => repository.countDocuments(getMongoDbFilter(entityType, filter))
       },
       [`${entitySchema.options.alias}EntityFindById`]: {
         type: entityType,
@@ -199,8 +199,8 @@ export class PublicSchemaBuilder {
             return repository
               .find(filter)
               .sort(options.sort)
-              .limit(options.limit)
-              .skip(options.skip);
+              .limit(options.limit || 100)
+              .skip(options.skip || 0);
           },
           {
             differentOutputType: true

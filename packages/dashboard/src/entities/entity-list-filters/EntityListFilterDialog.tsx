@@ -53,19 +53,32 @@ const EntityListFilterDialog: ComponentType<Props> = ({
   setOpened,
   schema,
   filters,
-  addFilter
+  addFilter,
+  updateFilter
 }) => {
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>Filter</DialogTitle>
       <DialogContent>
-        {filters.map(filter => {
+        {filters.map((filter, index) => {
           return (
             <Grid container spacing={2}>
               <Grid item xs={4}>
                 <FormControl className={classes.formControl} fullWidth>
                   <InputLabel>Property</InputLabel>
-                  <Select value={filter.propertyKey} onChange={e => console.log(e)}>
+                  <Select
+                    value={filter.propertyKey}
+                    onChange={e => {
+                      updateFilter({
+                        alias: schema.options.alias,
+                        index,
+                        filter: {
+                          ...filter,
+                          propertyKey: e.target.value as string
+                        }
+                      });
+                    }}
+                  >
                     {Object.keys(schema.properties).map(propertyKey => (
                       <MenuItem value={propertyKey}>
                         {schema.properties[propertyKey].displayName || propertyKey}
@@ -77,7 +90,19 @@ const EntityListFilterDialog: ComponentType<Props> = ({
               <Grid item xs={4}>
                 <FormControl className={classes.formControl} fullWidth>
                   <InputLabel>Operater</InputLabel>
-                  <Select value={filter.operater} onChange={e => console.log(e)}>
+                  <Select
+                    value={filter.operater}
+                    onChange={e => {
+                      updateFilter({
+                        alias: schema.options.alias,
+                        index,
+                        filter: {
+                          ...filter,
+                          operater: e.target.value as any
+                        }
+                      });
+                    }}
+                  >
                     {['eq', 'neq'].map(operater => (
                       <MenuItem value={operater}>{operater}</MenuItem>
                     ))}
@@ -85,7 +110,22 @@ const EntityListFilterDialog: ComponentType<Props> = ({
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <TextField className={classes.formControl} fullWidth label="Value" value={filter.value} />
+                <TextField
+                  className={classes.formControl}
+                  fullWidth
+                  label="Value"
+                  value={filter.value}
+                  onChange={e => {
+                    updateFilter({
+                      alias: schema.options.alias,
+                      index,
+                      filter: {
+                        ...filter,
+                        value: e.target.value as string
+                      }
+                    });
+                  }}
+                />
               </Grid>
             </Grid>
           );

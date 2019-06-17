@@ -21,7 +21,7 @@
       "@refract-cms/*": ["./packages/*/src"]
     },
     "isolatedModules": false,
-    "strict": true
+    "strict": false
   },
   "exclude": ["node_modules", "**/*.test.*"],
   "include": ["./consumer", "./packages"]
