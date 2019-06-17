@@ -75,15 +75,18 @@ const EntityListFilterDialog: ComponentType<Props> = ({
                         filter: {
                           ...filter,
                           propertyKey: e.target.value as string
-                        }
+                        },
+                        schema
                       });
                     }}
                   >
-                    {Object.keys(schema.properties).map(propertyKey => (
-                      <MenuItem key={propertyKey} value={propertyKey}>
-                        {schema.properties[propertyKey].displayName || propertyKey}
-                      </MenuItem>
-                    ))}
+                    {Object.keys(schema.properties)
+                      .filter(propertyKey => isBasicPropertyType(schema.properties[propertyKey].type))
+                      .map(propertyKey => (
+                        <MenuItem key={propertyKey} value={propertyKey}>
+                          {schema.properties[propertyKey].displayName || propertyKey}
+                        </MenuItem>
+                      ))}
                   </Select>
                 </FormControl>
               </Grid>
@@ -99,11 +102,12 @@ const EntityListFilterDialog: ComponentType<Props> = ({
                         filter: {
                           ...filter,
                           operater: e.target.value as any
-                        }
+                        },
+                        schema
                       });
                     }}
                   >
-                    {['eq', 'neq'].map(operater => (
+                    {['EQ', 'NEQ'].map(operater => (
                       <MenuItem key={operater} value={operater}>
                         {operater}
                       </MenuItem>
@@ -116,15 +120,16 @@ const EntityListFilterDialog: ComponentType<Props> = ({
                   className={classes.formControl}
                   fullWidth
                   label="Value"
-                  value={filter.value}
+                  value={`${filter.value}`}
                   onChange={e => {
                     updateFilter({
                       alias: schema.options.alias,
                       index,
                       filter: {
                         ...filter,
-                        value: e.target.value as string
-                      }
+                        value: schema.properties[filter.propertyKey].type(e.target.value) || 0
+                      },
+                      schema
                     });
                   }}
                 />

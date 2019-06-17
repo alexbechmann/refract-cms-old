@@ -28,8 +28,16 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
       };
     }
     case UPDATE_FILTER: {
+      const { schema } = action.payload;
       const newFilters = [...state[action.payload.alias].filters];
-      newFilters[action.payload.index] = action.payload.filter;
+      if (action.payload.filter.propertyKey == state[action.payload.alias].filters[action.payload.index].propertyKey) {
+        newFilters[action.payload.index] = action.payload.filter;
+      } else {
+        newFilters[action.payload.index] = {
+          ...action.payload.filter,
+          value: schema.properties[action.payload.filter.propertyKey].type()
+        };
+      }
       return {
         ...state,
         [action.payload.alias]: {

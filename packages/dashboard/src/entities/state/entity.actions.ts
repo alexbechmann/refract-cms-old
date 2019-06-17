@@ -16,16 +16,23 @@ export const setOrderByDirection = (args: { alias: string; direction: 'ASC' | 'D
 };
 
 export const addFilter = ({ schema }: { schema: EntitySchema<any> }) => {
+  const propertyKey = Object.keys(schema.properties)[0];
   return action(ADD_FILTER, {
     alias: schema.options.alias,
+    schema,
     filter: {
-      propertyKey: Object.keys(schema.properties)[0] || '',
-      operater: 'eq',
-      value: ''
+      propertyKey,
+      operater: 'EQ',
+      value: schema.properties[propertyKey].type()
     } as EntityListFilter
   });
 };
 
-export const updateFilter = (args: { alias: string; filter: EntityListFilter; index: number }) => {
+export const updateFilter = (args: {
+  alias: string;
+  filter: EntityListFilter;
+  index: number;
+  schema: EntitySchema<any>;
+}) => {
   return action(UPDATE_FILTER, args);
 };
