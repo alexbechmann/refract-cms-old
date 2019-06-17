@@ -80,7 +80,7 @@ const EntityListFilterDialog: ComponentType<Props> = ({
                     }}
                   >
                     {Object.keys(schema.properties).map(propertyKey => (
-                      <MenuItem value={propertyKey}>
+                      <MenuItem key={propertyKey} value={propertyKey}>
                         {schema.properties[propertyKey].displayName || propertyKey}
                       </MenuItem>
                     ))}
@@ -104,7 +104,9 @@ const EntityListFilterDialog: ComponentType<Props> = ({
                     }}
                   >
                     {['eq', 'neq'].map(operater => (
-                      <MenuItem value={operater}>{operater}</MenuItem>
+                      <MenuItem key={operater} value={operater}>
+                        {operater}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
