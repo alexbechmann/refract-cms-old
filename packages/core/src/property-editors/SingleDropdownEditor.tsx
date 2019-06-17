@@ -14,7 +14,7 @@ export default (options?: SingleDropdownEditorOptions) => (props: PropertyEditor
       <Select value={props.value || selectOptions[0]} onChange={e => props.setValue(e.target.value as string)}>
         {selectOptions.map(selectOption => (
           <MenuItem key={selectOption} value={selectOption}>
-            <ListItemText primary={selectOption} />
+            {selectOption}
           </MenuItem>
         ))}
       </Select>
