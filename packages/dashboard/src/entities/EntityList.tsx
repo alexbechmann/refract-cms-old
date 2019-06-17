@@ -26,6 +26,7 @@ import Filter from '@material-ui/icons/FilterList';
 import Refresh from '@material-ui/icons/Refresh';
 import EntityListSortDialog from './EntityListSortDialog';
 import EntityListFilterDialog from './entity-list-filters/EntityListFilterDialog';
+import { createLinkComponent } from '../shared/create-link-component';
 
 export interface EntitiesListProps extends RouteComponentProps<{ alias: string }> {}
 
@@ -98,8 +99,8 @@ class EntitiesList extends Component<Props> {
                           <Button
                             variant="contained"
                             color="primary"
-                            component={props => (
-                              <Link to={routes.entity.edit.createUrl({ id: 'new', schema: entitySchema })} {...props} />
+                            component={createLinkComponent(
+                              routes.entity.edit.createUrl({ id: 'new', schema: entitySchema })
                             )}
                           >
                             Add new
@@ -131,11 +132,8 @@ class EntitiesList extends Component<Props> {
                         return (
                           <EntityListItem
                             key={item._id}
-                            component={props => (
-                              <Link
-                                to={routes.entity.edit.createUrl({ id: item._id, schema: entitySchema })}
-                                {...props}
-                              />
+                            component={createLinkComponent(
+                              routes.entity.edit.createUrl({ id: item._id, schema: entitySchema })
                             )}
                             button
                             entity={item}

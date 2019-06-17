@@ -62,7 +62,7 @@ const EntityListFilterDialog: ComponentType<Props> = ({
       <DialogContent>
         {filters.map((filter, index) => {
           return (
-            <Grid container spacing={2}>
+            <Grid key={index} container spacing={2}>
               <Grid item xs={4}>
                 <FormControl className={classes.formControl} fullWidth>
                   <InputLabel>Property</InputLabel>
@@ -132,14 +132,7 @@ const EntityListFilterDialog: ComponentType<Props> = ({
         })}
         <Button
           onClick={() => {
-            addFilter({
-              alias: schema.options.alias,
-              filter: {
-                propertyKey: 'title',
-                operater: 'eq',
-                value: 'hello'
-              }
-            });
+            addFilter({ schema });
           }}
         >
           Add filter

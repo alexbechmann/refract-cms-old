@@ -1,5 +1,6 @@
 import { action } from 'typesafe-actions';
 import { EntityListFilter } from '../models/entity-list-filter.model';
+import { EntitySchema } from '@refract-cms/core';
 
 export const SET_ORDERBY = '@@CMS/ENTITIES/SET_ORDERBY';
 export const SET_ORDERBY_DIRECTION = '@@CMS/ENTITIES/SET_ORDERBY_DIRECTION';
@@ -14,8 +15,15 @@ export const setOrderByDirection = (args: { alias: string; direction: 'ASC' | 'D
   return action(SET_ORDERBY_DIRECTION, args);
 };
 
-export const addFilter = (args: { alias: string; filter: EntityListFilter }) => {
-  return action(ADD_FILTER, args);
+export const addFilter = ({ schema }: { schema: EntitySchema<any> }) => {
+  return action(ADD_FILTER, {
+    alias: schema.options.alias,
+    filter: {
+      propertyKey: Object.keys(schema.properties)[0] || '',
+      operater: 'eq',
+      value: ''
+    } as EntityListFilter
+  });
 };
 
 export const updateFilter = (args: { alias: string; filter: EntityListFilter; index: number }) => {
