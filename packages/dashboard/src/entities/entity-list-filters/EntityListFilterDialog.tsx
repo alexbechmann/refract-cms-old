@@ -117,23 +117,6 @@ const EntityListFilterDialog: ComponentType<Props> = ({
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                {/* <TextField
-                  className={classes.formControl}
-                  fullWidth
-                  label="Value"
-                  value={`${filter.value}`}
-                  onChange={e => {
-                    updateFilter({
-                      alias: schema.options.alias,
-                      index,
-                      filter: {
-                        ...filter,
-                        value: schema.properties[filter.propertyKey].type(e.target.value) || 0
-                      },
-                      schema
-                    });
-                  }}
-                /> */}
                 <Editor
                   serverUrl=""
                   propertyKey={filter.propertyKey}
@@ -145,7 +128,7 @@ const EntityListFilterDialog: ComponentType<Props> = ({
                       index,
                       filter: {
                         ...filter,
-                        value: schema.properties[filter.propertyKey].type(value)
+                        value
                       },
                       schema
                     });
