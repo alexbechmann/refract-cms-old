@@ -10,16 +10,20 @@ import { withCoreContext } from '../context/with-core-context';
 interface EntityListItemProps extends ListItemProps<any> {
   schema: EntitySchema;
   entity: Entity;
-  // SecondaryAction?: JSX.Element;
+  SecondaryAction?: JSX.Element;
 }
 
 interface Props extends EntityListItemProps, WithCoreContextProps {}
 
 const EntityListItem = (props: Props) => {
-  const { schema, entity, context } = props;
+  const { schema, entity, context, SecondaryAction } = props;
   const instanceDisplayProps = entityService.instanceDisplayPropsOrDefault(schema, context)(entity);
+  const listItemProps: any = {
+    ...props
+  };
+  delete listItemProps['SecondaryAction'];
   return (
-    <ListItem {...props as any}>
+    <ListItem {...listItemProps}>
       <ListItemAvatar>
         <Avatar src={instanceDisplayProps.imageUrl}>
           {schema.options.icon ? <schema.options.icon /> : schema.options.alias[0].toUpperCase()}
@@ -31,7 +35,7 @@ const EntityListItem = (props: Props) => {
         primary={instanceDisplayProps.primaryText}
         secondary={instanceDisplayProps.secondaryText}
       />
-      {/* {SecondaryAction && <ListItemSecondaryAction>{SecondaryAction}</ListItemSecondaryAction>} */}
+      {SecondaryAction && <ListItemSecondaryAction>{SecondaryAction}</ListItemSecondaryAction>}
     </ListItem>
   );
 };

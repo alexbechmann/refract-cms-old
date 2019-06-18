@@ -99,13 +99,16 @@ class EntitiesList extends Component<Props, State> {
           displayName={`${entitySchema.options.alias}_list`}
           notifyOnNetworkStatusChange
           fetchPolicy="network-only"
-        >
-          {({ loading, data, refetch, variables }) => {
-            const items = data.items || [];
-            const count = !loading && data ? data.count : undefined;
+          onCompleted={data => {
+            const count = !data.loading && data ? data.count : undefined;
             if (count != this.state.count) {
               this.setState({ count });
             }
+          }}
+        >
+          {({ loading, data, refetch, variables }) => {
+            const items = data.items || [];
+
             if (loading) {
               return <LinearProgress />;
             }
