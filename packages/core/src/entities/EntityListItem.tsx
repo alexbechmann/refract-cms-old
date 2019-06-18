@@ -10,13 +10,13 @@ import { withCoreContext } from '../context/with-core-context';
 interface EntityListItemProps extends ListItemProps<any> {
   schema: EntitySchema;
   entity: Entity;
-  SecondaryAction?: JSX.Element;
+  // SecondaryAction?: JSX.Element;
 }
 
 interface Props extends EntityListItemProps, WithCoreContextProps {}
 
 const EntityListItem = (props: Props) => {
-  const { schema, entity, SecondaryAction, context } = props;
+  const { schema, entity, context } = props;
   const instanceDisplayProps = entityService.instanceDisplayPropsOrDefault(schema, context)(entity);
   return (
     <ListItem {...props as any}>
@@ -31,7 +31,7 @@ const EntityListItem = (props: Props) => {
         primary={instanceDisplayProps.primaryText}
         secondary={instanceDisplayProps.secondaryText}
       />
-      {SecondaryAction && <ListItemSecondaryAction>{SecondaryAction}</ListItemSecondaryAction>}
+      {/* {SecondaryAction && <ListItemSecondaryAction>{SecondaryAction}</ListItemSecondaryAction>} */}
     </ListItem>
   );
 };

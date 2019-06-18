@@ -68,11 +68,13 @@ class EntitiesList extends Component<Props> {
     let transformedSort = {};
     if (filters.filters) {
       transformedFilter = {
-        AND: filters.filters.map(f => ({
-          [f.propertyKey]: {
-            [f.operater]: f.value
-          }
-        }))
+        AND: filters.filters.map(f => {
+          return {
+            [f.propertyKey]: {
+              [f.operater]: f.value
+            }
+          };
+        })
       };
     }
     if (filters.orderByDirection && filters.orderByField) {
@@ -80,7 +82,6 @@ class EntitiesList extends Component<Props> {
         [filters.orderByField]: filters.orderByDirection
       };
     }
-
     return (
       <div>
         <Query

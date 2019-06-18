@@ -43,9 +43,10 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
       if (action.payload.filter.propertyKey == state[action.payload.alias].filters[action.payload.index].propertyKey) {
         newFilters[action.payload.index] = action.payload.filter;
       } else {
+        const type = schema.properties[action.payload.filter.propertyKey].type;
         newFilters[action.payload.index] = {
           ...action.payload.filter,
-          value: schema.properties[action.payload.filter.propertyKey].type()
+          value: type == Date ? new Date() : type()
         };
       }
       return {
