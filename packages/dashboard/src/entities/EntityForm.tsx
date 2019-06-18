@@ -191,11 +191,11 @@ class EntityForm extends Component<Props, State> {
       this.setState({ loading: true }, () => {
         client
           .mutate({
-            refetchQueries: [
-              {
-                query: graphqlQueryHelper.getAllQueryWithAllFields(schema, filters)
-              }
-            ],
+            // refetchQueries: [
+            //   {
+            //     query: graphqlQueryHelper.getAllQueryWithAllFields(schema, filters)
+            //   }
+            // ],
             mutation: gql(`
       mutation {
         ${this.props.alias}RemoveById(id: "${this.props.id!}")

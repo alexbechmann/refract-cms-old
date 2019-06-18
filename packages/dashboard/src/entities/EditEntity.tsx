@@ -36,10 +36,10 @@ const EditEntity = ({ alias, id, client, schema, filters }: Props) => {
   return (
     <Mutation
       mutation={mutation}
-      refetchQueries={[
-        { query: graphqlQueryHelper.getAllQueryWithAllFields(schema, filters) },
-        { query: graphqlQueryHelper.getAllQueryWithAllFields(schema) }
-      ]}
+      // refetchQueries={[
+      //   { query: graphqlQueryHelper.getAllQueryWithAllFields(schema, filters) },
+      //   { query: graphqlQueryHelper.getAllQueryWithAllFields(schema) }
+      // ]}
     >
       {(save, mutationResult) => {
         return (

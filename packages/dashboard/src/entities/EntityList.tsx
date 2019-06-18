@@ -60,11 +60,31 @@ class EntitiesList extends Component<Props> {
 
   render() {
     const { routes, entitySchema, classes, filters } = this.props;
-    const query = graphqlQueryHelper.getAllQueryWithAllFields(entitySchema, filters);
+    const query = graphqlQueryHelper.getAllQueryWithAllFields(entitySchema);
+    let transformedFilter = {};
+    let transformedSort = {};
+    if (filters) {
+      if (filters.filters) {
+        transformedFilter = {
+          AND: filters.filters.map(f => ({
+            [f.propertyKey]: {
+              [f.operater]: f.value
+            }
+          }))
+        };
+        console.log(filters.filters, transformedFilter);
+      }
+      if (filters.orderByDirection && filters.orderByField) {
+        transformedSort = {
+          [filters.orderByField]: filters.orderByDirection
+        };
+      }
+    }
     return (
       <div>
         <Query
           query={query}
+          variables={{ filter: transformedFilter, sort: transformedSort }}
           displayName={`${entitySchema.options.alias}_list`}
           notifyOnNetworkStatusChange
           fetchPolicy="network-only"

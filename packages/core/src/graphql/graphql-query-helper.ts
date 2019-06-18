@@ -13,24 +13,24 @@ class GraphqlQueryHelper {
   }
 
   getAllQueryWithAllFields(
-    schema: EntitySchema,
-    filters?: {
-      orderByField: string;
-      orderByDirection: 'ASC' | 'DESC';
-    }
+    schema: EntitySchema
+    // filters?: {
+    //   orderByField: string;
+    //   orderByDirection: 'ASC' | 'DESC';
+    // }
   ) {
     const propertyTypes = Object.keys(schema.properties).reduce((acc, p) => {
       acc[p] = schema.properties[p].type;
       return acc;
     }, {});
 
-    const queryArgs =
-      filters && filters.orderByField && filters.orderByDirection
-        ? `(sort: {${filters.orderByField}: ${filters.orderByDirection}})`
-        : ``;
+    // const queryArgs =
+    //   filters && filters.orderByField && filters.orderByDirection
+    //     ? `(sort: {${filters.orderByField}: ${filters.orderByDirection}})`
+    //     : ``;
     return gql`
-      {
-        items: ${schema.options.alias}EntityList${queryArgs} {
+      query($filter: ${schema.options.alias}EntityFilterType, $sort: ${schema.options.alias}EntitySortType){
+        items: ${schema.options.alias}EntityList(filter: $filter, sort: $sort){
           _id
           ${this.buildProperties(propertyTypes)}
         }
