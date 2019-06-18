@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "target": "es5",
+    "lib": ["es2015", "es2017", "dom"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "declaration": true,
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "allowJs": false,
+    "checkJs": false,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "outDir": "dist",
+    "strict": false,
+    "baseUrl": "./",
+    "paths": {
+      "@refract-cms/*": ["../*/src"]
+    }
+  },
+  "files": ["src/index.ts"],
+  "exclude": ["node_modules"],
+  "include": ["src/**/*"]
+}

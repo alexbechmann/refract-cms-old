@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "alias": ["refract-cms.com"],
+  "builds": [
+    {
+      "src": "docs/package.json",
+      "use": "@now/static-build",
+      "config": { "distDir": "public" }
+    }
+  ],
+  "routes": [{ "src": "/(.*)", "dest": "/docs/$1" }],
+  "github": {
+    "autoAlias": true
+  }
+}

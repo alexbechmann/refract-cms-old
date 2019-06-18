@@ -1,0 +1,33 @@
+{
+  "name": "@refract-cms/cli",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "refract-cms": "./bin/refract-cms.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "typings": "./typings/typings.d.ts",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/polyfill": "^7.4.4",
+    "chalk": "^2.4.2",
+    "commander": "^2.20.0",
+    "fork-ts-checker-webpack-plugin": "^1.2.0",
+    "fs-extra": "^7.0.1",
+    "razzle-dev-utils": "^3.0.0",
+    "react-hot-loader": "^4.8.4",
+    "start-server-webpack-plugin": "^2.2.5",
+    "ts-loader": "^5.4.4",
+    "typeface-roboto": "^0.0.54",
+    "typescript": "3.5.1",
+    "webpack": "^4.30.0",
+    "webpack-dev-server": "^3.3.1",
+    "webpack-merge": "^4.2.1",
+    "webpack-node-externals": "^1.7.2",
+    "webpackbar": "^3.2.0"
+  }
+}

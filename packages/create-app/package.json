@@ -1,0 +1,23 @@
+{
+  "name": "@refract-cms/create-app",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "create-refract-cms-app": "./bin/create-refract-cms-app.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "typings": "./typings/typings.d.ts",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/polyfill": "^7.4.4",
+    "chalk": "^2.4.2",
+    "fs-extra": "^7.0.1",
+    "inquirer": "^6.3.1",
+    "ora": "^3.4.0",
+    "shelljs": "^0.8.3"
+  }
+}
