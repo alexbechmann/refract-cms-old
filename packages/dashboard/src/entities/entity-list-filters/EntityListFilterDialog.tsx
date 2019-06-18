@@ -27,6 +27,8 @@ import Dialog, { DialogProps } from '@material-ui/core/Dialog';
 import { EntitySchema, PropertyOptions, isBasicPropertyType } from '@refract-cms/core';
 import AddIcon from '@material-ui/icons/Add';
 import * as EntityActions from '../state/entity.actions';
+import { operatorDescriptions } from './operater-descriptions';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 export interface EntityListFilterDialogProps extends Pick<DialogProps, 'open' | 'onClose'> {
   schema: EntitySchema<any>;
@@ -64,7 +66,7 @@ const EntityListFilterDialog: ComponentType<Props> = ({
           const Editor = schema.properties[filter.propertyKey].editorComponent;
           return (
             <Grid key={index} container spacing={2}>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <FormControl className={classes.formControl} fullWidth>
                   <InputLabel>Property</InputLabel>
                   <Select
@@ -91,7 +93,7 @@ const EntityListFilterDialog: ComponentType<Props> = ({
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <FormControl className={classes.formControl} fullWidth>
                   <InputLabel>Operater</InputLabel>
                   <Select
@@ -108,9 +110,9 @@ const EntityListFilterDialog: ComponentType<Props> = ({
                       });
                     }}
                   >
-                    {['EQ', 'NEQ', 'GT', 'LT', 'GTE', 'LTE', 'IN'].map(operater => (
-                      <MenuItem key={operater} value={operater}>
-                        {operater}
+                    {operatorDescriptions.map(operaterDescription => (
+                      <MenuItem key={operaterDescription.operater} value={operaterDescription.operater}>
+                        {operaterDescription.displayName}
                       </MenuItem>
                     ))}
                   </Select>
@@ -135,18 +137,26 @@ const EntityListFilterDialog: ComponentType<Props> = ({
                   }}
                 />
               </Grid>
+              <Grid item xs={2}>
+                <Button style={{ marginTop: 11 }} fullWidth>
+                  Remove filter
+                </Button>
+              </Grid>
             </Grid>
           );
         })}
+      </DialogContent>
+      <DialogActions>
         <Button
+          color="secondary"
           onClick={() => {
             addFilter({ schema });
           }}
         >
           Add filter
         </Button>
-      </DialogContent>
-      <DialogActions>
+        <Button>Clear</Button>
+
         <Button onClick={() => setOpened(false)}>Done</Button>
       </DialogActions>
     </Dialog>
