@@ -25,6 +25,7 @@
     "no-string-throw": false,
     "ban-types": false,
     "interface-over-type-literal": false,
-    "no-enum": true
+    "no-enum": true,
+    "jsx-key": false
   }
 }

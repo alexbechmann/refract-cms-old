@@ -41,13 +41,13 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
     case UPDATE_FILTER: {
       const { schema } = action.payload;
       const newFilters = [...state[action.payload.alias].filters];
-      if (action.payload.filter.propertyKey == state[action.payload.alias].filters[action.payload.index].propertyKey) {
+      if (action.payload.filter.propertyKey === state[action.payload.alias].filters[action.payload.index].propertyKey) {
         newFilters[action.payload.index] = action.payload.filter;
       } else {
         const type = schema.properties[action.payload.filter.propertyKey].type;
         newFilters[action.payload.index] = {
           ...action.payload.filter,
-          value: type == Date ? convertDateToSimpleDate(new Date()) : type()
+          value: type === Date ? convertDateToSimpleDate(new Date()) : type()
         };
       }
       return {
@@ -61,7 +61,7 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
     }
     case REMOVE_FILTER: {
       const { alias, index } = action.payload;
-      const newFilters = [...state[action.payload.alias].filters.filter((f, i) => i != index)];
+      const newFilters = [...state[action.payload.alias].filters.filter((f, i) => i !== index)];
       return {
         ...state,
         [alias]: {

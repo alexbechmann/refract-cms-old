@@ -101,7 +101,7 @@ class EntitiesList extends Component<Props, State> {
           fetchPolicy="network-only"
           onCompleted={data => {
             const count = !data.loading && data ? data.count : undefined;
-            if (count != this.state.count) {
+            if (count !== this.state.count) {
               this.setState({ count });
             }
           }}
@@ -186,7 +186,6 @@ class EntitiesList extends Component<Props, State> {
                           <TablePagination
                             page={filters.currentPage}
                             count={data.count}
-                            // onChangeRowsPerPage={e => setpag}
                             onChangePage={(e, page) => {
                               setPage({
                                 alias: entitySchema.options.alias,
@@ -194,9 +193,6 @@ class EntitiesList extends Component<Props, State> {
                               });
                             }}
                             rowsPerPage={10}
-                            //rowsPerPageOptions={[5, 10, 25, 50]}
-                            // @ts-ignore
-                            // ActionsComponent={TablePaginationActions}
                           />
                         </TableRow>
                       </TableBody>
