@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "alias": ["refract-cms.com"],
   "builds": [
     {
       "src": "docs/package.json",
