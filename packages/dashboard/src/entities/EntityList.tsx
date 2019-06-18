@@ -13,7 +13,9 @@ import {
   Table,
   TableBody,
   TableRow,
-  TablePagination
+  TablePagination,
+  Badge,
+  Tooltip
 } from '@material-ui/core';
 import { Entity, graphqlQueryHelper, EntityListItem, PropertyOptions } from '@refract-cms/core';
 import { RouteComponentProps, Link } from '@reach/router';
@@ -27,6 +29,7 @@ import Refresh from '@material-ui/icons/Refresh';
 import EntityListSortDialog from './EntityListSortDialog';
 import EntityListFilterDialog from './entity-list-filters/EntityListFilterDialog';
 import { createLinkComponent } from '../shared/create-link-component';
+import * as EntityActions from './state/entity.actions';
 
 export interface EntitiesListProps extends RouteComponentProps<{ alias: string }> {}
 
@@ -59,31 +62,37 @@ class EntitiesList extends Component<Props> {
   };
 
   render() {
-    const { routes, entitySchema, classes, filters } = this.props;
+    const { routes, entitySchema, classes, filters, setPage } = this.props;
     const query = graphqlQueryHelper.getAllQueryWithAllFields(entitySchema);
     let transformedFilter = {};
     let transformedSort = {};
-    if (filters) {
-      if (filters.filters) {
-        transformedFilter = {
-          AND: filters.filters.map(f => ({
-            [f.propertyKey]: {
-              [f.operater]: f.value
-            }
-          }))
-        };
-      }
-      if (filters.orderByDirection && filters.orderByField) {
-        transformedSort = {
-          [filters.orderByField]: filters.orderByDirection
-        };
-      }
+    if (filters.filters) {
+      transformedFilter = {
+        AND: filters.filters.map(f => ({
+          [f.propertyKey]: {
+            [f.operater]: f.value
+          }
+        }))
+      };
     }
+    if (filters.orderByDirection && filters.orderByField) {
+      transformedSort = {
+        [filters.orderByField]: filters.orderByDirection
+      };
+    }
+
     return (
       <div>
         <Query
           query={query}
-          variables={{ filter: transformedFilter, sort: transformedSort }}
+          variables={{
+            filter: transformedFilter,
+            sort: transformedSort,
+            pagination: {
+              skip: filters.currentPage * 10,
+              limit: 10
+            }
+          }}
           displayName={`${entitySchema.options.alias}_list`}
           notifyOnNetworkStatusChange
           fetchPolicy="network-only"
@@ -99,32 +108,33 @@ class EntitiesList extends Component<Props> {
                 actionComponents={
                   !entitySchema.options.maxOne
                     ? [
-                        () => (
-                          <IconButton disabled={loading} onClick={() => refetch(variables)}>
-                            <Refresh />
-                          </IconButton>
-                        ),
-                        () => (
-                          <IconButton onClick={() => this.setState({ sortDialogOpen: true })}>
-                            <Sort />
-                          </IconButton>
-                        ),
-                        () => (
-                          <IconButton onClick={() => this.setState({ filterDialogOpen: true })}>
-                            <Filter />
-                          </IconButton>
-                        ),
-                        () => (
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            component={createLinkComponent(
-                              routes.entity.edit.createUrl({ id: 'new', schema: entitySchema })
-                            )}
-                          >
-                            Add new
-                          </Button>
-                        )
+                        <IconButton disabled={loading} onClick={() => refetch(variables)}>
+                          <Refresh />
+                        </IconButton>,
+                        <IconButton onClick={() => this.setState({ sortDialogOpen: true })}>
+                          <Tooltip title="Sort">
+                            <Badge variant="dot" badgeContent={filters.orderByField ? 1 : 0} color="secondary">
+                              <Sort />
+                            </Badge>
+                          </Tooltip>
+                        </IconButton>,
+
+                        <IconButton onClick={() => this.setState({ filterDialogOpen: true })}>
+                          <Tooltip title="Filters">
+                            <Badge badgeContent={filters.filters.length} color="secondary">
+                              <Filter />
+                            </Badge>
+                          </Tooltip>
+                        </IconButton>,
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          component={createLinkComponent(
+                            routes.entity.edit.createUrl({ id: 'new', schema: entitySchema })
+                          )}
+                        >
+                          Add new
+                        </Button>
                       ]
                     : undefined
                 }
@@ -165,12 +175,17 @@ class EntitiesList extends Component<Props> {
                       <TableBody>
                         <TableRow>
                           <TablePagination
-                            page={0}
-                            count={10}
-                            onChangeRowsPerPage={console.log}
-                            onChangePage={console.log}
+                            page={filters.currentPage}
+                            count={data.count}
+                            // onChangeRowsPerPage={e => setpag}
+                            onChangePage={(e, page) => {
+                              setPage({
+                                alias: entitySchema.options.alias,
+                                page
+                              });
+                            }}
                             rowsPerPage={10}
-                            rowsPerPageOptions={[5, 10, 25, 50]}
+                            //rowsPerPageOptions={[5, 10, 25, 50]}
                             // @ts-ignore
                             // ActionsComponent={TablePaginationActions}
                           />
@@ -219,7 +234,7 @@ class EntitiesList extends Component<Props> {
   }
 }
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { ...EntityActions };
 
 type DispatchProps = typeof mapDispatchToProps;
 

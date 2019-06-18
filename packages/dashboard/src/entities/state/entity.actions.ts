@@ -6,6 +6,7 @@ export const SET_ORDERBY = '@@CMS/ENTITIES/SET_ORDERBY';
 export const SET_ORDERBY_DIRECTION = '@@CMS/ENTITIES/SET_ORDERBY_DIRECTION';
 export const ADD_FILTER = '@@CMS/ENTITIES/ADD_FILTER';
 export const UPDATE_FILTER = '@@CMS/ENTITIES/UPDATE_FILTER';
+export const SET_PAGE = '@@CMS/ENTITIES/SET_PAGE';
 
 export const setOrderByField = (args: { alias: string; orderByField: string }) => {
   return action(SET_ORDERBY, args);
@@ -35,4 +36,8 @@ export const updateFilter = (args: {
   schema: EntitySchema<any>;
 }) => {
   return action(UPDATE_FILTER, args);
+};
+
+export const setPage = (args: { alias: string; page: number }) => {
+  return action(SET_PAGE, args);
 };

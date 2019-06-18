@@ -1,6 +1,6 @@
 import { AppAction } from '../../state/app-action';
 import { EntityState } from './entity.state';
-import { SET_ORDERBY, SET_ORDERBY_DIRECTION, ADD_FILTER, UPDATE_FILTER } from './entity.actions';
+import { SET_ORDERBY, SET_ORDERBY_DIRECTION, ADD_FILTER, UPDATE_FILTER, SET_PAGE } from './entity.actions';
 import { CONFIGURE } from '../../config/state/config.actions';
 
 const defaultState: EntityState = {};
@@ -55,12 +55,22 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
         }
       };
     }
+    case SET_PAGE: {
+      return {
+        ...state,
+        [action.payload.alias]: {
+          ...state[action.payload.alias],
+          currentPage: action.payload.page
+        }
+      };
+    }
     case CONFIGURE: {
       return action.payload.schema.reduce((acc, schema) => {
         acc[schema.options.alias] = {
           orderByDirection: schema.options.defaultSort ? schema.options.defaultSort.orderByDirection || 'ASC' : 'ASC',
           orderByField: schema.options.defaultSort ? schema.options.defaultSort.orderByField : undefined,
-          filters: []
+          filters: [],
+          currentPage: 0
         };
         return acc;
       }, {});

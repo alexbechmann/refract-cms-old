@@ -170,7 +170,11 @@ export default (options: MultipleEntityPickerOptions) => {
         fetchPolicy: 'network-only',
         variables: {
           filter: {},
-          sort: {}
+          sort: {},
+          pagination: {
+            limit: 50,
+            skip: 0
+          }
         }
       }
     })

@@ -12,28 +12,20 @@ class GraphqlQueryHelper {
     return `${this.firstLetterToUpper(alias)}${this.firstLetterToUpper(propertyKey)}`;
   }
 
-  getAllQueryWithAllFields(
-    schema: EntitySchema
-    // filters?: {
-    //   orderByField: string;
-    //   orderByDirection: 'ASC' | 'DESC';
-    // }
-  ) {
+  getAllQueryWithAllFields(schema: EntitySchema) {
     const propertyTypes = Object.keys(schema.properties).reduce((acc, p) => {
       acc[p] = schema.properties[p].type;
       return acc;
     }, {});
-
-    // const queryArgs =
-    //   filters && filters.orderByField && filters.orderByDirection
-    //     ? `(sort: {${filters.orderByField}: ${filters.orderByDirection}})`
-    //     : ``;
     return gql`
-      query($filter: ${schema.options.alias}EntityFilterType, $sort: ${schema.options.alias}EntitySortType){
-        items: ${schema.options.alias}EntityList(filter: $filter, sort: $sort){
+      query($filter: ${schema.options.alias}EntityFilterType, $sort: ${
+      schema.options.alias
+    }EntitySortType, $pagination: PaginationType){
+        items: ${schema.options.alias}EntityList(filter: $filter, sort: $sort, pagination: $pagination) {
           _id
           ${this.buildProperties(propertyTypes)}
         }
+        count: ${schema.options.alias}Count(filter: $filter)
       }
     `;
   }

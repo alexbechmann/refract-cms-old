@@ -5,5 +5,6 @@ export interface EntityState {
     orderByField: string;
     orderByDirection: 'ASC' | 'DESC';
     filters: EntityListFilter[];
+    currentPage: number;
   };
 }

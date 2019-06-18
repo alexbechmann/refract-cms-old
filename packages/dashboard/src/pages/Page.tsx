@@ -5,7 +5,7 @@ import classNames from 'classnames';
 export interface PageProps {
   disablePadding?: boolean;
   title: string;
-  actionComponents?: React.ComponentType[];
+  actionComponents?: React.ReactElement<any>[];
 }
 
 const styles = (theme: Theme) =>
@@ -49,7 +49,7 @@ const Page: ComponentType<Props> = ({ children, classes, disablePadding, title, 
           {actionComponents &&
             actionComponents.map((Component, index) => (
               <span key={index} className={classes.actionButton}>
-                <Component />
+                {Component}
               </span>
             ))}
         </div>
