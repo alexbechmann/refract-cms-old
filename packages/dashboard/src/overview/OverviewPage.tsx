@@ -20,6 +20,7 @@ import { AppState } from '../state/app.state';
 import gql from 'graphql-tag';
 import { connect } from 'react-redux';
 import { Query } from 'react-apollo';
+import { createLinkComponent } from '../shared/create-link-component';
 
 interface OverviewPageProps extends RouteComponentProps, ReturnType<typeof mapStateToProps> {}
 
@@ -35,7 +36,7 @@ class OverviewPage extends React.Component<OverviewPageProps> {
             }
 
             return (
-              <Grid container spacing={16}>
+              <Grid container spacing={2}>
                 {schemas.map(schema => {
                   const count = data[`${schema.options.alias}Count`];
                   return (
@@ -58,7 +59,7 @@ class OverviewPage extends React.Component<OverviewPageProps> {
                             fullWidth
                             variant="outlined"
                             size="small"
-                            component={(props: any) => <Link {...props} to={routes.entity.list.createUrl(schema)} />}
+                            component={createLinkComponent(routes.entity.list.createUrl(schema))}
                           >
                             Start editing
                           </Button>

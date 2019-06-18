@@ -42,10 +42,10 @@ interface State {
 const styles = (theme: Theme) =>
   createStyles({
     card: {
-      margin: theme.spacing.unit
+      margin: theme.spacing()
     },
     propertyEditor: {
-      marginBottom: theme.spacing.unit * 4
+      marginBottom: theme.spacing(4)
     },
     root: {
       paddingBottom: 70
@@ -112,21 +112,15 @@ class EntityForm extends Component<Props, State> {
         <Page
           title={schema.options.displayName || schema.options.alias}
           actionComponents={[
-            () => (
-              <IconButton onClick={this.back}>
-                <ArrowBack />
-              </IconButton>
-            ),
-            () => (
-              <IconButton onClick={this.delete}>
-                <Delete />
-              </IconButton>
-            ),
-            () => (
-              <Button color="primary" variant="contained" onClick={this.save}>
-                Save
-              </Button>
-            )
+            <IconButton onClick={this.back}>
+              <ArrowBack />
+            </IconButton>,
+            <IconButton onClick={this.delete}>
+              <Delete />
+            </IconButton>,
+            <Button color="primary" variant="contained" onClick={this.save}>
+              Save
+            </Button>
           ]}
         >
           <Grid justify="center" container>
@@ -136,9 +130,9 @@ class EntityForm extends Component<Props, State> {
                   const propertyOptions = schema.properties[propertyKey];
                   return (
                     <div key={index} className={classes.propertyEditor}>
-                      <Grid container spacing={16}>
+                      <Grid container spacing={2}>
                         <Grid item xs={12} sm={12} md={3} lg={3} xl={3}>
-                          <Typography variant="subheading" gutterBottom>
+                          <Typography variant="subtitle1" gutterBottom>
                             {propertyOptions.displayName || propertyKey}
                           </Typography>
                         </Grid>
@@ -191,11 +185,11 @@ class EntityForm extends Component<Props, State> {
       this.setState({ loading: true }, () => {
         client
           .mutate({
-            refetchQueries: [
-              {
-                query: graphqlQueryHelper.getAllQueryWithAllFields(schema, filters)
-              }
-            ],
+            // refetchQueries: [
+            //   {
+            //     query: graphqlQueryHelper.getAllQueryWithAllFields(schema, filters)
+            //   }
+            // ],
             mutation: gql(`
       mutation {
         ${this.props.alias}RemoveById(id: "${this.props.id!}")

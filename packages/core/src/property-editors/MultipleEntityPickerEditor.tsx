@@ -50,7 +50,7 @@ const styles = (theme: Theme) =>
       }
     },
     chip: {
-      margin: theme.spacing.unit
+      margin: theme.spacing()
     }
   });
 
@@ -129,10 +129,10 @@ class MultipleEntityPickerEditor extends React.Component<Props, State> {
             onClick={() => this.setState({ dialogOpen: true })}
           />
         )}
-        <Dialog open={this.state.dialogOpen}>
+        <Dialog open={this.state.dialogOpen} fullWidth maxWidth="sm">
           <DialogTitle>Select a {schema.options.displayName}</DialogTitle>
           <DialogContent>
-            <List style={{ width: 500 }}>
+            <List>
               {data.items.map(entity => {
                 return (
                   <EntityListItem
@@ -162,8 +162,22 @@ class MultipleEntityPickerEditor extends React.Component<Props, State> {
 
 export default (options: MultipleEntityPickerOptions) => {
   const ENTITY_PICKER_QUERY = graphqlQueryHelper.getAllQueryWithAllFields(options.schema);
-  const Editor = combineContainers(withCoreContext, withStyles(styles), graphql(ENTITY_PICKER_QUERY))(
-    MultipleEntityPickerEditor
-  );
+  const Editor = combineContainers(
+    withCoreContext,
+    withStyles(styles),
+    graphql(ENTITY_PICKER_QUERY, {
+      options: {
+        fetchPolicy: 'network-only',
+        variables: {
+          filter: {},
+          sort: {},
+          pagination: {
+            limit: 50,
+            skip: 0
+          }
+        }
+      }
+    })
+  )(MultipleEntityPickerEditor);
   return (props: PropertyEditorProps<string[]> & MultipleEntityPickerOptions) => <Editor {...props} {...options} />;
 };

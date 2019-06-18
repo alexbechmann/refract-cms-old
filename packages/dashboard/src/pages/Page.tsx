@@ -5,13 +5,13 @@ import classNames from 'classnames';
 export interface PageProps {
   disablePadding?: boolean;
   title: string;
-  actionComponents?: React.ComponentType[];
+  actionComponents?: React.ReactElement<any>[];
 }
 
 const styles = (theme: Theme) =>
   createStyles({
     padded: {
-      padding: theme.spacing.unit * 3
+      padding: theme.spacing(3)
     },
     appBar: {
       bottom: 'auto',
@@ -29,7 +29,7 @@ const styles = (theme: Theme) =>
       marginTop: 64
     },
     actionButton: {
-      marginLeft: theme.spacing.unit
+      marginLeft: theme.spacing()
     }
   });
 
@@ -49,7 +49,7 @@ const Page: ComponentType<Props> = ({ children, classes, disablePadding, title, 
           {actionComponents &&
             actionComponents.map((Component, index) => (
               <span key={index} className={classes.actionButton}>
-                <Component />
+                {Component}
               </span>
             ))}
         </div>

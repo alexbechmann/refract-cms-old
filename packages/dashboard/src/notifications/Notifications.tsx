@@ -13,7 +13,7 @@ interface Props extends MapDispatchToProps, ReturnType<typeof mapStateToProps> {
 const styles = (theme: Theme) =>
   createStyles({
     close: {
-      padding: theme.spacing.unit / 2
+      padding: theme.spacing(0.5)
     }
   });
 
