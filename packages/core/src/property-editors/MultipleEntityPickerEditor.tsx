@@ -129,10 +129,10 @@ class MultipleEntityPickerEditor extends React.Component<Props, State> {
             onClick={() => this.setState({ dialogOpen: true })}
           />
         )}
-        <Dialog open={this.state.dialogOpen}>
+        <Dialog open={this.state.dialogOpen} fullWidth maxWidth="sm">
           <DialogTitle>Select a {schema.options.displayName}</DialogTitle>
           <DialogContent>
-            <List style={{ width: 500 }}>
+            <List>
               {data.items.map(entity => {
                 return (
                   <EntityListItem
@@ -167,7 +167,11 @@ export default (options: MultipleEntityPickerOptions) => {
     withStyles(styles),
     graphql(ENTITY_PICKER_QUERY, {
       options: {
-        fetchPolicy: 'network-only'
+        fetchPolicy: 'network-only',
+        variables: {
+          filter: {},
+          sort: {}
+        }
       }
     })
   )(MultipleEntityPickerEditor);

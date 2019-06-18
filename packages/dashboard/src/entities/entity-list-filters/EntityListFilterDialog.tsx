@@ -108,7 +108,7 @@ const EntityListFilterDialog: ComponentType<Props> = ({
                       });
                     }}
                   >
-                    {['EQ', 'NEQ'].map(operater => (
+                    {['EQ', 'NEQ', 'GT', 'LT', 'GTE', 'LTE', 'IN'].map(operater => (
                       <MenuItem key={operater} value={operater}>
                         {operater}
                       </MenuItem>

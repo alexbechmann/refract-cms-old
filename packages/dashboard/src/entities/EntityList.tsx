@@ -72,7 +72,6 @@ class EntitiesList extends Component<Props> {
             }
           }))
         };
-        console.log(filters.filters, transformedFilter);
       }
       if (filters.orderByDirection && filters.orderByField) {
         transformedSort = {
