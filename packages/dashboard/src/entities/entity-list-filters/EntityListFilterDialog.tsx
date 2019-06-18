@@ -8,28 +8,19 @@ import {
   DialogTitle,
   DialogContent,
   Button,
-  List,
-  ListItemText,
   Select,
-  ListItem,
   InputLabel,
   FormControl,
   MenuItem,
-  IconButton,
-  ListItemSecondaryAction,
-  Grid,
-  TextField
+  Grid
 } from '@material-ui/core';
 import { compose } from 'recompose';
 import { AppState } from '../../state/app.state';
 import { connect } from 'react-redux';
 import Dialog, { DialogProps } from '@material-ui/core/Dialog';
-import { EntitySchema, PropertyOptions, isBasicPropertyType } from '@refract-cms/core';
-import AddIcon from '@material-ui/icons/Add';
+import { EntitySchema, isBasicPropertyType } from '@refract-cms/core';
 import * as EntityActions from '../state/entity.actions';
 import { operatorDescriptions } from './operater-descriptions';
-import DeleteIcon from '@material-ui/icons/Delete';
-
 export interface EntityListFilterDialogProps extends Pick<DialogProps, 'open' | 'onClose'> {
   schema: EntitySchema<any>;
   setOpened: (opened: boolean) => void;
