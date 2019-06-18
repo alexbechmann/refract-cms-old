@@ -42,6 +42,7 @@ interface Props
 interface State {
   sortDialogOpen: boolean;
   filterDialogOpen: boolean;
+  count: number | undefined;
 }
 
 const styles = (theme: Theme) =>
@@ -55,10 +56,11 @@ const styles = (theme: Theme) =>
     }
   });
 
-class EntitiesList extends Component<Props> {
+class EntitiesList extends Component<Props, State> {
   state: State = {
     sortDialogOpen: false,
-    filterDialogOpen: false
+    filterDialogOpen: false,
+    count: undefined
   };
 
   render() {
@@ -100,6 +102,10 @@ class EntitiesList extends Component<Props> {
         >
           {({ loading, data, refetch, variables }) => {
             const items = data.items || [];
+            const count = !loading && data ? data.count : undefined;
+            if (count != this.state.count) {
+              this.setState({ count });
+            }
             if (loading) {
               return <LinearProgress />;
             }
@@ -119,7 +125,6 @@ class EntitiesList extends Component<Props> {
                             </Badge>
                           </Tooltip>
                         </IconButton>,
-
                         <IconButton onClick={() => this.setState({ filterDialogOpen: true })}>
                           <Tooltip title="Filters">
                             <Badge badgeContent={filters.filters.length} color="secondary">
@@ -229,6 +234,7 @@ class EntitiesList extends Component<Props> {
           open={this.state.filterDialogOpen}
           onClose={() => this.setState({ filterDialogOpen: false })}
           setOpened={opened => this.setState({ filterDialogOpen: opened })}
+          count={this.state.count}
         />
       </div>
     );

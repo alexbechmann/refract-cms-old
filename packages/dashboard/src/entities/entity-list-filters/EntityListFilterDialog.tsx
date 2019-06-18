@@ -33,6 +33,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 export interface EntityListFilterDialogProps extends Pick<DialogProps, 'open' | 'onClose'> {
   schema: EntitySchema<any>;
   setOpened: (opened: boolean) => void;
+  count?: number;
 }
 
 const styles = (theme: Theme) =>
@@ -58,11 +59,12 @@ const EntityListFilterDialog: ComponentType<Props> = ({
   addFilter,
   updateFilter,
   removeFilter,
-  resetFilters
+  resetFilters,
+  count
 }) => {
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle>Filter</DialogTitle>
+      <DialogTitle>Filter {count ? <>({count} matches)</> : ''}</DialogTitle>
       <DialogContent>
         {filters.map((filter, index) => {
           const Editor = schema.properties[filter.propertyKey].editorComponent;

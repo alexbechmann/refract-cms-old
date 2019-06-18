@@ -10,6 +10,7 @@ import {
   RESET_FILTERS
 } from './entity.actions';
 import { CONFIGURE } from '../../config/state/config.actions';
+import { convertDateToSimpleDate } from '@refract-cms/core';
 
 const defaultState: EntityState = {};
 
@@ -46,7 +47,7 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
         const type = schema.properties[action.payload.filter.propertyKey].type;
         newFilters[action.payload.index] = {
           ...action.payload.filter,
-          value: type == Date ? new Date() : type()
+          value: type == Date ? convertDateToSimpleDate(new Date()) : type()
         };
       }
       return {
