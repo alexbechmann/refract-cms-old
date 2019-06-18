@@ -1,6 +1,14 @@
 import { AppAction } from '../../state/app-action';
 import { EntityState } from './entity.state';
-import { SET_ORDERBY, SET_ORDERBY_DIRECTION, ADD_FILTER, UPDATE_FILTER, SET_PAGE } from './entity.actions';
+import {
+  SET_ORDERBY,
+  SET_ORDERBY_DIRECTION,
+  ADD_FILTER,
+  UPDATE_FILTER,
+  SET_PAGE,
+  REMOVE_FILTER,
+  RESET_FILTERS
+} from './entity.actions';
 import { CONFIGURE } from '../../config/state/config.actions';
 
 const defaultState: EntityState = {};
@@ -13,7 +21,8 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
         [action.payload.alias]: {
           ...state[action.payload.alias],
           orderByDirection: state[action.payload.alias] ? state[action.payload.alias].orderByDirection || 'ASC' : 'ASC',
-          orderByField: action.payload.orderByField
+          orderByField: action.payload.orderByField,
+          currentPage: 0
         }
       };
     }
@@ -23,7 +32,8 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
         [action.payload.alias]: {
           ...state[action.payload.alias],
           orderByDirection: state[action.payload.alias] ? state[action.payload.alias].orderByDirection || 'ASC' : 'ASC',
-          filters: [...state[action.payload.alias].filters, action.payload.filter]
+          filters: [...state[action.payload.alias].filters, action.payload.filter],
+          currentPage: 0
         }
       };
     }
@@ -42,7 +52,31 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
         ...state,
         [action.payload.alias]: {
           ...state[action.payload.alias],
-          filters: newFilters
+          filters: newFilters,
+          currentPage: 0
+        }
+      };
+    }
+    case REMOVE_FILTER: {
+      const { alias, index } = action.payload;
+      const newFilters = [...state[action.payload.alias].filters.filter((f, i) => i != index)];
+      return {
+        ...state,
+        [alias]: {
+          ...state[alias],
+          filters: newFilters,
+          currentPage: 0
+        }
+      };
+    }
+    case RESET_FILTERS: {
+      const { alias } = action.payload;
+      return {
+        ...state,
+        [alias]: {
+          ...state[alias],
+          filters: [],
+          currentPage: 0
         }
       };
     }
@@ -51,7 +85,8 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
         ...state,
         [action.payload.alias]: {
           ...state[action.payload.alias],
-          orderByDirection: action.payload.direction
+          orderByDirection: action.payload.direction,
+          currentPage: 0
         }
       };
     }

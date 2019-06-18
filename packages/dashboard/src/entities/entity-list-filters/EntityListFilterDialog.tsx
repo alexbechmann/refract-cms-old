@@ -56,7 +56,9 @@ const EntityListFilterDialog: ComponentType<Props> = ({
   schema,
   filters,
   addFilter,
-  updateFilter
+  updateFilter,
+  removeFilter,
+  resetFilters
 }) => {
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
@@ -138,7 +140,11 @@ const EntityListFilterDialog: ComponentType<Props> = ({
                 />
               </Grid>
               <Grid item xs={2}>
-                <Button style={{ marginTop: 11 }} fullWidth>
+                <Button
+                  style={{ marginTop: 11 }}
+                  fullWidth
+                  onClick={() => removeFilter({ alias: schema.options.alias, index })}
+                >
                   Remove filter
                 </Button>
               </Grid>
@@ -155,8 +161,7 @@ const EntityListFilterDialog: ComponentType<Props> = ({
         >
           Add filter
         </Button>
-        <Button>Clear</Button>
-
+        <Button onClick={() => resetFilters({ alias: schema.options.alias })}>Clear</Button>
         <Button onClick={() => setOpened(false)}>Done</Button>
       </DialogActions>
     </Dialog>
