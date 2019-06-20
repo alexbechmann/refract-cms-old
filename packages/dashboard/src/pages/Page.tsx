@@ -54,31 +54,33 @@ const styles = (theme: Theme) =>
 
 interface Props extends PageProps, WithStyles<typeof styles> {}
 
-const Page: ComponentType<Props> = ({ children, classes, disablePadding, title, actionComponents }) => (
-  <div
-    className={classNames(classes.page, {
-      [classes.padded]: !disablePadding
-    })}
-  >
-    <Toolbar className={classes.toolbar} disableGutters>
-      <Typography variant="h5">{title}</Typography>
-    </Toolbar>
-    {children}
-    <AppBar position="fixed" color="default" className={classes.appBar}>
-      <Toolbar>
-        <div />
-        <div className={classes.grow} />
-        <div>
-          {actionComponents &&
-            actionComponents.map((Component, index) => (
-              <span key={index} className={classes.actionButton}>
-                {Component}
-              </span>
-            ))}
-        </div>
+const Page: ComponentType<Props> = ({ children, classes, disablePadding, title, actionComponents }) => {
+  return (
+    <div
+      className={classNames(classes.page, {
+        [classes.padded]: !disablePadding
+      })}
+    >
+      <Toolbar className={classes.toolbar} disableGutters>
+        <Typography variant="h5">{title}</Typography>
       </Toolbar>
-    </AppBar>
-  </div>
-);
+      {children}
+      <AppBar position="fixed" color="default" className={classes.appBar}>
+        <Toolbar>
+          <div />
+          <div className={classes.grow} />
+          <div>
+            {actionComponents &&
+              actionComponents.map((Component, index) => (
+                <span key={index} className={classes.actionButton}>
+                  {Component}
+                </span>
+              ))}
+          </div>
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
+};
 
 export default withStyles(styles)(Page) as ComponentType<PageProps>;
