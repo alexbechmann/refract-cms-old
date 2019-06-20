@@ -17,6 +17,9 @@ steps:
     displayName: "Set pre release tag"
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
 
+  - powershell: echo "tag is $(tag)"
+    displayName: "echo tag"
+
   - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
     displayName: Yarn install
     inputs:
@@ -46,9 +49,6 @@ steps:
 
   - powershell: . 'packages/create-app/update-package-version.ps1' $(GitVersion.SemVer)
     displayName: Update package version
-
-  - powershell: echo "tag is $(tag)"
-    displayName: "echo tag"
 
   - task: Npm@1
     displayName: npm custom
