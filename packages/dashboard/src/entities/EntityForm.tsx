@@ -123,42 +123,38 @@ class EntityForm extends Component<Props, State> {
             </Button>
           ]}
         >
-          <Grid justify="center" container>
-            <Grid item xs={12} sm={12} md={10} lg={8} xl={7}>
-              <div className={classes.card}>
-                {Object.keys(schema.properties).map((propertyKey: string, index: number) => {
-                  const propertyOptions = schema.properties[propertyKey];
-                  return (
-                    <div key={index} className={classes.propertyEditor}>
-                      <Grid container spacing={2}>
-                        <Grid item xs={12} sm={12} md={3} lg={3} xl={3}>
-                          <Typography variant="subtitle1" gutterBottom>
-                            {propertyOptions.displayName || propertyKey}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={9} lg={9} xl={9}>
-                          <RenderEditor
-                            serverUrl={context.serverUrl}
-                            setValue={value => {
-                              this.setState({
-                                updateValues: {
-                                  ...this.state.updateValues,
-                                  [propertyKey]: value
-                                }
-                              });
-                            }}
-                            value={this.state.updateValues[propertyKey]}
-                            propertyKey={propertyKey}
-                            propertyOptions={propertyOptions}
-                          />
-                        </Grid>
-                      </Grid>
-                    </div>
-                  );
-                })}
-              </div>
-            </Grid>
-          </Grid>
+          <div className={classes.card}>
+            {Object.keys(schema.properties).map((propertyKey: string, index: number) => {
+              const propertyOptions = schema.properties[propertyKey];
+              return (
+                <div key={index} className={classes.propertyEditor}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={12} md={3} lg={3} xl={3}>
+                      <Typography variant="subtitle1" gutterBottom>
+                        {propertyOptions.displayName || propertyKey}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={9} lg={9} xl={9}>
+                      <RenderEditor
+                        serverUrl={context.serverUrl}
+                        setValue={value => {
+                          this.setState({
+                            updateValues: {
+                              ...this.state.updateValues,
+                              [propertyKey]: value
+                            }
+                          });
+                        }}
+                        value={this.state.updateValues[propertyKey]}
+                        propertyKey={propertyKey}
+                        propertyOptions={propertyOptions}
+                      />
+                    </Grid>
+                  </Grid>
+                </div>
+              );
+            })}
+          </div>
         </Page>
       </div>
     );

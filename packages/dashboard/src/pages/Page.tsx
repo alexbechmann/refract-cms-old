@@ -1,5 +1,15 @@
 import React, { ComponentType } from 'react';
-import { Theme, createStyles, WithStyles, withStyles, Typography, AppBar, Toolbar } from '@material-ui/core';
+import {
+  Theme,
+  createStyles,
+  WithStyles,
+  withStyles,
+  Typography,
+  AppBar,
+  Toolbar,
+  Container,
+  Grid
+} from '@material-ui/core';
 import classNames from 'classnames';
 
 export interface PageProps {
@@ -11,25 +21,34 @@ export interface PageProps {
 const styles = (theme: Theme) =>
   createStyles({
     padded: {
-      padding: theme.spacing(3)
+      // adding: theme.spacing(3)
     },
     appBar: {
-      bottom: 'auto',
-      top: 64,
+      top: 'auto',
+      bottom: 0,
       background: theme.palette.background.default
     },
     toolbar: {
-      marginLeft: 240,
+      //marginLeft: 240,
+      marginTop: theme.spacing(9),
       alignItems: 'center',
       justifyContent: 'space-between'
       // minHeight: 40,
       // height: 40
+      //marginBottom: theme.spacing(3)
     },
     page: {
-      marginTop: 64
+      //marginTop: 64
+    },
+    pageContent: {
+      marginTop: theme.spacing(4),
+      paddingBottom: theme.spacing(4)
     },
     actionButton: {
       marginLeft: theme.spacing()
+    },
+    grow: {
+      flexGrow: 1
     }
   });
 
@@ -41,10 +60,14 @@ const Page: ComponentType<Props> = ({ children, classes, disablePadding, title, 
       [classes.padded]: !disablePadding
     })}
   >
-    <AppBar position="fixed" color="default" className={classes.appBar} elevation={0}>
-      <Toolbar className={classes.toolbar}>
-        <Typography variant="h5">{title}</Typography>
+    <Toolbar className={classes.toolbar} disableGutters>
+      <Typography variant="h5">{title}</Typography>
+    </Toolbar>
+    {children}
+    <AppBar position="fixed" color="default" className={classes.appBar}>
+      <Toolbar>
         <div />
+        <div className={classes.grow} />
         <div>
           {actionComponents &&
             actionComponents.map((Component, index) => (
@@ -55,8 +78,6 @@ const Page: ComponentType<Props> = ({ children, classes, disablePadding, title, 
         </div>
       </Toolbar>
     </AppBar>
-
-    {children}
   </div>
 );
 

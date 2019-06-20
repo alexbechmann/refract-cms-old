@@ -7,7 +7,7 @@ import { entityService } from './services/entity.service';
 import { WithCoreContextProps } from '../context/with-core-context-props.model';
 import { withCoreContext } from '../context/with-core-context';
 
-interface EntityListItemProps extends ListItemProps<any> {
+interface EntityListItemProps extends Partial<Pick<ListItemProps<any>, 'onClick' | 'button' | 'component'>> {
   schema: EntitySchema;
   entity: Entity;
   SecondaryAction?: JSX.Element;
@@ -18,20 +18,16 @@ interface Props extends EntityListItemProps, WithCoreContextProps {}
 const EntityListItem = (props: Props) => {
   const { schema, entity, context, SecondaryAction } = props;
   const instanceDisplayProps = entityService.instanceDisplayPropsOrDefault(schema, context)(entity);
-  const listItemProps: any = {
-    ...props
-  };
-  delete listItemProps['SecondaryAction'];
   return (
-    <ListItem {...listItemProps}>
+    <ListItem onClick={props.onClick} button={props.button || undefined} component={props.component}>
       <ListItemAvatar>
         <Avatar src={instanceDisplayProps.imageUrl}>
           {schema.options.icon ? <schema.options.icon /> : schema.options.alias[0].toUpperCase()}
         </Avatar>
       </ListItemAvatar>
       <ListItemText
-        primaryTypographyProps={{ noWrap: true }}
-        secondaryTypographyProps={{ noWrap: true }}
+        // primaryTypographyProps={{ noWrap: true }}
+        // secondaryTypographyProps={{ noWrap: true }}
         primary={instanceDisplayProps.primaryText}
         secondary={instanceDisplayProps.secondaryText}
       />
