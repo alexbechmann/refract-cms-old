@@ -47,6 +47,9 @@ steps:
     displayName: "Set pre release tag"
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
 
+  - powershell: echo "tag is $(tag)"
+    displayName: "echo tag"
+
   - task: Npm@1
     displayName: npm custom
     condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
