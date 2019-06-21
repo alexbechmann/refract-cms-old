@@ -181,15 +181,15 @@ class EntityForm extends Component<Props, State> {
 
   delete() {
     if (window.confirm('Are you sure you want to delete?')) {
-      const { client, schema, filters } = this.props;
+      const { client, schema, entityItemState } = this.props;
       this.setState({ loading: true }, () => {
         client
           .mutate({
-            // refetchQueries: [
-            //   {
-            //     query: graphqlQueryHelper.getAllQueryWithAllFields(schema, filters)
-            //   }
-            // ],
+            refetchQueries: [
+              {
+                query: entityItemState.query
+              }
+            ],
             mutation: gql(`
       mutation {
         ${this.props.alias}RemoveById(id: "${this.props.id!}")
@@ -220,15 +220,12 @@ export interface EntityFormProps {
 
 function mapStateToProps(state: AppState, ownProps: EntityFormProps) {
   const entitySchema = state.config.schema.find(s => s.options.alias === ownProps.alias)!;
-  const filters = state.entity[entitySchema.options.alias] || {
-    orderByDirection: 'ASC',
-    orderByField: undefined
-  };
-
+  const entityItemState = state.entity[entitySchema.options.alias];
+  console.log({ entityItemState });
   return {
     routes: state.router.routes!,
     schema: entitySchema,
-    filters
+    entityItemState
   };
 }
 

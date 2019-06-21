@@ -1,5 +1,5 @@
 import { AppAction } from '../../state/app-action';
-import { EntityState } from './entity.state';
+import { EntityState, EntityStateItem } from './entity.state';
 import {
   SET_ORDERBY,
   SET_ORDERBY_DIRECTION,
@@ -10,7 +10,7 @@ import {
   RESET_FILTERS
 } from './entity.actions';
 import { CONFIGURE } from '../../config/state/config.actions';
-import { convertDateToSimpleDate } from '@refract-cms/core';
+import { convertDateToSimpleDate, graphqlQueryHelper } from '@refract-cms/core';
 
 const defaultState: EntityState = {};
 
@@ -19,23 +19,23 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
     case SET_ORDERBY: {
       return {
         ...state,
-        [action.payload.alias]: {
+        [action.payload.alias]: buildQuery({
           ...state[action.payload.alias],
           orderByDirection: state[action.payload.alias] ? state[action.payload.alias].orderByDirection || 'ASC' : 'ASC',
           orderByField: action.payload.orderByField,
           currentPage: 0
-        }
+        })
       };
     }
     case ADD_FILTER: {
       return {
         ...state,
-        [action.payload.alias]: {
+        [action.payload.alias]: buildQuery({
           ...state[action.payload.alias],
           orderByDirection: state[action.payload.alias] ? state[action.payload.alias].orderByDirection || 'ASC' : 'ASC',
           filters: [...state[action.payload.alias].filters, action.payload.filter],
           currentPage: 0
-        }
+        })
       };
     }
     case UPDATE_FILTER: {
@@ -52,11 +52,11 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
       }
       return {
         ...state,
-        [action.payload.alias]: {
+        [action.payload.alias]: buildQuery({
           ...state[action.payload.alias],
           filters: newFilters,
           currentPage: 0
-        }
+        })
       };
     }
     case REMOVE_FILTER: {
@@ -64,41 +64,41 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
       const newFilters = [...state[action.payload.alias].filters.filter((f, i) => i !== index)];
       return {
         ...state,
-        [alias]: {
+        [alias]: buildQuery({
           ...state[alias],
           filters: newFilters,
           currentPage: 0
-        }
+        })
       };
     }
     case RESET_FILTERS: {
       const { alias } = action.payload;
       return {
         ...state,
-        [alias]: {
+        [alias]: buildQuery({
           ...state[alias],
           filters: [],
           currentPage: 0
-        }
+        })
       };
     }
     case SET_ORDERBY_DIRECTION: {
       return {
         ...state,
-        [action.payload.alias]: {
+        [action.payload.alias]: buildQuery({
           ...state[action.payload.alias],
           orderByDirection: action.payload.direction,
           currentPage: 0
-        }
+        })
       };
     }
     case SET_PAGE: {
       return {
         ...state,
-        [action.payload.alias]: {
+        [action.payload.alias]: buildQuery({
           ...state[action.payload.alias],
           currentPage: action.payload.page
-        }
+        })
       };
     }
     case CONFIGURE: {
@@ -107,8 +107,10 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
           orderByDirection: schema.options.defaultSort ? schema.options.defaultSort.orderByDirection || 'ASC' : 'ASC',
           orderByField: schema.options.defaultSort ? schema.options.defaultSort.orderByField : undefined,
           filters: [],
-          currentPage: 0
-        };
+          currentPage: 0,
+          schema,
+          query: graphqlQueryHelper.getAllQueryWithAllFields(schema)
+        } as EntityStateItem;
         return acc;
       }, {});
     }
@@ -117,4 +119,38 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
       return state;
     }
   }
+}
+
+function buildQuery(state: EntityStateItem): EntityStateItem {
+  const query = graphqlQueryHelper.getAllQueryWithAllFields(state.schema);
+  let transformedFilter = {};
+  let transformedSort = {};
+  if (state.filters) {
+    transformedFilter = {
+      AND: state.filters.map(f => {
+        return {
+          [f.propertyKey]: {
+            [f.operater]: f.value
+          }
+        };
+      })
+    };
+  }
+  if (state.orderByDirection && state.orderByField) {
+    transformedSort = {
+      [state.orderByField]: state.orderByDirection
+    };
+  }
+  return {
+    ...state,
+    query,
+    queryVariables: {
+      filter: transformedFilter,
+      sort: transformedSort,
+      pagination: {
+        skip: state.currentPage * 10,
+        limit: 10
+      }
+    }
+  };
 }
