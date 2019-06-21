@@ -7,10 +7,14 @@ import { graphqlQueryHelper } from '@refract-cms/core';
 import { combineContainers } from 'combine-containers';
 import { connect } from 'react-redux';
 import { AppState } from '../state/app.state';
+import { graphql } from 'graphql';
+import ApolloClient from 'apollo-client';
 
 export interface EditEntityProps extends RouteComponentProps<{ alias: string; id: string | 'new' }> {}
 
-export interface Props extends EditEntityProps, WithApolloClient<any>, ReturnType<typeof mapStateToProps> {}
+export interface Props extends EditEntityProps, WithApolloClient<any>, ReturnType<typeof mapStateToProps> {
+  client: ApolloClient<any>;
+}
 
 const EditEntity = ({ alias, id, client, schema, filters }: Props) => {
   const createMutation = gql(
@@ -18,6 +22,7 @@ const EditEntity = ({ alias, id, client, schema, filters }: Props) => {
   mutation save($record: ${schema.options.alias}Input!){
     ${alias}Create(record: $record) {
       _id
+      ${graphqlQueryHelper.buildPropertiesFromSchema(schema)}
     }
   }
   `
@@ -25,8 +30,9 @@ const EditEntity = ({ alias, id, client, schema, filters }: Props) => {
   const updateMutation = gql(
     `
   mutation save($record: ${schema.options.alias}Input!){
-    ${alias}Update(record: $record) {
+    update: ${alias}Update(record: $record) {
       _id
+      ${graphqlQueryHelper.buildPropertiesFromSchema(schema)}
     }
   }
   `
@@ -59,7 +65,12 @@ const EditEntity = ({ alias, id, client, schema, filters }: Props) => {
                     record: recordWithNullInsteadOfUndefined
                   },
                   update: (proxy, updateResult) => {
-                    console.log({ updateResult });
+                    var responseObject = updateResult.data.update;
+                    client.cache.writeData({
+                      id: responseObject._id,
+                      data: responseObject
+                    });
+                    //client.queryManager.broadcastQueries();
                     resolve();
                   }
                 });
