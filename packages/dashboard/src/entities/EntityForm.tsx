@@ -181,7 +181,7 @@ class EntityForm extends Component<Props, State> {
 
   delete() {
     if (window.confirm('Are you sure you want to delete?')) {
-      const { client, schema, filters } = this.props;
+      const { client, schema, filters, id } = this.props;
       this.setState({ loading: true }, () => {
         client
           .mutate({
@@ -197,6 +197,7 @@ class EntityForm extends Component<Props, State> {
           })
           .then(() => {
             this.back();
+            // this.props.client.resetStore();
             this.props.addNotification(`Successfully deleted ${schema.options.displayName || schema.options.alias}.`);
           })
           .catch(() => {

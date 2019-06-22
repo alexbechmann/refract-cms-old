@@ -20,7 +20,7 @@ const EditEntity = ({ alias, id, client, schema, filters }: Props) => {
   const createMutation = gql(
     `
   mutation save($record: ${schema.options.alias}Input!){
-    ${alias}Create(record: $record) {
+    update: ${alias}Create(record: $record) {
       _id
       ${graphqlQueryHelper.buildPropertiesFromSchema(schema)}
     }
