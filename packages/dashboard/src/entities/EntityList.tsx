@@ -43,6 +43,7 @@ interface State {
   sortDialogOpen: boolean;
   filterDialogOpen: boolean;
   count: number | undefined;
+  lastFetchAlias?: string;
 }
 
 const styles = (theme: Theme) =>
@@ -64,52 +65,27 @@ class EntitiesList extends Component<Props, State> {
   };
 
   render() {
-    const { routes, entitySchema, classes, filters, setPage } = this.props;
-    const query = graphqlQueryHelper.getAllQueryWithAllFields(entitySchema);
-    let transformedFilter = {};
-    let transformedSort = {};
-    if (filters.filters) {
-      transformedFilter = {
-        AND: filters.filters.map(f => {
-          return {
-            [f.propertyKey]: {
-              [f.operater]: f.value
-            }
-          };
-        })
-      };
-    }
-    if (filters.orderByDirection && filters.orderByField) {
-      transformedSort = {
-        [filters.orderByField]: filters.orderByDirection
-      };
-    }
+    const { routes, entitySchema, classes, entityItemState, setPage } = this.props;
+
     return (
       <div>
         <Query
-          query={query}
-          variables={{
-            filter: transformedFilter,
-            sort: transformedSort,
-            pagination: {
-              skip: filters.currentPage * 10,
-              limit: 10
-            }
-          }}
+          query={entityItemState.query}
+          variables={entityItemState.queryVariables}
           displayName={`${entitySchema.options.alias}_list`}
           notifyOnNetworkStatusChange
           //fetchPolicy="network-only"
           onCompleted={data => {
             const count = !data.loading && data ? data.count : undefined;
+            const lastFetchAlias = entitySchema.options.alias;
             if (count !== this.state.count) {
-              this.setState({ count });
+              this.setState({ count, lastFetchAlias });
             }
           }}
         >
           {({ loading, data, refetch, variables }) => {
             const items = data.items || [];
-
-            if (loading) {
+            if (loading && this.state.lastFetchAlias !== entitySchema.options.alias) {
               return <LinearProgress />;
             }
             return (
@@ -123,14 +99,14 @@ class EntitiesList extends Component<Props, State> {
                         </IconButton>,
                         <IconButton onClick={() => this.setState({ sortDialogOpen: true })}>
                           <Tooltip title="Sort">
-                            <Badge variant="dot" badgeContent={filters.orderByField ? 1 : 0} color="secondary">
+                            <Badge variant="dot" badgeContent={entityItemState.orderByField ? 1 : 0} color="secondary">
                               <Sort />
                             </Badge>
                           </Tooltip>
                         </IconButton>,
                         <IconButton onClick={() => this.setState({ filterDialogOpen: true })}>
                           <Tooltip title="Filters">
-                            <Badge badgeContent={filters.filters.length} color="secondary">
+                            <Badge badgeContent={entityItemState.filters.length} color="secondary">
                               <Filter />
                             </Badge>
                           </Tooltip>
@@ -152,14 +128,17 @@ class EntitiesList extends Component<Props, State> {
                   <div>
                     <List
                       subheader={
-                        filters && filters.orderByField && filters.orderByDirection ? (
+                        entityItemState && entityItemState.orderByField && entityItemState.orderByDirection ? (
                           <ListSubheader
                             className={classes.textLink}
                             onClick={() => this.setState({ sortDialogOpen: true })}
                           >
                             Sorted by{' '}
-                            {(entitySchema.properties[filters.orderByField] as PropertyOptions<any, any>).displayName},{' '}
-                            {filters.orderByDirection}
+                            {
+                              (entitySchema.properties[entityItemState.orderByField] as PropertyOptions<any, any>)
+                                .displayName
+                            }
+                            , {entityItemState.orderByDirection}
                           </ListSubheader>
                         ) : (
                           undefined
@@ -184,7 +163,7 @@ class EntitiesList extends Component<Props, State> {
                       <TableBody>
                         <TableRow>
                           <TablePagination
-                            page={filters.currentPage}
+                            page={entityItemState.currentPage}
                             count={data.count}
                             onChangePage={(e, page) => {
                               setPage({
@@ -246,12 +225,12 @@ type DispatchProps = typeof mapDispatchToProps;
 
 function mapStateToProps(state: AppState, ownProps: EntitiesListProps) {
   const entitySchema = state.config.schema.find(s => s.options.alias === ownProps.alias)!;
-  const filters = state.entity[entitySchema.options.alias];
+  const entityItemState = state.entity[entitySchema.options.alias];
   return {
     schema: state.config.schema,
     routes: state.router.routes!,
     entitySchema,
-    filters
+    entityItemState
   };
 }
 
