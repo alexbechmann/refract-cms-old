@@ -22,6 +22,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   'header-four': theme.typography.h4,
   'header-five': theme.typography.h5,
   'header-six': theme.typography.h6,
+  unstyled: {
+    ...theme.typography.body1,
+    margin: `0 !important`
+  },
+  blockquote: {
+    ...theme.typography.body1,
+    color: '#333',
+    padding: theme.spacing(1, 2),
+    fontStyle: 'italic',
+    borderLeft: `${theme.spacing()}px solid ${theme.palette.secondary.light}`,
+    marginLeft: 0
+  },
   '@global': {
     '.DraftEditor-editorContainer, .DraftEditor-root, .public-DraftEditor-content': {
       height: 'inherit',
@@ -190,7 +202,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   resetBlockStyles: {
-    margin: theme.spacing(2, 0)
+    marginBottom: theme.spacing(),
+    marginTop: 0
   }
 }));
 

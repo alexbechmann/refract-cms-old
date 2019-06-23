@@ -23,7 +23,8 @@ const styles = (theme: Theme) =>
       }
     },
     buttonGroup: {
-      marginRight: theme.spacing()
+      marginRight: theme.spacing(),
+      marginBottom: theme.spacing()
     }
   });
 
@@ -51,13 +52,14 @@ const RteToolbar: ComponentType<Props> = props => {
   return (
     <div className={classes.root}>
       <ButtonGroup className={classes.buttonGroup} size="small">
+        <Button {...createBlockButtonProps({ blockType: 'unstyled' })}>Normal</Button>
         <Button {...createBlockButtonProps({ blockType: 'header-one' })}>H1</Button>
         <Button {...createBlockButtonProps({ blockType: 'header-two' })}>H2</Button>
         <Button {...createBlockButtonProps({ blockType: 'header-three' })}>H3</Button>
         <Button {...createBlockButtonProps({ blockType: 'header-four' })}>H4</Button>
         <Button {...createBlockButtonProps({ blockType: 'header-five' })}>H5</Button>
         <Button {...createBlockButtonProps({ blockType: 'header-six' })}>H6</Button>
-        <Button {...createBlockButtonProps({ blockType: 'unstyled' })}>Normal</Button>
+        <Button {...createBlockButtonProps({ blockType: 'blockquote' })}>Quote</Button>
       </ButtonGroup>
       <ButtonGroup size="small">
         <Button {...createStyleButtonProps({ inlineStyle: 'BOLD' })}>Bold</Button>
