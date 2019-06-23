@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { AppState } from '../state/app.state';
 import { graphql } from 'graphql';
 import ApolloClient from 'apollo-client';
+import { buildEntityListQueryOptions } from './state/build-entity-list-query-options';
 
 export interface EditEntityProps extends RouteComponentProps<{ alias: string; id: string | 'new' }> {}
 
@@ -17,6 +18,7 @@ export interface Props extends EditEntityProps, WithApolloClient<any>, ReturnTyp
 }
 
 const EditEntity = ({ alias, id, client, schema, entityItemState }: Props) => {
+  const refetchQueryOptions = buildEntityListQueryOptions(entityItemState);
   const createMutation = gql(
     `
   mutation save($record: ${schema.options.alias}Input!){
@@ -40,13 +42,7 @@ const EditEntity = ({ alias, id, client, schema, entityItemState }: Props) => {
   const newEntity = !id || id === 'new';
   const mutation = newEntity ? createMutation : updateMutation;
   return (
-    <Mutation
-      mutation={mutation}
-      refetchQueries={[
-        // { query: graphqlQueryHelper.getAllQueryWithAllFields(schema, filters) },
-        { query: entityItemState.query, variables: entityItemState.queryVariables }
-      ]}
-    >
+    <Mutation mutation={mutation} refetchQueries={[refetchQueryOptions]}>
       {(save, mutationResult) => {
         return (
           <EntityForm

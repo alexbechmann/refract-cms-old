@@ -30,6 +30,7 @@ import EntityListSortDialog from './EntityListSortDialog';
 import EntityListFilterDialog from './entity-list-filters/EntityListFilterDialog';
 import { createLinkComponent } from '../shared/create-link-component';
 import * as EntityActions from './state/entity.actions';
+import { buildEntityListQueryOptions } from './state/build-entity-list-query-options';
 
 export interface EntitiesListProps extends RouteComponentProps<{ alias: string }> {}
 
@@ -66,15 +67,15 @@ class EntitiesList extends Component<Props, State> {
 
   render() {
     const { routes, entitySchema, classes, entityItemState, setPage } = this.props;
-
+    const { query, variables } = buildEntityListQueryOptions(entityItemState);
     return (
       <div>
         <Query
-          query={entityItemState.query}
-          variables={entityItemState.queryVariables}
+          query={query}
+          variables={variables}
           displayName={`${entitySchema.options.alias}_list`}
           notifyOnNetworkStatusChange
-          //fetchPolicy="network-only"
+          fetchPolicy="cache-and-network"
           onCompleted={data => {
             const count = !data.loading && data ? data.count : undefined;
             const lastFetchAlias = entitySchema.options.alias;

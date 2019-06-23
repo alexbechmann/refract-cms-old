@@ -33,6 +33,7 @@ import Page from '../pages/Page';
 import { addNotification } from '../notifications/state/notification.actions';
 import Delete from '@material-ui/icons/Delete';
 import ArrowBack from '@material-ui/icons/ArrowBack';
+import { buildEntityListQueryOptions } from './state/build-entity-list-query-options';
 
 interface State {
   updateValues: any;
@@ -182,15 +183,11 @@ class EntityForm extends Component<Props, State> {
   delete() {
     if (window.confirm('Are you sure you want to delete?')) {
       const { client, schema, entityItemState, id } = this.props;
+      const refetchQueryOptions = buildEntityListQueryOptions(entityItemState);
       this.setState({ loading: true }, () => {
         client
           .mutate({
-            refetchQueries: [
-              {
-                query: entityItemState.query,
-                variables: entityItemState.queryVariables
-              }
-            ],
+            refetchQueries: [refetchQueryOptions],
             mutation: gql(`
       mutation {
         ${this.props.alias}RemoveById(id: "${this.props.id!}")
@@ -198,7 +195,6 @@ class EntityForm extends Component<Props, State> {
           })
           .then(() => {
             this.back();
-            // this.props.client.resetStore();
             this.props.addNotification(`Successfully deleted ${schema.options.displayName || schema.options.alias}.`);
           })
           .catch(() => {

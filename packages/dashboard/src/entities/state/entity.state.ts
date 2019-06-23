@@ -7,15 +7,6 @@ export interface EntityStateItem {
   orderByDirection: 'ASC' | 'DESC';
   filters: EntityListFilter[];
   currentPage: number;
-  query: any;
-  queryVariables: {
-    filter: any;
-    sort: any;
-    pagination: {
-      skip: number;
-      limit: number;
-    };
-  };
 }
 
 export interface EntityState {

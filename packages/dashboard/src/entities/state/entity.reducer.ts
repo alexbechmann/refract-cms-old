@@ -19,23 +19,23 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
     case SET_ORDERBY: {
       return {
         ...state,
-        [action.payload.alias]: buildQuery({
+        [action.payload.alias]: {
           ...state[action.payload.alias],
           orderByDirection: state[action.payload.alias] ? state[action.payload.alias].orderByDirection || 'ASC' : 'ASC',
           orderByField: action.payload.orderByField,
           currentPage: 0
-        })
+        }
       };
     }
     case ADD_FILTER: {
       return {
         ...state,
-        [action.payload.alias]: buildQuery({
+        [action.payload.alias]: {
           ...state[action.payload.alias],
           orderByDirection: state[action.payload.alias] ? state[action.payload.alias].orderByDirection || 'ASC' : 'ASC',
           filters: [...state[action.payload.alias].filters, action.payload.filter],
           currentPage: 0
-        })
+        }
       };
     }
     case UPDATE_FILTER: {
@@ -52,11 +52,11 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
       }
       return {
         ...state,
-        [action.payload.alias]: buildQuery({
+        [action.payload.alias]: {
           ...state[action.payload.alias],
           filters: newFilters,
           currentPage: 0
-        })
+        }
       };
     }
     case REMOVE_FILTER: {
@@ -64,41 +64,41 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
       const newFilters = [...state[action.payload.alias].filters.filter((f, i) => i !== index)];
       return {
         ...state,
-        [alias]: buildQuery({
+        [alias]: {
           ...state[alias],
           filters: newFilters,
           currentPage: 0
-        })
+        }
       };
     }
     case RESET_FILTERS: {
       const { alias } = action.payload;
       return {
         ...state,
-        [alias]: buildQuery({
+        [alias]: {
           ...state[alias],
           filters: [],
           currentPage: 0
-        })
+        }
       };
     }
     case SET_ORDERBY_DIRECTION: {
       return {
         ...state,
-        [action.payload.alias]: buildQuery({
+        [action.payload.alias]: {
           ...state[action.payload.alias],
           orderByDirection: action.payload.direction,
           currentPage: 0
-        })
+        }
       };
     }
     case SET_PAGE: {
       return {
         ...state,
-        [action.payload.alias]: buildQuery({
+        [action.payload.alias]: {
           ...state[action.payload.alias],
           currentPage: action.payload.page
-        })
+        }
       };
     }
     case CONFIGURE: {
@@ -119,38 +119,4 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
       return state;
     }
   }
-}
-
-function buildQuery(state: EntityStateItem): EntityStateItem {
-  const query = graphqlQueryHelper.getAllQueryWithAllFields(state.schema);
-  let transformedFilter = {};
-  let transformedSort = {};
-  if (state.filters) {
-    transformedFilter = {
-      AND: state.filters.map(f => {
-        return {
-          [f.propertyKey]: {
-            [f.operater]: f.value
-          }
-        };
-      })
-    };
-  }
-  if (state.orderByDirection && state.orderByField) {
-    transformedSort = {
-      [state.orderByField]: state.orderByDirection
-    };
-  }
-  return {
-    ...state,
-    query,
-    queryVariables: {
-      filter: transformedFilter,
-      sort: transformedSort,
-      pagination: {
-        skip: state.currentPage * 10,
-        limit: 10
-      }
-    }
-  };
 }
