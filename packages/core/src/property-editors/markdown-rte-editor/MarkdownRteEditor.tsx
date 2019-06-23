@@ -6,6 +6,7 @@ import { Editor, EditorState, RichUtils } from 'draft-js';
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 import { stateToMarkdown } from 'draft-js-export-markdown';
 import RteToolbar from './RteToolbar';
+import classNames from 'classnames';
 
 // const RichTextEditor = process.env.BUILD_TARGET !== 'server' ? require('react-rte').default : undefined;
 
@@ -187,28 +188,32 @@ const useStyles = makeStyles((theme: Theme) => ({
     '.public-DraftStyleDefault-depth4.public-DraftStyleDefault-reset': {
       counterReset: 'ol4'
     }
+  },
+  resetBlockStyles: {
+    margin: theme.spacing(2, 0)
   }
 }));
 
 export default (options: MarkdownRteEditorOptions = {}) => ({ value, setValue }: PropertyEditorProps<string>) => {
   const rteValue = value ? EditorState.createWithContent(stateFromMarkdown(value)) : EditorState.createEmpty();
   const classes = useStyles({});
-  const [editorState, setEditorState] = React.useState<EditorState>(rteValue);
+  const [editorState, setLocalEditorState] = React.useState<EditorState>(rteValue);
+
+  const setEditorState = (newEditorState: EditorState) => {
+    setLocalEditorState(newEditorState);
+    const newValue = stateToMarkdown(newEditorState.getCurrentContent());
+    setValue(newValue);
+  };
 
   return (
     <Paper className={classes.root}>
       <RteToolbar editorState={editorState} setEditorState={setEditorState} />
       <Editor
         editorState={editorState}
-        onChange={editorState => {
-          setEditorState(editorState);
-          const newValue = stateToMarkdown(editorState.getCurrentContent());
-          setValue(newValue);
-        }}
+        onChange={setEditorState}
         blockStyleFn={contentBlock => {
           var type = contentBlock.getType();
-          console.log(type);
-          return classes[type];
+          return classNames(classes.resetBlockStyles, classes[type]);
         }}
       />
     </Paper>

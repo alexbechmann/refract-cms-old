@@ -16,7 +16,11 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing()
     },
     active: {
-      backgroundColor: theme.palette.secondary.main
+      backgroundColor: theme.palette.secondary.main,
+      color: theme.palette.secondary.contrastText,
+      '&:hover': {
+        backgroundColor: theme.palette.secondary.light
+      }
     },
     buttonGroup: {
       marginRight: theme.spacing()
@@ -36,7 +40,6 @@ const RteToolbar: ComponentType<Props> = props => {
     };
   }
   function createStyleButtonProps({ inlineStyle }: { inlineStyle: string }) {
-    // console.log(RichUtils.)
     const currentStyle = props.editorState.getCurrentInlineStyle();
     return {
       className: classNames({
@@ -47,14 +50,19 @@ const RteToolbar: ComponentType<Props> = props => {
   }
   return (
     <div className={classes.root}>
-      <ButtonGroup className={classes.buttonGroup} size="small" aria-label="Small outlined button group">
+      <ButtonGroup className={classes.buttonGroup} size="small">
         <Button {...createBlockButtonProps({ blockType: 'header-one' })}>H1</Button>
         <Button {...createBlockButtonProps({ blockType: 'header-two' })}>H2</Button>
         <Button {...createBlockButtonProps({ blockType: 'header-three' })}>H3</Button>
         <Button {...createBlockButtonProps({ blockType: 'header-four' })}>H4</Button>
+        <Button {...createBlockButtonProps({ blockType: 'header-five' })}>H5</Button>
+        <Button {...createBlockButtonProps({ blockType: 'header-six' })}>H6</Button>
+        <Button {...createBlockButtonProps({ blockType: 'unstyled' })}>Normal</Button>
       </ButtonGroup>
-      <ButtonGroup size="small" aria-label="Small outlined button group">
+      <ButtonGroup size="small">
         <Button {...createStyleButtonProps({ inlineStyle: 'BOLD' })}>Bold</Button>
+        <Button {...createStyleButtonProps({ inlineStyle: 'ITALIC' })}>Italic</Button>
+        <Button {...createStyleButtonProps({ inlineStyle: 'UNDERLINE' })}>Underline</Button>
       </ButtonGroup>
     </div>
   );
