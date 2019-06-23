@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   blockquote: {
     ...theme.typography.body1,
-    color: '#333',
+    color: '#666',
     padding: theme.spacing(1, 2),
     fontStyle: 'italic',
     borderLeft: `${theme.spacing()}px solid ${theme.palette.secondary.light}`,
@@ -225,7 +225,7 @@ export default (options: MarkdownRteEditorOptions = {}) => ({ value, setValue }:
         editorState={editorState}
         onChange={setEditorState}
         blockStyleFn={contentBlock => {
-          var type = contentBlock.getType();
+          const type = contentBlock.getType();
           return classNames(classes.resetBlockStyles, classes[type]);
         }}
       />
