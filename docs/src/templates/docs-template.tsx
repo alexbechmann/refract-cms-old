@@ -11,7 +11,7 @@ class DocsTemplate extends Component<any> {
     return (
       <Layout title={page.frontmatter.title}>
         <Helmet title={page.frontmatter.title} />
-        <Grid container spacing={2}>
+        <Grid container spacing={16}>
           <Grid item xs={12} sm={9}>
             <div dangerouslySetInnerHTML={{ __html: page.html }} />
           </Grid>

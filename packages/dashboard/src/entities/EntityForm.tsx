@@ -33,6 +33,7 @@ import Page from '../pages/Page';
 import { addNotification } from '../notifications/state/notification.actions';
 import Delete from '@material-ui/icons/Delete';
 import ArrowBack from '@material-ui/icons/ArrowBack';
+import { buildEntityListQueryOptions } from './state/build-entity-list-query-options';
 
 interface State {
   updateValues: any;
@@ -181,15 +182,12 @@ class EntityForm extends Component<Props, State> {
 
   delete() {
     if (window.confirm('Are you sure you want to delete?')) {
-      const { client, schema, filters } = this.props;
+      const { client, schema, entityItemState, id } = this.props;
+      const refetchQueryOptions = buildEntityListQueryOptions(entityItemState);
       this.setState({ loading: true }, () => {
         client
           .mutate({
-            // refetchQueries: [
-            //   {
-            //     query: graphqlQueryHelper.getAllQueryWithAllFields(schema, filters)
-            //   }
-            // ],
+            refetchQueries: [refetchQueryOptions],
             mutation: gql(`
       mutation {
         ${this.props.alias}RemoveById(id: "${this.props.id!}")
@@ -220,15 +218,12 @@ export interface EntityFormProps {
 
 function mapStateToProps(state: AppState, ownProps: EntityFormProps) {
   const entitySchema = state.config.schema.find(s => s.options.alias === ownProps.alias)!;
-  const filters = state.entity[entitySchema.options.alias] || {
-    orderByDirection: 'ASC',
-    orderByField: undefined
-  };
-
+  const entityItemState = state.entity[entitySchema.options.alias];
+  console.log({ entityItemState });
   return {
     routes: state.router.routes!,
     schema: entitySchema,
-    filters
+    entityItemState
   };
 }
 
