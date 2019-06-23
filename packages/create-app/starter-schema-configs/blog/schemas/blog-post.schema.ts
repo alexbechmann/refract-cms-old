@@ -2,6 +2,7 @@ import { composeSchema, createTextEditor, createDatePickerEditor, propertyBuilde
 import DescriptionIcon from '@material-ui/icons/Description';
 import { BlogPostCategorySchema } from './blog-post-category.schema';
 import { AuthorSchema } from './author.schema';
+import moment from 'moment';
 
 export const BlogPostSchema = composeSchema({
   options: {
@@ -9,8 +10,13 @@ export const BlogPostSchema = composeSchema({
     displayName: 'Blog post',
     icon: DescriptionIcon,
     instanceDisplayProps: blogPost => ({
-      primaryText: blogPost.title
-    })
+      primaryText: blogPost.title,
+      secondaryText: blogPost.date && moment(blogPost.date).format('LL')
+    }),
+    defaultSort: {
+      orderByDirection: 'DESC',
+      orderByField: 'date'
+    }
   },
   properties: {
     title: {
