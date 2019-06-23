@@ -1,23 +1,26 @@
 import React, { useState } from 'react';
 import { PropertyEditorProps } from '@refract-cms/core';
-import { Typography, Theme, NoSsr } from '@material-ui/core';
+import { Typography, Theme, NoSsr, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { Editor, EditorState } from 'draft-js';
+import { Editor, EditorState, RichUtils } from 'draft-js';
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 import { stateToMarkdown } from 'draft-js-export-markdown';
-// import 'draft-js/dist/Draft.css'
-import draftStyles from './draft-styles';
+import RteToolbar from './RteToolbar';
 
 // const RichTextEditor = process.env.BUILD_TARGET !== 'server' ? require('react-rte').default : undefined;
 
 export interface MarkdownRteEditorOptions {}
 
 const useStyles = makeStyles((theme: Theme) => ({
-  // ...draftStyles,
-  // '@global .DraftEditor-root': {
-  //   // color: theme.palette.getContrastText(theme.palette.background.default)
-  //   color: '#333'
-  // }
+  root: {
+    padding: theme.spacing()
+  },
+  'header-one': theme.typography.h1,
+  'header-two': theme.typography.h2,
+  'header-three': theme.typography.h3,
+  'header-four': theme.typography.h4,
+  'header-five': theme.typography.h5,
+  'header-six': theme.typography.h6,
   '@global': {
     '.DraftEditor-editorContainer, .DraftEditor-root, .public-DraftEditor-content': {
       height: 'inherit',
@@ -189,30 +192,25 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default (options: MarkdownRteEditorOptions = {}) => ({ value, setValue }: PropertyEditorProps<string>) => {
   const rteValue = value ? EditorState.createWithContent(stateFromMarkdown(value)) : EditorState.createEmpty();
-  console.log(rteValue);
   const classes = useStyles({});
-  // const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty());
   const [editorState, setEditorState] = React.useState<EditorState>(rteValue);
 
   return (
-    <Editor
-      editorState={editorState}
-      onChange={editorState => {
-        setEditorState(editorState);
-        console.log(editorState);
-        const newValue = stateToMarkdown(editorState.getCurrentContent());
-        setValue(newValue);
-      }}
-      // blockStyleFn={contentBlock => {
-      //   var type = contentBlock.getType();
-      //   console.log(type);
-      //   return classes.test;
-      // }}
-      // onChange={newState => {
-      //   setEditorState(newState);
-      //   var newValue = stateToMarkdown(newState);
-      //   // setValue(newValue);
-      // }}
-    />
+    <Paper className={classes.root}>
+      <RteToolbar editorState={editorState} setEditorState={setEditorState} />
+      <Editor
+        editorState={editorState}
+        onChange={editorState => {
+          setEditorState(editorState);
+          const newValue = stateToMarkdown(editorState.getCurrentContent());
+          setValue(newValue);
+        }}
+        blockStyleFn={contentBlock => {
+          var type = contentBlock.getType();
+          console.log(type);
+          return classes[type];
+        }}
+      />
+    </Paper>
   );
 };
