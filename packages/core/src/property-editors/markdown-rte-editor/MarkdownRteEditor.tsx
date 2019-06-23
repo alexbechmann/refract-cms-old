@@ -8,8 +8,6 @@ import { stateToMarkdown } from 'draft-js-export-markdown';
 import RteToolbar from './RteToolbar';
 import classNames from 'classnames';
 
-// const RichTextEditor = process.env.BUILD_TARGET !== 'server' ? require('react-rte').default : undefined;
-
 export interface MarkdownRteEditorOptions {}
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -28,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   blockquote: {
     ...theme.typography.body1,
-    color: '#666',
+    color: '#828282',
     padding: theme.spacing(1, 2),
     fontStyle: 'italic',
     borderLeft: `${theme.spacing()}px solid ${theme.palette.secondary.light}`,
