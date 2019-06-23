@@ -1,5 +1,5 @@
 import { AppAction } from '../../state/app-action';
-import { EntityState } from './entity.state';
+import { EntityState, EntityStateItem } from './entity.state';
 import {
   SET_ORDERBY,
   SET_ORDERBY_DIRECTION,
@@ -10,7 +10,7 @@ import {
   RESET_FILTERS
 } from './entity.actions';
 import { CONFIGURE } from '../../config/state/config.actions';
-import { convertDateToSimpleDate } from '@refract-cms/core';
+import { convertDateToSimpleDate, graphqlQueryHelper } from '@refract-cms/core';
 
 const defaultState: EntityState = {};
 
@@ -107,8 +107,10 @@ export function entityReducer(state = defaultState, action: AppAction): EntitySt
           orderByDirection: schema.options.defaultSort ? schema.options.defaultSort.orderByDirection || 'ASC' : 'ASC',
           orderByField: schema.options.defaultSort ? schema.options.defaultSort.orderByField : undefined,
           filters: [],
-          currentPage: 0
-        };
+          currentPage: 0,
+          schema,
+          query: graphqlQueryHelper.getAllQueryWithAllFields(schema)
+        } as EntityStateItem;
         return acc;
       }, {});
     }

@@ -242,9 +242,15 @@ export class PublicSchemaBuilder {
     type: GraphQLObjectType
   ) {
     const inputType = this.buildInput(`${entitySchema.options.alias}Input`, entitySchema.properties);
+    const entityType = this.buildEntityFromSchema({
+      entitySchema,
+      prefixName: '',
+      addResolvers: false,
+      suffixName: 'Entity'
+    });
     return {
       [`${entitySchema.options.alias}Create`]: {
-        type,
+        type: entityType,
         args: {
           record: { type: inputType }
         },
@@ -256,18 +262,19 @@ export class PublicSchemaBuilder {
         }
       },
       [`${entitySchema.options.alias}Update`]: {
-        type,
+        type: entityType,
         args: {
           record: { type: inputType }
         },
-        resolve: (_, { record }, { userId }) => {
+        resolve: async (_, { record }, { userId }) => {
           if (!userId) {
             throw new Error('AuthenticationError');
           }
           if (!record._id) {
             throw new Error('Missing _id');
           }
-          return repository.findByIdAndUpdate(record._id, record);
+          await repository.findByIdAndUpdate(record._id, record);
+          return repository.findById(record._id);
         }
       },
       [`${entitySchema.options.alias}RemoveById`]: {

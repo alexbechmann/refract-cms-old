@@ -13,21 +13,25 @@ class GraphqlQueryHelper {
   }
 
   getAllQueryWithAllFields(schema: EntitySchema) {
-    const propertyTypes = Object.keys(schema.properties).reduce((acc, p) => {
-      acc[p] = schema.properties[p].type;
-      return acc;
-    }, {});
     return gql`
       query($filter: ${schema.options.alias}EntityFilterType, $sort: ${
       schema.options.alias
     }EntitySortType, $pagination: PaginationType){
         items: ${schema.options.alias}EntityList(filter: $filter, sort: $sort, pagination: $pagination) {
           _id
-          ${this.buildProperties(propertyTypes)}
+          ${this.buildPropertiesFromSchema(schema)}
         }
         count: ${schema.options.alias}Count(filter: $filter)
       }
     `;
+  }
+
+  buildPropertiesFromSchema(schema: EntitySchema<any>) {
+    const propertyTypes = Object.keys(schema.properties).reduce((acc, p) => {
+      acc[p] = schema.properties[p].type;
+      return acc;
+    }, {});
+    return this.buildProperties(propertyTypes);
   }
 
   buildProperties(properties: { [key: string]: PropertyType }): string {
