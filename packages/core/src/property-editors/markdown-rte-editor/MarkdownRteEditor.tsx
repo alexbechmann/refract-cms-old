@@ -14,15 +14,33 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing()
   },
-  'header-one': theme.typography.h1,
-  'header-two': theme.typography.h2,
-  'header-three': theme.typography.h3,
-  'header-four': theme.typography.h4,
-  'header-five': theme.typography.h5,
-  'header-six': theme.typography.h6,
+  'header-one': {
+    ...theme.typography.h1,
+    margin: theme.spacing(1, 0)
+  },
+  'header-two': {
+    ...theme.typography.h2,
+    margin: theme.spacing(1, 0)
+  },
+  'header-three': {
+    ...theme.typography.h3,
+    margin: theme.spacing(1, 0)
+  },
+  'header-four': {
+    ...theme.typography.h4,
+    margin: theme.spacing(1, 0)
+  },
+  'header-five': {
+    ...theme.typography.h5,
+    margin: theme.spacing(1, 0)
+  },
+  'header-six': {
+    ...theme.typography.h6,
+    margin: theme.spacing(1, 0)
+  },
   unstyled: {
     ...theme.typography.body1,
-    margin: `0 !important`
+    margin: 0
   },
   blockquote: {
     ...theme.typography.body1,
@@ -198,10 +216,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '.public-DraftStyleDefault-depth4.public-DraftStyleDefault-reset': {
       counterReset: 'ol4'
     }
-  },
-  resetBlockStyles: {
-    marginBottom: theme.spacing(),
-    marginTop: 0
   }
 }));
 
@@ -224,7 +238,7 @@ export default (options: MarkdownRteEditorOptions = {}) => ({ value, setValue }:
         onChange={setEditorState}
         blockStyleFn={contentBlock => {
           const type = contentBlock.getType();
-          return classNames(classes.resetBlockStyles, classes[type]);
+          return classes[type];
         }}
       />
     </Paper>
