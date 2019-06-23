@@ -36,3 +36,4 @@ export { default as createSingleEntityPickerEditor } from './property-editors/Si
 export { default as createMultipleEntityPickerEditor } from './property-editors/MultipleEntityPickerEditor';
 export { default as createFileUploadEditor } from './property-editors/FileUploaderEditor';
 export { default as createNumberEditor } from './property-editors/NumberEditor';
+export { default as createMarkdownRteEditor } from './property-editors/MarkdownRteEditor';

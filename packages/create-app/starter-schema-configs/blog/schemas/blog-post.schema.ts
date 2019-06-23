@@ -1,4 +1,10 @@
-import { composeSchema, createTextEditor, createDatePickerEditor, propertyBuilder } from '@refract-cms/core';
+import {
+  composeSchema,
+  createTextEditor,
+  createDatePickerEditor,
+  propertyBuilder,
+  createMarkdownRteEditor
+} from '@refract-cms/core';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { BlogPostCategorySchema } from './blog-post-category.schema';
 import { AuthorSchema } from './author.schema';
@@ -22,6 +28,11 @@ export const BlogPostSchema = composeSchema({
     title: {
       displayName: 'Title',
       editorComponent: createTextEditor(),
+      type: String
+    },
+    bodyText: {
+      displayName: 'Body text',
+      editorComponent: createMarkdownRteEditor(),
       type: String
     },
     date: {

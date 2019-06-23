@@ -219,7 +219,6 @@ export interface EntityFormProps {
 function mapStateToProps(state: AppState, ownProps: EntityFormProps) {
   const entitySchema = state.config.schema.find(s => s.options.alias === ownProps.alias)!;
   const entityItemState = state.entity[entitySchema.options.alias];
-  console.log({ entityItemState });
   return {
     routes: state.router.routes!,
     schema: entitySchema,

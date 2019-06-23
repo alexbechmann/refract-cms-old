@@ -17,6 +17,10 @@ function createClientConfig() {
     module: {
       rules: [
         {
+          test: /\.css$/,
+          loaders: ["style-loader", "css-loader?modules"]
+        },
+        {
           test: /\.(js|jsx|ts|tsx)$/,
           loader: "ts-loader",
           include: [path.resolve(__dirname, "../src")],
@@ -98,6 +102,10 @@ function createServerConfig() {
     },
     module: {
       rules: [
+        {
+          test: /\.css$/,
+          loaders: ["style-loader", "css-loader?modules"]
+        },
         {
           test: /\.(js|jsx|ts|tsx)$/,
           loader: "ts-loader",
