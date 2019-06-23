@@ -78,7 +78,7 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
 
   router.use(
     '/internal/graphql',
-    //requireAuth(serverConfig),
+    requireAuth(serverConfig),
     graphqlHTTP((req, res) => {
       const context = {
         userId: req.headers.authorization

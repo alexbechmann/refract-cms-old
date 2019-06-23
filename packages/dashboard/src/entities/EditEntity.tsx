@@ -61,12 +61,11 @@ const EditEntity = ({ alias, id, client, schema, entityItemState }: Props) => {
                     record: recordWithNullInsteadOfUndefined
                   },
                   update: (proxy, updateResult) => {
-                    var responseObject = updateResult.data.update;
+                    const responseObject = updateResult.data.update;
                     client.cache.writeData({
                       id: responseObject._id,
                       data: responseObject
                     });
-                    //client.queryManager.broadcastQueries();
                     resolve();
                   }
                 });
