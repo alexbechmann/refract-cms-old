@@ -134,9 +134,6 @@ function createServerConfig() {
       ]
     },
     plugins: [
-      new webpack.DefinePlugin({
-        "process.env": { BUILD_TARGET: JSON.stringify("server") }
-      }),
       new WebpackBar({
         name: "server",
         color: "#3949ab"
