@@ -158,9 +158,9 @@ function createServerConfig() {
       new webpack.NamedModulesPlugin(),
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
-      new webpack.DefinePlugin({
-        "process.env": { BUILD_TARGET: JSON.stringify("server") }
-      }),
+      // new webpack.DefinePlugin({
+      //   "process.env": { BUILD_TARGET: JSON.stringify("server") }
+      // }),
       new WebpackBar({
         name: "server",
         color: "#3949ab"
