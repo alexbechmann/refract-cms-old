@@ -33,12 +33,12 @@ export class PublicSchemaBuilder {
   buildEntityFromSchema({
     entitySchema,
     prefixName = '',
-    addResolvers,
+    addResolvers = true,
     suffixName = ''
   }: {
     entitySchema: EntitySchema;
-    prefixName: string;
-    addResolvers: boolean;
+    prefixName?: string;
+    addResolvers?: boolean;
     suffixName?: string;
   }) {
     const type = this.buildEntity(

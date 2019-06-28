@@ -10,9 +10,7 @@ export const multipleRefPlugin = createResolverPlugin({
   buildFieldConfig: ({ propertyKey, meta, serverConfig, schemaBuilder }) => {
     const refSchema: EntitySchema = meta.schema;
     const type = schemaBuilder.buildEntityFromSchema({
-      entitySchema: refSchema,
-      prefixName: '',
-      addResolvers: true
+      entitySchema: refSchema
     });
     const entityType = schemaBuilder.buildEntityFromSchema({
       entitySchema: refSchema,
