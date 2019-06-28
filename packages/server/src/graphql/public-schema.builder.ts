@@ -180,6 +180,7 @@ export class PublicSchemaBuilder {
       addResolvers: false,
       suffixName: 'Entity'
     });
+    const inputType = this.buildInput(`${entitySchema.options.alias}Input`, entitySchema.properties);
     const args = getGraphQLQueryArgs(entityType);
     const resolvers = {
       [`${entitySchema.options.alias}Count`]: {
@@ -189,7 +190,6 @@ export class PublicSchemaBuilder {
         },
         resolve: (_, { filter }) => repository.count(getMongoDbFilter(entityType, filter))
       },
-
       [`${entitySchema.options.alias}List`]: {
         type: new GraphQLList(type),
         args,
@@ -206,6 +206,15 @@ export class PublicSchemaBuilder {
             differentOutputType: true
           }
         )
+      },
+      [`${entitySchema.options.alias}Transform`]: {
+        type,
+        args: {
+          record: { type: inputType }
+        },
+        resolve: (_, { record }, { userId }) => {
+          return record;
+        }
       }
     };
 
