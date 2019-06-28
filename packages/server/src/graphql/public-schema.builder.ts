@@ -240,6 +240,23 @@ export class PublicSchemaBuilder {
           resolve: (_, { id }) => {
             return repository.findById(id);
           }
+        },
+        [`${entitySchema.options.alias}FindOne`]: {
+          type,
+          args,
+          resolve: getMongoDbQueryResolver(
+            entityType,
+            async (filter, projection, options, obj, args, { db }: { db: Db }) => {
+              return repository
+                .findOne(filter)
+                .sort(options.sort)
+                .limit(options.limit || 100)
+                .skip(options.skip || 0);
+            },
+            {
+              differentOutputType: true
+            }
+          )
         }
       };
     }
