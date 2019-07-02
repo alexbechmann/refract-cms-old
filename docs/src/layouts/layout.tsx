@@ -33,6 +33,9 @@ const styles = (theme: Theme) =>
       color: 'white',
       fontFamily: 'Roboto'
     },
+    '@global a': {
+      color: theme.palette.secondary.main
+    },
     content: {
       padding: theme.spacing.unit
     },
