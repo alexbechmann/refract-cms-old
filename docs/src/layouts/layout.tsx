@@ -74,10 +74,12 @@ const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
           </Link>
         </Typography>
         <div className={classes.grow} />
+        <Button component="a" onClick={() => navigate('/screenshots')}>
+          Screenshots
+        </Button>
         <Button component="a" onClick={() => navigate('/docs')}>
           Docs
         </Button>
-
         <IconButton href="https://github.com/alexbechmann/refract-cms">
           <GitHub />
         </IconButton>
