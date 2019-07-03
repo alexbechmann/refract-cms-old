@@ -35,30 +35,41 @@ export default class extends React.Component<IndexPageProps, {}> {
   public render() {
     return (
       <Layout title=" Welcome to the Refract Cms docs">
-        <Typography>
-          Welcome to the Refract Cms docs, a code first NodeJS/React based content management system.
+        <Typography variant="h5" gutterBottom>
+          What is Refract-CMS?
         </Typography>
-        <br />
-        <Typography>
-          Unlike most other CMS systems, the schema is defined in code, and not with a GUI. The schema config is
-          referenced by both the client and server side code, allowing you to render the content editor dashboard &
-          create the backend GraphQL endpoints from a strongly typed schema using typescript.
+        <Typography paragraph>
+          Refract-CMS is an open source, code first, self-hosted headless CMS using React, Express & MongoDB.
         </Typography>
-        <br />
-        <Typography>
-          You can choose host a seperate react app for the CMS frontend, or add it to a route on your existing React app
-          (e.g. with react-router).
+        <Typography variant="h5" gutterBottom>
+          How is it different from other CMS's?
         </Typography>
-        <br />
-        <Typography>
-          Property editors for each property on the entity model are added to the schema here, allowing you to choose
-          between some of the in-built editors (TextBox, Select, Image) or to write your own.
+        <Typography paragraph>
+          Unlike most other CMS systems, the schema is defined in JavaScript/TypeScript, and we do not force developers
+          to use elaborate GUI's. Developers can live entirely in their chosen code editor, while content editors can
+          utilize a blazing fast React based single-page-app, to manage content. This approach has some advantages: - It
+          allows teams to properly code-review schema changes using their current git workflows. - Your schema's can be
+          copy/pasted between projects, or distributed using your organizations private NPM registry etc. - Your schema
+          can be deployed to multiple environments without requiring you to do duplicate work in a GUI or database
+          imports, You just deploy the code and start editing. - Clean database, Refract-CMS only creates one mongo
+          collection per schema, as it doesn't have to store schema information in there.
         </Typography>
-        <br />
-        <Typography>Writing custom components is a core feature, and is done by writing a React component.</Typography>
-        <br />
-        <br />
-        <Typography variant="h5">Technologies</Typography>
+        <Typography variant="h5" gutterBottom>
+          GraphQL
+        </Typography>
+        <Typography paragraph>
+          The CMS exposes a GraphQL endpoint, with rich filtering that you can use to query data for your frontend apps.
+        </Typography>
+        <Typography variant="h5" gutterBottom>
+          Customization
+        </Typography>
+        <Typography paragraph>
+          Property editors for each property on the entity model are added to the schema in code, allowing you to choose
+          between some of the in-built editors (TextBox, Select, Image) or to write your own using React.
+        </Typography>
+        <Typography variant="h5" gutterBottom>
+          Technologies
+        </Typography>
         <List style={{ width: '100%' }}>
           <ListItem>
             <ListItemAvatar>
@@ -117,13 +128,9 @@ export default class extends React.Component<IndexPageProps, {}> {
           </ListItem>
         </List>
         <br />
-        <br />
         <Button variant="raised" component="a" color="secondary" onClick={() => navigate('/cli')}>
           Get started with CLI
         </Button>
-        <br />
-        <br />
-        <Img fluid={this.props.data.adminDashboardImg.childImageSharp.fluid} />
       </Layout>
     );
   }
@@ -161,13 +168,6 @@ export const pageQuery = graphql`
       childImageSharp {
         fixed(width: 40, height: 40) {
           ...GatsbyImageSharpFixed
-        }
-      }
-    }
-    adminDashboardImg: file(relativePath: { eq: "admin-dashboard.png" }) {
-      childImageSharp {
-        fluid(maxWidth: 980) {
-          ...GatsbyImageSharpFluid
         }
       }
     }
