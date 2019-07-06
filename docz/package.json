@@ -1,0 +1,17 @@
+{
+  "name": "docs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "docz dev",
+    "build": "docz build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "docz": "^1.2.0",
+    "docz-theme-default": "^1.2.0"
+  }
+}
