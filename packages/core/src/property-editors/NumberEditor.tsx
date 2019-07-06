@@ -24,7 +24,6 @@ export default (options: TextEditorOptions = defaultOptions) => (props: Property
       value={props.value || ''}
       onChange={e => {
         let val: number = 0;
-        console.log(options.numberType);
         if (options.numberType === 'FLOAT') {
           val = parseFloat(e.target.value);
         }

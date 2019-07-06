@@ -33,12 +33,12 @@ export class PublicSchemaBuilder {
   buildEntityFromSchema({
     entitySchema,
     prefixName = '',
-    addResolvers,
+    addResolvers = true,
     suffixName = ''
   }: {
     entitySchema: EntitySchema;
-    prefixName: string;
-    addResolvers: boolean;
+    prefixName?: string;
+    addResolvers?: boolean;
     suffixName?: string;
   }) {
     const type = this.buildEntity(
@@ -144,8 +144,8 @@ export class PublicSchemaBuilder {
             return repository
               .find(filter)
               .sort(options.sort)
-              .limit(options.limit)
-              .skip(options.skip);
+              .limit(options.limit || 100)
+              .skip(options.skip || 0);
           }
         )
       },
@@ -154,7 +154,7 @@ export class PublicSchemaBuilder {
         args: {
           filter: args.filter
         },
-        resolve: (_, { filter }) => repository.count(getMongoDbFilter(entityType, filter))
+        resolve: (_, { filter }) => repository.countDocuments(getMongoDbFilter(entityType, filter))
       },
       [`${entitySchema.options.alias}EntityFindById`]: {
         type: entityType,
@@ -180,6 +180,7 @@ export class PublicSchemaBuilder {
       addResolvers: false,
       suffixName: 'Entity'
     });
+    const inputType = this.buildInput(`${entitySchema.options.alias}Input`, entitySchema.properties);
     const args = getGraphQLQueryArgs(entityType);
     const resolvers = {
       [`${entitySchema.options.alias}Count`]: {
@@ -189,7 +190,6 @@ export class PublicSchemaBuilder {
         },
         resolve: (_, { filter }) => repository.count(getMongoDbFilter(entityType, filter))
       },
-
       [`${entitySchema.options.alias}List`]: {
         type: new GraphQLList(type),
         args,
@@ -199,13 +199,22 @@ export class PublicSchemaBuilder {
             return repository
               .find(filter)
               .sort(options.sort)
-              .limit(options.limit)
-              .skip(options.skip);
+              .limit(options.limit || 100)
+              .skip(options.skip || 0);
           },
           {
             differentOutputType: true
           }
         )
+      },
+      [`${entitySchema.options.alias}Transform`]: {
+        type,
+        args: {
+          record: { type: inputType }
+        },
+        resolve: (_, { record }, { userId }) => {
+          return record;
+        }
       }
     };
 
@@ -231,6 +240,23 @@ export class PublicSchemaBuilder {
           resolve: (_, { id }) => {
             return repository.findById(id);
           }
+        },
+        [`${entitySchema.options.alias}FindOne`]: {
+          type,
+          args,
+          resolve: getMongoDbQueryResolver(
+            entityType,
+            async (filter, projection, options, obj, args, { db }: { db: Db }) => {
+              return repository
+                .findOne(filter)
+                .sort(options.sort)
+                .limit(options.limit || 100)
+                .skip(options.skip || 0);
+            },
+            {
+              differentOutputType: true
+            }
+          )
         }
       };
     }
@@ -242,9 +268,15 @@ export class PublicSchemaBuilder {
     type: GraphQLObjectType
   ) {
     const inputType = this.buildInput(`${entitySchema.options.alias}Input`, entitySchema.properties);
+    const entityType = this.buildEntityFromSchema({
+      entitySchema,
+      prefixName: '',
+      addResolvers: false,
+      suffixName: 'Entity'
+    });
     return {
       [`${entitySchema.options.alias}Create`]: {
-        type,
+        type: entityType,
         args: {
           record: { type: inputType }
         },
@@ -256,18 +288,19 @@ export class PublicSchemaBuilder {
         }
       },
       [`${entitySchema.options.alias}Update`]: {
-        type,
+        type: entityType,
         args: {
           record: { type: inputType }
         },
-        resolve: (_, { record }, { userId }) => {
+        resolve: async (_, { record }, { userId }) => {
           if (!userId) {
             throw new Error('AuthenticationError');
           }
           if (!record._id) {
             throw new Error('Missing _id');
           }
-          return repository.findByIdAndUpdate(record._id, record);
+          await repository.findByIdAndUpdate(record._id, record);
+          return repository.findById(record._id);
         }
       },
       [`${entitySchema.options.alias}RemoveById`]: {

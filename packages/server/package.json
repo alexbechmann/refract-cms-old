@@ -15,7 +15,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@date-io/moment": "0.0.2",
     "express": "^4.16.4",
     "express-graphql": "^0.8.0",
     "fork-ts-checker-webpack-plugin": "^0.4.15",
@@ -28,7 +27,6 @@
     "jsonwebtoken": "^8.4.0",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.11",
-    "material-ui-pickers": "^2.0.2",
     "moment": "^2.22.2",
     "mongodb": "^3.1.10",
     "mongoose": "^5.4.0",

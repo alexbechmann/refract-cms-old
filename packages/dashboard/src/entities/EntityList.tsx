@@ -1,38 +1,36 @@
 import React, { Component } from 'react';
-import gql from 'graphql-tag';
-import { Query, withApollo, WithApolloClient } from 'react-apollo';
+import { Query, withApollo } from 'react-apollo';
 import {
   LinearProgress,
   List,
-  ListItem,
-  ListItemText,
   Button,
   ListSubheader,
-  ListItemAvatar,
-  Avatar,
   IconButton,
-  Dialog,
-  DialogContent,
-  DialogActions,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   Theme,
   createStyles,
   withStyles,
-  DialogTitle,
-  WithStyles
+  WithStyles,
+  Table,
+  TableBody,
+  TableRow,
+  TablePagination,
+  Badge,
+  Tooltip
 } from '@material-ui/core';
-import { EntitySchema, Entity, graphqlQueryHelper, EntityListItem, PropertyOptions } from '@refract-cms/core';
-import { RouteComponentProps, Link, Redirect } from '@reach/router';
+import { Entity, graphqlQueryHelper, EntityListItem, PropertyOptions } from '@refract-cms/core';
+import { RouteComponentProps, Link } from '@reach/router';
 import { connect } from 'react-redux';
 import { AppState } from '../state/app.state';
 import { combineContainers } from 'combine-containers';
 import Page from '../pages/Page';
 import Sort from '@material-ui/icons/Sort';
+import Filter from '@material-ui/icons/FilterList';
 import Refresh from '@material-ui/icons/Refresh';
-import { setOrderByField, setOrderByDirection } from './state/entity.actions';
+import EntityListSortDialog from './EntityListSortDialog';
+import EntityListFilterDialog from './entity-list-filters/EntityListFilterDialog';
+import { createLinkComponent } from '../shared/create-link-component';
+import * as EntityActions from './state/entity.actions';
+import { buildEntityListQueryOptions } from './state/build-entity-list-query-options';
 
 export interface EntitiesListProps extends RouteComponentProps<{ alias: string }> {}
 
@@ -43,14 +41,14 @@ interface Props
     WithStyles<typeof styles> {}
 
 interface State {
+  sortDialogOpen: boolean;
   filterDialogOpen: boolean;
+  count: number | undefined;
+  lastFetchAlias?: string;
 }
 
 const styles = (theme: Theme) =>
   createStyles({
-    formControl: {
-      marginBottom: theme.spacing.unit
-    },
     textLink: {
       cursor: 'pointer',
       color: theme.palette.secondary.main,
@@ -60,20 +58,35 @@ const styles = (theme: Theme) =>
     }
   });
 
-class EntitiesList extends Component<Props> {
+class EntitiesList extends Component<Props, State> {
   state: State = {
-    filterDialogOpen: false
+    sortDialogOpen: false,
+    filterDialogOpen: false,
+    count: undefined
   };
 
   render() {
-    const { schema, routes, entitySchema, setOrderByField, filters, classes } = this.props;
-    const query = graphqlQueryHelper.getAllQueryWithAllFields(entitySchema, filters);
+    const { routes, entitySchema, classes, entityItemState, setPage } = this.props;
+    const { query, variables } = buildEntityListQueryOptions(entityItemState);
     return (
       <div>
-        <Query query={query} displayName={`${entitySchema.options.alias}_list`} notifyOnNetworkStatusChange>
-          {({ loading, error, data, refetch, variables }) => {
+        <Query
+          query={query}
+          variables={variables}
+          displayName={`${entitySchema.options.alias}_list`}
+          notifyOnNetworkStatusChange
+          fetchPolicy="cache-and-network"
+          onCompleted={data => {
+            const count = !data.loading && data ? data.count : undefined;
+            const lastFetchAlias = entitySchema.options.alias;
+            if (count !== this.state.count) {
+              this.setState({ count, lastFetchAlias });
+            }
+          }}
+        >
+          {({ loading, data, refetch, variables }) => {
             const items = data.items || [];
-            if (loading) {
+            if (loading && this.state.lastFetchAlias !== entitySchema.options.alias) {
               return <LinearProgress />;
             }
             return (
@@ -82,45 +95,32 @@ class EntitiesList extends Component<Props> {
                 actionComponents={
                   !entitySchema.options.maxOne
                     ? [
-                        // () => (
-                        //   <FormControl>
-                        //     <InputLabel>Age</InputLabel>
-                        //     <Select
-                        //       value={this.props.filters.orderByField}
-                        //       onChange={e =>
-                        //         setOrderByField({
-                        //           alias: entitySchema.options.alias,
-                        //           orderByField: e.target.value
-                        //         })
-                        //       }
-                        //     >
-                        //       <MenuItem value={'createDate'}>Create Date</MenuItem>
-                        //       <MenuItem value={'a'}>Twenty</MenuItem>
-                        //       <MenuItem value={'b'}>Thirty</MenuItem>
-                        //     </Select>
-                        //   </FormControl>
-                        // ),
-                        () => (
-                          <IconButton disabled={loading} onClick={() => refetch(variables)}>
-                            <Refresh />
-                          </IconButton>
-                        ),
-                        () => (
-                          <IconButton onClick={() => this.setState({ filterDialogOpen: true })}>
-                            <Sort />
-                          </IconButton>
-                        ),
-                        () => (
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            component={props => (
-                              <Link to={routes.entity.edit.createUrl({ id: 'new', schema: entitySchema })} {...props} />
-                            )}
-                          >
-                            Add new
-                          </Button>
-                        )
+                        <IconButton disabled={loading} onClick={() => refetch(variables)}>
+                          <Refresh />
+                        </IconButton>,
+                        <IconButton onClick={() => this.setState({ sortDialogOpen: true })}>
+                          <Tooltip title="Sort">
+                            <Badge variant="dot" badgeContent={entityItemState.orderByField ? 1 : 0} color="secondary">
+                              <Sort />
+                            </Badge>
+                          </Tooltip>
+                        </IconButton>,
+                        <IconButton onClick={() => this.setState({ filterDialogOpen: true })}>
+                          <Tooltip title="Filters">
+                            <Badge badgeContent={entityItemState.filters.length} color="secondary">
+                              <Filter />
+                            </Badge>
+                          </Tooltip>
+                        </IconButton>,
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          component={createLinkComponent(
+                            routes.entity.edit.createUrl({ id: 'new', schema: entitySchema })
+                          )}
+                        >
+                          Add new
+                        </Button>
                       ]
                     : undefined
                 }
@@ -129,14 +129,17 @@ class EntitiesList extends Component<Props> {
                   <div>
                     <List
                       subheader={
-                        filters && filters.orderByField && filters.orderByDirection ? (
+                        entityItemState && entityItemState.orderByField && entityItemState.orderByDirection ? (
                           <ListSubheader
                             className={classes.textLink}
-                            onClick={() => this.setState({ filterDialogOpen: true })}
+                            onClick={() => this.setState({ sortDialogOpen: true })}
                           >
                             Sorted by{' '}
-                            {(entitySchema.properties[filters.orderByField] as PropertyOptions<any, any>).displayName},{' '}
-                            {filters.orderByDirection}
+                            {
+                              (entitySchema.properties[entityItemState.orderByField] as PropertyOptions<any, any>)
+                                .displayName
+                            }
+                            , {entityItemState.orderByDirection}
                           </ListSubheader>
                         ) : (
                           undefined
@@ -147,11 +150,8 @@ class EntitiesList extends Component<Props> {
                         return (
                           <EntityListItem
                             key={item._id}
-                            component={props => (
-                              <Link
-                                to={routes.entity.edit.createUrl({ id: item._id, schema: entitySchema })}
-                                {...props}
-                              />
+                            component={createLinkComponent(
+                              routes.entity.edit.createUrl({ id: item._id, schema: entitySchema })
                             )}
                             button
                             entity={item}
@@ -160,6 +160,23 @@ class EntitiesList extends Component<Props> {
                         );
                       })}
                     </List>
+                    <Table>
+                      <TableBody>
+                        <TableRow>
+                          <TablePagination
+                            page={entityItemState.currentPage}
+                            count={data.count}
+                            onChangePage={(e, page) => {
+                              setPage({
+                                alias: entitySchema.options.alias,
+                                page
+                              });
+                            }}
+                            rowsPerPage={10}
+                          />
+                        </TableRow>
+                      </TableBody>
+                    </Table>
                   </div>
                 ) : (
                   <div>
@@ -185,75 +202,36 @@ class EntitiesList extends Component<Props> {
             );
           }}
         </Query>
-        <Dialog open={this.state.filterDialogOpen} onClose={() => this.setState({ filterDialogOpen: false })}>
-          <DialogTitle>Sort</DialogTitle>
-          <DialogContent style={{ width: 400 }}>
-            <FormControl className={classes.formControl} fullWidth>
-              <InputLabel>Sort by</InputLabel>
-              <Select
-                value={this.props.filters.orderByField || ''}
-                onChange={e =>
-                  this.props.setOrderByField({
-                    alias: entitySchema.options.alias,
-                    orderByField: e.target.value
-                  })
-                }
-              >
-                <MenuItem value="">None</MenuItem>
-                {Object.keys(entitySchema.properties)
-                  .filter(
-                    propertyKey =>
-                      entitySchema.properties[propertyKey].type === String ||
-                      entitySchema.properties[propertyKey].type === Date ||
-                      entitySchema.properties[propertyKey].type === Number
-                  )
-                  .map((propertyKey: string, index: number) => {
-                    const propertyOptions = entitySchema.properties[propertyKey] as PropertyOptions<any, any>;
-                    return (
-                      <MenuItem key={index} value={propertyKey}>
-                        {propertyOptions.displayName || propertyKey}
-                      </MenuItem>
-                    );
-                  })}
-              </Select>
-            </FormControl>
-            <FormControl className={classes.formControl} fullWidth>
-              <InputLabel>Direction</InputLabel>
-              <Select
-                value={this.props.filters.orderByDirection}
-                onChange={e =>
-                  this.props.setOrderByDirection({
-                    alias: entitySchema.options.alias,
-                    direction: e.target.value as 'ASC' | 'DESC'
-                  })
-                }
-              >
-                <MenuItem value="ASC">ASC</MenuItem>
-                <MenuItem value="DESC">DESC</MenuItem>
-              </Select>
-            </FormControl>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => this.setState({ filterDialogOpen: false })}>Done</Button>
-          </DialogActions>
-        </Dialog>
+        <EntityListSortDialog
+          schema={entitySchema}
+          open={this.state.sortDialogOpen}
+          onClose={() => this.setState({ sortDialogOpen: false })}
+          setOpened={opened => this.setState({ sortDialogOpen: opened })}
+        />
+        <EntityListFilterDialog
+          schema={entitySchema}
+          open={this.state.filterDialogOpen}
+          onClose={() => this.setState({ filterDialogOpen: false })}
+          setOpened={opened => this.setState({ filterDialogOpen: opened })}
+          count={this.state.count}
+        />
       </div>
     );
   }
 }
 
-const mapDispatchToProps = { setOrderByField, setOrderByDirection };
+const mapDispatchToProps = { ...EntityActions };
 
 type DispatchProps = typeof mapDispatchToProps;
 
 function mapStateToProps(state: AppState, ownProps: EntitiesListProps) {
   const entitySchema = state.config.schema.find(s => s.options.alias === ownProps.alias)!;
-  const filters = state.entity[entitySchema.options.alias];
+  const entityItemState = state.entity[entitySchema.options.alias];
   return {
     schema: state.config.schema,
     routes: state.router.routes!,
     entitySchema,
-    filters
+    entityItemState
   };
 }
 

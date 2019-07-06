@@ -23,13 +23,7 @@
       "@refract-cms/*": ["../*/src"]
     }
   },
-  "files": [
-    "src/index.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "src/**/*"
-  ]
+  "files": ["src/index.ts"],
+  "exclude": ["node_modules"],
+  "include": ["src/**/*"]
 }

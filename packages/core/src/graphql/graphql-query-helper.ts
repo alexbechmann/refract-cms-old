@@ -1,6 +1,7 @@
 import { EntitySchema } from '../entities/entity-schema';
 import gql from 'graphql-tag';
 import { PropertyType } from '../properties/property-types';
+import { isBasicPropertyType } from '..';
 
 class GraphqlQueryHelper {
   schemaName(alias: string) {
@@ -11,42 +12,34 @@ class GraphqlQueryHelper {
     return `${this.firstLetterToUpper(alias)}${this.firstLetterToUpper(propertyKey)}`;
   }
 
-  getAllQueryWithAllFields(
-    schema: EntitySchema,
-    filters?: {
-      orderByField: string;
-      orderByDirection: 'ASC' | 'DESC';
-    }
-  ) {
-    const propertyTypes = Object.keys(schema.properties).reduce((acc, p) => {
-      acc[p] = schema.properties[p].type;
-      return acc;
-    }, {});
-
-    const queryArgs =
-      filters && filters.orderByField && filters.orderByDirection
-        ? `(sort: {${filters.orderByField}: ${filters.orderByDirection}})`
-        : ``;
+  getAllQueryWithAllFields(schema: EntitySchema) {
     return gql`
-      {
-        items: ${schema.options.alias}EntityList${queryArgs} {
+      query($filter: ${schema.options.alias}EntityFilterType, $sort: ${
+      schema.options.alias
+    }EntitySortType, $pagination: PaginationType){
+        items: ${schema.options.alias}EntityList(filter: $filter, sort: $sort, pagination: $pagination) {
           _id
-          ${this.buildProperties(propertyTypes)}
+          ${this.buildPropertiesFromSchema(schema)}
         }
+        count: ${schema.options.alias}Count(filter: $filter)
       }
     `;
   }
 
-  isBasicPropertyType(propertyType: PropertyType) {
-    return [String, Number, Date, Boolean].find(t => propertyType === t);
+  buildPropertiesFromSchema(schema: EntitySchema<any>) {
+    const propertyTypes = Object.keys(schema.properties).reduce((acc, p) => {
+      acc[p] = schema.properties[p].type;
+      return acc;
+    }, {});
+    return this.buildProperties(propertyTypes);
   }
 
   buildProperties(properties: { [key: string]: PropertyType }): string {
     return Object.keys(properties).map(propertyKey => {
       const propertyType = properties[propertyKey];
       if (
-        this.isBasicPropertyType(propertyType) ||
-        (propertyType instanceof Array && this.isBasicPropertyType(propertyType[0]))
+        isBasicPropertyType(propertyType) ||
+        (propertyType instanceof Array && isBasicPropertyType(propertyType[0]))
       ) {
         return propertyKey;
       } else {

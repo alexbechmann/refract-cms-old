@@ -7,17 +7,24 @@ import { graphqlQueryHelper } from '@refract-cms/core';
 import { combineContainers } from 'combine-containers';
 import { connect } from 'react-redux';
 import { AppState } from '../state/app.state';
+import { graphql } from 'graphql';
+import ApolloClient from 'apollo-client';
+import { buildEntityListQueryOptions } from './state/build-entity-list-query-options';
 
 export interface EditEntityProps extends RouteComponentProps<{ alias: string; id: string | 'new' }> {}
 
-export interface Props extends EditEntityProps, WithApolloClient<any>, ReturnType<typeof mapStateToProps> {}
+export interface Props extends EditEntityProps, WithApolloClient<any>, ReturnType<typeof mapStateToProps> {
+  client: ApolloClient<any>;
+}
 
-const EditEntity = ({ alias, id, client, schema, filters }: Props) => {
+const EditEntity = ({ alias, id, client, schema, entityItemState }: Props) => {
+  const refetchQueryOptions = buildEntityListQueryOptions(entityItemState);
   const createMutation = gql(
     `
   mutation save($record: ${schema.options.alias}Input!){
-    ${alias}Create(record: $record) {
+    update: ${alias}Create(record: $record) {
       _id
+      ${graphqlQueryHelper.buildPropertiesFromSchema(schema)}
     }
   }
   `
@@ -25,8 +32,9 @@ const EditEntity = ({ alias, id, client, schema, filters }: Props) => {
   const updateMutation = gql(
     `
   mutation save($record: ${schema.options.alias}Input!){
-    ${alias}Update(record: $record) {
+    update: ${alias}Update(record: $record) {
       _id
+      ${graphqlQueryHelper.buildPropertiesFromSchema(schema)}
     }
   }
   `
@@ -34,13 +42,7 @@ const EditEntity = ({ alias, id, client, schema, filters }: Props) => {
   const newEntity = !id || id === 'new';
   const mutation = newEntity ? createMutation : updateMutation;
   return (
-    <Mutation
-      mutation={mutation}
-      refetchQueries={[
-        { query: graphqlQueryHelper.getAllQueryWithAllFields(schema, filters) },
-        { query: graphqlQueryHelper.getAllQueryWithAllFields(schema) }
-      ]}
-    >
+    <Mutation mutation={mutation} refetchQueries={[refetchQueryOptions]}>
       {(save, mutationResult) => {
         return (
           <EntityForm
@@ -59,7 +61,11 @@ const EditEntity = ({ alias, id, client, schema, filters }: Props) => {
                     record: recordWithNullInsteadOfUndefined
                   },
                   update: (proxy, updateResult) => {
-                    console.log({ updateResult });
+                    const responseObject = updateResult.data.update;
+                    client.cache.writeData({
+                      id: responseObject._id,
+                      data: responseObject
+                    });
                     resolve();
                   }
                 });
@@ -74,14 +80,11 @@ const EditEntity = ({ alias, id, client, schema, filters }: Props) => {
 
 function mapStateToProps(state: AppState, ownProps: EditEntityProps) {
   const entitySchema = state.config.schema.find(s => s.options.alias === ownProps.alias)!;
-  const filters = state.entity[entitySchema.options.alias] || {
-    orderByDirection: 'ASC',
-    orderByField: undefined
-  };
+  const entityItemState = state.entity[entitySchema.options.alias];
   return {
     routes: state.router.routes!,
     schema: entitySchema,
-    filters
+    entityItemState
   };
 }
 

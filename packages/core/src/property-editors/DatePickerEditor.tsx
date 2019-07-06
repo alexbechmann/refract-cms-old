@@ -1,5 +1,5 @@
 import React from 'react';
-import { DatePicker, MuiPickersUtilsProvider } from 'material-ui-pickers';
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { PropertyEditorProps } from '../properties/property-editor-props';
 import MomentUtils from '@date-io/moment';
 import moment from 'moment';
@@ -7,6 +7,7 @@ import { Theme, withStyles, WithStyles } from '@material-ui/core';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import Event from '@material-ui/icons/Event';
+import { convertDateToSimpleDate } from '../properties/convert-date-to-simple-date';
 
 export interface DatePickerOptions {}
 
@@ -21,12 +22,7 @@ interface Props extends PropertyEditorProps<Date>, WithStyles<typeof styles> {}
 class DatePickerEditor extends React.Component<Props> {
   componentDidMount() {
     if (!this.props.value) {
-      const newDate = new Date();
-      newDate.setHours(0);
-      newDate.setMinutes(0);
-      newDate.setSeconds(0);
-      newDate.setMilliseconds(0);
-      this.props.setValue(newDate);
+      this.props.setValue(convertDateToSimpleDate(new Date()));
     }
   }
 
@@ -36,10 +32,9 @@ class DatePickerEditor extends React.Component<Props> {
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <DatePicker
           className={classes.editor}
-          keyboard
+          allowKeyboardControl
           label={this.props.propertyOptions.displayName}
           format="DD/MM/YYYY"
-          mask={v => (v ? [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/] : [])}
           value={value}
           onChange={(momentDate: moment.Moment) => {
             const newDate = momentDate.toDate();
@@ -52,7 +47,6 @@ class DatePickerEditor extends React.Component<Props> {
           animateYearScrolling={false}
           rightArrowIcon={<ChevronRight />}
           leftArrowIcon={<ChevronLeft />}
-          keyboardIcon={<Event />}
           showTodayButton
         />
       </MuiPickersUtilsProvider>

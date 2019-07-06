@@ -36,9 +36,7 @@ class ImageUploader extends React.Component<Props, State> {
           <div>
             <input hidden onChange={this.handleImageChange} accept="image/*" id="icon-button-file" type="file" />
             <label htmlFor="icon-button-file">
-              <Button color="primary" component="span">
-                Select File to upload
-              </Button>
+              <Button color="primary">Select File to upload</Button>
             </label>
           </div>
         ) : null}

@@ -48,6 +48,7 @@ import Auth from './auth/Auth';
 import { logout } from './auth/state/auth.actions';
 import Notifications from './notifications/Notifications';
 import { FileService } from '@refract-cms/core';
+import { createLinkComponent } from './shared/create-link-component';
 
 const drawerWidth = 240;
 
@@ -106,9 +107,9 @@ const styles = (theme: Theme) =>
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen
       }),
-      width: theme.spacing.unit * 7,
+      width: theme.spacing(7),
       [theme.breakpoints.up('sm')]: {
-        width: theme.spacing.unit * 9
+        width: theme.spacing(9)
       }
     },
     appBarSpacer: theme.mixins.toolbar,
@@ -125,7 +126,7 @@ const styles = (theme: Theme) =>
       height: 320
     },
     h5: {
-      marginBottom: theme.spacing.unit * 2
+      marginBottom: theme.spacing(2)
     }
   });
 
@@ -196,7 +197,7 @@ class Dashboard extends React.Component<Props> {
                   >
                     <MenuIcon />
                   </IconButton>
-                  <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+                  <Typography variant="h6" color="inherit" noWrap className={classes.title}>
                     Content Dashboard
                   </Typography>
                   {/* <IconButton color="inherit">
@@ -227,13 +228,13 @@ class Dashboard extends React.Component<Props> {
                 </div>
                 <Divider />
                 <List>
-                  <ListItem button component={(props: any) => <Link {...props} to={routes.root.createUrl()} />}>
+                  <ListItem button component={createLinkComponent(routes.root.createUrl())}>
                     <ListItemIcon>
                       <DashboardIcon />
                     </ListItemIcon>
                     <ListItemText primary="Overview" />
                   </ListItem>
-                  <ListItem button component={(props: any) => <Link {...props} to={routes.graphql.createUrl()} />}>
+                  <ListItem button component={createLinkComponent(routes.graphql.createUrl())}>
                     <ListItemIcon>
                       <CloudIcon />
                     </ListItemIcon>
@@ -247,14 +248,14 @@ class Dashboard extends React.Component<Props> {
                       <ListItem
                         key={schema.options.alias}
                         button
-                        component={(props: any) => <Link {...props} to={routes.entity.list.createUrl(schema)} />}
+                        component={createLinkComponent(routes.entity.list.createUrl(schema))}
                       >
                         {schema.options.icon && (
                           <ListItemIcon>
                             <schema.options.icon />
                           </ListItemIcon>
                         )}
-                        <ListItemText inset primary={schema.options.displayName || schema.options.alias} />
+                        <ListItemText primary={schema.options.displayName || schema.options.alias} />
                       </ListItem>
                     );
                   })}
@@ -265,7 +266,7 @@ class Dashboard extends React.Component<Props> {
                     <ListItemIcon>
                       <ExitToApp />
                     </ListItemIcon>
-                    <ListItemText inset primary="Logout" />
+                    <ListItemText primary="Logout" />
                   </ListItem>
                 </List>
               </Drawer>

@@ -7,8 +7,5 @@ export default createMuiTheme({
     primary: {
       main: indigo[500]
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });

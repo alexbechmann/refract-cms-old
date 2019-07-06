@@ -19,6 +19,8 @@ export { withCoreContext } from './context/with-core-context';
 export { WithCoreContextProps } from './context/with-core-context-props.model';
 export { default as FileUploader } from './files/FileUploader';
 export { propertyBuilder } from './properties/property-builder';
+export { isBasicPropertyType } from './properties/is-basic-property-type';
+export { convertDateToSimpleDate } from './properties/convert-date-to-simple-date';
 
 // Property Editors
 export { PropertyEditorProps } from './properties/property-editor-props';
@@ -35,3 +37,4 @@ export { default as createMultipleEntityPickerEditor } from './property-editors/
 export { default as createFileUploadEditor } from './property-editors/FileUploaderEditor';
 export { default as createNumberEditor } from './property-editors/NumberEditor';
 export { default as createBooleanEditor } from './property-editors/BooleanEditor';
+export { default as createMarkdownRteEditor } from './property-editors/markdown-rte-editor/MarkdownRteEditor';

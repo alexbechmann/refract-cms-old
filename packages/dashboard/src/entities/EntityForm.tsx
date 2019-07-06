@@ -33,6 +33,7 @@ import Page from '../pages/Page';
 import { addNotification } from '../notifications/state/notification.actions';
 import Delete from '@material-ui/icons/Delete';
 import ArrowBack from '@material-ui/icons/ArrowBack';
+import { buildEntityListQueryOptions } from './state/build-entity-list-query-options';
 
 interface State {
   updateValues: any;
@@ -42,10 +43,10 @@ interface State {
 const styles = (theme: Theme) =>
   createStyles({
     card: {
-      margin: theme.spacing.unit
+      margin: theme.spacing()
     },
     propertyEditor: {
-      marginBottom: theme.spacing.unit * 4
+      marginBottom: theme.spacing(4)
     },
     root: {
       paddingBottom: 70
@@ -112,21 +113,15 @@ class EntityForm extends Component<Props, State> {
         <Page
           title={schema.options.displayName || schema.options.alias}
           actionComponents={[
-            () => (
-              <IconButton onClick={this.back}>
-                <ArrowBack />
-              </IconButton>
-            ),
-            () => (
-              <IconButton onClick={this.delete}>
-                <Delete />
-              </IconButton>
-            ),
-            () => (
-              <Button color="primary" variant="contained" onClick={this.save}>
-                Save
-              </Button>
-            )
+            <IconButton onClick={this.back}>
+              <ArrowBack />
+            </IconButton>,
+            <IconButton onClick={this.delete}>
+              <Delete />
+            </IconButton>,
+            <Button color="primary" variant="contained" onClick={this.save}>
+              Save
+            </Button>
           ]}
         >
           <Grid justify="center" container>
@@ -136,9 +131,9 @@ class EntityForm extends Component<Props, State> {
                   const propertyOptions = schema.properties[propertyKey];
                   return (
                     <div key={index} className={classes.propertyEditor}>
-                      <Grid container spacing={16}>
+                      <Grid container spacing={2}>
                         <Grid item xs={12} sm={12} md={3} lg={3} xl={3}>
-                          <Typography variant="subheading" gutterBottom>
+                          <Typography variant="subtitle1" gutterBottom>
                             {propertyOptions.displayName || propertyKey}
                           </Typography>
                         </Grid>
@@ -187,15 +182,12 @@ class EntityForm extends Component<Props, State> {
 
   delete() {
     if (window.confirm('Are you sure you want to delete?')) {
-      const { client, schema, filters } = this.props;
+      const { client, schema, entityItemState, id } = this.props;
+      const refetchQueryOptions = buildEntityListQueryOptions(entityItemState);
       this.setState({ loading: true }, () => {
         client
           .mutate({
-            refetchQueries: [
-              {
-                query: graphqlQueryHelper.getAllQueryWithAllFields(schema, filters)
-              }
-            ],
+            refetchQueries: [refetchQueryOptions],
             mutation: gql(`
       mutation {
         ${this.props.alias}RemoveById(id: "${this.props.id!}")
@@ -226,15 +218,11 @@ export interface EntityFormProps {
 
 function mapStateToProps(state: AppState, ownProps: EntityFormProps) {
   const entitySchema = state.config.schema.find(s => s.options.alias === ownProps.alias)!;
-  const filters = state.entity[entitySchema.options.alias] || {
-    orderByDirection: 'ASC',
-    orderByField: undefined
-  };
-
+  const entityItemState = state.entity[entitySchema.options.alias];
   return {
     routes: state.router.routes!,
     schema: entitySchema,
-    filters
+    entityItemState
   };
 }
 
