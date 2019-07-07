@@ -1,0 +1,59 @@
+---
+name: Create schema
+menu: 2. Schema
+---
+
+# Create schema
+
+## Create schema file
+
+Create file e.g.: `blog-post.schema.tsx`
+
+```tsx
+import {
+  composeSchema,
+  createTextEditor,
+  createDatePickerEditor,
+  propertyBuilder
+} from "@refract-cms/core";
+import DescriptionIcon from "@material-ui/icons/Description";
+
+export const BlogPostSchema = composeSchema({
+  options: {
+    alias: "blogPost",
+    displayName: "Blog post",
+    icon: DescriptionIcon,
+    instanceDisplayProps: blogPost => ({
+      primaryText: blogPost.title
+    })
+  },
+  properties: {
+    title: {
+      displayName: "Title",
+      editorComponent: createTextEditor(),
+      type: String
+    },
+    date: {
+      displayName: "Date",
+      editorComponent: createDatePickerEditor(),
+      type: Date
+    }
+  }
+});
+```
+
+## Add schema reference to config
+
+Add your new schema to the `refract.config.tsx`
+
+```typescript
+...
+import { BlogPostSchema } from "./news-article.schema";
+
+export default configure({
+  schema: [
+    BlogPostSchema
+    // The rest of your schemas
+  ]
+});
+```
