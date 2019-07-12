@@ -51,10 +51,13 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
     }
   });
 
-  mongoose.connect(
-    serverConfig.mongoConnectionString,
-    { useNewUrlParser: true }
-  );
+  if (mongoose.connection.readyState !== 1) {
+    mongoose.connect(
+      serverConfig.mongoConnectionString,
+      { useNewUrlParser: true }
+    );
+  }
+
   const schemaBuilder = new MongooseSchemaBuilder();
   schemaBuilder.buildSchema(config.schema, serverConfig);
 
