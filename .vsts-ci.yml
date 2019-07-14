@@ -1,12 +1,12 @@
+trigger:
+  - master
+  - release
+  - develop
+
 jobs:
   - job: Linux
     pool:
       vmImage: "vs2017-win2016"
-
-    trigger:
-      - master
-      - release
-      - develop
 
     variables:
       tag: latest
