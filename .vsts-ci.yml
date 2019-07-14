@@ -1,106 +1,107 @@
-queue:
-  name: Hosted Linux Preview
-  demands: npm
+jobs:
+  - job: Linux
+    pool:
+      vmImage: "vs2017-win2016"
 
-trigger:
-  - master
-  - release
-  - develop
+    trigger:
+      - master
+      - release
+      - develop
 
-variables:
-  tag: latest
+    variables:
+      tag: latest
 
-steps:
-  - task: gittools.gitversion.gitversion-task.GitVersion@3
+    steps:
+      - task: gittools.gitversion.gitversion-task.GitVersion@3
 
-  - powershell: echo "##vso[task.setvariable variable=tag]$(GitVersion.PreReleaseLabel)"
-    displayName: "Set pre release tag"
-    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+      - powershell: echo "##vso[task.setvariable variable=tag]$(GitVersion.PreReleaseLabel)"
+        displayName: "Set pre release tag"
+        condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
 
-  - powershell: echo "tag is $(tag)"
-    displayName: "echo tag"
+      - powershell: echo "tag is $(tag)"
+        displayName: "echo tag"
 
-  - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
-    displayName: Yarn install
-    inputs:
-      Arguments: "install"
+      - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
+        displayName: Yarn install
+        inputs:
+          Arguments: "install"
 
-  - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
-    displayName: Yarn test
-    inputs:
-      Arguments: "test"
+      - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
+        displayName: Yarn test
+        inputs:
+          Arguments: "test"
 
-  - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
-    displayName: Yarn run build
-    inputs:
-      Arguments: "run build"
+      - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
+        displayName: Yarn run build
+        inputs:
+          Arguments: "run build"
 
-  - powershell: . 'packages/core/update-package-version.ps1' $(GitVersion.SemVer)
-    displayName: Update package version
+      - powershell: . 'packages/core/update-package-version.ps1' $(GitVersion.SemVer)
+        displayName: Update package version
 
-  - powershell: . 'packages/dashboard/update-package-version.ps1' $(GitVersion.SemVer)
-    displayName: Update package version
+      - powershell: . 'packages/dashboard/update-package-version.ps1' $(GitVersion.SemVer)
+        displayName: Update package version
 
-  - powershell: . 'packages/server/update-package-version.ps1' $(GitVersion.SemVer)
-    displayName: Update package version
+      - powershell: . 'packages/server/update-package-version.ps1' $(GitVersion.SemVer)
+        displayName: Update package version
 
-  - powershell: . 'packages/cli/update-package-version.ps1' $(GitVersion.SemVer)
-    displayName: Update package version
+      - powershell: . 'packages/cli/update-package-version.ps1' $(GitVersion.SemVer)
+        displayName: Update package version
 
-  - powershell: . 'packages/create-app/update-package-version.ps1' $(GitVersion.SemVer)
-    displayName: Update package version
+      - powershell: . 'packages/create-app/update-package-version.ps1' $(GitVersion.SemVer)
+        displayName: Update package version
 
-  - task: Npm@1
-    displayName: npm custom
-    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
-    inputs:
-      command: custom
-      workingDir: packages/core
-      verbose: false
-      customCommand: "publish --access public --tag $(tag)"
-      customEndpoint: npm
-      publishEndpoint: npm
+      - task: Npm@1
+        displayName: npm custom
+        condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+        inputs:
+          command: custom
+          workingDir: packages/core
+          verbose: false
+          customCommand: "publish --access public --tag $(tag)"
+          customEndpoint: npm
+          publishEndpoint: npm
 
-  - task: Npm@1
-    displayName: npm custom
-    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
-    inputs:
-      command: custom
-      workingDir: packages/dashboard
-      verbose: false
-      customCommand: "publish --access public --tag $(tag)"
-      customEndpoint: npm
-      publishEndpoint: npm
+      - task: Npm@1
+        displayName: npm custom
+        condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+        inputs:
+          command: custom
+          workingDir: packages/dashboard
+          verbose: false
+          customCommand: "publish --access public --tag $(tag)"
+          customEndpoint: npm
+          publishEndpoint: npm
 
-  - task: Npm@1
-    displayName: npm custom
-    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
-    inputs:
-      command: custom
-      workingDir: packages/server
-      verbose: false
-      customCommand: "publish --access public --tag $(tag)"
-      customEndpoint: npm
-      publishEndpoint: npm
+      - task: Npm@1
+        displayName: npm custom
+        condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+        inputs:
+          command: custom
+          workingDir: packages/server
+          verbose: false
+          customCommand: "publish --access public --tag $(tag)"
+          customEndpoint: npm
+          publishEndpoint: npm
 
-  - task: Npm@1
-    displayName: npm custom
-    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
-    inputs:
-      command: custom
-      workingDir: packages/cli
-      verbose: false
-      customCommand: "publish --access public --tag $(tag)"
-      customEndpoint: npm
-      publishEndpoint: npm
+      - task: Npm@1
+        displayName: npm custom
+        condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+        inputs:
+          command: custom
+          workingDir: packages/cli
+          verbose: false
+          customCommand: "publish --access public --tag $(tag)"
+          customEndpoint: npm
+          publishEndpoint: npm
 
-  - task: Npm@1
-    displayName: npm custom
-    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
-    inputs:
-      command: custom
-      workingDir: packages/create-app
-      verbose: false
-      customCommand: "publish --access public --tag $(tag)"
-      customEndpoint: npm
-      publishEndpoint: npm
+      - task: Npm@1
+        displayName: npm custom
+        condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+        inputs:
+          command: custom
+          workingDir: packages/create-app
+          verbose: false
+          customCommand: "publish --access public --tag $(tag)"
+          customEndpoint: npm
+          publishEndpoint: npm
