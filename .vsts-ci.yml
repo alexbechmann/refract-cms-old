@@ -1,5 +1,5 @@
 queue:
-  name: Hosted linux
+  name: Hosted Linux Preview
   demands: npm
 
 trigger:
