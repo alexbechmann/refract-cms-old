@@ -4,6 +4,7 @@ import config from '@consumer/config/refract.config';
 import serverConfig from '@consumer/config/server.config';
 import path from 'path';
 import '@babel/polyfill';
+import cors from 'cors';
 
 const server = express();
 
@@ -12,12 +13,12 @@ serverConfig.config = config;
 
 const scriptSrc = process.env.NODE_ENV === 'development' ? 'http://localhost:3001/client.js' : '/public/client.js';
 
+const handler = refractCmsHandler({
+  serverConfig
+});
+
 server
-  .use(
-    ...refractCmsHandler({
-      serverConfig
-    })
-  )
+  .use(handler[0], cors(), handler[1])
   .use('/public', express.static(path.join(__dirname, 'public')))
   .get('/*', (req: express.Request, res: express.Response) => {
     res.send(
