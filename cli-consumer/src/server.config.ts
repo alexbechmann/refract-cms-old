@@ -29,7 +29,10 @@ const serverConfig: CliServerConfig = {
       }
     })
   },
-  resolverPlugins: []
+  resolverPlugins: [],
+  configureExpress: app => {
+    app.get('/test', (req, res) => res.send('hi'));
+  }
 };
 
 export default serverConfig;

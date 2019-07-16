@@ -1,10 +1,11 @@
 import express from 'express';
-import { refractCmsHandler } from '@refract-cms/server';
-import config from '@consumer/config/refract.config';
-import serverConfig from '@consumer/config/server.config';
+import { refractCmsHandler, ServerConfig } from '@refract-cms/server';
+const config = require('@consumer/config/refract.config').default;
+const serverConfig: CliServerConfig & ServerConfig = require('@consumer/config/server.config').default;
 import path from 'path';
 import '@babel/polyfill';
 import cors from 'cors';
+import { CliServerConfig } from '@refract-cms/cli';
 
 const server = express();
 
@@ -16,6 +17,10 @@ const scriptSrc = process.env.NODE_ENV === 'development' ? 'http://localhost:300
 const handler = refractCmsHandler({
   serverConfig
 });
+
+if (serverConfig.configureExpress) {
+  serverConfig.configureExpress(server);
+}
 
 server
   .use(handler[0], cors(), handler[1])
