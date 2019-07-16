@@ -23,36 +23,43 @@ import { GraphQLDate, GraphQLDateTime } from 'graphql-iso-date';
 import chalk from 'chalk';
 import { MongoIdType } from './mongo-id.type';
 import { ResolvedPropertyOptions } from '../resolved-property-options';
+import { singleRefPlugin } from '../plugins/single-ref-plugin';
+import { multipleRefPlugin } from '../plugins/multiple-ref-plugin';
+import produce from 'immer';
 
-export class PublicSchemaBuilder {
+export class SchemaBuilder {
   types: GraphQLObjectType[] = [];
   inputTypes: GraphQLInputObjectType[] = [];
+  serverConfig: ServerConfig;
 
-  constructor(private serverConfig: ServerConfig) {}
+  init(serverConfig: ServerConfig) {
+    this.types = [];
+    this.inputTypes = [];
+    this.serverConfig = produce(serverConfig, newServerConfig => {
+      newServerConfig.resolverPlugins.push(singleRefPlugin);
+      newServerConfig.resolverPlugins.push(multipleRefPlugin);
+    });
+  }
 
-  buildEntityFromSchema({
-    entitySchema,
-    prefixName = '',
-    addResolvers = true,
-    suffixName = ''
-  }: {
-    entitySchema: EntitySchema;
-    prefixName?: string;
-    addResolvers?: boolean;
-    suffixName?: string;
-  }) {
-    const type = this.buildEntity(
-      prefixName + entitySchema.options.alias + suffixName,
-      entitySchema.properties,
-      addResolvers
-    );
-    return type;
+  getTypeFromSchema<T>(entitySchema: EntitySchema<T>) {
+    return this.buildGraphQLObjectFromSchema({
+      entitySchema
+    });
+  }
+
+  getEntityTypeFromSchema<T>(entitySchema: EntitySchema<T>) {
+    return this.buildGraphQLObjectFromSchema({
+      entitySchema,
+      prefixName: '',
+      addResolvers: false,
+      suffixName: 'Entity'
+    });
   }
 
   buildSchema(schema: EntitySchema[]) {
     let publicQueryFields = {};
     schema.forEach(entitySchema => {
-      const type = this.buildEntityFromSchema({
+      const type = this.buildGraphQLObjectFromSchema({
         entitySchema,
         prefixName: '',
         addResolvers: true
@@ -76,16 +83,10 @@ export class PublicSchemaBuilder {
 
     let internalQueryFields = {};
     schema.forEach(entitySchema => {
-      const type = this.buildEntityFromSchema({
-        entitySchema,
-        prefixName: '',
-        addResolvers: true
-      });
       const repository = repositoryForSchema(entitySchema);
-
       internalQueryFields = {
         ...internalQueryFields,
-        ...this.buildInternalFieldQueries(entitySchema, repository, type)
+        ...this.buildInternalFieldQueries(entitySchema, repository)
       };
     });
 
@@ -96,16 +97,11 @@ export class PublicSchemaBuilder {
 
     let mutationFields = {};
     schema.forEach(entitySchema => {
-      const type = this.buildEntityFromSchema({
-        entitySchema,
-        prefixName: '',
-        addResolvers: true
-      });
       const repository = repositoryForSchema(entitySchema);
 
       mutationFields = {
         ...mutationFields,
-        ...this.buildFieldMutations(entitySchema, repository, type)
+        ...this.buildFieldMutations(entitySchema, repository)
       };
     });
 
@@ -124,15 +120,9 @@ export class PublicSchemaBuilder {
 
   buildInternalFieldQueries<TEntity extends Entity & mongoose.Document>(
     entitySchema: EntitySchema<TEntity>,
-    repository: mongoose.Model<TEntity>,
-    type: GraphQLObjectType
+    repository: mongoose.Model<TEntity>
   ) {
-    const entityType = this.buildEntityFromSchema({
-      entitySchema,
-      prefixName: '',
-      addResolvers: false,
-      suffixName: 'Entity'
-    });
+    const entityType = this.getEntityTypeFromSchema(entitySchema);
     const args = getGraphQLQueryArgs(entityType);
     const resolvers = {
       [`${entitySchema.options.alias}EntityList`]: {
@@ -174,7 +164,7 @@ export class PublicSchemaBuilder {
     repository: mongoose.Model<TEntity>,
     type: GraphQLObjectType
   ) {
-    const entityType = this.buildEntityFromSchema({
+    const entityType = this.buildGraphQLObjectFromSchema({
       entitySchema,
       prefixName: '',
       addResolvers: false,
@@ -207,7 +197,7 @@ export class PublicSchemaBuilder {
           }
         )
       },
-      [`${entitySchema.options.alias}Transform`]: {
+      [`${entitySchema.options.alias}Preview`]: {
         type,
         args: {
           record: { type: inputType }
@@ -264,16 +254,10 @@ export class PublicSchemaBuilder {
 
   buildFieldMutations<TEntity extends Entity & mongoose.Document>(
     entitySchema: EntitySchema<TEntity>,
-    repository: mongoose.Model<TEntity>,
-    type: GraphQLObjectType
+    repository: mongoose.Model<TEntity>
   ) {
     const inputType = this.buildInput(`${entitySchema.options.alias}Input`, entitySchema.properties);
-    const entityType = this.buildEntityFromSchema({
-      entitySchema,
-      prefixName: '',
-      addResolvers: false,
-      suffixName: 'Entity'
-    });
+    const entityType = this.getEntityTypeFromSchema(entitySchema);
     return {
       [`${entitySchema.options.alias}Create`]: {
         type: entityType,
@@ -344,7 +328,7 @@ export class PublicSchemaBuilder {
       // @ts-ignore
       // case 'SchemaType': {
       //   // @ts-ignore
-      //   return this.buildEntityFromSchema(propertyType.meta, '');
+      //   return this.buildGraphQLObjectFromSchema(propertyType.meta, '');
       // }
       // case 'Ref': {
       //   const shapeArgs = Object.keys(propertyType.meta.properties).reduce((acc, propertKey) => {
@@ -512,4 +496,25 @@ export class PublicSchemaBuilder {
       }, {})
     });
   }
+
+  private buildGraphQLObjectFromSchema({
+    entitySchema,
+    prefixName = '',
+    addResolvers = true,
+    suffixName = ''
+  }: {
+    entitySchema: EntitySchema;
+    prefixName?: string;
+    addResolvers?: boolean;
+    suffixName?: string;
+  }) {
+    const type = this.buildEntity(
+      prefixName + entitySchema.options.alias + suffixName,
+      entitySchema.properties,
+      addResolvers
+    );
+    return type;
+  }
 }
+
+export const schemaBuilder = new SchemaBuilder();

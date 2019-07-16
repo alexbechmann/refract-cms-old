@@ -1,7 +1,7 @@
 import mocha from 'mocha';
 import chai from 'chai';
-import { PublicSchemaBuilder } from '../../../../packages/server/src/graphql/public-schema.builder';
-import { PropertyType } from '../../../../packages/core/src';
+import { SchemaBuilder } from '../../../../packages/server/src/graphql/schema.builder';
+import { PropertyType, composeSchema, Config, configure, propertyBuilder } from '../../../../packages/core/src';
 import { ProductSchema } from '../../config/products/product.schema';
 import { printType, GraphQLString, GraphQLBoolean, GraphQLFloat } from 'graphql';
 import refractConfig from '../../config/refract.config';
@@ -9,12 +9,16 @@ import { ServerConfig } from 'packages/server/src/server-config.model';
 import { GraphQLDateTime } from 'graphql-iso-date';
 
 const expect = chai.expect;
-
-const publicSchemaBuilder = new PublicSchemaBuilder({ resolverPlugins: [] } as ServerConfig);
+let schemaBuilder: SchemaBuilder;
 
 mocha.describe('build shape', () => {
+  mocha.beforeEach(() => {
+    schemaBuilder = new SchemaBuilder();
+    schemaBuilder.init({ resolverPlugins: [] } as ServerConfig);
+  });
+
   mocha.it('should create valid shape (Location)', () => {
-    const shape = publicSchemaBuilder.buildShape('Location', {
+    const shape = schemaBuilder.buildShape('Location', {
       lat: Number,
       lng: Number,
       deep: {
@@ -37,29 +41,29 @@ type Location {
 
 mocha.describe('build types', () => {
   mocha.it('should create valid string', () => {
-    const type = publicSchemaBuilder.buildType<string>('something', String);
+    const type = schemaBuilder.buildType<string>('something', String);
     expect(type).to.equal(GraphQLString);
   });
 
   mocha.it('should create valid boolean', () => {
-    const type = publicSchemaBuilder.buildType<boolean>('something', Boolean);
+    const type = schemaBuilder.buildType<boolean>('something', Boolean);
     expect(type).to.equal(GraphQLBoolean);
   });
 
   mocha.it('should create valid date', () => {
-    const type = publicSchemaBuilder.buildType<Date>('something', Date);
+    const type = schemaBuilder.buildType<Date>('something', Date);
     expect(type).to.equal(GraphQLDateTime);
   });
 
   mocha.it('should create valid boolean', () => {
-    const type = publicSchemaBuilder.buildType<number>('something', Number);
+    const type = schemaBuilder.buildType<number>('something', Number);
     expect(type).to.equal(GraphQLFloat);
   });
 });
 
 mocha.describe('build entity schema', () => {
   mocha.it('should create valid entity', () => {
-    const type = publicSchemaBuilder.buildEntity('product', ProductSchema.properties);
+    const type = schemaBuilder.buildEntity('product', ProductSchema.properties);
     const expected = `
 type product {
   _id: MongoId
@@ -74,7 +78,46 @@ type product {
   });
 
   mocha.it('should not crash', () => {
-    const schema = publicSchemaBuilder.buildSchema(refractConfig.schema);
+    const schema = schemaBuilder.buildSchema(refractConfig.schema);
+  });
+
+  mocha.it('should correctly create reference schema', () => {
+    const AuthorSchema = composeSchema({
+      options: {
+        alias: 'author'
+      },
+      properties: {
+        name: {
+          type: String
+        }
+      }
+    });
+    const ArticleSchema = composeSchema({
+      options: {
+        alias: 'article'
+      },
+      properties: {
+        title: {
+          type: String
+        },
+        author: propertyBuilder.singleReference(AuthorSchema)
+      }
+    });
+
+    const config: Config = configure({
+      schema: [ArticleSchema, AuthorSchema]
+    });
+
+    const { publicGraphQLSchema } = schemaBuilder.buildSchema(config.schema);
+
+    expect(printType(publicGraphQLSchema.getType('article'))).to.equal(
+      `
+type article {
+  _id: MongoId
+  title: String
+  author: author
+}`.trim()
+    );
   });
 });
 
