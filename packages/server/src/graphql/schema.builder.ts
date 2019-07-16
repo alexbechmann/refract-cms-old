@@ -56,25 +56,6 @@ export class SchemaBuilder {
     });
   }
 
-  private buildGraphQLObjectFromSchema({
-    entitySchema,
-    prefixName = '',
-    addResolvers = true,
-    suffixName = ''
-  }: {
-    entitySchema: EntitySchema;
-    prefixName?: string;
-    addResolvers?: boolean;
-    suffixName?: string;
-  }) {
-    const type = this.buildEntity(
-      prefixName + entitySchema.options.alias + suffixName,
-      entitySchema.properties,
-      addResolvers
-    );
-    return type;
-  }
-
   buildSchema(schema: EntitySchema[]) {
     let publicQueryFields = {};
     schema.forEach(entitySchema => {
@@ -514,6 +495,25 @@ export class SchemaBuilder {
         return acc;
       }, {})
     });
+  }
+
+  private buildGraphQLObjectFromSchema({
+    entitySchema,
+    prefixName = '',
+    addResolvers = true,
+    suffixName = ''
+  }: {
+    entitySchema: EntitySchema;
+    prefixName?: string;
+    addResolvers?: boolean;
+    suffixName?: string;
+  }) {
+    const type = this.buildEntity(
+      prefixName + entitySchema.options.alias + suffixName,
+      entitySchema.properties,
+      addResolvers
+    );
+    return type;
   }
 }
 
