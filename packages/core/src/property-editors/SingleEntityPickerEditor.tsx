@@ -11,6 +11,7 @@ export default (options: SingleEntityPickerOptions) => {
   const MultipleEntityPickerEditor = createMultipleEntityPickerEditor(options);
   return ({ value, setValue, propertyKey, propertyOptions, serverUrl }: PropertyEditorProps<string>) => (
     <MultipleEntityPickerEditor
+      source={{}}
       serverUrl={serverUrl}
       value={[value].filter(Boolean)}
       setValue={newValue => {

@@ -42,6 +42,11 @@ export const ProductSchema = composeSchema({
       editorComponent: CustomDropdownEditor,
       type: Number
     },
+    requiredForCustomDropdownEditor: {
+      type: String,
+      editorComponent: createTextEditor(),
+      displayName: 'For DP Editor'
+    },
     location: {
       displayName: 'Location',
       editorComponent: createLocationEditor(),

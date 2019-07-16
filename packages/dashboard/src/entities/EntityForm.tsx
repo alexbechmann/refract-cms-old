@@ -139,6 +139,7 @@ class EntityForm extends Component<Props, State> {
                         </Grid>
                         <Grid item xs={12} sm={12} md={9} lg={9} xl={9}>
                           <RenderEditor
+                            source={this.state.updateValues}
                             serverUrl={context.serverUrl}
                             setValue={value => {
                               this.setState({
