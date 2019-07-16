@@ -10,13 +10,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export default ({ value, setValue }: PropertyEditorProps<number>) => {
+type Source = { requiredForCustomDropdownEditor: string };
+
+export default ({ value, setValue, source }: PropertyEditorProps<number, Source>) => {
   const classes = useStyles({});
   return (
     <div>
       <Typography className={classes.highlightedText} gutterBottom>
         This is an example of using current theme to render text with secondary color.
+        <br />
+        Other property on source: {source.requiredForCustomDropdownEditor}
       </Typography>
+
       <select value={value} onChange={e => setValue(parseInt(e.target.value, 10))}>
         <option>1</option>
         <option>2</option>
