@@ -33,6 +33,8 @@ export class SchemaBuilder {
   serverConfig: ServerConfig;
 
   init(serverConfig: ServerConfig) {
+    this.types = [];
+    this.inputTypes = [];
     this.serverConfig = produce(serverConfig, newServerConfig => {
       newServerConfig.resolverPlugins.push(singleRefPlugin);
       newServerConfig.resolverPlugins.push(multipleRefPlugin);
