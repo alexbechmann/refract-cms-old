@@ -205,4 +205,12 @@ type articlelocations {
 }`.trim()
     );
   });
+
+  mocha.it('should not crash with null server options', () => {
+    chai.assert.doesNotThrow(() => {
+      var s = new SchemaBuilder();
+      s.init({} as any);
+      s.buildSchema([]);
+    });
+  });
 });
