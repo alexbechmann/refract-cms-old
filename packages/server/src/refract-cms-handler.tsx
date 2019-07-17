@@ -15,7 +15,7 @@ import uniqueString from 'unique-string';
 import fs from 'fs';
 import { MongooseSchemaBuilder } from './persistance/mongoose-schema-builder';
 import mongoose from 'mongoose';
-import { PublicSchemaBuilder } from './graphql/public-schema.builder';
+import { schemaBuilder } from './graphql/schema.builder';
 import expressPlayground from 'graphql-playground-middleware-express';
 import bodyParser from 'body-parser';
 import { requireAuth } from './auth/require-auth.middleware';
@@ -25,8 +25,6 @@ import { multipleRefPlugin } from './plugins/multiple-ref-plugin';
 
 const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => {
   const { config } = serverConfig;
-
-  serverConfig.resolverPlugins = [singleRefPlugin, multipleRefPlugin, ...serverConfig.resolverPlugins];
 
   const router = express.Router();
   const storage = multer.diskStorage({
@@ -51,15 +49,18 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
     }
   });
 
-  mongoose.connect(
-    serverConfig.mongoConnectionString,
-    { useNewUrlParser: true }
-  );
-  const schemaBuilder = new MongooseSchemaBuilder();
-  schemaBuilder.buildSchema(config.schema, serverConfig);
+  if (mongoose.connection.readyState !== 1) {
+    mongoose.connect(
+      serverConfig.mongoConnectionString,
+      { useNewUrlParser: true }
+    );
+  }
 
-  const publicSchemaBuilder = new PublicSchemaBuilder(serverConfig);
-  const { publicGraphQLSchema, internalGraphQLSchema } = publicSchemaBuilder.buildSchema(config.schema);
+  const mongooseSchemaBuilder = new MongooseSchemaBuilder();
+  mongooseSchemaBuilder.buildSchema(config.schema, serverConfig);
+
+  schemaBuilder.init(serverConfig);
+  const { publicGraphQLSchema, internalGraphQLSchema } = schemaBuilder.buildSchema(config.schema);
 
   router.use(
     '/graphql',

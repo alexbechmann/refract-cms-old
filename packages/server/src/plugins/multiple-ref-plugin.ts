@@ -9,16 +9,8 @@ export const multipleRefPlugin = createResolverPlugin({
   alias: 'multipleRef',
   buildFieldConfig: ({ propertyKey, meta, serverConfig, schemaBuilder }) => {
     const refSchema: EntitySchema = meta.schema;
-    const type = schemaBuilder.buildEntityFromSchema({
-      entitySchema: refSchema
-    });
-    const entityType = schemaBuilder.buildEntityFromSchema({
-      entitySchema: refSchema,
-      prefixName: '',
-      addResolvers: false,
-      suffixName: 'Entity'
-    });
-
+    const type = schemaBuilder.getTypeFromSchema(refSchema);
+    const entityType = schemaBuilder.getEntityTypeFromSchema(refSchema);
     return {
       type: new GraphQLList(type),
       args: getGraphQLQueryArgs(entityType),

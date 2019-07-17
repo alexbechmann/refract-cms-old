@@ -51,7 +51,7 @@ const EditEntity = ({ alias, id, client, schema, entityItemState }: Props) => {
             id={id}
             saveEntity={record => {
               const recordWithNullInsteadOfUndefined = Object.keys(record).reduce((acc, recordKey) => {
-                acc[recordKey] = record[recordKey] || null;
+                acc[recordKey] = record[recordKey] === undefined ? null : record[recordKey];
                 return acc;
               }, {});
               // delete recordWithNullInsteadOfUndefined['__typename'];

@@ -5,7 +5,8 @@ import {
   createSingleDropdownEditor,
   createMultipleDropdownEditor,
   Entity,
-  Location
+  Location,
+  createBooleanEditor
 } from '@refract-cms/core';
 import CustomDropdownEditor from '../shared/CustomDropdownEditor';
 import ScatterPlotIcon from '@material-ui/icons/ScatterPlot';
@@ -41,6 +42,11 @@ export const ProductSchema = composeSchema({
       editorComponent: CustomDropdownEditor,
       type: Number
     },
+    requiredForCustomDropdownEditor: {
+      type: String,
+      editorComponent: createTextEditor(),
+      displayName: 'For DP Editor'
+    },
     location: {
       displayName: 'Location',
       editorComponent: createLocationEditor(),
@@ -66,11 +72,15 @@ export const ProductSchema = composeSchema({
         selectOptions: ['Type1', 'Type2']
       }),
       type: [String]
-    }
+    },
     // commaSeperatedTypes: {
     //   mode: 'resolve',
     //   type: String,
     //   resolve: ({ types }) => (types ? types.join(',') : '')
     // }
+    primary: {
+      type: Boolean,
+      editorComponent: createBooleanEditor()
+    }
   }
 });

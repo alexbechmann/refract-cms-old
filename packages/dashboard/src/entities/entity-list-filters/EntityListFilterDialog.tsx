@@ -115,6 +115,7 @@ const EntityListFilterDialog: ComponentType<Props> = ({
               </Grid>
               <Grid item xs={4}>
                 <Editor
+                  source={{} as any}
                   serverUrl=""
                   propertyKey={filter.propertyKey}
                   propertyOptions={schema.properties[filter.propertyKey]}
