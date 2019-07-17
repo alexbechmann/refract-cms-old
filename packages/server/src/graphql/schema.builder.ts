@@ -36,6 +36,7 @@ export class SchemaBuilder {
     this.types = [];
     this.inputTypes = [];
     this.serverConfig = produce(serverConfig, newServerConfig => {
+      newServerConfig.resolverPlugins = newServerConfig.resolverPlugins || [];
       newServerConfig.resolverPlugins.push(singleRefPlugin);
       newServerConfig.resolverPlugins.push(multipleRefPlugin);
     });
