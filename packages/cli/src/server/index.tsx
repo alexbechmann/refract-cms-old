@@ -1,13 +1,17 @@
 import express from 'express';
 import { refractCmsHandler, ServerConfig } from '@refract-cms/server';
-const config = require('@consumer/config/refract.config').default;
-const serverConfig: CliServerConfig & ServerConfig = require('@consumer/config/server.config').default;
+import configImport from '@consumer/config/refract.config';
+import serverConfigImport from '@consumer/config/server.config';
 import path from 'path';
 import '@babel/polyfill';
 import cors from 'cors';
 import { CliServerConfig } from '@refract-cms/cli';
+import { Config } from '@refract-cms/core';
 
 const server = express();
+
+const serverConfig: CliServerConfig & ServerConfig = serverConfigImport;
+const config: Config = configImport;
 
 serverConfig.rootPath = '/cms';
 serverConfig.config = config;
