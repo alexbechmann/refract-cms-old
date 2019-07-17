@@ -1,7 +1,7 @@
 import express from 'express';
 import { refractCmsHandler, ServerConfig } from '@refract-cms/server';
 import configImport from '@consumer/config/refract.config';
-import serverConfigImport from '@consumer/config/server.config');
+import serverConfigImport from '@consumer/config/server.config';
 import path from 'path';
 import '@babel/polyfill';
 import cors from 'cors';
