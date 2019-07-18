@@ -1,10 +1,18 @@
 import mocha from 'mocha';
 import chai from 'chai';
 import { SchemaBuilder } from '../../../../packages/server/src/graphql/schema.builder';
-import { PropertyType, composeSchema, Config, configure, propertyBuilder } from '../../../../packages/core/src';
-import { ProductSchema } from '../../config/products/product.schema';
+import {
+  PropertyType,
+  composeSchema,
+  Config,
+  configure,
+  propertyBuilder,
+  createTextEditor,
+  createLocationEditor,
+  createSingleDropdownEditor,
+  createMultipleDropdownEditor
+} from '../../../../packages/core/src';
 import { printType, GraphQLString, GraphQLBoolean, GraphQLFloat } from 'graphql';
-import refractConfig from '../../config/refract.config';
 import { ServerConfig } from 'packages/server/src/server-config.model';
 import { GraphQLDateTime } from 'graphql-iso-date';
 
@@ -63,6 +71,63 @@ mocha.describe('build types', () => {
 
 mocha.describe('build entity schema', () => {
   mocha.it('should create valid entity', () => {
+    const ProductSchema = composeSchema({
+      options: {
+        alias: 'product',
+        displayName: 'Product',
+        instanceDisplayProps: product => ({
+          primaryText: `${product.title}`,
+          secondaryText: product.productType
+        })
+      },
+      properties: {
+        title: {
+          displayName: 'Title',
+          editorComponent: createTextEditor({
+            maxLength: 30
+          }),
+          defaultValue: '',
+          type: String
+        },
+        productType: {
+          displayName: 'Product type',
+          editorComponent: createTextEditor({ maxLength: 10 }),
+          defaultValue: 'default',
+          type: String
+        },
+        customNumber: {
+          displayName: 'Custom number',
+          defaultValue: 3,
+          type: Number
+        },
+        location: {
+          displayName: 'Location',
+          editorComponent: createLocationEditor(),
+          defaultValue: {
+            lng: 15,
+            lat: 23
+          },
+          type: {
+            lat: Number,
+            lng: Number
+          }
+        },
+        category: {
+          displayName: 'Category',
+          editorComponent: createSingleDropdownEditor({
+            selectOptions: ['Electronics', 'Food']
+          }),
+          type: String
+        },
+        types: {
+          displayName: 'Types',
+          editorComponent: createMultipleDropdownEditor({
+            selectOptions: ['Type1', 'Type2']
+          }),
+          type: [String]
+        }
+      }
+    });
     const type = schemaBuilder.buildEntity('product', ProductSchema.properties);
     const expected = `
 type product {
@@ -75,10 +140,6 @@ type product {
   types: [String]
 }`;
     expect(printType(type)).to.equal(expected.trim());
-  });
-
-  mocha.it('should not crash', () => {
-    const schema = schemaBuilder.buildSchema(refractConfig.schema);
   });
 
   mocha.it('should correctly create reference schema', () => {
@@ -100,7 +161,21 @@ type product {
         title: {
           type: String
         },
-        author: propertyBuilder.singleReference(AuthorSchema)
+        author: propertyBuilder.singleReference(AuthorSchema),
+        tags: {
+          type: [String]
+        },
+        locations: {
+          type: [
+            {
+              lat: Number,
+              lng: Number
+            }
+          ]
+        },
+        primary: {
+          type: Boolean
+        }
       }
     });
 
@@ -116,9 +191,26 @@ type article {
   _id: MongoId
   title: String
   author: author
+  tags: [String]
+  locations: [articlelocations]
+  primary: Boolean
+}`.trim()
+    );
+
+    expect(printType(publicGraphQLSchema.getType('articlelocations'))).to.equal(
+      `
+type articlelocations {
+  lat: Float
+  lng: Float
 }`.trim()
     );
   });
-});
 
-mocha.describe('build entire schema', () => {});
+  mocha.it('should not crash with null server options', () => {
+    chai.assert.doesNotThrow(() => {
+      var s = new SchemaBuilder();
+      s.init({} as any);
+      s.buildSchema([]);
+    });
+  });
+});
