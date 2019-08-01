@@ -1,5 +1,6 @@
 import { configure, FileSystemImageSchema } from '@refract-cms/core';
 
 export default configure({
-  schema: [FileSystemImageSchema]
+  schema: [FileSystemImageSchema],
+  rootPath: '/'
 });

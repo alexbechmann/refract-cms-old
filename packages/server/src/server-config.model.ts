@@ -3,7 +3,6 @@ import { ResolverPlugin } from './plugins/resolver-plugin.model';
 
 export interface ServerConfig {
   config: Config;
-  rootPath: string;
   mongoConnectionString: string;
   filesPath: string;
   auth: {

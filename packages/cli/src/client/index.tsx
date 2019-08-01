@@ -9,7 +9,7 @@ import { ThemeProvider } from '@material-ui/styles';
 
 render(
   <ThemeProvider theme={theme}>
-    <Dashboard config={config} rootPath="/" serverUrl="/cms" />
+    <Dashboard config={config} rootPath={config.rootPath} serverUrl={config.rootPath} />
   </ThemeProvider>,
   document.getElementById('root')
 );

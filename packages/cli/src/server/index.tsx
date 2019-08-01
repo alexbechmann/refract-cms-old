@@ -13,7 +13,7 @@ const server = express();
 const serverConfig: CliServerConfig & ServerConfig = serverConfigImport;
 const config: Config = configImport;
 
-serverConfig.rootPath = '/cms';
+config.rootPath = config.rootPath || '/';
 serverConfig.config = config;
 
 const scriptSrc = process.env.NODE_ENV === 'development' ? 'http://localhost:3001/client.js' : '/public/client.js';
@@ -26,10 +26,12 @@ if (serverConfig.configureExpress) {
   serverConfig.configureExpress(server);
 }
 
+console.log(`Serving dashboard at ${config.rootPath}*`);
+
 server
   .use(handler[0], cors(), handler[1])
-  .use('/public', express.static(path.join(__dirname, 'public')))
-  .get('/*', (req: express.Request, res: express.Response) => {
+  //.use('/public', express.static(path.join(__dirname, 'public')))
+  .get(`${config.rootPath}*`, (req: express.Request, res: express.Response) => {
     res.send(
       `<!doctype html>
 <html lang="">

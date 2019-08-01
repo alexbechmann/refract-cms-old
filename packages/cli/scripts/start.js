@@ -33,15 +33,15 @@ function main() {
 
   function logHelperUrlsIfNecessary() {
     if (clientCompiled && serverCompiled && !hasLoggedHelperUrls) {
-      console.log(`Dashboard: ${chalk.magenta("http://localhost:3000")}`);
-      console.log(
-        `GraphiQL: ${chalk.magenta("http://localhost:3000/cms/graphql")}`
-      );
-      console.log(
-        `GraphQL Playground: ${chalk.magenta(
-          "http://localhost:3000/cms/graphql-playground"
-        )}`
-      );
+      // console.log(`Dashboard: ${chalk.magenta("http://localhost:3000")}`);
+      // console.log(
+      //   `GraphiQL: ${chalk.magenta("http://localhost:3000/cms/graphql")}`
+      // );
+      // console.log(
+      //   `GraphQL Playground: ${chalk.magenta(
+      //     "http://localhost:3000/cms/graphql-playground"
+      //   )}`
+      // );
       hasLoggedHelperUrls = true;
     }
   }

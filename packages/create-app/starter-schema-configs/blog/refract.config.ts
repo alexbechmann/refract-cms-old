@@ -4,5 +4,6 @@ import { BlogPostCategorySchema } from './schemas/blog-post-category.schema';
 import { AuthorSchema } from './schemas/author.schema';
 
 export default configure({
-  schema: [BlogPostSchema, AuthorSchema, BlogPostCategorySchema, FileSystemImageSchema]
+  schema: [BlogPostSchema, AuthorSchema, BlogPostCategorySchema, FileSystemImageSchema],
+  rootPath: '/'
 });
