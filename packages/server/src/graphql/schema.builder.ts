@@ -12,7 +12,6 @@ import {
   GraphQLInt,
   GraphQLScalarType
 } from 'graphql';
-import { merge } from 'lodash';
 import mongoose from 'mongoose';
 import { ServerConfig } from '../server-config.model';
 // import { Properties, buildHelpers } from '../create-public-schema';
@@ -26,6 +25,7 @@ import { ResolvedPropertyOptions } from '../resolved-property-options';
 import { singleRefPlugin } from '../plugins/single-ref-plugin';
 import { multipleRefPlugin } from '../plugins/multiple-ref-plugin';
 import produce from 'immer';
+import { emitGraphqlCodeGen } from './emit-graphql-codegen';
 
 export class SchemaBuilder {
   types: GraphQLObjectType[] = [];
@@ -112,6 +112,10 @@ export class SchemaBuilder {
     });
 
     const internalGraphQLSchema = new GraphQLSchema({ query: internalQuery, mutation });
+
+    if (this.serverConfig.codeGenOptions) {
+      emitGraphqlCodeGen(publicGraphQLSchema, this.serverConfig).catch(console.log);
+    }
 
     return {
       publicGraphQLSchema,

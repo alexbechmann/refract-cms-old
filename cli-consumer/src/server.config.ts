@@ -7,6 +7,7 @@ import { createResolver } from '@refract-cms/server';
 // import { ProductSchema } from './products/product.schema';
 // import { NewsArticleSchema } from './news/news-article.schema';
 // import { SettingsSchema } from './settings/settings.schema';
+import path from 'path';
 
 const serverConfig: CliServerConfig = {
   mongoConnectionString: 'mongodb://localhost:27018/cli-consumer',
@@ -32,6 +33,9 @@ const serverConfig: CliServerConfig = {
   resolverPlugins: [],
   configureExpress: app => {
     app.get('/test', (req, res) => res.send('hi'));
+  },
+  codeGenOptions: {
+    outputPath: path.resolve(process.cwd(), 'generated')
   }
 };
 

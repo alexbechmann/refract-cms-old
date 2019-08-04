@@ -22,16 +22,10 @@ const handler = refractCmsHandler({
   serverConfig
 });
 
-if (serverConfig.configureExpress) {
-  serverConfig.configureExpress(server);
-}
-
-console.log(`Serving dashboard at ${config.rootPath}*`);
-
 server
   .use(handler[0], cors(), handler[1])
-  //.use('/public', express.static(path.join(__dirname, 'public')))
-  .get(`${config.rootPath}*`, (req: express.Request, res: express.Response) => {
+  .use('/public', express.static(path.join(__dirname, 'public')))
+  .get(`${config.rootPath}*`, (req, res) => {
     res.send(
       `<!doctype html>
 <html lang="">
@@ -49,5 +43,9 @@ server
 </html>`
     );
   });
+
+if (serverConfig.configureExpress) {
+  serverConfig.configureExpress(server);
+}
 
 export default server;

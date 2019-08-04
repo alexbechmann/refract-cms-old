@@ -1,5 +1,6 @@
 import { Config, PropertyType } from '@refract-cms/core';
 import { ResolverPlugin } from './plugins/resolver-plugin.model';
+import { ASTNode } from 'graphql';
 
 export interface ServerConfig {
   config: Config;
@@ -24,4 +25,8 @@ export interface ServerConfig {
     };
   };
   resolverPlugins?: ResolverPlugin[];
+  codeGenOptions?: {
+    outputPath: string;
+    queries?: ASTNode[];
+  };
 }

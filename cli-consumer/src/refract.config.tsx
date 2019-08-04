@@ -1,4 +1,3 @@
-import React from 'react';
 import { configure, FileSystemImageSchema } from '@refract-cms/core';
 import { NewsArticleSchema } from './news/news-article.schema';
 import { SettingsSchema } from './settings/settings.schema';

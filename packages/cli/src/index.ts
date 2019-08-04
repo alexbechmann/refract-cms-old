@@ -28,6 +28,9 @@ export default express()
       return;
     }
     console.log(`> Started on port ${port}`);
+    console.log(`Dashboard: ${chalk.magenta('http://localhost:3000')}`);
+    console.log(`GraphiQL: ${chalk.magenta('http://localhost:3000/cms/graphql')}`);
+    console.log(`GraphQL Playground: ${chalk.magenta('http://localhost:3000/cms/graphql-playground')}`);
   });
 
 // workaround for ts local development
