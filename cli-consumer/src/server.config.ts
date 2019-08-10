@@ -36,7 +36,17 @@ const serverConfig: CliServerConfig = {
   },
   codeGenOptions: {
     outputPath: path.resolve(process.cwd(), 'generated')
-  }
+  },
+  events: {
+    onSchemaBuilt: () => console.log('hi from consumer')
+  },
+  plugins: [
+    {
+      events: {
+        onSchemaBuilt: () => console.log('hi from plugin')
+      }
+    }
+  ]
 };
 
 export default serverConfig;

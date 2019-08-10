@@ -1,6 +1,6 @@
 export { default as refractCmsHandler } from './refract-cms-handler';
 export { repositoryForSchema } from './repository-for-schema';
-export { ServerConfig } from './server-config.model';
+export { ServerConfig } from './config/server-config.model';
 export { createResolver } from './graphql/create-resolver';
 export { SchemaBuilder } from './graphql/schema.builder';
 export { RefractGraphQLContext } from './graphql/refract-graphql-context';

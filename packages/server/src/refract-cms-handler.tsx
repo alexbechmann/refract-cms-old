@@ -6,7 +6,7 @@ import { Config, graphqlQueryHelper, FileModel, Crop, EntitySchema } from '@refr
 import { merge } from 'lodash';
 import { printType } from 'graphql';
 import { MongoClient, Db, ObjectId } from 'mongodb';
-import { ServerConfig } from './server-config.model';
+import { ServerConfig } from './config/server-config.model';
 import { RequestHandlerParams } from 'express-serve-static-core';
 import multer from 'multer';
 import jimp from 'jimp';
@@ -22,6 +22,7 @@ import { requireAuth } from './auth/require-auth.middleware';
 import { RefractGraphQLContext } from './graphql/refract-graphql-context';
 import { singleRefPlugin } from './plugins/single-ref-plugin';
 import { multipleRefPlugin } from './plugins/multiple-ref-plugin';
+import { buildServerOptions } from './config/create-server-options';
 
 const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => {
   const { config } = serverConfig;
@@ -56,10 +57,12 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
     );
   }
 
+  const serverOptions = buildServerOptions(serverConfig);
+
   const mongooseSchemaBuilder = new MongooseSchemaBuilder();
   mongooseSchemaBuilder.buildSchema(config.schema, serverConfig);
 
-  schemaBuilder.init(serverConfig);
+  schemaBuilder.init(serverOptions);
   const { publicGraphQLSchema, internalGraphQLSchema } = schemaBuilder.buildSchema(config.schema);
 
   router.use(

@@ -1,26 +1,68 @@
 import express from 'express';
-import { ServerConfig, SchemaBuilder } from '@refract-cms/server';
+import {} from '@refract-cms/server';
+import { Config, EntitySchema } from '@refract-cms/core';
+import merge from 'lodash/merge';
 
-interface ResolverPlugin<T extends PropertyType = any> {
-  alias: string;
-  buildFieldConfig: (
-    args: {
-      propertyKey: string;
-      meta: any;
-      serverConfig: ServerConfig;
-      schemaBuilder: SchemaBuilder;
-    }
-  ) => GraphQLFieldConfig<any, RefractGraphQLContext>;
+interface Events {
+  onSave?: () => void;
 }
 
-function createResolverPlugin<T extends PropertyType = any>(plugin: ResolverPlugin<T>) {
-  return plugin;
+interface ServerOptions {
+  schemas?: EntitySchema[];
+  events?: Events;
+  resolverPlugins?: any[];
+  addExpressRouter?: () => express.Router;
 }
 
-interface Plugin {
-  resolverPlugins: ResolverPlugin[];
-  addExpressRouter: () => express.Router;
-  events: {
-    onSave?: () => void;
+interface ServerConfig {
+  schemas?: EntitySchema[];
+  resolverPlugins?: any[];
+  events: Events[];
+  routers: express.Router[];
+}
+
+interface PluginManifest {}
+
+interface ServerPlugin extends ServerOptions {}
+
+interface DashboardConfig {
+  config: Config;
+  components: {
+    login: React.ComponentType<any>;
   };
 }
+
+interface DashboardPlugin {
+  configure: (serverConfig: DashboardConfig) => void;
+}
+
+const ActiveDirectoryServerPlugin: ServerPlugin = {
+  schemas: [],
+  events: {
+    onSave: console.log
+  }
+};
+
+const ActiveDirectoryDashboardPlugin: DashboardPlugin = {
+  configure: c => {
+    c.config;
+  }
+};
+
+const serverOptions: ServerOptions = {
+  schemas: []
+};
+
+function buildServerConfig(...serverOptionsConfigs: ServerOptions[]): ServerConfig {
+  const { resolverPlugins, schemas }: ServerOptions = serverOptionsConfigs.reduce((acc, s) => {
+    return merge(acc, s);
+  }, {});
+  return {
+    resolverPlugins,
+    schemas,
+    events: serverOptionsConfigs.map(o => o.events),
+    routers: serverOptionsConfigs.map(o => o.addExpressRouter())
+  };
+}
+
+buildServerConfig(serverOptions, ActiveDirectoryServerPlugin);

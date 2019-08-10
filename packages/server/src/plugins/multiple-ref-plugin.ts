@@ -7,7 +7,7 @@ import { merge } from 'lodash';
 
 export const multipleRefPlugin = createResolverPlugin({
   alias: 'multipleRef',
-  buildFieldConfig: ({ propertyKey, meta, serverConfig, schemaBuilder }) => {
+  buildFieldConfig: ({ propertyKey, meta, serverOptions, schemaBuilder }) => {
     const refSchema: EntitySchema = meta.schema;
     const type = schemaBuilder.getTypeFromSchema(refSchema);
     const entityType = schemaBuilder.getEntityTypeFromSchema(refSchema);

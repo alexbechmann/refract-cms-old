@@ -13,7 +13,6 @@ const server = express();
 const serverConfig: CliServerConfig & ServerConfig = serverConfigImport;
 const config: Config = configImport;
 
-config.rootPath = config.rootPath || '/';
 serverConfig.config = config;
 
 const scriptSrc = process.env.NODE_ENV === 'development' ? 'http://localhost:3001/client.js' : '/public/client.js';
@@ -25,7 +24,7 @@ const handler = refractCmsHandler({
 server
   .use(handler[0], cors(), handler[1])
   .use('/public', express.static(path.join(__dirname, 'public')))
-  .get(`${config.rootPath}*`, (req, res) => {
+  .get(`*`, (req, res) => {
     res.send(
       `<!doctype html>
 <html lang="">

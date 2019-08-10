@@ -1,6 +1,6 @@
 import { EntitySchema } from '@refract-cms/core';
 import mongoose, { SchemaTypeOpts, Schema, SchemaType, mongo } from 'mongoose';
-import { ServerConfig } from '../server-config.model';
+import { ServerConfig } from '../config/server-config.model';
 
 export class MongooseSchemaBuilder {
   constructor() {}

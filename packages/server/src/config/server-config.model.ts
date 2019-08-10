@@ -1,8 +1,10 @@
 import { Config, PropertyType } from '@refract-cms/core';
-import { ResolverPlugin } from './plugins/resolver-plugin.model';
+import { ResolverPlugin } from '../plugins/resolver-plugin.model';
 import { ASTNode } from 'graphql';
+import { ServerPlugin } from '../plugins/server-plugin.model';
+import { ServerOptionsArgs } from './server-options-args.model';
 
-export interface ServerConfig {
+export interface ServerConfig extends ServerOptionsArgs {
   config: Config;
   mongoConnectionString: string;
   filesPath: string;
@@ -16,15 +18,7 @@ export interface ServerConfig {
       secret: string;
     };
   };
-  resolvers?: {
-    [key: string]: {
-      [key: string]: {
-        type: PropertyType;
-        resolve?: any;
-      };
-    };
-  };
-  resolverPlugins?: ResolverPlugin[];
+  plugins?: ServerPlugin[];
   codeGenOptions?: {
     outputPath: string;
     queries?: ASTNode[];

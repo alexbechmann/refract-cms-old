@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import jwt from 'jsonwebtoken';
-import { ServerConfig } from '../server-config.model';
+import { ServerConfig } from '../config/server-config.model';
 import { AuthToken } from '@refract-cms/core';
 
 class AuthService {

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { tokenService } from './token.service';
-import { ServerConfig } from '../server-config.model';
+import { ServerConfig } from '../config/server-config.model';
 
 export const requireAuth = (serverConfig: ServerConfig) => (req: Request, res: Response, next: NextFunction) => {
   try {
