@@ -5,8 +5,8 @@ import { ServerConfig } from '../config/server-config.model';
 export class MongooseSchemaBuilder {
   constructor() {}
 
-  buildSchema(schema: EntitySchema[], serverConfig: ServerConfig) {
-    schema.forEach(entitySchema => {
+  buildSchema(schemas: EntitySchema[]) {
+    schemas.forEach(entitySchema => {
       this.configureEntitySchema(entitySchema);
     });
   }

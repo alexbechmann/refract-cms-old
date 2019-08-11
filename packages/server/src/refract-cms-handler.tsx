@@ -60,10 +60,10 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
   const serverOptions = buildServerOptions(serverConfig);
 
   const mongooseSchemaBuilder = new MongooseSchemaBuilder();
-  mongooseSchemaBuilder.buildSchema(config.schema, serverConfig);
+  mongooseSchemaBuilder.buildSchema(serverOptions.schemas);
 
   schemaBuilder.init(serverOptions);
-  const { publicGraphQLSchema, internalGraphQLSchema } = schemaBuilder.buildSchema(config.schema);
+  const { publicGraphQLSchema, internalGraphQLSchema } = schemaBuilder.buildSchema(serverOptions.schemas);
 
   router.use(
     '/graphql',

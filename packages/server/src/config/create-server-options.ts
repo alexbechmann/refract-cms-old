@@ -6,16 +6,19 @@ import { ServerConfig } from './server-config.model';
 
 export function buildServerOptions(serverConfig: ServerConfig): ServerOptions {
   const serverOptionsConfigs: ServerOptionsArgs[] = [serverConfig, ...serverConfig.plugins];
-  const { resolverPlugins, schemas, resolvers }: ServerOptions = serverOptionsConfigs.reduce<ServerOptions>(
+  const { resolverPlugins, resolvers, config }: ServerOptionsArgs = serverOptionsConfigs.reduce<ServerOptionsArgs>(
     merge,
     {} as any
   );
-  const options = {
+  return {
+    config: {
+      ...config,
+      rootPath: serverConfig.config.rootPath
+    },
     resolverPlugins,
-    schemas,
+    schemas: config.schema,
     resolvers,
     events: Array.prototype.concat(serverOptionsConfigs.map(o => o.events)).filter(Boolean),
     routers: [] // Array.prototype.concat(serverOptionsConfigs.map(o => o.addExpressRouter()))
   };
-  return options;
 }
