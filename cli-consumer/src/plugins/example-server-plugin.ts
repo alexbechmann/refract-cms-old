@@ -1,4 +1,4 @@
-import { ServerPlugin } from '@refract-cms/server';
+import { createServerPlugin } from '@refract-cms/server';
 import { composeSchema, createTextEditor, PluginConfig } from '@refract-cms/core';
 import PersonIcon from '@material-ui/icons/Person';
 
@@ -25,14 +25,13 @@ export const ActiveDirectoryUserSchema = composeSchema({
   }
 });
 
-const ExamplePluginConfig: PluginConfig = {
+const examplePluginConfig: PluginConfig = {
   name: 'Example',
   schema: [ActiveDirectoryUserSchema]
 };
 
-export const ExampleServerPlugin: ServerPlugin = {
-  config: ExamplePluginConfig,
+export const exampleServerPlugin = createServerPlugin(examplePluginConfig, {
   events: {
     onSchemaBuilt: () => console.log('hi from plugin2')
   }
-};
+});

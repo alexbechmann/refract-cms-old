@@ -8,3 +8,4 @@ export { MongooseSchemaBuilder } from './persistance/mongoose-schema-builder';
 export { createResolverPlugin } from './plugins/create-resolver-plugin';
 export { ResolverPlugin } from './plugins/resolver-plugin.model';
 export { ServerPlugin } from './plugins/server-plugin.model';
+export { createServerPlugin } from './plugins/create-server-plugin';

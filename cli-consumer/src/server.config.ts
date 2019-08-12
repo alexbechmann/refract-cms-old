@@ -8,7 +8,7 @@ import { createResolver } from '@refract-cms/server';
 // import { NewsArticleSchema } from './news/news-article.schema';
 // import { SettingsSchema } from './settings/settings.schema';
 import path from 'path';
-import { ExampleServerPlugin } from './plugins/example-server-plugin';
+import { exampleServerPlugin } from './plugins/example-server-plugin';
 
 const serverConfig: CliServerConfig = {
   mongoConnectionString: 'mongodb://localhost:27018/cli-consumer',
@@ -41,7 +41,7 @@ const serverConfig: CliServerConfig = {
   events: {
     onSchemaBuilt: () => console.log('hi from consumer')
   },
-  plugins: [ExampleServerPlugin]
+  plugins: [exampleServerPlugin]
 };
 
 export default serverConfig;
