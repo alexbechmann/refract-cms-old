@@ -21,10 +21,12 @@ const handler = refractCmsHandler({
   serverConfig
 });
 
+const rootPath = config.rootPath || '/';
+
 server
   .use(handler[0], cors(), handler[1])
   .use('/public', express.static(path.join(__dirname, 'public')))
-  .get(`*`, (req, res) => {
+  .get(`${rootPath}*`, (req, res) => {
     res.send(
       `<!doctype html>
 <html lang="">

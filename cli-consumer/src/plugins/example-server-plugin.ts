@@ -32,6 +32,6 @@ const examplePluginConfig: PluginConfig = {
 
 export const exampleServerPlugin = createServerPlugin(examplePluginConfig, {
   events: {
-    onSchemaBuilt: () => console.log('hi from plugin2')
+    onSchemaBuilt: () => console.log('hi from plugin')
   }
 });

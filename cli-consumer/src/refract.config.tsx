@@ -5,6 +5,6 @@ import { ProductSchema } from './products/product.schema';
 import config from '../../packages/create-app/starter-schema-configs/blog/refract.config';
 
 export default configure({
-  schema: [ProductSchema, NewsArticleSchema, SettingsSchema, ...config.schema],
+  schema: [NewsArticleSchema, SettingsSchema, ProductSchema, ...config.schema],
   rootPath: '/admin'
 });

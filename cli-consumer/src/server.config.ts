@@ -3,12 +3,12 @@ import { CliServerConfig } from '@refract-cms/cli';
 import { ProductSchema } from './products/product.schema';
 import { NewsArticleSchema } from './news/news-article.schema';
 import { createResolver } from '@refract-cms/server';
-// import { RefractTypes } from '@refract-cms/core';
 // import { ProductSchema } from './products/product.schema';
 // import { NewsArticleSchema } from './news/news-article.schema';
 // import { SettingsSchema } from './settings/settings.schema';
 import path from 'path';
 import { exampleServerPlugin } from './plugins/example-server-plugin';
+// import next from 'next';
 
 const serverConfig: CliServerConfig = {
   mongoConnectionString: 'mongodb://localhost:27018/cli-consumer',
@@ -33,7 +33,14 @@ const serverConfig: CliServerConfig = {
   },
   resolverPlugins: [],
   configureExpress: app => {
-    app.get('/test', (req, res) => res.send('hi'));
+    const dev = process.env.NODE_ENV !== 'production';
+    //const nextApp = next({ dev });
+    // const handle = nextApp.getRequestHandler();
+    // nextApp.prepare().then(() => {
+    //   app.get('*', (req, res) => {
+    //     handle(req, res);
+    //   });
+    // });
   },
   codeGenOptions: {
     outputPath: path.resolve(process.cwd(), 'generated')
