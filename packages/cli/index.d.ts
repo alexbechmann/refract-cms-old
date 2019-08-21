@@ -1,6 +1,7 @@
 import { Omit, Theme } from '@material-ui/core';
 import { ServerConfig } from '@refract-cms/server';
 import { Config } from '@refract-cms/core';
+import express from 'express';
 
 declare module '@refract-cms/cli' {
   export interface CliServerConfig extends Omit<ServerConfig, 'rootPath' | 'config'> {
