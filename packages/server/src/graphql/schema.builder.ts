@@ -113,6 +113,8 @@ export class SchemaBuilder {
 
     const internalGraphQLSchema = new GraphQLSchema({ query: internalQuery, mutation });
 
+    console.log(this.serverOptions);
+
     this.serverOptions.events
       .filter(e => Boolean(e.onSchemaBuilt))
       .forEach(events => {

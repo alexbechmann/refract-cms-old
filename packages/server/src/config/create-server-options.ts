@@ -19,13 +19,13 @@ export function buildServerOptions(serverConfig: ServerConfig): ServerOptions {
     });
     return acc;
   }, []);
-
+  const events = Array.prototype.concat(serverOptionsConfigs.map(o => o.events)).filter(Boolean) || [];
   return {
     config,
     resolverPlugins,
     schemas,
     resolvers,
-    events: Array.prototype.concat(serverOptionsConfigs.map(o => o.events)).filter(Boolean),
+    events,
     routers: [] // Array.prototype.concat(serverOptionsConfigs.map(o => o.addExpressRouter()))
   };
 }
