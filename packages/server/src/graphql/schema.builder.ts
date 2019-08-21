@@ -12,9 +12,7 @@ import {
   GraphQLInt,
   GraphQLScalarType
 } from 'graphql';
-import { merge } from 'lodash';
 import mongoose from 'mongoose';
-import { ServerConfig } from '../server-config.model';
 // import { Properties, buildHelpers } from '../create-public-schema';
 import { repositoryForSchema } from '../repository-for-schema';
 import { getGraphQLQueryArgs, getMongoDbQueryResolver, getMongoDbFilter } from 'graphql-to-mongodb';
@@ -26,19 +24,21 @@ import { ResolvedPropertyOptions } from '../resolved-property-options';
 import { singleRefPlugin } from '../plugins/single-ref-plugin';
 import { multipleRefPlugin } from '../plugins/multiple-ref-plugin';
 import produce from 'immer';
+import { emitGraphqlCodeGen } from './emit-graphql-codegen';
+import { ServerOptions } from '../config/server-options.model';
 
 export class SchemaBuilder {
   types: GraphQLObjectType[] = [];
   inputTypes: GraphQLInputObjectType[] = [];
-  serverConfig: ServerConfig;
+  serverOptions: ServerOptions;
 
-  init(serverConfig: ServerConfig) {
+  init(serverOptions: ServerOptions) {
     this.types = [];
     this.inputTypes = [];
-    this.serverConfig = produce(serverConfig, newServerConfig => {
-      newServerConfig.resolverPlugins = newServerConfig.resolverPlugins || [];
-      newServerConfig.resolverPlugins.push(singleRefPlugin);
-      newServerConfig.resolverPlugins.push(multipleRefPlugin);
+    this.serverOptions = produce(serverOptions, newServerOptions => {
+      newServerOptions.resolverPlugins = newServerOptions.resolverPlugins || [];
+      newServerOptions.resolverPlugins.push(singleRefPlugin);
+      newServerOptions.resolverPlugins.push(multipleRefPlugin);
     });
   }
 
@@ -112,6 +112,16 @@ export class SchemaBuilder {
     });
 
     const internalGraphQLSchema = new GraphQLSchema({ query: internalQuery, mutation });
+
+    console.log(this.serverOptions);
+
+    this.serverOptions.events
+      .filter(e => Boolean(e.onSchemaBuilt))
+      .forEach(events => {
+        events.onSchemaBuilt(publicGraphQLSchema);
+      });
+
+    // //emitGraphqlCodeGen(publicGraphQLSchema, this.serverOptions).catch(console.log);
 
     return {
       publicGraphQLSchema,
@@ -420,7 +430,8 @@ export class SchemaBuilder {
     if (existingType) {
       return existingType;
     }
-    const extraProperties = this.serverConfig.resolvers && addResolvers ? this.serverConfig.resolvers[alias] || {} : {};
+    const extraProperties =
+      this.serverOptions.resolvers && addResolvers ? this.serverOptions.resolvers[alias] || {} : {};
 
     const editableAndResolvedProperties = {
       ...properties,
@@ -445,15 +456,15 @@ export class SchemaBuilder {
             } else if (
               addResolvers &&
               propertyOptions.resolverPlugin &&
-              this.serverConfig.resolverPlugins.some(plugin => plugin.alias === propertyOptions.resolverPlugin.alias)
+              this.serverOptions.resolverPlugins.some(plugin => plugin.alias === propertyOptions.resolverPlugin.alias)
             ) {
-              const plugin = this.serverConfig.resolverPlugins.find(
+              const plugin = this.serverOptions.resolverPlugins.find(
                 plugin => plugin.alias === propertyOptions.resolverPlugin.alias
               );
               acc[propertyKey] = plugin.buildFieldConfig({
                 propertyKey,
                 meta: propertyOptions.resolverPlugin.meta,
-                serverConfig: this.serverConfig,
+                serverOptions: this.serverOptions,
                 schemaBuilder: this
               });
             }

@@ -13,8 +13,8 @@ import {
   createMultipleDropdownEditor
 } from '../../../../packages/core/src';
 import { printType, GraphQLString, GraphQLBoolean, GraphQLFloat } from 'graphql';
-import { ServerConfig } from 'packages/server/src/server-config.model';
 import { GraphQLDateTime } from 'graphql-iso-date';
+import { ServerOptions } from 'packages/server/src/config/server-options.model';
 
 const expect = chai.expect;
 let schemaBuilder: SchemaBuilder;
@@ -22,7 +22,7 @@ let schemaBuilder: SchemaBuilder;
 mocha.describe('build shape', () => {
   mocha.beforeEach(() => {
     schemaBuilder = new SchemaBuilder();
-    schemaBuilder.init({ resolverPlugins: [] } as ServerConfig);
+    schemaBuilder.init({ resolverPlugins: [], events: [] } as ServerOptions);
   });
 
   mocha.it('should create valid shape (Location)', () => {
@@ -204,13 +204,5 @@ type articlelocations {
   lng: Float
 }`.trim()
     );
-  });
-
-  mocha.it('should not crash with null server options', () => {
-    chai.assert.doesNotThrow(() => {
-      var s = new SchemaBuilder();
-      s.init({} as any);
-      s.buildSchema([]);
-    });
   });
 });

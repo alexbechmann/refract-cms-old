@@ -32,7 +32,7 @@ module.exports = function(name) {
   );
   console.log("Created app in " + chalk.blue(appDir));
 
-  inquirer
+  return inquirer
     .prompt([
       {
         type: "list",

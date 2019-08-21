@@ -21,6 +21,7 @@ export { default as FileUploader } from './files/FileUploader';
 export { propertyBuilder } from './properties/property-builder';
 export { isBasicPropertyType } from './properties/is-basic-property-type';
 export { convertDateToSimpleDate } from './properties/convert-date-to-simple-date';
+export { PluginConfig } from './plugins/plugin-config';
 
 // Property Editors
 export { PropertyEditorProps } from './properties/property-editor-props';

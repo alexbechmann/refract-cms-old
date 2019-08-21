@@ -6,7 +6,7 @@ import { Config, graphqlQueryHelper, FileModel, Crop, EntitySchema } from '@refr
 import { merge } from 'lodash';
 import { printType } from 'graphql';
 import { MongoClient, Db, ObjectId } from 'mongodb';
-import { ServerConfig } from './server-config.model';
+import { ServerConfig } from './config/server-config.model';
 import { RequestHandlerParams } from 'express-serve-static-core';
 import multer from 'multer';
 import jimp from 'jimp';
@@ -22,6 +22,7 @@ import { requireAuth } from './auth/require-auth.middleware';
 import { RefractGraphQLContext } from './graphql/refract-graphql-context';
 import { singleRefPlugin } from './plugins/single-ref-plugin';
 import { multipleRefPlugin } from './plugins/multiple-ref-plugin';
+import { buildServerOptions } from './config/create-server-options';
 
 const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => {
   const { config } = serverConfig;
@@ -56,11 +57,13 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
     );
   }
 
-  const mongooseSchemaBuilder = new MongooseSchemaBuilder();
-  mongooseSchemaBuilder.buildSchema(config.schema, serverConfig);
+  const serverOptions = buildServerOptions(serverConfig);
 
-  schemaBuilder.init(serverConfig);
-  const { publicGraphQLSchema, internalGraphQLSchema } = schemaBuilder.buildSchema(config.schema);
+  const mongooseSchemaBuilder = new MongooseSchemaBuilder();
+  mongooseSchemaBuilder.buildSchema(serverOptions.schemas);
+
+  schemaBuilder.init(serverOptions);
+  const { publicGraphQLSchema, internalGraphQLSchema } = schemaBuilder.buildSchema(serverOptions.schemas);
 
   router.use(
     '/graphql',
@@ -127,7 +130,7 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
     res.send(req.file);
   });
 
-  return [serverConfig.rootPath, router] as RequestHandlerParams[];
+  return [serverConfig.rootPath || '', router] as RequestHandlerParams[];
 };
 
 export default refractCmsHandler;
