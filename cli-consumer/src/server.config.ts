@@ -1,14 +1,9 @@
-// import { createPublicSchema } from '@refract-cms/server';
 import { CliServerConfig } from '@refract-cms/cli';
-import { ProductSchema } from './products/product.schema';
 import { NewsArticleSchema } from './news/news-article.schema';
 import { createResolver } from '@refract-cms/server';
-// import { ProductSchema } from './products/product.schema';
-// import { NewsArticleSchema } from './news/news-article.schema';
-// import { SettingsSchema } from './settings/settings.schema';
 import path from 'path';
 import { exampleServerPlugin } from './plugins/example-server-plugin';
-// import next from 'next';
+import { aciveDirectoryServerPlugin } from '@refract-cms/plugin-active-directory-auth/server';
 
 const serverConfig: CliServerConfig = {
   mongoConnectionString: 'mongodb://localhost:27018/cli-consumer',
@@ -41,6 +36,10 @@ const serverConfig: CliServerConfig = {
     //     handle(req, res);
     //   });
     // });
+    console.log('hi');
+    app.get('*', (req, res) => {
+      res.send('frontend here');
+    });
   },
   codeGenOptions: {
     outputPath: path.resolve(process.cwd(), 'generated')
@@ -48,7 +47,7 @@ const serverConfig: CliServerConfig = {
   events: {
     onSchemaBuilt: () => console.log('hi from consumer')
   },
-  plugins: [exampleServerPlugin]
+  plugins: [exampleServerPlugin, aciveDirectoryServerPlugin]
 };
 
 export default serverConfig;
