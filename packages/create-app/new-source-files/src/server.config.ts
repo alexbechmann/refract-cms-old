@@ -15,7 +15,8 @@ const serverConfig: CliServerConfig = {
       issuer: 'consumer',
       secret: 'secret1'
     }
-  }
+  },
+  plugins: []
 };
 
 export default serverConfig;
