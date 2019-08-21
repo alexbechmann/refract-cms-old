@@ -1,6 +1,19 @@
 import { configure, FileSystemImageSchema } from '@refract-cms/core';
+import { configureCli } from '@refract-cms/cli';
+import { createMuiTheme } from '@material-ui/core';
+import { indigo, pink } from '@material-ui/core/colors';
 
-export default configure({
+export default configureCli({
   schema: [FileSystemImageSchema],
-  rootPath: '/'
+  theme: createMuiTheme({
+    palette: {
+      type: 'light',
+      primary: {
+        main: indigo[500]
+      },
+      secondary: {
+        main: pink[500]
+      }
+    }
+  })
 });

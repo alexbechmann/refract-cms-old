@@ -34,6 +34,4 @@ export default express()
   });
 
 // workaround for ts local development
-export interface CliServerConfig extends Omit<ServerConfig, 'config'> {
-  configureExpress?: (app: express.Express) => void;
-}
+export * from '../index';

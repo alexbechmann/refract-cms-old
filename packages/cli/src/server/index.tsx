@@ -5,23 +5,24 @@ import serverConfigImport from '@consumer/config/server.config';
 import path from 'path';
 import '@babel/polyfill';
 import cors from 'cors';
-import { CliServerConfig } from '@refract-cms/cli';
+import { CliServerConfig, CliConfig } from '@refract-cms/cli';
 import { Config } from '@refract-cms/core';
 
 const server = express();
 
 const serverConfig: CliServerConfig & ServerConfig = serverConfigImport;
-const config: Config = configImport;
+const config: Config & CliConfig = configImport;
+
+const rootPath = config.path || '/';
 
 serverConfig.config = config;
+serverConfig.rootPath = rootPath;
 
 const scriptSrc = process.env.NODE_ENV === 'development' ? 'http://localhost:3001/client.js' : '/public/client.js';
 
 const handler = refractCmsHandler({
   serverConfig
 });
-
-const rootPath = config.rootPath || '/';
 
 server
   .use(handler[0], cors(), handler[1])

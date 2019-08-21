@@ -1,15 +1,17 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Dashboard } from '@refract-cms/dashboard';
-import config from '@consumer/config/refract.config';
-import theme from '@consumer/config/theme';
+import configImport from '@consumer/config/refract.config';
 // import 'typeface-roboto';
 import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
+import { CliConfig } from '@refract-cms/cli';
+
+const config = configImport as CliConfig;
 
 render(
-  <ThemeProvider theme={theme}>
-    <Dashboard config={config} rootPath={config.rootPath || '/'} serverUrl={config.rootPath} />
+  <ThemeProvider theme={config.theme}>
+    <Dashboard config={config} rootPath={config.path || '/'} serverUrl={config.path} />
   </ThemeProvider>,
   document.getElementById('root')
 );

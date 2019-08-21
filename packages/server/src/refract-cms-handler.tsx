@@ -99,7 +99,7 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
     })
   );
 
-  router.get('/graphql-playground', expressPlayground({ endpoint: `${config.rootPath}/graphql` }));
+  router.get('/graphql-playground', expressPlayground({ endpoint: `${serverConfig.rootPath}/graphql` }));
 
   // const filesRepository = new MongoRepository<FileModel>('files', db!);
 
@@ -130,7 +130,7 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
     res.send(req.file);
   });
 
-  return [config.rootPath || '', router] as RequestHandlerParams[];
+  return [serverConfig.rootPath || '', router] as RequestHandlerParams[];
 };
 
 export default refractCmsHandler;

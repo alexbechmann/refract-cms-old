@@ -21,10 +21,7 @@ export function buildServerOptions(serverConfig: ServerConfig): ServerOptions {
   }, []);
 
   return {
-    config: {
-      ...config,
-      rootPath: serverConfig.config.rootPath
-    },
+    config,
     resolverPlugins,
     schemas,
     resolvers,

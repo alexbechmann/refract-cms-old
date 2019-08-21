@@ -8,6 +8,7 @@ export interface ServerConfig extends ServerOptionsArgs {
   config: Config;
   mongoConnectionString: string;
   filesPath: string;
+  rootPath: string;
   auth: {
     adminCredentials: {
       username: string;
