@@ -7,10 +7,10 @@ import { plugin as typescriptOperationsPlugin } from '@graphql-codegen/typescrip
 import { plugin as apolloPlugin } from '@graphql-codegen/typescript-react-apollo';
 import { printSchema, parse, GraphQLSchema, print, printType, graphql, ASTNode } from 'graphql';
 import { ServerConfig } from '../config/server-config.model';
+import { CodeGenServerPluginOptions } from '../plugins/code-gen-server-plugin';
 
-export async function emitGraphqlCodeGen(schema: GraphQLSchema, config: ServerConfig) {
-  const { outputPath, queries } = config.codeGenOptions;
-
+export async function emitGraphqlCodeGen(schema: GraphQLSchema, options: CodeGenServerPluginOptions) {
+  const { outputPath, queries } = options;
   await fs.mkdir(outputPath, { recursive: true }, err => {
     // if (err) console.log(err);
   });

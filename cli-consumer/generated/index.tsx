@@ -1,6 +1,37 @@
 import gql from 'graphql-tag';
+import * as React from 'react';
+import * as ReactApollo from 'react-apollo';
+import * as ReactApolloHooks from 'react-apollo-hooks';
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type Maybe<T> = T | null;
-/** All built-in and custom scalars, mapped to their actual values */
+
+export const NewsArticleCountDocument = gql`
+    query NewsArticleCount {
+  newsArticleCount
+}
+    `;
+export type NewsArticleCountComponentProps = Omit<ReactApollo.QueryProps<NewsArticleCountQuery, NewsArticleCountQueryVariables>, 'query'>;
+
+    export const NewsArticleCountComponent = (props: NewsArticleCountComponentProps) => (
+      <ReactApollo.Query<NewsArticleCountQuery, NewsArticleCountQueryVariables> query={NewsArticleCountDocument} {...props} />
+    );
+    
+export type NewsArticleCountProps<TChildProps = {}> = Partial<ReactApollo.DataProps<NewsArticleCountQuery, NewsArticleCountQueryVariables>> & TChildProps;
+export function withNewsArticleCount<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
+  TProps,
+  NewsArticleCountQuery,
+  NewsArticleCountQueryVariables,
+  NewsArticleCountProps<TChildProps>>) {
+    return ReactApollo.withQuery<TProps, NewsArticleCountQuery, NewsArticleCountQueryVariables, NewsArticleCountProps<TChildProps>>(NewsArticleCountDocument, {
+      alias: 'withNewsArticleCount',
+      ...operationOptions
+    });
+};
+
+    export function useNewsArticleCountQuery(baseOptions?: ReactApolloHooks.QueryHookOptions<NewsArticleCountQueryVariables>) {
+      return ReactApolloHooks.useQuery<NewsArticleCountQuery, NewsArticleCountQueryVariables>(NewsArticleCountDocument, baseOptions);
+    };
+export type NewsArticleCountQueryHookResult = ReturnType<typeof useNewsArticleCountQuery>;/** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string,
   String: string,
@@ -9,6 +40,34 @@ export type Scalars = {
   Float: number,
   MongoId: string,
   DateTime: Date,
+};
+
+export type AdUser = {
+  __typename?: 'adUser',
+  _id?: Maybe<Scalars['MongoId']>,
+  firstName?: Maybe<Scalars['String']>,
+  lastName?: Maybe<Scalars['String']>,
+};
+
+export type AdUserEntityFilterType = {
+  _id?: Maybe<MongoIdFilter>,
+  firstName?: Maybe<StringFilter>,
+  lastName?: Maybe<StringFilter>,
+  OR?: Maybe<Array<Maybe<AdUserEntityFilterType>>>,
+  AND?: Maybe<Array<Maybe<AdUserEntityFilterType>>>,
+  NOR?: Maybe<Array<Maybe<AdUserEntityFilterType>>>,
+};
+
+export type AdUserEntitySortType = {
+  _id?: Maybe<SortType>,
+  firstName?: Maybe<SortType>,
+  lastName?: Maybe<SortType>,
+};
+
+export type AdUserInput = {
+  _id?: Maybe<Scalars['MongoId']>,
+  firstName?: Maybe<Scalars['String']>,
+  lastName?: Maybe<Scalars['String']>,
 };
 
 export type Author = {
@@ -519,11 +578,6 @@ export type Productlocation = {
 
 export type Query = {
   __typename?: 'Query',
-  productCount?: Maybe<Scalars['Int']>,
-  productList?: Maybe<Array<Maybe<Product>>>,
-  productPreview?: Maybe<Product>,
-  productFindById?: Maybe<Product>,
-  productFindOne?: Maybe<Product>,
   newsArticleCount?: Maybe<Scalars['Int']>,
   newsArticleList?: Maybe<Array<Maybe<NewsArticle>>>,
   newsArticlePreview?: Maybe<NewsArticle>,
@@ -533,6 +587,11 @@ export type Query = {
   settingsList?: Maybe<Array<Maybe<Settings>>>,
   settingsPreview?: Maybe<Settings>,
   settings?: Maybe<Settings>,
+  productCount?: Maybe<Scalars['Int']>,
+  productList?: Maybe<Array<Maybe<Product>>>,
+  productPreview?: Maybe<Product>,
+  productFindById?: Maybe<Product>,
+  productFindOne?: Maybe<Product>,
   blogPostCount?: Maybe<Scalars['Int']>,
   blogPostList?: Maybe<Array<Maybe<BlogPost>>>,
   blogPostPreview?: Maybe<BlogPost>,
@@ -553,35 +612,11 @@ export type Query = {
   filePreview?: Maybe<File>,
   fileFindById?: Maybe<File>,
   fileFindOne?: Maybe<File>,
-};
-
-
-export type QueryProductCountArgs = {
-  filter?: Maybe<ProductEntityFilterType>
-};
-
-
-export type QueryProductListArgs = {
-  filter?: Maybe<ProductEntityFilterType>,
-  sort?: Maybe<ProductEntitySortType>,
-  pagination?: Maybe<PaginationType>
-};
-
-
-export type QueryProductPreviewArgs = {
-  record?: Maybe<ProductInput>
-};
-
-
-export type QueryProductFindByIdArgs = {
-  id?: Maybe<Scalars['String']>
-};
-
-
-export type QueryProductFindOneArgs = {
-  filter?: Maybe<ProductEntityFilterType>,
-  sort?: Maybe<ProductEntitySortType>,
-  pagination?: Maybe<PaginationType>
+  adUserCount?: Maybe<Scalars['Int']>,
+  adUserList?: Maybe<Array<Maybe<AdUser>>>,
+  adUserPreview?: Maybe<AdUser>,
+  adUserFindById?: Maybe<AdUser>,
+  adUserFindOne?: Maybe<AdUser>,
 };
 
 
@@ -628,6 +663,35 @@ export type QuerySettingsListArgs = {
 
 export type QuerySettingsPreviewArgs = {
   record?: Maybe<SettingsInput>
+};
+
+
+export type QueryProductCountArgs = {
+  filter?: Maybe<ProductEntityFilterType>
+};
+
+
+export type QueryProductListArgs = {
+  filter?: Maybe<ProductEntityFilterType>,
+  sort?: Maybe<ProductEntitySortType>,
+  pagination?: Maybe<PaginationType>
+};
+
+
+export type QueryProductPreviewArgs = {
+  record?: Maybe<ProductInput>
+};
+
+
+export type QueryProductFindByIdArgs = {
+  id?: Maybe<Scalars['String']>
+};
+
+
+export type QueryProductFindOneArgs = {
+  filter?: Maybe<ProductEntityFilterType>,
+  sort?: Maybe<ProductEntitySortType>,
+  pagination?: Maybe<PaginationType>
 };
 
 
@@ -743,6 +807,35 @@ export type QueryFileFindByIdArgs = {
 export type QueryFileFindOneArgs = {
   filter?: Maybe<FileEntityFilterType>,
   sort?: Maybe<FileEntitySortType>,
+  pagination?: Maybe<PaginationType>
+};
+
+
+export type QueryAdUserCountArgs = {
+  filter?: Maybe<AdUserEntityFilterType>
+};
+
+
+export type QueryAdUserListArgs = {
+  filter?: Maybe<AdUserEntityFilterType>,
+  sort?: Maybe<AdUserEntitySortType>,
+  pagination?: Maybe<PaginationType>
+};
+
+
+export type QueryAdUserPreviewArgs = {
+  record?: Maybe<AdUserInput>
+};
+
+
+export type QueryAdUserFindByIdArgs = {
+  id?: Maybe<Scalars['String']>
+};
+
+
+export type QueryAdUserFindOneArgs = {
+  filter?: Maybe<AdUserEntityFilterType>,
+  sort?: Maybe<AdUserEntitySortType>,
   pagination?: Maybe<PaginationType>
 };
 
@@ -866,3 +959,7 @@ export type StringNotFilter = {
   /** $options. Modifiers for the $regex expression. Field is ignored on its own */
   OPTIONS?: Maybe<Scalars['String']>,
 };
+export type NewsArticleCountQueryVariables = {};
+
+
+export type NewsArticleCountQuery = ({ __typename?: 'Query' } & Pick<Query, 'newsArticleCount'>);

@@ -20,8 +20,4 @@ export interface ServerConfig extends ServerOptionsArgs {
     };
   };
   plugins?: ServerPlugin[];
-  codeGenOptions?: {
-    outputPath: string;
-    queries?: ASTNode[];
-  };
 }
