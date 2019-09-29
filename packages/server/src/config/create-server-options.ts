@@ -45,6 +45,7 @@ export function buildServerOptions(serverConfig: ServerConfig): ServerOptions {
       if (plugin.configureRouter) {
         plugin.configureRouter(router);
       }
+      console.log(plugin.config.name);
       return {
         alias: plugin.config.name,
         router

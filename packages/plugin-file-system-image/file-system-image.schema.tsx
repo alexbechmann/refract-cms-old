@@ -2,11 +2,12 @@ import { composeSchema, createTextEditor, PropertyEditorProps } from '@refract-c
 import { FileModel } from './file.model';
 import ImageIcon from '@material-ui/icons/Image';
 import { FileRef } from './file-ref.model';
+import createFileUploadEditor from './FileUploaderEditor';
 
 export const FileSystemImageSchema = composeSchema({
   options: {
     alias: 'file',
-    displayName: 'File',
+    displayName: 'Image',
     icon: ImageIcon
     // instanceDisplayProps: (file, { context }) => ({
     //   primaryText: file.fileRef ? file.fileRef.fileName : undefined,
@@ -15,15 +16,15 @@ export const FileSystemImageSchema = composeSchema({
     // })
   },
   properties: {
-    // fileRef: {
-    //   editorComponent: createFileUploadEditor({}),
-    //   displayName: 'Image',
-    //   type: {
-    //     fileName: String,
-    //     path: String,
-    //     mimetype: String,
-    //     size: Number
-    //   }
-    // }
+    fileRef: {
+      editorComponent: createFileUploadEditor({}),
+      displayName: 'Image',
+      type: {
+        fileName: String,
+        path: String,
+        mimetype: String,
+        size: Number
+      }
+    }
   }
 });

@@ -5,7 +5,6 @@ import { RequestHandlerParams } from 'express-serve-static-core';
 import multer from 'multer';
 import jimp from 'jimp';
 import { authService } from './auth/auth.service';
-import uniqueString from 'unique-string';
 import fs from 'fs';
 import { MongooseSchemaBuilder } from './persistance/mongoose-schema-builder';
 import mongoose from 'mongoose';
@@ -22,14 +21,6 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
   const { config } = serverConfig;
 
   const router = express.Router();
-  const storage = multer.diskStorage({
-    destination: serverConfig.filesPath,
-    filename(req, file, cb) {
-      console.log(file);
-      cb(null, `${uniqueString()}_${file.originalname}`);
-    }
-  });
-  const upload = multer({ storage });
 
   router.use(bodyParser.json());
 
@@ -52,12 +43,15 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
   }
 
   const serverOptions = buildServerOptions(serverConfig);
-
   const mongooseSchemaBuilder = new MongooseSchemaBuilder();
   mongooseSchemaBuilder.buildSchema(serverOptions.schemas);
 
   schemaBuilder.init(serverOptions);
   const { publicGraphQLSchema, internalGraphQLSchema } = schemaBuilder.buildSchema(serverOptions.schemas);
+
+  serverOptions.routers.forEach(routerDef => {
+    router.use(`/plugins/${routerDef.alias.toLowerCase()}`, routerDef.router);
+  });
 
   router.use(
     '/graphql',
@@ -119,14 +113,10 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
   //   }
   // });
 
-  router.post('/files', upload.single('file'), (req, res) => {
-    const { mimetype, path, filename, size } = req.file;
-    res.send(req.file);
-  });
-
-  serverOptions.routers.forEach(routerDef => {
-    router.use(routerDef.alias, routerDef.router);
-  });
+  // router.post('/files', upload.single('file'), (req, res) => {
+  //   const { mimetype, path, filename, size } = req.file;
+  //   res.send(req.file);
+  // });
 
   return [serverConfig.rootPath || '', router] as RequestHandlerParams[];
 };

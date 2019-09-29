@@ -9,7 +9,6 @@ import gql from 'graphql-tag';
 
 const serverConfig: CliServerConfig = {
   mongoConnectionString: 'mongodb://localhost:27018/cli-consumer',
-  filesPath: 'files/',
   auth: {
     adminCredentials: {
       username: 'admin',
@@ -48,7 +47,9 @@ const serverConfig: CliServerConfig = {
   plugins: [
     exampleServerPlugin,
     activeDirectoryServerPlugin,
-    activeDirectoryServerPlugin,
+    fileSystemImageServerPlugin({
+      filesPath: 'files/'
+    }),
     codeGenServerPlugin({
       outputPath: path.resolve(process.cwd(), 'generated'),
       queries: [
