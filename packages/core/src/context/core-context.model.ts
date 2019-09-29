@@ -1,3 +1,6 @@
-import { FileService } from "../files/file.service";
+// import { FileService } from "../files/file.service";
 
-export interface CoreContextModel { serverUrl: string; fileService: FileService }
+export interface CoreContextModel {
+  serverUrl: string;
+  // fileService: FileService;
+}

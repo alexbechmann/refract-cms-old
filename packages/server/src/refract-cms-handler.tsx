@@ -1,11 +1,5 @@
 import * as express from 'express';
 import graphqlHTTP from 'express-graphql';
-import { makeExecutableSchema } from 'graphql-tools';
-import { Dashboard } from '@refract-cms/dashboard';
-import { Config, graphqlQueryHelper, FileModel, Crop, EntitySchema } from '@refract-cms/core';
-import { merge } from 'lodash';
-import { printType } from 'graphql';
-import { MongoClient, Db, ObjectId } from 'mongodb';
 import { ServerConfig } from './config/server-config.model';
 import { RequestHandlerParams } from 'express-serve-static-core';
 import multer from 'multer';
@@ -103,31 +97,35 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
 
   // const filesRepository = new MongoRepository<FileModel>('files', db!);
 
-  const fileRepository = mongoose.connection.models['file'];
+  // const fileRepository = mongoose.connection.models['file'];
 
-  router.get('/files/:id', async (req, res) => {
-    const { id } = req.params;
-    const crop = req.query;
-    const entity: FileModel = await fileRepository.findById(id);
+  // router.get('/files/:id', async (req, res) => {
+  //   const { id } = req.params;
+  //   const crop = req.query;
+  //   const entity: FileModel = await fileRepository.findById(id);
 
-    if (entity.fileRef) {
-      const img = await jimp.read(entity.fileRef.path);
+  //   if (entity.fileRef) {
+  //     const img = await jimp.read(entity.fileRef.path);
 
-      if (crop.x && crop.y && crop.width && crop.height) {
-        img.crop(parseInt(crop.x), parseInt(crop.y), parseInt(crop.width), parseInt(crop.height));
-      }
+  //     if (crop.x && crop.y && crop.width && crop.height) {
+  //       img.crop(parseInt(crop.x), parseInt(crop.y), parseInt(crop.width), parseInt(crop.height));
+  //     }
 
-      const imgBuffer = await img.getBufferAsync(entity.fileRef.mimetype);
-      res.writeHead(200, { 'Content-Type': entity.fileRef.mimetype });
-      res.end(imgBuffer, 'binary');
-    } else {
-      res.sendStatus(500);
-    }
-  });
+  //     const imgBuffer = await img.getBufferAsync(entity.fileRef.mimetype);
+  //     res.writeHead(200, { 'Content-Type': entity.fileRef.mimetype });
+  //     res.end(imgBuffer, 'binary');
+  //   } else {
+  //     res.sendStatus(500);
+  //   }
+  // });
 
   router.post('/files', upload.single('file'), (req, res) => {
     const { mimetype, path, filename, size } = req.file;
     res.send(req.file);
+  });
+
+  serverOptions.routers.forEach(routerDef => {
+    router.use(routerDef.alias, routerDef.router);
   });
 
   return [serverConfig.rootPath || '', router] as RequestHandlerParams[];

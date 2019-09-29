@@ -3,5 +3,10 @@ import { fileSystemImagePluginConfig } from './';
 
 export const fileSystemImageServerPlugin = createServerPlugin(fileSystemImagePluginConfig, {
   events: {},
-  resolverPlugins: []
+  resolverPlugins: [],
+  configureRouter: router => {
+    router.get('/', (req, res) => {
+      res.send('hi');
+    });
+  }
 });

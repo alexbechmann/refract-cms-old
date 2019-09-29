@@ -6,6 +6,6 @@ import { PluginConfig } from '@refract-cms/core';
 
 export interface ServerPlugin extends ServerOptionsArgs {
   // resolverPlugins: ResolverPlugin[];
-  // addExpressRouter: () => Router;
+  configureRouter?: (router: Router) => void;
   config: PluginConfig;
 }

@@ -3,7 +3,8 @@ import { NewsArticleSchema } from './news/news-article.schema';
 import { createResolver, codeGenServerPlugin } from '@refract-cms/server';
 import path from 'path';
 import { exampleServerPlugin } from './plugins/example-server-plugin';
-import { aciveDirectoryServerPlugin } from '@refract-cms/plugin-active-directory-auth/server';
+import { activeDirectoryServerPlugin } from '@refract-cms/plugin-active-directory-auth/server';
+import { fileSystemImageServerPlugin } from '@refract-cms/plugin-file-system-image/server';
 import gql from 'graphql-tag';
 
 const serverConfig: CliServerConfig = {
@@ -46,7 +47,8 @@ const serverConfig: CliServerConfig = {
   },
   plugins: [
     exampleServerPlugin,
-    aciveDirectoryServerPlugin,
+    activeDirectoryServerPlugin,
+    activeDirectoryServerPlugin,
     codeGenServerPlugin({
       outputPath: path.resolve(process.cwd(), 'generated'),
       queries: [
