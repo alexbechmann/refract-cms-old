@@ -1,9 +1,6 @@
-import composeSchema from '../entities/compose-schema';
+import { composeSchema, createTextEditor, createFileUploadEditor, PropertyEditorProps } from '@refract-cms/core';
 import { FileModel } from './file.model';
-import createTextEditor from '../property-editors/TextEditor';
 import ImageIcon from '@material-ui/icons/Image';
-import createFileUploadEditor from '../property-editors/FileUploaderEditor';
-import { PropertyEditorProps } from '../properties/property-editor-props';
 import { FileRef } from './file-ref.model';
 
 export const FileSystemImageSchema = composeSchema({
