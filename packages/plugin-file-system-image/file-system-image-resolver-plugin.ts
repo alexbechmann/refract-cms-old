@@ -1,5 +1,8 @@
 import { createResolverPlugin } from '@refract-cms/server';
-import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLInt, GraphQLObjectType, GraphQLString, GraphQLNonNull } from 'graphql';
+import { FileService } from './file.service';
+import { FileModel } from './file.model';
+import url from 'url';
 
 // const fileSystemImageType = new GraphQLObjectType({
 //   name: 'FileSystemImage',
@@ -15,10 +18,24 @@ export default createResolverPlugin({
       type: GraphQLString,
       name: 'FileSystemImage',
       args: {
-        height: { type: GraphQLInt }
+        height: { type: new GraphQLNonNull(GraphQLInt) },
+        width: { type: new GraphQLNonNull(GraphQLInt) },
+        x: { type: GraphQLInt },
+        y: { type: GraphQLInt }
       },
-      resolve: source => {
-        return source[args.propertyKey];
+      resolve: (source, args, context) => {
+        // const serverUrl = context.req.protocol + '://' + context.req.host + context.serverConfig.rootPath;
+        const serverUrl = url.format({
+          protocol: context.req.protocol,
+          host: context.req.get('host'),
+          pathname: context.serverConfig.rootPath
+        });
+        const fileService = new FileService(serverUrl);
+        const fileModel: FileModel & { _id: string } = source;
+        return fileService.buildImageUrl({
+          fileId: fileModel._id,
+          pixelCrop: args as any
+        });
       }
     };
   }

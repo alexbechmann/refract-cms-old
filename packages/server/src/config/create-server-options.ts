@@ -32,7 +32,6 @@ export function buildServerOptions(serverConfig: ServerConfig): ServerOptions {
   //   });
   //   return acc;
   // }, []);
-  console.log(resolverPlugins.map(x => x.alias), config.schema.length);
   const events = []; // Array.prototype.concat(serverOptionsConfigs.map(o => o.events)).filter(Boolean) || [];
   return {
     config,
@@ -45,7 +44,6 @@ export function buildServerOptions(serverConfig: ServerConfig): ServerOptions {
       if (plugin.configureRouter) {
         plugin.configureRouter(router);
       }
-      console.log(plugin.config.name);
       return {
         alias: plugin.config.name,
         router

@@ -1,10 +1,12 @@
-import { createServerPlugin, repositoryForSchema } from '@refract-cms/server';
+import { createServerPlugin, repositoryForSchema, createResolverPlugin } from '@refract-cms/server';
 import { fileSystemImagePluginConfig } from './';
 import multer from 'multer';
 import uniqueString from 'unique-string';
 import { FileModel } from './file.model';
 import { FileSystemImageSchema } from './file-system-image.schema';
-import jimp = require('jimp');
+import jimp from 'jimp';
+import { Crop } from './crop.model';
+import fileSystemImageResolverPlugin from './file-system-image-resolver-plugin';
 
 interface FileSystemImageServerPluginOptions {
   filesPath: string;
@@ -13,12 +15,8 @@ interface FileSystemImageServerPluginOptions {
 export const fileSystemImageServerPlugin = ({ filesPath }: FileSystemImageServerPluginOptions) =>
   createServerPlugin(fileSystemImagePluginConfig, {
     events: {},
-    resolverPlugins: [],
+    resolverPlugins: [fileSystemImageResolverPlugin],
     configureRouter: router => {
-      router.get('/hi', (req, res) => {
-        res.send('hi');
-      });
-
       const storage = multer.diskStorage({
         destination: filesPath,
         filename(req, file, cb) {
@@ -39,9 +37,14 @@ export const fileSystemImageServerPlugin = ({ filesPath }: FileSystemImageServer
 
           if (crop.x && crop.y && crop.width && crop.height) {
             img.crop(parseInt(crop.x), parseInt(crop.y), parseInt(crop.width), parseInt(crop.height));
+          } else if (crop.width && crop.height) {
+            img.cover(parseInt(crop.width), parseInt(crop.height));
           }
 
-          const imgBuffer = await img.getBufferAsync(entity.fileRef.mimetype);
+          const imgBuffer = await img
+            .quality(80)
+            .getBufferAsync(entity.fileRef.mimetype)
+            .catch(() => res.sendStatus(500));
           res.writeHead(200, { 'Content-Type': entity.fileRef.mimetype });
           res.end(imgBuffer, 'binary');
         } else {
