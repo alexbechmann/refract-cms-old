@@ -25,9 +25,9 @@ export const fileSystemImageServerPlugin = ({ filesPath }: FileSystemImageServer
         }
       });
       const upload = multer({ storage });
-      const fileRepository = repositoryForSchema(FileSystemImageSchema);
 
       router.get('/files/:id', async (req, res) => {
+        const fileRepository = repositoryForSchema(FileSystemImageSchema);
         const { id } = req.params;
         const crop = req.query;
         const entity = await fileRepository.findById(id);

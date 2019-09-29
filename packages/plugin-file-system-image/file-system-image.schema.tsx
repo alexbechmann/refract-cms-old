@@ -13,8 +13,9 @@ export const FileSystemImageSchema = composeSchema({
     instanceDisplayProps: (file, { context }) => {
       const fileService = new FileService(context.serverUrl);
       return {
-        primaryText: file._id,
-        secondaryText: file.fileRef ? file.fileRef.path : undefined,
+        primaryText: file.name || file._id,
+        // primaryText: file._id,
+        // secondaryText: file.fileRef ? file.fileRef.path : undefined,
         imageUrl: fileService.buildImageUrl({
           fileId: file._id,
           pixelCrop: {
@@ -28,6 +29,11 @@ export const FileSystemImageSchema = composeSchema({
     }
   },
   properties: {
+    name: {
+      type: String,
+      displayName: 'Name',
+      editorComponent: createTextEditor()
+    },
     fileRef: {
       editorComponent: createFileUploadEditor({}),
       displayName: 'Image',

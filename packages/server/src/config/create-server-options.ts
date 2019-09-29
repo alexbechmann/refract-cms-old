@@ -40,7 +40,7 @@ export function buildServerOptions(serverConfig: ServerConfig): ServerOptions {
     resolvers,
     events,
     routers: serverConfig.plugins.map(plugin => {
-      var router = express.Router();
+      const router = express.Router();
       if (plugin.configureRouter) {
         plugin.configureRouter(router);
       }

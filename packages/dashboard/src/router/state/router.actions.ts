@@ -16,8 +16,8 @@ export const setBaseRoute = (baseRoute: string) => {
       createUrl: () => buildPath('/about')
     },
     graphql: {
-      path: buildPath('/graphql'),
-      createUrl: () => buildPath('/graphql')
+      path: buildPath('/graphql-browser'),
+      createUrl: () => buildPath('/graphql-browser')
     },
     media: {
       path: buildPath('/media'),

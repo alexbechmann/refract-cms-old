@@ -19,9 +19,9 @@ export default createResolverPlugin({
       name: 'FileSystemImage',
       args: {
         height: { type: new GraphQLNonNull(GraphQLInt) },
-        width: { type: new GraphQLNonNull(GraphQLInt) },
-        x: { type: GraphQLInt },
-        y: { type: GraphQLInt }
+        width: { type: new GraphQLNonNull(GraphQLInt) }
+        // x: { type: GraphQLInt },
+        // y: { type: GraphQLInt }
       },
       resolve: (source, args, context) => {
         // const serverUrl = context.req.protocol + '://' + context.req.host + context.serverConfig.rootPath;
