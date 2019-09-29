@@ -38,9 +38,9 @@ const serverConfig: CliServerConfig = {
     //     handle(req, res);
     //   });
     // });
-    app.get('*', (req, res) => {
-      res.send('frontend here');
-    });
+    // app.get('*', (req, res) => {
+    //   res.send('frontend here');
+    // });
   },
   events: {
     onSchemaBuilt: () => console.log('hi from consumer')

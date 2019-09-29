@@ -8,7 +8,7 @@ import { createMuiTheme } from '@material-ui/core';
 
 export default configureCli({
   schema: [NewsArticleSchema, SettingsSchema, ProductSchema, ...config.schema],
-  path: '/admin',
+  path: '', ///admin',
   theme: createMuiTheme({
     palette: {
       type: 'light',

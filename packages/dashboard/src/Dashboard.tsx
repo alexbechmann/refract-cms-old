@@ -47,7 +47,7 @@ import EditEntity from './entities/EditEntity';
 import Auth from './auth/Auth';
 import { logout } from './auth/state/auth.actions';
 import Notifications from './notifications/Notifications';
-import { FileService } from '@refract-cms/core';
+// import { FileService } from '@refract-cms/core';
 import { createLinkComponent } from './shared/create-link-component';
 
 const drawerWidth = 240;
@@ -170,8 +170,8 @@ class Dashboard extends React.Component<Props> {
     return (
       <CoreContext.Provider
         value={{
-          serverUrl,
-          fileService: new FileService(serverUrl)
+          serverUrl
+          // fileService: new FileService(serverUrl)
         }}
       >
         <ApolloProvider client={createApolloClient({ serverUrl })}>
