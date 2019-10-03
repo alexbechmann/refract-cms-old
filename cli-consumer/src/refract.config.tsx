@@ -9,7 +9,6 @@ import { FileSystemImageSchema } from '@refract-cms/plugin-file-system-image/fil
 
 export default configureCli({
   schema: [NewsArticleSchema, SettingsSchema, ProductSchema, ...config.schema, FileSystemImageSchema],
-  path: '', ///admin',
   theme: createMuiTheme({
     palette: {
       type: 'light',

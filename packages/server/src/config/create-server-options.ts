@@ -15,6 +15,7 @@ function customizer(objValue, srcValue) {
 }
 
 export function buildServerOptions(serverConfig: ServerConfig): ServerOptions {
+  const configs = [serverConfig, ...serverConfig.plugins];
   const { resolverPlugins, resolvers, config }: ServerOptionsArgs = mergeWith(
     serverConfig,
     ...serverConfig.plugins,
@@ -32,7 +33,8 @@ export function buildServerOptions(serverConfig: ServerConfig): ServerOptions {
   //   });
   //   return acc;
   // }, []);
-  const events = []; // Array.prototype.concat(serverOptionsConfigs.map(o => o.events)).filter(Boolean) || [];
+  // console.log(evjents);
+  const events = Array.prototype.concat(configs.map(o => o.events)).filter(Boolean) || [];
   return {
     config,
     resolverPlugins,
