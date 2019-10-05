@@ -24,7 +24,6 @@ import { ResolvedPropertyOptions } from '../resolved-property-options';
 import { singleRefPlugin } from '../plugins/single-ref-plugin';
 import { multipleRefPlugin } from '../plugins/multiple-ref-plugin';
 import produce from 'immer';
-import { emitGraphqlCodeGen } from './emit-graphql-codegen';
 import { ServerOptions } from '../config/server-options.model';
 
 export class SchemaBuilder {

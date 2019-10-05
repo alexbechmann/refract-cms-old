@@ -1,0 +1,22 @@
+{
+  "name": "@refract-cms/plugin-code-gen",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@graphql-codegen/core": "^1.4.0",
+    "@graphql-codegen/fragment-matcher": "^1.4.0",
+    "@graphql-codegen/typescript": "^1.4.0",
+    "@graphql-codegen/typescript-operations": "^1.4.0",
+    "@graphql-codegen/typescript-react-apollo": "^1.4.0"
+  },
+  "peerDependencies": {
+    "@refract-cms/core": "latest",
+    "@refract-cms/server": "latest"
+  }
+}

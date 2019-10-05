@@ -15,11 +15,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@graphql-codegen/core": "^1.4.0",
-    "@graphql-codegen/fragment-matcher": "^1.4.0",
-    "@graphql-codegen/typescript": "^1.4.0",
-    "@graphql-codegen/typescript-operations": "^1.4.0",
-    "@graphql-codegen/typescript-react-apollo": "^1.4.0",
     "express": "^4.16.4",
     "express-graphql": "^0.8.0",
     "fork-ts-checker-webpack-plugin": "^0.4.15",

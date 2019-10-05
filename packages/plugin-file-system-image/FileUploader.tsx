@@ -4,8 +4,7 @@ import { withApollo, WithApolloClient } from 'react-apollo';
 import { connect } from 'react-redux';
 import { combineContainers } from 'combine-containers';
 import { FileRef } from './file-ref.model';
-import { withCoreContext } from '../context/with-core-context';
-import { WithCoreContextProps } from '../context/with-core-context-props.model';
+import { withCoreContext, WithCoreContextProps } from '@refract-cms/core';
 
 interface State {
   file?: File;
@@ -34,10 +33,10 @@ class ImageUploader extends React.Component<Props, State> {
       <div>
         {!uploading && !file ? (
           <div>
-            <input hidden onChange={this.handleImageChange} accept="image/*" id="icon-button-file" type="file" />
-            <label htmlFor="icon-button-file">
+            <input onChange={this.handleImageChange} accept="image/*" id="icon-button-file" type="file" />
+            {/* <label htmlFor="icon-button-file">
               <Button color="primary">Select File to upload</Button>
-            </label>
+            </label> */}
           </div>
         ) : null}
         {file && !this.state.uploading ? (
@@ -71,22 +70,28 @@ class ImageUploader extends React.Component<Props, State> {
       this.setState({
         uploading: true
       });
-      this.props.context.fileService.upload(file).then(multerFile => {
-        this.setState({ uploading: false });
-        // this.props.client.resetStore();
-        // this.props.addNotification('Successfully uploaded file.');
-        if (this.props.onUploaded) {
-          this.props.onUploaded({
-            path: multerFile.path,
-            fileName: multerFile.originalname,
-            mimetype: multerFile.mimetype,
-            size: multerFile.size
+      const data = new FormData();
+      data.append('file', file);
+      const httpClient = this.props.context.getPluginAxios('fileSystemImage');
+      httpClient
+        .post(`/files`, data)
+        .then(r => r.data)
+        .then(multerFile => {
+          this.setState({ uploading: false });
+          // this.props.client.resetStore();
+          // this.props.addNotification('Successfully uploaded file.');
+          if (this.props.onUploaded) {
+            this.props.onUploaded({
+              path: multerFile.path,
+              fileName: multerFile.originalname,
+              mimetype: multerFile.mimetype,
+              size: multerFile.size
+            });
+          }
+          this.setState({
+            file: undefined
           });
-        }
-        this.setState({
-          file: undefined
         });
-      });
     }
   }
 }

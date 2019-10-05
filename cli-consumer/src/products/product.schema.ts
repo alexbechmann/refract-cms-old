@@ -6,10 +6,12 @@ import {
   createMultipleDropdownEditor,
   Entity,
   Location,
-  createBooleanEditor
+  createBooleanEditor,
+  propertyBuilder
 } from '@refract-cms/core';
 import CustomDropdownEditor from '../shared/CustomDropdownEditor';
 import ScatterPlotIcon from '@material-ui/icons/ScatterPlot';
+import { FileSystemImageSchema } from '@refract-cms/plugin-file-system-image';
 
 export const ProductSchema = composeSchema({
   options: {
@@ -78,6 +80,7 @@ export const ProductSchema = composeSchema({
     //   type: String,
     //   resolve: ({ types }) => (types ? types.join(',') : '')
     // }
+    image: propertyBuilder.singleReference(FileSystemImageSchema),
     primary: {
       type: Boolean,
       editorComponent: createBooleanEditor()

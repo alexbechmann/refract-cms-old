@@ -1,4 +1,4 @@
-import { configure, FileSystemImageSchema } from '@refract-cms/core';
+import { configure } from '@refract-cms/core';
 import { BlogPostSchema } from './schemas/blog-post.schema';
 import { BlogPostCategorySchema } from './schemas/blog-post-category.schema';
 import { AuthorSchema } from './schemas/author.schema';
@@ -7,7 +7,7 @@ import { createMuiTheme } from '@material-ui/core';
 import { indigo, pink } from '@material-ui/core/colors';
 
 export default configureCli({
-  schema: [BlogPostSchema, AuthorSchema, BlogPostCategorySchema, FileSystemImageSchema],
+  schema: [BlogPostSchema, AuthorSchema, BlogPostCategorySchema],
   path: '/',
   theme: createMuiTheme({
     palette: {

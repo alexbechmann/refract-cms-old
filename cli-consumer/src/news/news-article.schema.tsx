@@ -5,14 +5,6 @@ import {
   createTextEditor,
   createDatePickerEditor,
   createListEditor,
-  createImagePickerEditor,
-  ImageRef,
-  PropertyEditorProps,
-  createSingleEntityPickerEditor,
-  createMultipleEntityPickerEditor,
-  createMultipleDropdownEditor,
-  EntitySchema,
-  PropertyOptions,
   propertyBuilder
 } from '@refract-cms/core';
 import DescriptionIcon from '@material-ui/icons/Description';

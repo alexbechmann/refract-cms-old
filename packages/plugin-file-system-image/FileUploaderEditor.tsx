@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react';
-import { PropertyEditorProps } from '../properties/property-editor-props';
-import FileUploader from '../files/FileUploader';
+import { PropertyEditorProps } from '@refract-cms/core';
+import FileUploader from './FileUploader';
 import { Typography } from '@material-ui/core';
-import { FileRef } from '../files/file-ref.model';
+import { FileRef } from './file-ref.model';
 
 interface Props extends FileUploaderEditorOptions, PropertyEditorProps<FileRef> {}
 

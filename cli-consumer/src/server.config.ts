@@ -1,14 +1,15 @@
 import { CliServerConfig } from '@refract-cms/cli';
 import { NewsArticleSchema } from './news/news-article.schema';
-import { createResolver, codeGenServerPlugin } from '@refract-cms/server';
+import { createResolver } from '@refract-cms/server';
 import path from 'path';
 import { exampleServerPlugin } from './plugins/example-server-plugin';
-import { aciveDirectoryServerPlugin } from '@refract-cms/plugin-active-directory-auth/server';
+import { activeDirectoryServerPlugin } from '@refract-cms/plugin-active-directory-auth/server';
+import { fileSystemImageServerPlugin } from '@refract-cms/plugin-file-system-image/server';
+import { codeGenServerPlugin } from '@refract-cms/plugin-code-gen/server';
 import gql from 'graphql-tag';
 
 const serverConfig: CliServerConfig = {
   mongoConnectionString: 'mongodb://localhost:27018/cli-consumer',
-  filesPath: 'files/',
   auth: {
     adminCredentials: {
       username: 'admin',
@@ -37,16 +38,19 @@ const serverConfig: CliServerConfig = {
     //     handle(req, res);
     //   });
     // });
-    app.get('*', (req, res) => {
-      res.send('frontend here');
-    });
+    // app.get('*', (req, res) => {
+    //   res.send('frontend here');
+    // });
   },
   events: {
     onSchemaBuilt: () => console.log('hi from consumer')
   },
   plugins: [
     exampleServerPlugin,
-    aciveDirectoryServerPlugin,
+    activeDirectoryServerPlugin,
+    fileSystemImageServerPlugin({
+      filesPath: 'files/'
+    }),
     codeGenServerPlugin({
       outputPath: path.resolve(process.cwd(), 'generated'),
       queries: [

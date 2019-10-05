@@ -272,7 +272,14 @@ export type DateTimeNotFilter = {
 export type File = {
   __typename?: 'file',
   _id?: Maybe<Scalars['MongoId']>,
-  fileRef?: Maybe<FilefileRef>,
+  name?: Maybe<Scalars['String']>,
+  fileRef?: Maybe<Scalars['String']>,
+};
+
+
+export type FileFileRefArgs = {
+  height: Scalars['Int'],
+  width: Scalars['Int']
 };
 
 export type FileEntityfileRefObjectFilterType = {
@@ -292,6 +299,7 @@ export type FileEntityfileRefSortType = {
 
 export type FileEntityFilterType = {
   _id?: Maybe<MongoIdFilter>,
+  name?: Maybe<StringFilter>,
   fileRef?: Maybe<FileEntityfileRefObjectFilterType>,
   OR?: Maybe<Array<Maybe<FileEntityFilterType>>>,
   AND?: Maybe<Array<Maybe<FileEntityFilterType>>>,
@@ -300,19 +308,13 @@ export type FileEntityFilterType = {
 
 export type FileEntitySortType = {
   _id?: Maybe<SortType>,
+  name?: Maybe<SortType>,
   fileRef?: Maybe<FileEntityfileRefSortType>,
-};
-
-export type FilefileRef = {
-  __typename?: 'filefileRef',
-  fileName?: Maybe<Scalars['String']>,
-  path?: Maybe<Scalars['String']>,
-  mimetype?: Maybe<Scalars['String']>,
-  size?: Maybe<Scalars['Float']>,
 };
 
 export type FileInput = {
   _id?: Maybe<Scalars['MongoId']>,
+  name?: Maybe<Scalars['String']>,
   fileRef?: Maybe<FileInputfileRef>,
 };
 
@@ -513,6 +515,7 @@ export type Product = {
   location?: Maybe<Productlocation>,
   category?: Maybe<Scalars['String']>,
   types?: Maybe<Array<Maybe<Scalars['String']>>>,
+  image?: Maybe<File>,
   primary?: Maybe<Scalars['Boolean']>,
 };
 
@@ -525,6 +528,7 @@ export type ProductEntityFilterType = {
   location?: Maybe<ProductEntitylocationObjectFilterType>,
   category?: Maybe<StringFilter>,
   types?: Maybe<StringFilter>,
+  image?: Maybe<StringFilter>,
   primary?: Maybe<BooleanFilter>,
   OR?: Maybe<Array<Maybe<ProductEntityFilterType>>>,
   AND?: Maybe<Array<Maybe<ProductEntityFilterType>>>,
@@ -550,6 +554,7 @@ export type ProductEntitySortType = {
   requiredForCustomDropdownEditor?: Maybe<SortType>,
   location?: Maybe<ProductEntitylocationSortType>,
   category?: Maybe<SortType>,
+  image?: Maybe<SortType>,
   primary?: Maybe<SortType>,
 };
 
@@ -562,6 +567,7 @@ export type ProductInput = {
   location?: Maybe<ProductInputlocation>,
   category?: Maybe<Scalars['String']>,
   types?: Maybe<Array<Maybe<Scalars['String']>>>,
+  image?: Maybe<Scalars['String']>,
   primary?: Maybe<Scalars['Boolean']>,
 };
 

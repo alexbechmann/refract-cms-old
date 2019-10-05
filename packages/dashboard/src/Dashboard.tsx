@@ -47,8 +47,10 @@ import EditEntity from './entities/EditEntity';
 import Auth from './auth/Auth';
 import { logout } from './auth/state/auth.actions';
 import Notifications from './notifications/Notifications';
-import { FileService } from '@refract-cms/core';
+// import { FileService } from '@refract-cms/core';
 import { createLinkComponent } from './shared/create-link-component';
+import axios from 'axios';
+import { authService } from './auth/auth.service';
 
 const drawerWidth = 240;
 
@@ -171,7 +173,16 @@ class Dashboard extends React.Component<Props> {
       <CoreContext.Provider
         value={{
           serverUrl,
-          fileService: new FileService(serverUrl)
+          getPluginAxios: pluginAlias => {
+            const client = axios.create({
+              baseURL: `${serverUrl}/plugins/${pluginAlias}`,
+              headers: {
+                Authorization: 'Bearer ' + authService.getAccessToken()
+              }
+            });
+            return client;
+          }
+          // fileService: new FileService(serverUrl)
         }}
       >
         <ApolloProvider client={createApolloClient({ serverUrl })}>
