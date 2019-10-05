@@ -35,20 +35,22 @@ steps:
     inputs:
       Arguments: "run build"
 
-  - powershell: . 'packages/core/update-package-version.ps1' $(GitVersion.SemVer)
-    displayName: Update package version
+  - script: node ./set-package-versions $(GitVersion.SemVer)
 
-  - powershell: . 'packages/dashboard/update-package-version.ps1' $(GitVersion.SemVer)
-    displayName: Update package version
+  # - powershell: . 'packages/core/update-package-version.ps1' $(GitVersion.SemVer)
+  #   displayName: Update package version
 
-  - powershell: . 'packages/server/update-package-version.ps1' $(GitVersion.SemVer)
-    displayName: Update package version
+  # - powershell: . 'packages/dashboard/update-package-version.ps1' $(GitVersion.SemVer)
+  #   displayName: Update package version
 
-  - powershell: . 'packages/cli/update-package-version.ps1' $(GitVersion.SemVer)
-    displayName: Update package version
+  # - powershell: . 'packages/server/update-package-version.ps1' $(GitVersion.SemVer)
+  #   displayName: Update package version
 
-  - powershell: . 'packages/create-app/update-package-version.ps1' $(GitVersion.SemVer)
-    displayName: Update package version
+  # - powershell: . 'packages/cli/update-package-version.ps1' $(GitVersion.SemVer)
+  #   displayName: Update package version
+
+  # - powershell: . 'packages/create-app/update-package-version.ps1' $(GitVersion.SemVer)
+  #   displayName: Update package version
 
   - task: Npm@1
     displayName: npm custom
@@ -100,6 +102,39 @@ steps:
     inputs:
       command: custom
       workingDir: packages/create-app
+      verbose: false
+      customCommand: "publish --access public --tag $(tag)"
+      customEndpoint: npm
+      publishEndpoint: npm
+
+  - task: Npm@1
+    displayName: npm custom
+    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+    inputs:
+      command: custom
+      workingDir: packages/plugin-active-directory-auth
+      verbose: false
+      customCommand: "publish --access public --tag $(tag)"
+      customEndpoint: npm
+      publishEndpoint: npm
+
+  - task: Npm@1
+    displayName: npm custom
+    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+    inputs:
+      command: custom
+      workingDir: packages/plugin-code-gen
+      verbose: false
+      customCommand: "publish --access public --tag $(tag)"
+      customEndpoint: npm
+      publishEndpoint: npm
+
+  - task: Npm@1
+    displayName: npm custom
+    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+    inputs:
+      command: custom
+      workingDir: packages/plugin-file-system-image
       verbose: false
       customCommand: "publish --access public --tag $(tag)"
       customEndpoint: npm

@@ -9,6 +9,7 @@ program
   .parse(process.argv);
 
 const { packageVersion, dryRun } = program;
+const dependencyPackageVersion = `^${packageVersion}`;
 
 console.log({ packageVersion, dryRun });
 const rootDir = path.resolve(__dirname, "packages");
@@ -39,15 +40,21 @@ dirs.forEach(dir => {
     packageJsonContents,
     newPackageJson => {
       newPackageJson.version = packageVersion;
-      // for (const key in newPackageJson.dependencies) {
-      //   if (object.hasOwnProperty(key)) {
-      //     const element = object[key];
-      //   }
-      // }
-      // if (newPackageJson.name.indexOf('plugin')) {
-
-      //   newPackageJson.peerDependencies
-      // }
+      for (const key in newPackageJson.dependencies) {
+        if (key.indexOf("@refract-cms") > -1) {
+          newPackageJson.dependencies[key] = dependencyPackageVersion;
+        }
+      }
+      for (const key in newPackageJson.devDependencies) {
+        if (key.indexOf("@refract-cms") > -1) {
+          newPackageJson.devDependencies[key] = dependencyPackageVersion;
+        }
+      }
+      for (const key in newPackageJson.peerDependencies) {
+        if (key.indexOf("@refract-cms") > -1) {
+          newPackageJson.peerDependencies[key] = dependencyPackageVersion;
+        }
+      }
     }
   );
   console.log(
