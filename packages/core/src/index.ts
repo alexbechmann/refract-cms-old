@@ -1,7 +1,7 @@
 export { Entity } from './entities/entity.model';
 export { Location } from './location/location.model';
 export { Config } from './config/config';
-export { default as configure } from './config/configure';
+export { configure } from './config/configure';
 export { default as composeSchema } from './entities/compose-schema';
 export { PropertyType, ActualType } from './properties/property-types';
 export { EntitySchema, Return } from './entities/entity-schema';
