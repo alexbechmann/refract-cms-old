@@ -61,8 +61,8 @@ dirs.forEach(dir => {
     `Setting package version ${packageVersion} for file: ${packageJsonPath}`,
     newPackageJsonContents
   );
-  // fs.writeFileSync(
-  //   packageJsonPath,
-  //   JSON.stringify(newPackageJsonContents, null, 2)
-  // );
+  fs.writeFileSync(
+    packageJsonPath,
+    JSON.stringify(newPackageJsonContents, null, 2)
+  );
 });
