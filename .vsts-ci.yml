@@ -35,7 +35,7 @@ steps:
     inputs:
       Arguments: "run build"
 
-  - script: node ./set-package-versions $(GitVersion.SemVer)
+  - script: node ./set-package-versions -p $(GitVersion.SemVer)
 
   # - powershell: . 'packages/core/update-package-version.ps1' $(GitVersion.SemVer)
   #   displayName: Update package version
