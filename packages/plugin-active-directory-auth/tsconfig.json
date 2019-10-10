@@ -19,6 +19,11 @@
     "outDir": "dist",
     "strict": false
   },
+  "references": [
+    { "path": "../core" },
+    { "path": "../dashboard" },
+    { "path": "../server" }
+  ],
   "files": ["src/index.ts"],
   "exclude": ["node_modules"],
   "include": ["src/**/*"]

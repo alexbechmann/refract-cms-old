@@ -3,9 +3,9 @@ import { NewsArticleSchema } from './news/news-article.schema';
 import { createResolver } from '@refract-cms/server';
 import path from 'path';
 import { exampleServerPlugin } from './plugins/example-server-plugin';
-import { activeDirectoryServerPlugin } from '@refract-cms/plugin-active-directory-auth/server';
-import { fileSystemImageServerPlugin } from '@refract-cms/plugin-file-system-image/server';
-import { codeGenServerPlugin } from '@refract-cms/plugin-code-gen/server';
+import { activeDirectoryServerPlugin } from '@refract-cms/plugin-active-directory-auth/dist/server';
+import { fileSystemImageServerPlugin } from '@refract-cms/plugin-file-system-image/dist/server';
+import { codeGenServerPlugin } from '@refract-cms/plugin-code-gen/dist/server';
 import gql from 'graphql-tag';
 
 const serverConfig: CliServerConfig = {
