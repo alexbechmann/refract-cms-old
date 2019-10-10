@@ -34,6 +34,24 @@ module.exports = ({ webpackConfig, target }) => {
           "../packages",
           "server",
           "src"
+        ),
+        "@refract-cms/plugin-code-gen": path.join(
+          __dirname,
+          "../packages",
+          "plugin-code-gen",
+          "src"
+        ),
+        "@refract-cms/plugin-active-directory-auth": path.join(
+          __dirname,
+          "../packages",
+          "plugin-active-directory-auth",
+          "src"
+        ),
+        "@refract-cms/plugin-file-system-image": path.join(
+          __dirname,
+          "../packages",
+          "plugin-file-system-image",
+          "src"
         )
       }
     }

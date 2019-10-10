@@ -59,10 +59,10 @@ const baseConfig = {
   }
 };
 
-function createConfig(name) {
+function createConfig(name, entries) {
   return {
     ...baseConfig,
-    entry: `./packages/${name}/src/index.ts`,
+    entry: ["index", ...entries].map(e => `./packages/${name}/src/${e}.ts`),
     mode: "production",
     target: "node",
     output: {
@@ -89,7 +89,7 @@ module.exports = [
   createConfig("core"),
   createConfig("dashboard"),
   createConfig("server"),
-  createConfig("plugin-active-directory-auth"),
-  createConfig("plugin-code-gen"),
-  createConfig("plugin-file-system-image")
+  createConfig("plugin-active-directory-auth", ["server"]),
+  createConfig("plugin-code-gen", ["server"]),
+  createConfig("plugin-file-system-image", ["server"])
 ];

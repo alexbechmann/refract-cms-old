@@ -43,11 +43,13 @@ dirs.forEach(dir => {
       for (const key in newPackageJson.dependencies) {
         if (key.indexOf("@refract-cms") > -1) {
           newPackageJson.dependencies[key] = dependencyPackageVersion;
+          newPackageJson.peerDependencies[key] = dependencyPackageVersion;
         }
       }
       for (const key in newPackageJson.devDependencies) {
         if (key.indexOf("@refract-cms") > -1) {
           newPackageJson.devDependencies[key] = dependencyPackageVersion;
+          newPackageJson.peerDependencies[key] = dependencyPackageVersion;
         }
       }
       for (const key in newPackageJson.peerDependencies) {
