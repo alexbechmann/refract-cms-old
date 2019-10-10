@@ -5,12 +5,8 @@
   "main": "dist/index.js",
   "typings": "./dist/index.d.ts",
   "scripts": {
-    "build": "npm-run-all build:js build:types",
-    "build:js": "webpack",
-    "watch:js": "webpack -w",
-    "build:types": "tsc --emitDeclarationOnly",
-    "watch:types": "tsc --emitDeclarationOnly -w",
-    "start": "npm-run-all -p watch:js watch:types"
+    "dev": "tsc -w",
+    "build": "tsc" 
   },
   "author": "",
   "license": "ISC",

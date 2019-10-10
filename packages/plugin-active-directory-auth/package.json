@@ -1,11 +1,13 @@
 {
+  "extends": "../../tsconfig.json",
   "name": "@refract-cms/plugin-active-directory-auth",
   "version": "0.0.0",
   "description": "",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsc -w",
+    "build": "tsc" 
   },
   "peerDependencies": {
     "@refract-cms/core": "latest",

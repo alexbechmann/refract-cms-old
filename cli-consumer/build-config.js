@@ -20,40 +20,40 @@ module.exports = ({ webpackConfig, target }) => {
         }
       ]
     },
-    resolve: {
-      alias: {
-        "@refract-cms/dashboard": path.join(
-          __dirname,
-          "../packages",
-          "dashboard",
-          "src"
-        ),
-        "@refract-cms/core": path.join(__dirname, "../packages", "core", "src"),
-        "@refract-cms/server": path.join(
-          __dirname,
-          "../packages",
-          "server",
-          "src"
-        ),
-        "@refract-cms/plugin-code-gen": path.join(
-          __dirname,
-          "../packages",
-          "plugin-code-gen",
-          "src"
-        ),
-        "@refract-cms/plugin-active-directory-auth": path.join(
-          __dirname,
-          "../packages",
-          "plugin-active-directory-auth",
-          "src"
-        ),
-        "@refract-cms/plugin-file-system-image": path.join(
-          __dirname,
-          "../packages",
-          "plugin-file-system-image",
-          "src"
-        )
-      }
-    }
+    // resolve: {
+    //   alias: {
+    //     "@refract-cms/dashboard": path.join(
+    //       __dirname,
+    //       "../packages",
+    //       "dashboard",
+    //       "src"
+    //     ),
+    //     "@refract-cms/core": path.join(__dirname, "../packages", "core", "src"),
+    //     "@refract-cms/server": path.join(
+    //       __dirname,
+    //       "../packages",
+    //       "server",
+    //       "src"
+    //     ),
+    //     "@refract-cms/plugin-code-gen": path.join(
+    //       __dirname,
+    //       "../packages",
+    //       "plugin-code-gen",
+    //       "src"
+    //     ),
+    //     "@refract-cms/plugin-active-directory-auth": path.join(
+    //       __dirname,
+    //       "../packages",
+    //       "plugin-active-directory-auth",
+    //       "src"
+    //     ),
+    //     "@refract-cms/plugin-file-system-image": path.join(
+    //       __dirname,
+    //       "../packages",
+    //       "plugin-file-system-image",
+    //       "src"
+    //     )
+    //   }
+    // }
   });
 };
