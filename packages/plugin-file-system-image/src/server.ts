@@ -32,8 +32,8 @@ export const fileSystemImageServerPlugin = ({ filesPath }: FileSystemImageServer
         const crop = req.query;
         const entity = await fileRepository.findById(id);
 
-        if (entity.fileRef) {
-          const img = await jimp.read(entity.fileRef.path);
+        if (entity.url) {
+          const img = await jimp.read(entity.url.path);
 
           if (crop.x && crop.y && crop.width && crop.height) {
             img.crop(parseInt(crop.x), parseInt(crop.y), parseInt(crop.width), parseInt(crop.height));
@@ -43,9 +43,9 @@ export const fileSystemImageServerPlugin = ({ filesPath }: FileSystemImageServer
 
           const imgBuffer = await img
             .quality(80)
-            .getBufferAsync(entity.fileRef.mimetype)
+            .getBufferAsync(entity.url.mimetype)
             .catch(() => res.sendStatus(500));
-          res.writeHead(200, { 'Content-Type': entity.fileRef.mimetype });
+          res.writeHead(200, { 'Content-Type': entity.url.mimetype });
           res.end(imgBuffer, 'binary');
         } else {
           res.sendStatus(500);

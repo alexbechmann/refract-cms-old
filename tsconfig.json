@@ -17,7 +17,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "isolatedModules": false,
-    "strict": false
+    "strict": false,
+    "baseUrl": "./",
+    "paths": {
+      "@refract-cms/core": ["./packages/*/src"]
+    }
   },
   // "references": [
   //   { "path": "./packages/core" },

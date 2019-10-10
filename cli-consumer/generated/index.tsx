@@ -273,11 +273,11 @@ export type File = {
   __typename?: 'file',
   _id?: Maybe<Scalars['MongoId']>,
   name?: Maybe<Scalars['String']>,
-  fileRef?: Maybe<Scalars['String']>,
+  url?: Maybe<Scalars['String']>,
 };
 
 
-export type FileFileRefArgs = {
+export type FileUrlArgs = {
   height: Scalars['Int'],
   width: Scalars['Int']
 };
@@ -315,10 +315,10 @@ export type FileEntitySortType = {
 export type FileInput = {
   _id?: Maybe<Scalars['MongoId']>,
   name?: Maybe<Scalars['String']>,
-  fileRef?: Maybe<FileInputfileRef>,
+  url?: Maybe<FileInputurl>,
 };
 
-export type FileInputfileRef = {
+export type FileInputurl = {
   fileName?: Maybe<Scalars['String']>,
   path?: Maybe<Scalars['String']>,
   mimetype?: Maybe<Scalars['String']>,
