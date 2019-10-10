@@ -18,7 +18,8 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "outDir": "dist",
-    "strict": false
+    "strict": false,
+    "composite": true
   },
   "references": [
     { "path": "../core" },
