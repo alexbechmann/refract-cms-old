@@ -3,5 +3,13 @@
   "compilerOptions": {
     "strict": false
   },
+  // "references": [
+  //   { "path": "../packages/core" },
+  //   { "path": "../packages/dashboard" },
+  //   { "path": "../packages/server" },
+  //   { "path": "../packages/plugin-active-directory-auth" },
+  //   { "path": "../packages/plugin-code-gen" },
+  //   { "path": "../packages/plugin-file-system-image" }
+  // ],
   "include": ["./src", "./pages"]
 }
