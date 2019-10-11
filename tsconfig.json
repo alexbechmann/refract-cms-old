@@ -20,7 +20,7 @@
     "strict": false,
     "baseUrl": "./",
     "paths": {
-      "@refract-cms/core": ["./packages/*/src"]
+      "@refract-cms/*": ["./packages/*/src"]
     }
   },
   // "references": [
