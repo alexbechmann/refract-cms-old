@@ -3,8 +3,11 @@ import { NewsArticleSchema } from './news/news-article.schema';
 import { createResolver } from '@refract-cms/server';
 import path from 'path';
 import { exampleServerPlugin } from './plugins/example-server-plugin';
+//@ts-ignore
 import { activeDirectoryServerPlugin } from '@refract-cms/plugin-active-directory-auth/server';
+//@ts-ignore
 import { fileSystemImageServerPlugin } from '@refract-cms/plugin-file-system-image/server';
+//@ts-ignore
 import { codeGenServerPlugin } from '@refract-cms/plugin-code-gen/server';
 import gql from 'graphql-tag';
 

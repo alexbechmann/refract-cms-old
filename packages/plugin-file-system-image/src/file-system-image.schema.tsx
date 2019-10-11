@@ -34,7 +34,7 @@ export const FileSystemImageSchema = composeSchema({
       displayName: 'Name',
       editorComponent: createTextEditor()
     },
-    fileRef: {
+    url: {
       editorComponent: createFileUploadEditor({}),
       displayName: 'Image',
       type: {

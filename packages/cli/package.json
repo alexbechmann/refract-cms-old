@@ -7,6 +7,9 @@
     "refract-cms": "./bin/refract-cms.js"
   },
   "scripts": {
+    "build": "echo \"no build required\"",
+    "dev": "echo \"no build required\"",
+    "clean": "echo \"no build required\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "typings": "./index.d.ts",
@@ -24,7 +27,7 @@
     "start-server-webpack-plugin": "^2.2.5",
     "ts-loader": "^5.4.4",
     "typeface-roboto": "^0.0.54",
-    "typescript": "3.5.1",
+    "typescript": "3.7.0-beta",
     "webpack": "^4.30.0",
     "webpack-dev-server": "^3.3.1",
     "webpack-merge": "^4.2.1",

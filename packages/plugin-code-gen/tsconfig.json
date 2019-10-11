@@ -1,4 +1,5 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "noImplicitAny": false,
     "target": "es5",
@@ -17,8 +18,14 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "outDir": "dist",
-    "strict": false
+    "strict": false,
+    "composite": false
   },
+  // "references": [
+  //   { "path": "../core" },
+  //   { "path": "../dashboard" },
+  //   { "path": "../server" }
+  // ],
   "files": ["src/index.ts"],
   "exclude": ["node_modules"],
   "include": ["src/**/*"]

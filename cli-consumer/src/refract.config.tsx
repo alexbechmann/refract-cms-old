@@ -5,9 +5,10 @@ import config from '../../packages/create-app/starter-schema-configs/blog/refrac
 import { configureCli } from '@refract-cms/cli';
 import { pink, indigo } from '@material-ui/core/colors';
 import { createMuiTheme } from '@material-ui/core';
-import { FileSystemImageSchema } from '@refract-cms/plugin-file-system-image/file-system-image.schema';
+import { FileSystemImageSchema } from '@refract-cms/plugin-file-system-image';
 
 export default configureCli({
+  path: '',
   schema: [NewsArticleSchema, SettingsSchema, ProductSchema, ...config.schema, FileSystemImageSchema],
   theme: createMuiTheme({
     palette: {

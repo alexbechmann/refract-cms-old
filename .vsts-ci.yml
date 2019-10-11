@@ -24,16 +24,16 @@ steps:
     displayName: Yarn install
     inputs:
       Arguments: "install"
+      
+  - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
+    displayName: Yarn run build
+    inputs:
+      Arguments: "run build"
 
   - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
     displayName: Yarn test
     inputs:
       Arguments: "test"
-
-  - task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@2
-    displayName: Yarn run build
-    inputs:
-      Arguments: "run build"
 
   - script: node ./set-package-versions -p $(GitVersion.SemVer)
 

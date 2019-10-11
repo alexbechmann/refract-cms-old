@@ -1,6 +1,6 @@
 // import React from 'react';
 // import Cropper from 'react-easy-crop';
-// import { PropertyEditorProps } from '../properties/property-editor-props';
+// import { PropertyEditorProps } from '@refract-cms/core';
 // import {
 //   Theme,
 //   createStyles,
@@ -17,14 +17,13 @@
 //   DialogTitle,
 //   Avatar
 // } from '@material-ui/core';
-// import { ImageRef } from '../files/image-ref.model';
-// import FileList from '../files/FileList';
-// import { FileModel } from '../files/file.model';
-// import { Crop } from '../files/crop.model';
+// // import { ImageRef } from '../files/image-ref.model';
+// // import FileList from '../files/FileList';
+// import { FileModel } from './file.model';
+// import { Crop } from './crop.model';
 // import classNames from 'classnames';
 // import { combineContainers } from 'combine-containers';
-// import { withCoreContext } from '../context/with-core-context';
-// import { WithCoreContextProps } from '../context/with-core-context-props.model';
+// import { withCoreContext, WithCoreContextProps } from '@refract-cms/core';
 
 // type Crops<TCrops extends string> = {
 //   [P in TCrops]: {
@@ -53,7 +52,7 @@
 
 // interface Props
 //   extends ImagePickerEditorOptions<any>,
-//     PropertyEditorProps<ImageRef<any>>,
+//     PropertyEditorProps<Crops<any>>,
 //     WithStyles<typeof styles>,
 //     WithCoreContextProps {}
 
