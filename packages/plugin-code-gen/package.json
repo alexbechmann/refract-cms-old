@@ -6,6 +6,7 @@
   "main": "./dist/src/index.js",
   "typings": "./dist/src/index.d.ts",
   "scripts": {
+    "clean": "rimraf ./dist/",
     "dev": "tsc -w",
     "build": "tsc" 
   },
