@@ -282,25 +282,10 @@ export type FileUrlArgs = {
   width: Scalars['Int']
 };
 
-export type FileEntityfileRefObjectFilterType = {
-  fileName?: Maybe<StringFilter>,
-  path?: Maybe<StringFilter>,
-  mimetype?: Maybe<StringFilter>,
-  size?: Maybe<FloatFilter>,
-  opr?: Maybe<OprExists>,
-};
-
-export type FileEntityfileRefSortType = {
-  fileName?: Maybe<SortType>,
-  path?: Maybe<SortType>,
-  mimetype?: Maybe<SortType>,
-  size?: Maybe<SortType>,
-};
-
 export type FileEntityFilterType = {
   _id?: Maybe<MongoIdFilter>,
   name?: Maybe<StringFilter>,
-  fileRef?: Maybe<FileEntityfileRefObjectFilterType>,
+  url?: Maybe<FileEntityurlObjectFilterType>,
   OR?: Maybe<Array<Maybe<FileEntityFilterType>>>,
   AND?: Maybe<Array<Maybe<FileEntityFilterType>>>,
   NOR?: Maybe<Array<Maybe<FileEntityFilterType>>>,
@@ -309,7 +294,22 @@ export type FileEntityFilterType = {
 export type FileEntitySortType = {
   _id?: Maybe<SortType>,
   name?: Maybe<SortType>,
-  fileRef?: Maybe<FileEntityfileRefSortType>,
+  url?: Maybe<FileEntityurlSortType>,
+};
+
+export type FileEntityurlObjectFilterType = {
+  fileName?: Maybe<StringFilter>,
+  path?: Maybe<StringFilter>,
+  mimetype?: Maybe<StringFilter>,
+  size?: Maybe<FloatFilter>,
+  opr?: Maybe<OprExists>,
+};
+
+export type FileEntityurlSortType = {
+  fileName?: Maybe<SortType>,
+  path?: Maybe<SortType>,
+  mimetype?: Maybe<SortType>,
+  size?: Maybe<SortType>,
 };
 
 export type FileInput = {
