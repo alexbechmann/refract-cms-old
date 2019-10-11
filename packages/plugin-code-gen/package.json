@@ -22,5 +22,8 @@
   "peerDependencies": {
     "@refract-cms/core": "latest",
     "@refract-cms/server": "latest"
-  }
+  },
+  "files": [
+    "dist/"
+  ]
 }

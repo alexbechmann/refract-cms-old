@@ -15,5 +15,8 @@
     "@refract-cms/server": "latest"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "files": [
+    "dist/"
+  ]
 }
