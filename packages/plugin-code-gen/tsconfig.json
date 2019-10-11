@@ -19,13 +19,13 @@
     "skipDefaultLibCheck": true,
     "outDir": "dist",
     "strict": false,
-    "composite": true
+    "composite": false
   },
-  "references": [
-    { "path": "../core" },
-    { "path": "../dashboard" },
-    { "path": "../server" }
-  ],
+  // "references": [
+  //   { "path": "../core" },
+  //   { "path": "../dashboard" },
+  //   { "path": "../server" }
+  // ],
   "files": ["src/index.ts"],
   "exclude": ["node_modules"],
   "include": ["src/**/*"]

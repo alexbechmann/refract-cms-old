@@ -19,11 +19,11 @@
     "skipDefaultLibCheck": true,
     "outDir": "dist",
     "strict": false,
-    "composite": true
+    "composite": false
   },
-  "references": [
-    { "path": "../core" }
-  ],
+  // "references": [
+  //   { "path": "../core" }
+  // ],
   "files": ["src/index.ts"],
   "exclude": ["node_modules"],
   "include": ["src/**/*"]

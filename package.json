@@ -9,9 +9,12 @@
     "cli-consumer"
   ],
   "scripts": {
-    "dev": "wsrun dev",
-    "build": "wsrun clean && wsrun build",
-    "test": "ts-mocha --paths -p \"./__tests__/tsconfig.json\" \"__tests__/**/*.test*.ts*\""
+    "dev": "cd cli-consumer && yarn dev",
+    "build": "wsrun clean && yarn build:core && yarn build:dashboard && yarn build:server && wsrun build",
+    "test": "ts-mocha --paths -p \"./__tests__/tsconfig.json\" \"__tests__/**/*.test*.ts*\"",
+    "build:core": "cd ./packages/core && yarn run build",
+    "build:dashboard": "cd ./packages/dashboard && yarn run build",
+    "build:server": "cd ./packages/server && yarn run build"
   },
   "author": "",
   "license": "ISC",

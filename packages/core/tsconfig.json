@@ -19,7 +19,7 @@
     "skipDefaultLibCheck": true,
     "outDir": "dist",
     "strict": false,
-    "composite": true
+    "composite": false
   },
   "files": ["src/index.ts"],
   "exclude": ["node_modules"],
