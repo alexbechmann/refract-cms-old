@@ -5,7 +5,6 @@ const env = dotenv.config().parsed;
 
 const serverConfig: CliServerConfig = {
   mongoConnectionString: env.MONGO_URI,
-  filesPath: 'files/',
   auth: {
     adminCredentials: {
       username: 'admin',
