@@ -825,7 +825,7 @@
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/@emotion/utils/-/utils-0.8.2.tgz#576ff7fb1230185b619a75d258cbc98f0867a8dc"
 
-"@graphql-codegen/core@^1.4.0":
+"@graphql-codegen/core@1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/core/-/core-1.4.0.tgz#dc3ef765706e0ba0b93d446dee3aba7eeb615cd6"
   dependencies:
@@ -833,7 +833,7 @@
     graphql-toolkit "0.3.4"
     tslib "1.10.0"
 
-"@graphql-codegen/fragment-matcher@^1.4.0":
+"@graphql-codegen/fragment-matcher@1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/fragment-matcher/-/fragment-matcher-1.4.0.tgz#5c09972e07cbd0c53a1664c717be882fbceefe60"
   dependencies:
@@ -848,7 +848,7 @@
     import-from "3.0.0"
     tslib "1.10.0"
 
-"@graphql-codegen/typescript-operations@^1.4.0":
+"@graphql-codegen/typescript-operations@1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-operations/-/typescript-operations-1.4.0.tgz#2bc4692c9b1b168eb23fb3d8c73732d21fb55eec"
   dependencies:
@@ -857,7 +857,7 @@
     "@graphql-codegen/visitor-plugin-common" "1.4.0"
     tslib "1.10.0"
 
-"@graphql-codegen/typescript-react-apollo@^1.4.0":
+"@graphql-codegen/typescript-react-apollo@1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript-react-apollo/-/typescript-react-apollo-1.4.0.tgz#dd186ec7f6a119826e997519e510d0df6a0e7da2"
   dependencies:
@@ -865,7 +865,7 @@
     "@graphql-codegen/visitor-plugin-common" "1.4.0"
     tslib "1.10.0"
 
-"@graphql-codegen/typescript@1.4.0", "@graphql-codegen/typescript@^1.4.0":
+"@graphql-codegen/typescript@1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@graphql-codegen/typescript/-/typescript-1.4.0.tgz#8c920643310ad05522b7609a9cd48d1663a6c71d"
   dependencies:
