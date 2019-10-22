@@ -1,7 +1,30 @@
 {
-  "extends": "../tsconfig.json",
+  // "extends": "../tsconfig.json",
   "compilerOptions": {
-    "strict": false
+    "strict": false,
+    "baseUrl": "../",
+    "rootDir": "../",
+    "paths": {
+      "@refract-cms/*": ["../packages/*/src"]
+    },
+    "jsx": "react",
+    "noImplicitAny": false,
+    "target": "es5",
+    "lib": ["dom", "es6", "dom.iterable", "scripthost"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "allowJs": false,
+    "checkJs": false,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "isolatedModules": false,
+    "composite": true
   },
   // "references": [
   //   { "path": "../packages/core" },
@@ -11,5 +34,5 @@
   //   { "path": "../packages/plugin-code-gen" },
   //   { "path": "../packages/plugin-file-system-image" }
   // ],
-  "include": ["./src", "./pages"]
+  "include": ["./src", "./pages", "../packages"]
 }
