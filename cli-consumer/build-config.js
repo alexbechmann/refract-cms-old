@@ -7,10 +7,20 @@ module.exports = ({ webpackConfig, target }) => {
       rules: [
         {
           test: /\.(ts|tsx)$/,
-          loader: "ts-loader",
+          loader: "babel-loader",
           include: [path.resolve(__dirname, "..", "packages")],
+          // options: {
+          //   transpileOnly: true
+          // }
           options: {
-            transpileOnly: true
+            "presets": [
+                "@babel/typescript",
+                "@babel/react"
+            ],
+            "plugins": [
+                "@babel/proposal-class-properties",
+                "@babel/proposal-object-rest-spread"
+            ]
           }
         },
         {

@@ -1,6 +1,8 @@
 import express from 'express';
 import { refractCmsHandler, ServerConfig } from '@refract-cms/server';
+//@ts-ignore
 import configImport from '@consumer/config/refract.config';
+//@ts-ignore
 import serverConfigImport from '@consumer/config/server.config';
 import path from 'path';
 import '@babel/polyfill';
