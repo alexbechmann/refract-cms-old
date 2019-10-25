@@ -14,7 +14,7 @@ const dependencyPackageVersion = `^${packageVersion}`;
 console.log({ packageVersion, dryRun });
 const rootDir = path.resolve(__dirname, "packages");
 
-let dirs = [];
+let dirs = ["create-app/new-source-files"];
 for (const file of fs.readdirSync(rootDir)) {
   if (
     fs.statSync(path.join(rootDir, file)).isDirectory() &&
@@ -24,6 +24,7 @@ for (const file of fs.readdirSync(rootDir)) {
   }
 }
 
+console.log({ dirs });
 dirs.forEach(dir => {
   const packageJsonPath = path.resolve(
     __dirname,
@@ -63,8 +64,10 @@ dirs.forEach(dir => {
     `Setting package version ${packageVersion} for file: ${packageJsonPath}`,
     newPackageJsonContents
   );
-  fs.writeFileSync(
-    packageJsonPath,
-    JSON.stringify(newPackageJsonContents, null, 2)
-  );
+  if (!dryRun) {
+    fs.writeFileSync(
+      packageJsonPath,
+      JSON.stringify(newPackageJsonContents, null, 2)
+    );
+  }
 });
