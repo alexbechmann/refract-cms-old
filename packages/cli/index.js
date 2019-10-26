@@ -1,3 +1,6 @@
 module.exports = {
-  configureCli: config => config
+  configureCli: config => ({
+    ...config,
+    path: (config.path || "/").replace(/\/$/, "")
+  })
 };
