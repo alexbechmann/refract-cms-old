@@ -8,7 +8,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import { CliConfig } from '@refract-cms/cli';
 
 const config = configImport as CliConfig;
-const path = config.path || '';
+const path = config.path;
 
 render(
   <ThemeProvider theme={config.theme}>

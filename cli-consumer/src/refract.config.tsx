@@ -8,7 +8,7 @@ import { createMuiTheme } from '@material-ui/core';
 import { FileSystemImageSchema } from '@refract-cms/plugin-file-system-image';
 
 export default configureCli({
-  path: '',
+  path: '/',
   schema: [NewsArticleSchema, SettingsSchema, ProductSchema, ...config.schema, FileSystemImageSchema],
   theme: createMuiTheme({
     palette: {
