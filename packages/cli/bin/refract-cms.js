@@ -16,3 +16,5 @@ program
   .action(function() {
     require("../scripts/build");
   });
+
+program.parse(process.argv);
