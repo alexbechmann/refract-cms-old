@@ -1,16 +1,13 @@
 {
   "name": "@refract-cms/core",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "scripts": {
-    "build": "npm-run-all build:js build:types",
-    "build:js": "webpack",
-    "watch:js": "webpack -w",
-    "build:types": "tsc --emitDeclarationOnly",
-    "watch:types": "tsc --emitDeclarationOnly -w",
-    "start": "npm-run-all -p watch:js watch:types"
+    "dev": "tsc -w",
+    "build": "tsc",
+    "clean": "rimraf ./dist/"
   },
   "author": "",
   "license": "ISC",
@@ -60,7 +57,7 @@
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.16.0",
     "tslint-react": "^3.6.0",
-    "typescript": "3.5.1",
+    "typescript": "3.7.0-beta",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",

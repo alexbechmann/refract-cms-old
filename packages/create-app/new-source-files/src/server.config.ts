@@ -1,11 +1,9 @@
+import { configureCliServer } from '@refract-cms/cli';
 import dotenv from 'dotenv';
-import { CliServerConfig } from '@refract-cms/cli';
+dotenv.config();
 
-const env = dotenv.config().parsed;
-
-const serverConfig: CliServerConfig = {
-  mongoConnectionString: env.MONGO_URI,
-  filesPath: 'files/',
+export default configureCliServer({
+  mongoConnectionString: process.env.MONGO_URI,
   auth: {
     adminCredentials: {
       username: 'admin',
@@ -15,7 +13,6 @@ const serverConfig: CliServerConfig = {
       issuer: 'consumer',
       secret: 'secret1'
     }
-  }
-};
-
-export default serverConfig;
+  },
+  plugins: []
+});

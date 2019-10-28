@@ -7,6 +7,9 @@
     "create-refract-cms-app": "./bin/create-refract-cms-app.js"
   },
   "scripts": {
+    "build": "echo \"no build required\"",
+    "dev": "echo \"no build required\"",
+    "clean": "echo \"no build required\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "typings": "./typings/typings.d.ts",

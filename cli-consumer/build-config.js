@@ -7,10 +7,20 @@ module.exports = ({ webpackConfig, target }) => {
       rules: [
         {
           test: /\.(ts|tsx)$/,
-          loader: "ts-loader",
+          loader: "babel-loader",
           include: [path.resolve(__dirname, "..", "packages")],
+          // options: {
+          //   transpileOnly: true
+          // }
           options: {
-            transpileOnly: true
+            "presets": [
+                "@babel/typescript",
+                "@babel/react"
+            ],
+            "plugins": [
+                "@babel/proposal-class-properties",
+                "@babel/proposal-object-rest-spread"
+            ]
           }
         },
         {
@@ -33,6 +43,24 @@ module.exports = ({ webpackConfig, target }) => {
           __dirname,
           "../packages",
           "server",
+          "src"
+        ),
+        "@refract-cms/plugin-code-gen": path.join(
+          __dirname,
+          "../packages",
+          "plugin-code-gen",
+          "src"
+        ),
+        "@refract-cms/plugin-active-directory-auth": path.join(
+          __dirname,
+          "../packages",
+          "plugin-active-directory-auth",
+          "src"
+        ),
+        "@refract-cms/plugin-file-system-image": path.join(
+          __dirname,
+          "../packages",
+          "plugin-file-system-image",
           "src"
         )
       }

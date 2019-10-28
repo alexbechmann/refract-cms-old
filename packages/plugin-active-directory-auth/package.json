@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.json",
+  "name": "@refract-cms/plugin-active-directory-auth",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "scripts": {
+    "clean": "rimraf ./dist/",
+    "dev": "tsc -w",
+    "build": "tsc" 
+  },
+  "peerDependencies": {
+    "@refract-cms/core": "latest",
+    "@refract-cms/server": "latest"
+  },
+  "author": "",
+  "license": "ISC",
+  "files": [
+    "dist/"
+  ]
+}

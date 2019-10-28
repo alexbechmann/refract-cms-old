@@ -4,15 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run docker-compose && npm run start:cms",
+    "dev": "npm run docker-compose && npm run start:cms",
     "start:cms": "node ../packages/cli/bin/refract-cms.js start",
-    "build": "node ../packages/cli/bin/refract-cms.js build",
+    "build": "echo \"no build required\"",
+    "clean": "echo \"no clean required\"",
+    "build:2": "node ../packages/cli/bin/refract-cms.js build",
     "docker-compose": "docker-compose up -d"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "dotenv": "^8.2.0"
+  },
   "devDependencies": {
+    "@babel/preset-react": "^7.6.3",
+    "@babel/preset-typescript": "^7.6.0",
     "npm-run-all": "^4.1.5"
   }
 }

@@ -5,6 +5,7 @@ const StartServerPlugin = require("start-server-webpack-plugin");
 const WebpackBar = require("webpackbar");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const fs = require("fs");
+// var FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 
 const appDirectory = fs.realpathSync(process.cwd());
 
@@ -49,6 +50,7 @@ function createClientConfig() {
     },
     plugins: [
       // new webpack.NamedModulesPlugin(),
+      // new FriendlyErrorsWebpackPlugin(),
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
       new WebpackBar({
@@ -170,6 +172,7 @@ function createServerConfig() {
         ignoreLints: ["**/*.test.*"],
         async: true
       })
+      // new FriendlyErrorsWebpackPlugin()
       // function() {
       //   this.plugin("done", function(stats) {
       //     if (

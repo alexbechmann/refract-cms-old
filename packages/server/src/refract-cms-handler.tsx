@@ -1,17 +1,10 @@
 import * as express from 'express';
 import graphqlHTTP from 'express-graphql';
-import { makeExecutableSchema } from 'graphql-tools';
-import { Dashboard } from '@refract-cms/dashboard';
-import { Config, graphqlQueryHelper, FileModel, Crop, EntitySchema } from '@refract-cms/core';
-import { merge } from 'lodash';
-import { printType } from 'graphql';
-import { MongoClient, Db, ObjectId } from 'mongodb';
-import { ServerConfig } from './server-config.model';
+import { ServerConfig } from './config/server-config.model';
 import { RequestHandlerParams } from 'express-serve-static-core';
 import multer from 'multer';
 import jimp from 'jimp';
 import { authService } from './auth/auth.service';
-import uniqueString from 'unique-string';
 import fs from 'fs';
 import { MongooseSchemaBuilder } from './persistance/mongoose-schema-builder';
 import mongoose from 'mongoose';
@@ -22,19 +15,12 @@ import { requireAuth } from './auth/require-auth.middleware';
 import { RefractGraphQLContext } from './graphql/refract-graphql-context';
 import { singleRefPlugin } from './plugins/single-ref-plugin';
 import { multipleRefPlugin } from './plugins/multiple-ref-plugin';
+import { buildServerOptions } from './config/create-server-options';
 
 const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => {
   const { config } = serverConfig;
 
   const router = express.Router();
-  const storage = multer.diskStorage({
-    destination: serverConfig.filesPath,
-    filename(req, file, cb) {
-      console.log(file);
-      cb(null, `${uniqueString()}_${file.originalname}`);
-    }
-  });
-  const upload = multer({ storage });
 
   router.use(bodyParser.json());
 
@@ -56,11 +42,16 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
     );
   }
 
+  const serverOptions = buildServerOptions(serverConfig);
   const mongooseSchemaBuilder = new MongooseSchemaBuilder();
-  mongooseSchemaBuilder.buildSchema(config.schema, serverConfig);
+  mongooseSchemaBuilder.buildSchema(serverOptions.schemas);
 
-  schemaBuilder.init(serverConfig);
-  const { publicGraphQLSchema, internalGraphQLSchema } = schemaBuilder.buildSchema(config.schema);
+  schemaBuilder.init(serverOptions);
+  const { publicGraphQLSchema, internalGraphQLSchema } = schemaBuilder.buildSchema(serverOptions.schemas);
+
+  serverOptions.routers.forEach(routerDef => {
+    router.use(`/plugins/${routerDef.alias.toLowerCase()}`, routerDef.router);
+  });
 
   router.use(
     '/graphql',
@@ -100,34 +91,34 @@ const refractCmsHandler = ({ serverConfig }: { serverConfig: ServerConfig }) => 
 
   // const filesRepository = new MongoRepository<FileModel>('files', db!);
 
-  const fileRepository = mongoose.connection.models['file'];
+  // const fileRepository = mongoose.connection.models['file'];
 
-  router.get('/files/:id', async (req, res) => {
-    const { id } = req.params;
-    const crop = req.query;
-    const entity: FileModel = await fileRepository.findById(id);
+  // router.get('/files/:id', async (req, res) => {
+  //   const { id } = req.params;
+  //   const crop = req.query;
+  //   const entity: FileModel = await fileRepository.findById(id);
 
-    if (entity.fileRef) {
-      const img = await jimp.read(entity.fileRef.path);
+  //   if (entity.fileRef) {
+  //     const img = await jimp.read(entity.fileRef.path);
 
-      if (crop.x && crop.y && crop.width && crop.height) {
-        img.crop(parseInt(crop.x), parseInt(crop.y), parseInt(crop.width), parseInt(crop.height));
-      }
+  //     if (crop.x && crop.y && crop.width && crop.height) {
+  //       img.crop(parseInt(crop.x), parseInt(crop.y), parseInt(crop.width), parseInt(crop.height));
+  //     }
 
-      const imgBuffer = await img.getBufferAsync(entity.fileRef.mimetype);
-      res.writeHead(200, { 'Content-Type': entity.fileRef.mimetype });
-      res.end(imgBuffer, 'binary');
-    } else {
-      res.sendStatus(500);
-    }
-  });
+  //     const imgBuffer = await img.getBufferAsync(entity.fileRef.mimetype);
+  //     res.writeHead(200, { 'Content-Type': entity.fileRef.mimetype });
+  //     res.end(imgBuffer, 'binary');
+  //   } else {
+  //     res.sendStatus(500);
+  //   }
+  // });
 
-  router.post('/files', upload.single('file'), (req, res) => {
-    const { mimetype, path, filename, size } = req.file;
-    res.send(req.file);
-  });
+  // router.post('/files', upload.single('file'), (req, res) => {
+  //   const { mimetype, path, filename, size } = req.file;
+  //   res.send(req.file);
+  // });
 
-  return [serverConfig.rootPath, router] as RequestHandlerParams[];
+  return [serverConfig.rootPath || '', router] as RequestHandlerParams[];
 };
 
 export default refractCmsHandler;

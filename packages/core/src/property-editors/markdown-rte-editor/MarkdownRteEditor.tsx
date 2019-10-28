@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { PropertyEditorProps } from '@refract-cms/core';
-import { Typography, Theme, NoSsr, Paper } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { Typography, Theme, NoSsr, Paper, makeStyles } from '@material-ui/core';
 import { Editor, EditorState, RichUtils } from 'draft-js';
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 import { stateToMarkdown } from 'draft-js-export-markdown';
 import RteToolbar from './RteToolbar';
 import classNames from 'classnames';
+import { PropertyEditorProps } from '../../properties/property-editor-props';
 
 export interface MarkdownRteEditorOptions {}
 

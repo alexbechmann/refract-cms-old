@@ -1,0 +1,29 @@
+{
+  "extends": "../../tsconfig.json",
+  "name": "@refract-cms/plugin-code-gen",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "scripts": {
+    "clean": "rimraf ./dist/",
+    "dev": "tsc -w",
+    "build": "tsc" 
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@graphql-codegen/core": "1.4.0",
+    "@graphql-codegen/fragment-matcher": "1.4.0",
+    "@graphql-codegen/typescript": "1.4.0",
+    "@graphql-codegen/typescript-operations": "1.4.0",
+    "@graphql-codegen/typescript-react-apollo": "1.4.0"
+  },
+  "peerDependencies": {
+    "@refract-cms/core": "latest",
+    "@refract-cms/server": "latest"
+  },
+  "files": [
+    "dist/"
+  ]
+}

@@ -59,10 +59,10 @@ const baseConfig = {
   }
 };
 
-function createConfig(name) {
+function createConfig(name, entries) {
   return {
     ...baseConfig,
-    entry: `./packages/${name}/src/index.ts`,
+    entry: ["index", ...entries].map(e => `./packages/${name}/src/${e}.ts`),
     mode: "production",
     target: "node",
     output: {
@@ -72,15 +72,15 @@ function createConfig(name) {
       libraryTarget: "umd"
     },
     plugins: [
-      ...baseConfig.plugins,
-      new ForkTsCheckerWebpackPlugin({
-        tsconfig: path.resolve(__dirname, "tsconfig.json"),
-        memoryLimit: 2048,
-        tslint: path.resolve(__dirname, "tslint.json"),
-        reportFiles: [`./packages/${name}/src/**`],
-        ignoreLints: ["**/*.test.*"],
-        async: true
-      })
+      ...baseConfig.plugins
+      // new ForkTsCheckerWebpackPlugin({
+      //   tsconfig: path.resolve(__dirname, "tsconfig.json"),
+      //   memoryLimit: 2048,
+      //   tslint: path.resolve(__dirname, "tslint.json"),
+      //   reportFiles: [`./packages/${name}/src/**`],
+      //   ignoreLints: ["**/*.test.*"],
+      //   async: true
+      // })
     ]
   };
 }
@@ -88,5 +88,8 @@ function createConfig(name) {
 module.exports = [
   createConfig("core"),
   createConfig("dashboard"),
-  createConfig("server")
+  createConfig("server"),
+  createConfig("plugin-active-directory-auth", ["server"]),
+  createConfig("plugin-code-gen", ["server"]),
+  createConfig("plugin-file-system-image", ["server"])
 ];
