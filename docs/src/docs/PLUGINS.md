@@ -52,22 +52,7 @@ This will generate typescript interfaces for all schemas & allow you to write qu
 ### Installation
 
 ```
-npm install --save @refract-cms/plugin-file-system-image
-```
-
-Add Schema to your `refract.config.tsx`
-
-```tsx
-// ... rest of imports
-import { FileSystemImageSchema } from "@refract-cms/plugin-file-system-image";
-
-export default configureCli({
-  schema: [
-    // rest of your schemas
-    FileSystemImageSchema
-  ]
-  // ... rest of config
-});
+npm install --save @refract-cms/plugin-code-gen
 ```
 
 Add server plugin to `server.config.ts`
@@ -91,6 +76,8 @@ export default configureCliServer({
           query allAuthors {
             authorList {
               _id
+              firstName
+              lastName
             }
           }
         `
