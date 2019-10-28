@@ -1,51 +1,8 @@
 ---
-path: "/plugins"
-title: Plugins
-order: 6
+path: "/plugin-code-gen"
+title: Codegen Plugin
+order: 7
 ---
-
-## File System Image
-
-This will allow you to upload images & pick them from your schemas. It adds has a image processor to your server and the ability to query for cropped images in GraphQL.
-
-### Installation
-
-```
-npm install --save @refract-cms/plugin-file-system-image
-```
-
-Add Schema to your `refract.config.tsx`
-
-```tsx
-import { FileSystemImageSchema } from "@refract-cms/plugin-file-system-image";
-// ... rest of imports
-
-export default configureCli({
-  schema: [
-    // rest of your schemas
-    FileSystemImageSchema
-  ]
-  // ... rest of config
-});
-```
-
-Add server plugin to `server.config.ts`
-
-```tsx
-import { fileSystemImageServerPlugin } from "@refract-cms/plugin-file-system-image/dist/server";
-
-export default configureCliServer({
-  // rest of config
-  plugins: [
-    // rest of your plugins
-    fileSystemImageServerPlugin({
-      filesPath: "files/" // path is relative to root dir containing package.json
-    })
-  ]
-});
-```
-
-## Code gen
 
 This will generate typescript interfaces for all schemas & allow you to write queries that will generate react hooks for apollo to be consumed by a frontend project.
 
