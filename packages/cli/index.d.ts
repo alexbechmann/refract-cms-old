@@ -12,4 +12,5 @@ declare module '@refract-cms/cli' {
     path?: string;
   }
   export function configureCli(config: CliConfig): CliConfig;
+  export function configureCliServer(config: CliServerConfig): CliServerConfig;
 }
