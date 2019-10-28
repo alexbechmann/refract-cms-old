@@ -89,10 +89,19 @@ export default configureCliServer({
 
 Then in your frontend project
 
+```
+npm install --save apollo-boost @apollo/react-hooks graphql apollo-cache-inmemory
+```
+
 ```tsx
 import React from "react";
 import ReactDOM from "react-dom";
 import { ApolloProvider } from "@apollo/react-hooks";
+import {
+  InMemoryCache,
+  IntrospectionFragmentMatcher
+} from "apollo-cache-inmemory";
+import ApolloClient from "apollo-boost";
 import introspectionResult from "../path/to/generated/introspect.generated.json";
 import { useAllAuthorsQuery } from "../path/to/generated";
 
@@ -106,7 +115,7 @@ const cache = new InMemoryCache({
   addTypename: true,
   fragmentMatcher
 });
-return new ApolloClient({
+const apolloClient = new ApolloClient({
   link,
   cache
 });
@@ -133,7 +142,7 @@ function Authors() {
 
 function App() {
   return (
-    <ApolloProvider client={apollo}>
+    <ApolloProvider client={apolloClient}>
       <Authors />
     </ApolloProvider>
   );
