@@ -107,3 +107,17 @@ function App() {
 
 ReactDOM.render(<App />, document.getElementById("root"));
 ```
+
+## Architecture
+
+We recommend having both backend & all frontends in one "mono-repo" e.g:
+
+```
+git repo:
+
+cms/
+frontend-web/
+frontend-react-native/
+```
+
+This way you can import the generated output from the server in your frontend projects and be 100% sure that it's always in sync.
