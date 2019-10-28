@@ -47,23 +47,25 @@ export default configureCliServer({
 Then in your frontend project
 
 ```
-npm install --save apollo-boost @apollo/react-hooks graphql apollo-cache-inmemory
+npm install --save @apollo/react-hooks graphql apollo-client apollo-link-http apollo-cache-inmemory
 ```
 
 ```tsx
 import React from "react";
 import ReactDOM from "react-dom";
 import { ApolloProvider } from "@apollo/react-hooks";
+import { HttpLink } from "apollo-link-http";
 import {
   InMemoryCache,
   IntrospectionFragmentMatcher
 } from "apollo-cache-inmemory";
-import ApolloClient from "apollo-boost";
+import { ApolloClient } from "apollo-client";
 import introspectionResult from "../path/to/generated/introspect.generated.json";
 import { useAllAuthorsQuery } from "../path/to/generated";
 
-const httpLink = createHttpLink({
-  uri: "http://localhost:3000/graphql"
+const httpLink = new HttpLink({
+  uri: "http://localhost:3000/graphql",
+  credentials: "same-origin"
 });
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData: introspectionResult
