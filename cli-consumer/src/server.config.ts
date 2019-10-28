@@ -1,4 +1,4 @@
-import { CliServerConfig } from '@refract-cms/cli';
+import { configureCliServer } from '@refract-cms/cli';
 import { NewsArticleSchema } from './news/news-article.schema';
 import { createResolver } from '@refract-cms/server';
 import path from 'path';
@@ -10,9 +10,12 @@ import { fileSystemImageServerPlugin } from '@refract-cms/plugin-file-system-ima
 //@ts-ignore
 import { codeGenServerPlugin } from '@refract-cms/plugin-code-gen/server';
 import gql from 'graphql-tag';
+import dotenv from 'dotenv';
 
-const serverConfig: CliServerConfig = {
-  mongoConnectionString: 'mongodb://localhost:27018/cli-consumer',
+dotenv.config();
+
+export default configureCliServer({
+  mongoConnectionString: process.env.MONGO_URL,
   auth: {
     adminCredentials: {
       username: 'admin',
@@ -65,6 +68,4 @@ const serverConfig: CliServerConfig = {
       ]
     })
   ]
-};
-
-export default serverConfig;
+});
