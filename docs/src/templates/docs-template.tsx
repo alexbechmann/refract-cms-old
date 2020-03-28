@@ -45,13 +45,13 @@ class DocsTemplate extends Component<any> {
     return (
       <Layout title={page.frontmatter.title}>
         <Helmet title={page.frontmatter.title} />
-        <Grid container spacing={32}>
-          <Grid item xs={12} sm={4} lg={4} xl={3}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={3}>
             <Paper>
               <DocsMenu />
             </Paper>
           </Grid>
-          <Grid item xs={12} sm={8} lg={8} xl={8}>
+          <Grid item xs={12} md={9}>
             <div className={this.props.classes.rte} dangerouslySetInnerHTML={{ __html: page.html }} />
           </Grid>
         </Grid>

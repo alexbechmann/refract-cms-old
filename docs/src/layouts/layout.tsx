@@ -14,7 +14,8 @@ import {
   createMuiTheme,
   MuiThemeProvider,
   IconButton,
-  Button
+  Button,
+  Container
 } from '@material-ui/core';
 import 'typeface-roboto';
 import GitHub from '../icons/GitHub';
@@ -38,20 +39,20 @@ const styles = (theme: Theme) =>
     //   color: theme.palette.primary.main
     // },
     content: {
-      padding: theme.spacing.unit
+      padding: theme.spacing()
     },
     grow: {
       flexGrow: 1
     },
     appBar: {
-      marginBottom: theme.spacing.unit * 3,
+      marginBottom: theme.spacing(3),
       background: 'white'
     },
     title: {
-      marginBottom: theme.spacing.unit * 3
+      marginBottom: theme.spacing(3)
     },
     logo: {
-      marginRight: theme.spacing.unit,
+      marginRight: theme.spacing(),
       height: 30
     }
   });
@@ -61,24 +62,26 @@ interface Props extends LayoutProps, WithStyles<typeof styles> {}
 const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
   <MuiThemeProvider theme={theme}>
     <AppBar position="sticky" className={classes.appBar} elevation={1}>
-      <Toolbar>
-        <img className={classes.logo} src="/avumt-3eeeh-003.png" />
-        <Typography color="primary" variant="h6">
-          <Link to="/" style={{ textDecoration: 'none' }}>
-            Refract Cms
-          </Link>
-        </Typography>
-        <div className={classes.grow} />
-        <Button component="a" onClick={() => navigate('/screenshots')}>
-          Screenshots
-        </Button>
-        <Button component="a" onClick={() => navigate('/cli')}>
-          Docs
-        </Button>
-        <IconButton href="https://github.com/alexbechmann/refract-cms">
-          <GitHub />
-        </IconButton>
-      </Toolbar>
+      <Container maxWidth="md">
+        <Toolbar disableGutters>
+          <img className={classes.logo} src="/avumt-3eeeh-003.png" />
+          <Typography color="primary" variant="h6">
+            <Link to="/" style={{ textDecoration: 'none' }}>
+              Refract Cms
+            </Link>
+          </Typography>
+          <div className={classes.grow} />
+          <Button component="a" onClick={() => navigate('/screenshots')}>
+            Screenshots
+          </Button>
+          <Button component="a" onClick={() => navigate('/cli')}>
+            Docs
+          </Button>
+          <IconButton href="https://github.com/alexbechmann/refract-cms">
+            <GitHub />
+          </IconButton>
+        </Toolbar>
+      </Container>
     </AppBar>
     <Helmet
       title={title}
@@ -91,14 +94,7 @@ const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
     </Helmet>
     <CssBaseline />
-    <Grid container justify="center">
-      <Grid item xs={12} sm={12} md={9} lg={7} xl={6} className={classes.content}>
-        {/* <Typography gutterBottom variant="h4" className={classes.title}>
-          {title}
-        </Typography> */}
-        {children}
-      </Grid>
-    </Grid>
+    <Container maxWidth="md">{children}</Container>
   </MuiThemeProvider>
 );
 

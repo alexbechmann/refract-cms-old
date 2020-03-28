@@ -29,12 +29,6 @@ exports.createPages = ({ boundActionCreators, graphql }) => {
     result.data.allMarkdownRemark.edges
       .filter(({ node }) => node.frontmatter.path)
       .forEach(({ node }) => {
-        // const filePathSections = node.fileAbsolutePath.split("/");
-        // const section = filePathSections[filePathSections.length - 2].split(
-        //   "_"
-        // )[1];
-        // console.log({ section });
-
         createPage({
           path: node.frontmatter.path,
           component: docTemplate,

@@ -53,7 +53,7 @@ export default class extends React.Component<IndexPageProps, {}> {
         <Typography variant="h5" gutterBottom>
           Features
         </Typography>
-        <Grid container spacing={24}>
+        <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <Card elevation={20}>
               <CardHeader title="Code first" />
