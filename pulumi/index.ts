@@ -108,14 +108,13 @@ const appService = new k8s.core.v1.Service(
   { provider }
 );
 
-const domain = new digitalocean.Domain('refract-cms', {
-  name: 'refract-cms.com',
-  ipAddress: publicIp
-});
-
 const hostPrefixes = [`${env}`];
 
 if (env === 'master') {
+  const domain = new digitalocean.Domain('refract-cms', {
+    name: 'refract-cms.com',
+    ipAddress: publicIp
+  });
   hostPrefixes.push(''); // empty for root domain
   hostPrefixes.push('www'); // empty for root domain
 }
