@@ -12,11 +12,11 @@ import {
   withStyles,
   WithStyles,
   createMuiTheme,
-  MuiThemeProvider,
   IconButton,
   Button,
   Container
 } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/styles';
 import 'typeface-roboto';
 import GitHub from '../icons/GitHub';
 import { indigo } from '@material-ui/core/colors';
@@ -60,7 +60,7 @@ const styles = (theme: Theme) =>
 interface Props extends LayoutProps, WithStyles<typeof styles> {}
 
 const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
-  <MuiThemeProvider theme={theme}>
+  <ThemeProvider theme={theme}>
     <AppBar position="sticky" className={classes.appBar} elevation={1}>
       <Container maxWidth="md">
         <Toolbar disableGutters>
@@ -95,7 +95,7 @@ const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
     </Helmet>
     <CssBaseline />
     <Container maxWidth="md">{children}</Container>
-  </MuiThemeProvider>
+  </ThemeProvider>
 );
 
 export default compose(withRoot, withStyles(styles))(Layout) as React.ComponentType<LayoutProps>;
