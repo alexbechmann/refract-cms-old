@@ -65,11 +65,11 @@ const deployment = new k8s.apps.v1.Deployment(
                   memory: '256Mi'
                 }
               },
-              ports: [{ containerPort: 3000 }],
+              ports: [{ containerPort: 80 }],
               livenessProbe: {
                 httpGet: {
                   path: '/',
-                  port: 3000
+                  port: 80
                 },
                 initialDelaySeconds: 5,
                 periodSeconds: 15
@@ -96,7 +96,7 @@ const appService = new k8s.core.v1.Service(
           name: 'app',
           port: 80,
           protocol: 'TCP',
-          targetPort: 3000
+          targetPort: 80
         }
       ],
       selector: {
@@ -108,10 +108,15 @@ const appService = new k8s.core.v1.Service(
   { provider }
 );
 
-const hostPrefixes = [`${env}.${project}`];
+const domain = new digitalocean.Domain('refract-cms', {
+  name: 'refract-cms.com',
+  ipAddress: publicIp
+});
+
+const hostPrefixes = [`${env}`];
 
 if (env === 'master') {
-  //   hostPrefixes.push(''); // empty for root domain
+  hostPrefixes.push(''); // empty for root domain
   hostPrefixes.push('www'); // empty for root domain
 }
 
@@ -122,13 +127,15 @@ hostPrefixes.forEach(hostPrefix => {
   const secretName = `tls-${hostPrefix}-secret-${issuer}`;
   const host = hostPrefix ? `${hostPrefix}.refract-cms.com` : 'refract-cms.com';
   hosts.push(host);
-  var dns = new digitalocean.DnsRecord(host, {
-    ttl: 300,
-    name: hostPrefix,
-    domain: 'refract-cms.com',
-    type: 'A',
-    value: publicIp
-  });
+  if (hostPrefix) {
+    var dns = new digitalocean.DnsRecord(host, {
+      ttl: 300,
+      name: hostPrefix,
+      domain: 'refract-cms.com',
+      type: 'A',
+      value: publicIp
+    });
+  }
   const ingress = new k8s.networking.v1beta1.Ingress(
     host,
     {
