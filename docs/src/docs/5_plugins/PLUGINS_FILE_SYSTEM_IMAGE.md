@@ -1,6 +1,7 @@
 ---
 path: "/plugin-file-system-image"
 title: File System Image Plugin
+section: Plugins
 order: 6
 ---
 

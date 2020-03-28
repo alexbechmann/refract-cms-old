@@ -11,14 +11,14 @@ class DocsTemplate extends Component<any> {
     return (
       <Layout title={page.frontmatter.title}>
         <Helmet title={page.frontmatter.title} />
-        <Grid container spacing={16}>
-          <Grid item xs={12} sm={9}>
-            <div dangerouslySetInnerHTML={{ __html: page.html }} />
-          </Grid>
-          <Grid item xs={12} sm={3}>
+        <Grid container spacing={32}>
+          <Grid item xs={12} sm={4} lg={3}>
             <Paper>
               <DocsMenu />
             </Paper>
+          </Grid>
+          <Grid item xs={12} sm={8} lg={9}>
+            <div dangerouslySetInnerHTML={{ __html: page.html }} />
           </Grid>
         </Grid>
       </Layout>

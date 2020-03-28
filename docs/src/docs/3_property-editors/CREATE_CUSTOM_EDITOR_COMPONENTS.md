@@ -1,6 +1,7 @@
 ---
 path: "/create-custom-editor-components"
 title: Create custom editor component
+section: Property Editors
 order: 4
 ---
 

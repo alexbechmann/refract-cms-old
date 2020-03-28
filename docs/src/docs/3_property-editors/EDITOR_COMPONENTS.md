@@ -1,6 +1,7 @@
 ---
 path: "/built-in-editor-components"
 title: Built in editor components
+section: Property Editors
 order: 3
 ---
 

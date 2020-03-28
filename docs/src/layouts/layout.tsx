@@ -22,6 +22,7 @@ import { indigo } from '@material-ui/core/colors';
 const favicon = require('../assets/favicon.ico');
 import withRoot from '../with-root';
 import { compose } from 'recompose';
+import { theme } from '../theme';
 
 interface LayoutProps {
   title: string;
@@ -30,12 +31,12 @@ interface LayoutProps {
 const styles = (theme: Theme) =>
   createStyles({
     '@global h1, h2, h3, p': {
-      color: 'white',
+      // color: 'white',
       fontFamily: 'Roboto'
     },
-    '@global a': {
-      color: theme.palette.secondary.main
-    },
+    // '@global a': {
+    //   color: theme.palette.primary.main
+    // },
     content: {
       padding: theme.spacing.unit
     },
@@ -43,35 +44,26 @@ const styles = (theme: Theme) =>
       flexGrow: 1
     },
     appBar: {
-      marginBottom: theme.spacing.unit * 3
+      marginBottom: theme.spacing.unit * 3,
+      background: 'white'
     },
     title: {
       marginBottom: theme.spacing.unit * 3
+    },
+    logo: {
+      marginRight: theme.spacing.unit
     }
   });
 
 interface Props extends LayoutProps, WithStyles<typeof styles> {}
 
-const theme = createMuiTheme({
-  palette: {
-    type: 'dark',
-    primary: {
-      main: indigo[600]
-    }
-    // secondary: {
-    //   main: '#4ec9b0'
-    // }
-  }
-});
-
 const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
   <MuiThemeProvider theme={theme}>
-    <AppBar position="sticky" className={classes.appBar}>
+    <AppBar position="sticky" className={classes.appBar} elevation={1}>
       <Toolbar>
-        <Typography color="inherit" variant="h6">
-          <Link to="/" style={{ color: 'white' }}>
-            Refract Cms docs
-          </Link>
+        <img className={classes.logo} src="/avumt-3eeeh-003.png" />
+        <Typography color="primary" variant="h6">
+          <Link to="/">Refract Cms</Link>
         </Typography>
         <div className={classes.grow} />
         <Button component="a" onClick={() => navigate('/screenshots')}>
@@ -87,7 +79,10 @@ const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
     </AppBar>
     <Helmet
       title={title}
-      meta={[{ name: 'description', content: 'Sample' }, { name: 'keywords', content: 'sample, something' }]}
+      meta={[
+        { name: 'description', content: 'Sample' },
+        { name: 'keywords', content: 'sample, something' }
+      ]}
       link={[{ rel: 'icon', href: `${favicon}` }]}
     />
     <CssBaseline />
@@ -102,7 +97,4 @@ const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
   </MuiThemeProvider>
 );
 
-export default compose(
-  withRoot,
-  withStyles(styles)
-)(Layout) as React.ComponentType<LayoutProps>;
+export default compose(withRoot, withStyles(styles))(Layout) as React.ComponentType<LayoutProps>;
