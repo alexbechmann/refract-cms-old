@@ -63,7 +63,9 @@ const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
       <Toolbar>
         <img className={classes.logo} src="/avumt-3eeeh-003.png" />
         <Typography color="primary" variant="h6">
-          <Link to="/">Refract Cms</Link>
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            Refract Cms
+          </Link>
         </Typography>
         <div className={classes.grow} />
         <Button component="a" onClick={() => navigate('/screenshots')}>
@@ -84,7 +86,9 @@ const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
         { name: 'keywords', content: 'sample, something' }
       ]}
       link={[{ rel: 'icon', href: `${favicon}` }]}
-    />
+    >
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    </Helmet>
     <CssBaseline />
     <Grid container justify="center">
       <Grid item xs={12} sm={1} md={10} lg={10} xl={7} className={classes.content}>
