@@ -51,7 +51,8 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing.unit * 3
     },
     logo: {
-      marginRight: theme.spacing.unit
+      marginRight: theme.spacing.unit,
+      height: 30
     }
   });
 
@@ -71,7 +72,7 @@ const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
         <Button component="a" onClick={() => navigate('/screenshots')}>
           Screenshots
         </Button>
-        <Button component="a" onClick={() => navigate('/docs')}>
+        <Button component="a" onClick={() => navigate('/cli')}>
           Docs
         </Button>
         <IconButton href="https://github.com/alexbechmann/refract-cms">
@@ -91,10 +92,10 @@ const Layout: React.ComponentType<Props> = ({ title, children, classes }) => (
     </Helmet>
     <CssBaseline />
     <Grid container justify="center">
-      <Grid item xs={12} sm={1} md={10} lg={10} xl={7} className={classes.content}>
-        <Typography gutterBottom variant="h4" className={classes.title}>
+      <Grid item xs={12} sm={12} md={9} lg={7} xl={6} className={classes.content}>
+        {/* <Typography gutterBottom variant="h4" className={classes.title}>
           {title}
-        </Typography>
+        </Typography> */}
         {children}
       </Grid>
     </Grid>

@@ -27,7 +27,7 @@ export default () => {
         sections = Array.from(new Set(sections));
         console.log(sections);
         return (
-          <List>
+          <List dense>
             {sections.map(section => {
               return (
                 <>
