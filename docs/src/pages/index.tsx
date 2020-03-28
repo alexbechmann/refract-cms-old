@@ -16,7 +16,8 @@ import {
   Card,
   CardContent,
   CardMedia,
-  CardHeader
+  CardHeader,
+  makeStyles
 } from '@material-ui/core';
 import Img from 'gatsby-image';
 
@@ -33,80 +34,81 @@ interface IndexPageProps {
   };
 }
 
-export default class extends React.Component<IndexPageProps, {}> {
-  constructor(props: IndexPageProps, context: any) {
-    super(props, context);
+const useStyles = makeStyles(theme => ({
+  cardContent: {
+    minHeight: theme.spacing(14)
   }
-  public render() {
-    return (
-      <Layout title="Welcome to the Refract Cms docs">
-        <Typography variant="h5" gutterBottom>
-          What is Refract-CMS?
-        </Typography>
-        <Typography paragraph>
-          We aim to delight developers by allowing them to stay where they are most comfortable, in their favourite IDE;
-          and content editors by providing a clean, snappy, single purpose UI to edit content only.
-        </Typography>
-        <br />
-        <br />
+}));
 
-        <Typography variant="h5" gutterBottom>
-          Features
-        </Typography>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
-            <Card elevation={20}>
-              <CardHeader title="Code first" />
-              <CardContent>
-                <Typography>
-                  Schema configuration such as fields & editor comopnent are configured in code only. This means
-                  developers can version control & embrace good DevOps practices.
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Card elevation={20}>
-              <CardHeader title="Customizable" />
-              <CardContent>
-                <Typography>
-                  Creating a custom editor is as simple as creating a react component & importing it into the schema
-                  declaration.
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Card elevation={20}>
-              <CardHeader title="Type saftey" />
-              <CardContent>
-                <Typography>
-                  All configuration is type-safe using TypeScript, allowing you to be confident when making changes to
-                  the schema.
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Card elevation={20}>
-              <CardHeader title="GraphQL" />
-              <CardContent>
-                <Typography>
-                  A fully featured GraphQL endpoint is generated for your consuming apps, allowing you to extract all
-                  CMS data as well as add custom resolvers.
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+export default function(props: IndexPageProps) {
+  const classes = useStyles();
+  return (
+    <Layout title="Welcome to the Refract Cms docs">
+      <Typography variant="h5" gutterBottom>
+        What is Refract-CMS?
+      </Typography>
+      <Typography paragraph>
+        We aim to delight developers by allowing them to stay where they are most comfortable, in their favourite IDE;
+        and content editors by providing a clean, snappy, single purpose UI to edit content only.
+      </Typography>
+      <br />
+      <br />
+
+      <Typography variant="h5" gutterBottom>
+        Features
+      </Typography>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={6}>
+          <Card elevation={20}>
+            <CardHeader title="Code first" />
+            <CardContent className={classes.cardContent}>
+              <Typography>
+                Schema configuration such as fields & editor comopnent are configured in code only. This means
+                developers can version control & embrace good DevOps practices.
+              </Typography>
+            </CardContent>
+          </Card>
         </Grid>
-        {/* <Button variant="raised" component="a" color="secondary" onClick={() => navigate('/cli')}>
+        <Grid item xs={12} sm={6}>
+          <Card elevation={20}>
+            <CardHeader title="Customizable" />
+            <CardContent className={classes.cardContent}>
+              <Typography>
+                Creating a custom editor is as simple as creating a react component & importing it into the schema
+                declaration.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Card elevation={20}>
+            <CardHeader title="Type saftey" />
+            <CardContent className={classes.cardContent}>
+              <Typography>
+                All configuration is type-safe using TypeScript, allowing you to be confident when making changes to the
+                schema.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Card elevation={20}>
+            <CardHeader title="GraphQL" />
+            <CardContent className={classes.cardContent}>
+              <Typography>
+                A fully featured GraphQL endpoint is generated for your consuming apps, allowing you to extract all CMS
+                data as well as add custom resolvers.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+      {/* <Button variant="raised" component="a" color="secondary" onClick={() => navigate('/cli')}>
           Get started with CLI
         </Button> */}
-      </Layout>
-    );
-  }
+    </Layout>
+  );
 }
-
 export const pageQuery = graphql`
   query IndexQuery {
     site {
