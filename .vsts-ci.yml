@@ -8,13 +8,14 @@ variables:
   env: $(Build.SourceBranchName)
 
 stages:
-  - stage: Docs
-    pool:
-      name: Default
-      demands:
-        - HOME_NETWORK
+  - stage: Build 
     jobs:
       - job: Pulumi
+        pool:
+          name: Default
+          demands:
+            - HOME_NETWORK
+        
         steps:
           - script: docker login --username alexbechmann --password $(DOCKER_TOKEN)
             displayName: Docker login
@@ -60,12 +61,10 @@ stages:
           - script: |
               pulumi up --stack $(env) --yes --cwd $(System.DefaultWorkingDirectory)/pulumi
             displayName: "Deploy with Pulumi"
-
-  - stage: Package 
-    pool:
-      vmImage: windows-latest
-    jobs:
+            
       - job: Packages
+        pool:
+          vmImage: windows-latest
         steps:
           - task: gittools.gitversion.gitversion-task.GitVersion@3
 
