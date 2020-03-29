@@ -43,3 +43,23 @@ export default configureCliServer({
   ]
 });
 ```
+
+In your schema you then add a reference to `FileSystemImageSchema`
+
+```tsx
+{
+  image: propertyBuilder.singleReference(FileSystemImageSchema, {
+    displayName: "Image"
+  });
+}
+```
+
+or
+
+```tsx
+{
+  image: propertyBuilder.multipleReference(FileSystemImageSchema, {
+    displayName: "Image"
+  });
+}
+```

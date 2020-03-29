@@ -18,10 +18,9 @@ _CustomDropdownEditor.tsx_
 ```tsx
 import React from "react";
 import { PropertyEditorProps } from "@refract-cms/core";
-import { Typography, Theme } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import { Typography, makeStyles } from "@material-ui/core";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(theme => ({
   highlightedText: {
     color: theme.palette.secondary.main,
     fontWeight: 500

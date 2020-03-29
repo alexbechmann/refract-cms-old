@@ -48,8 +48,7 @@ export default function(props: IndexPageProps) {
         What is Refract-CMS?
       </Typography>
       <Typography paragraph>
-        We aim to delight developers by allowing them to stay where they are most comfortable, in their favourite IDE;
-        and content editors by providing a clean, snappy, single purpose UI to edit content only.
+        Refract-CMS is an open source, code first, self-hosted headless CMS that uses React, Express & MongoDB.
       </Typography>
       <br />
       <br />
@@ -82,7 +81,7 @@ export default function(props: IndexPageProps) {
         </Grid>
         <Grid item xs={12} sm={6}>
           <Card elevation={20}>
-            <CardHeader title="Type saftey" />
+            <CardHeader title="Type safety" />
             <CardContent className={classes.cardContent}>
               <Typography>
                 All configuration is type-safe using TypeScript, allowing you to be confident when making changes to the
@@ -96,8 +95,8 @@ export default function(props: IndexPageProps) {
             <CardHeader title="GraphQL" />
             <CardContent className={classes.cardContent}>
               <Typography>
-                A fully featured GraphQL endpoint is generated for your consuming apps, allowing you to extract all CMS
-                data as well as add custom resolvers.
+                A GraphQL endpoint with rich filtering & sorting is generated for your consuming apps, allowing you to
+                extract all CMS data as well as add custom resolvers.
               </Typography>
             </CardContent>
           </Card>
