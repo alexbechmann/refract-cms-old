@@ -2,7 +2,13 @@ import React from 'react';
 import GatsbyLink, { navigate } from 'gatsby-link';
 import Layout from '../layouts/layout';
 import { graphql, StaticQuery } from 'gatsby';
-import { MenuItem, MenuList, Paper, ListItem, List, ListSubheader, ListItemText } from '@material-ui/core';
+import { MenuItem, MenuList, Paper, makeStyles, ListItem, List, ListSubheader, ListItemText } from '@material-ui/core';
+
+const useStyles = makeStyles(theme => ({
+  listSection: {
+    marginBottom: theme.spacing(3)
+  }
+}));
 
 const QUERY = graphql`
   {
@@ -19,6 +25,7 @@ const QUERY = graphql`
 `;
 
 export default () => {
+  const classes = useStyles();
   return (
     <StaticQuery
       query={QUERY}
@@ -30,7 +37,7 @@ export default () => {
           <List dense>
             {sections.map(section => {
               return (
-                <>
+                <div className={classes.listSection}>
                   <ListSubheader>{section}</ListSubheader>
                   {data.allMarkdownRemark.nodes
                     .filter(node => node.frontmatter.section === section)
@@ -44,7 +51,7 @@ export default () => {
                         </ListItem>
                       );
                     })}
-                </>
+                </div>
               );
             })}
           </List>
