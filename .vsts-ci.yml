@@ -223,4 +223,4 @@ stages:
                 - script: |
                     npm install 
                     pulumi destroy --stack $(env) --yes --cwd $(Pipeline.Workspace)/Pulumi
-                            displayName: "Destroy with Pulumi"
+                  displayName: "Destroy with Pulumi"
