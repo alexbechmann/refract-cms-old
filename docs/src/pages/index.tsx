@@ -62,7 +62,7 @@ export default function(props: IndexPageProps) {
             <CardHeader title="Code first" />
             <CardContent className={classes.cardContent}>
               <Typography>
-                Schema configuration such as fields & editor comopnent are configured in code only. This means
+                Schema configuration such as fields & editor components are configured in code only. This means
                 developers can version control & embrace good DevOps practices.
               </Typography>
             </CardContent>
@@ -74,7 +74,7 @@ export default function(props: IndexPageProps) {
             <CardContent className={classes.cardContent}>
               <Typography>
                 Creating a custom editor is as simple as creating a react component & importing it into the schema
-                declaration.
+                declaration. You can also add server-side custom resolvers for user-defined custom fields.
               </Typography>
             </CardContent>
           </Card>
