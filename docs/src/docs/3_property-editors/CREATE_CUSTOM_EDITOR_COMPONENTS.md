@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default ({ value, setValue }: PropertyEditorProps<number>) => {
-  const classes = useStyles({});
+  const classes = useStyles();
   return (
     <div>
       <Typography className={classes.highlightedText} gutterBottom>
