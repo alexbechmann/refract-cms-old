@@ -197,8 +197,12 @@ stages:
 
   - stage:
     displayName: Cleanup
+    # pool:
+    #   vmImage: ubuntu-latest
     pool:
-      vmImage: ubuntu-latest
+      name: Default
+      demands:
+        - HOME_NETWORK
     jobs:
       - deployment: Preview
         displayName: Preview
