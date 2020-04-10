@@ -1,0 +1,10 @@
+version: "3.1"
+services:
+  refract-cms:
+    command: npm start
+    volumes:  
+      - "./refract-cms/src:/usr/src/app/src"
+    ports:
+      - "3001:3001"
+    expose: 
+      - 3001

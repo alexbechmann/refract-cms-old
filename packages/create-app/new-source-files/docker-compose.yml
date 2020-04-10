@@ -4,8 +4,6 @@ services:
   mongo:
     image: mongo
     restart: always
-    ports:
-      - 27417:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: hqXzNv2f5YC45veW
@@ -18,3 +16,13 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: hqXzNv2f5YC45veW
+
+  refract-cms: 
+    build: ./refract-cms
+    environment: 
+      MONGO_URI: mongodb://root:hqXzNv2f5YC45veW@mongo:27017/refract-cms?authSource=admin
+    # volumes:  
+      # - "./refract-cms/node_modules:/usr/src/app/node_modules"
+    ports:
+      - "3000:3000"
+      
