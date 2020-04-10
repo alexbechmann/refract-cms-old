@@ -1,6 +1,6 @@
-import { NewsArticleSchema } from './news/news-article.schema';
-import { SettingsSchema } from './settings/settings.schema';
-import { ProductSchema } from './products/product.schema';
+import { NewsArticleSchema } from './schemas/news/news-article.schema';
+import { SettingsSchema } from './schemas/settings/settings.schema';
+import { ProductSchema } from './schemas/products/product.schema';
 import config from '@refract-cms/create-app/starter-schema-configs/blog/refract.config';
 import { configureCli } from '@refract-cms/cli';
 import { pink, indigo } from '@material-ui/core/colors';
@@ -20,5 +20,6 @@ export default configureCli({
         main: pink[500]
       }
     }
-  })
+  }),
+  serverConfig: () => import('./server/server.config').then(({ serverConfig }) => serverConfig)
 });

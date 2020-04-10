@@ -10,6 +10,7 @@ declare module '@refract-cms/cli' {
   export interface CliConfig extends Config {
     theme: Theme;
     path?: string;
+    serverConfig: () => Promise<CliServerConfig>;
   }
   export function configureCli(config: CliConfig): CliConfig;
   export function configureCliServer(config: CliServerConfig): CliServerConfig;

@@ -1,5 +1,5 @@
 import { configureCliServer } from '@refract-cms/cli';
-import { NewsArticleSchema } from './news/news-article.schema';
+import { NewsArticleSchema } from '../news/news-article.schema';
 import { createResolver } from '@refract-cms/server';
 import path from 'path';
 import { exampleServerPlugin } from './plugins/example-server-plugin';
@@ -14,7 +14,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export default configureCliServer({
+export const serverConfig = configureCliServer({
   mongoConnectionString: process.env.MONGO_URL,
   auth: {
     adminCredentials: {

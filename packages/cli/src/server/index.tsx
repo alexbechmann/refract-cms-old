@@ -3,7 +3,7 @@ import { refractCmsHandler, ServerConfig } from '@refract-cms/server';
 //@ts-ignore
 import configImport from '@consumer/config/refract.config';
 //@ts-ignore
-import serverConfigImport from '@consumer/config/server.config';
+// import serverConfigImport from '@consumer/config/server.config';
 import path from 'path';
 import '@babel/polyfill';
 import cors from 'cors';
@@ -12,24 +12,26 @@ import { Config } from '@refract-cms/core';
 
 const server = express();
 
-const serverConfig: CliServerConfig & ServerConfig = serverConfigImport;
+// const serverConfig: CliServerConfig & ServerConfig = serverConfigImport;
 const config: Config & CliConfig = configImport;
 
-serverConfig.config = config;
-serverConfig.rootPath = config.path;
+async function setup() {
+  const serverConfig = (await config.serverConfig()) as CliServerConfig & ServerConfig;
+  serverConfig.config = config;
+  serverConfig.rootPath = config.path;
 
-const scriptSrc = process.env.NODE_ENV === 'development' ? 'http://localhost:3001/client.js' : '/public/client.js';
+  const scriptSrc = process.env.NODE_ENV === 'development' ? 'http://localhost:3001/client.js' : '/public/client.js';
 
-const handler = refractCmsHandler({
-  serverConfig
-});
+  const handler = refractCmsHandler({
+    serverConfig
+  });
 
-server
-  .use(handler[0], cors(), handler[1])
-  .use('/public', express.static(path.join(__dirname, 'public')))
-  .get(`${serverConfig.rootPath}*`, (req, res) => {
-    res.send(
-      `<!doctype html>
+  server
+    .use(handler[0], cors(), handler[1])
+    .use('/public', express.static(path.join(__dirname, 'public')))
+    .get(`${serverConfig.rootPath}*`, (req, res) => {
+      res.send(
+        `<!doctype html>
 <html lang="">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -43,11 +45,14 @@ server
     <script src="${scriptSrc}" defer crossorigin></script>
 </body>
 </html>`
-    );
-  });
+      );
+    });
 
-if (serverConfig.configureExpress) {
-  serverConfig.configureExpress(server);
+  if (serverConfig.configureExpress) {
+    serverConfig.configureExpress(server);
+  }
 }
+
+setup();
 
 export default server;
