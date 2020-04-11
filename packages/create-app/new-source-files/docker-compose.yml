@@ -21,8 +21,6 @@ services:
     build: ./refract-cms
     environment: 
       MONGO_URI: mongodb://root:hqXzNv2f5YC45veW@mongo:27017/refract-cms?authSource=admin
-    # volumes:  
-      # - "./refract-cms/node_modules:/usr/src/app/node_modules"
     ports:
       - "3000:3000"
       

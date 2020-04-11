@@ -14,7 +14,7 @@ const dependencyPackageVersion = `^${packageVersion}`;
 console.log({ packageVersion, dryRun });
 const rootDir = path.resolve(__dirname, "packages");
 
-let dirs = ["create-app/new-source-files"];
+let dirs = ["create-app/new-source-files/refract-cms"];
 for (const file of fs.readdirSync(rootDir)) {
   if (
     fs.statSync(path.join(rootDir, file)).isDirectory() &&

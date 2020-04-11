@@ -3,9 +3,7 @@ FROM node:10 as build-deps
 WORKDIR /usr/src/app
 
 COPY ./package*.json ./
-RUN npm ci
+RUN npm install --verbose
 COPY . .
-WORKDIR /usr/src/app
-RUN npm run build
 
-CMD npm run start:prod
+CMD npm start 

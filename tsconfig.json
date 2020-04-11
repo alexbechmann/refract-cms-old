@@ -18,10 +18,11 @@
     "skipDefaultLibCheck": true,
     "isolatedModules": false,
     "strict": false,
-    // "baseUrl": "./",
-    // "paths": {
-    //   "@refract-cms/*": ["./packages/*/src"]
-    // },
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "./",
+    "paths": {
+      "@refract-cms/*": ["./packages/*/src"]
+    },
     "composite": true,
     "listEmittedFiles": true
   },
