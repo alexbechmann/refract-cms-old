@@ -31,7 +31,7 @@ import {
 import HomeIcon from '@material-ui/icons/Home';
 import HelpIcon from '@material-ui/icons/Help';
 import { Config, EntitySchema, CoreContext } from '@refract-cms/core';
-import Graphql from './Graphql/Graphql';
+import Graphql from './graphql/Graphql';
 import { ApolloProvider } from 'react-apollo';
 import { createApolloClient } from './graphql/create-apollo-client';
 import EntityList from './entities/EntityList';
