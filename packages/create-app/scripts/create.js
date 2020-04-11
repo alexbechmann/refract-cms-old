@@ -33,7 +33,7 @@ module.exports = function({ dir, sampleSchema }) {
 
   fs.copySync(
     path.join(__dirname, "../starter-schema-configs", sampleSchema),
-    path.join(process.cwd(), dir, "src")
+    path.join(process.cwd(), dir, "refract-cms/src")
   );
 
   spinner.start();
