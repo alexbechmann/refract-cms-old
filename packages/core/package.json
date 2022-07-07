@@ -28,7 +28,7 @@
     "graphql": "^14.2.1",
     "graphql-tools": "^4.0.3",
     "lodash": "^4.17.11",
-    "moment": "^2.22.2",
+    "moment": "^2.29.4",
     "pluralize": "^7.0.0",
     "query-string": "^6.2.0",
     "react": "^16.8.4",
